@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "epicenter-libs": "file:../../main/js"
+  }
+}
