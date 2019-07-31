@@ -1,5 +1,8 @@
 import * as epicenter from 'epicenter-libs';
 
+epicenter.channel.ChannelManager.connect();
+
+/*
 new epicenter.authentication.Authentication().authenticate(new epicenter.authentication.AdminAuthenticationToken("dberkman@forio.com", "logos1174!"))
   .then(foo => {
     console.log(foo);
@@ -15,3 +18,4 @@ new epicenter.authentication.Authentication().authenticate(new epicenter.authent
       .catch(fault => console.log(JSON.stringify(fault)));
   })
   .catch(fault => console.log(JSON.stringify(fault)));
+*/
