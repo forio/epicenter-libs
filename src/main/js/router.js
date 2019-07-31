@@ -74,7 +74,7 @@ export class RouteBuilder {
   }
 }
 
-export const route = new RouteBuilder().withServer('http://epistage1.foriodev.com').withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
+export const route = new RouteBuilder().withServer('http://epistage2.foriodev.com').withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
 
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
