@@ -12,23 +12,27 @@ const State = {
 
 export class Channel {
 
-  constructor(cometd) {
+  #cometd;
+  #state;
 
-    this.cometd = cometd;
-    this.state = State.DISCONNECTED;
+  constructor(cometd, logLevel = 'error') {
 
-    this.cometd.configure({
-      url: URL
+    this.#cometd = cometd;
+    this.#state = State.DISCONNECTED;
+
+    this.#cometd.configure({
+      url: URL,
+      logLevel: logLevel
     });
   }
 
   connect() {
 
-    if (this.state !== State.CONNECTED) {
-      if (this.state === State.CONNECTING) {
+    if (this.#state !== State.CONNECTED) {
+      if (this.#state === State.CONNECTING) {
         setTimeout(() => this.connect(), 500)
       } else {
-        this.state = State.CONNECTING;
+        this.#state = State.CONNECTING;
 
         let handshakeProps = {};
         let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
@@ -42,14 +46,14 @@ export class Channel {
           }
         }
 
-        this.cometd.ackEnabled = true;
-        this.cometd.websocketEnabled = true;
+        this.#cometd.ackEnabled = true;
+        this.#cometd.websocketEnabled = true;
 
-        this.cometd.handshake(handshakeProps, (handshakeReply) => {
+        this.#cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
-              this.state = State.CONNECTED;
+              this.#state = State.CONNECTED;
             } else {
-              this.state = State.DISCONNECTED;
+              this.#state = State.DISCONNECTED;
               throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
             }
           }

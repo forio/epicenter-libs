@@ -13,10 +13,8 @@ epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenti
 
 
     let cometd = new lib.CometD();
-    let channel = new epicenter.channel.Channel(cometd);
+    let channel = new epicenter.channel.Channel(cometd, 'debug');
 
-    channel.connect();
-    channel.connect();
     channel.connect();
 
     /*
