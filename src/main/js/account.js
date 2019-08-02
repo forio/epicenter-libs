@@ -1,26 +1,23 @@
 import * as router from './router.js';
 import * as utility from './utility.js';
 
-export class Account {
+export function create(createDto) {
 
-  create(creator) {
-
-    return utility.EpicenterPromise(router.POST('/account', creator, null));
-  }
-
-  // should take an updater
-  update(creator) {
-
-    return utility.EpicenterPromise(router.POST('/account', creator, null));
-  }
-
-  delete(creator) {
-
-    return utility.EpicenterPromise(router.POST('/account', creator, null));
-  }
+  return utility.EpicenterPromise(router.POST('/account', createDto, null));
 }
 
-class AccountCreator {
+// should take an updater
+export function update(updateDto) {
+
+  return utility.EpicenterPromise(router.PATCH('/account', updateDto, null));
+}
+
+export function remove(accountShortName) {
+
+  return utility.EpicenterPromise(router.DELETE('/account', new router.RouteBuilder().withAccountShortName(accountShortName).build()));
+}
+
+class AccountCreateInDto {
 
   constructor(objectType, name, shortName, adminKey) {
 
@@ -32,7 +29,7 @@ class AccountCreator {
   }
 }
 
-export class PersonalAccountCreator extends AccountCreator {
+export class PersonalAccountCreateInDto extends AccountCreateInDto {
 
   constructor(name, shortName, adminKey) {
 
@@ -40,7 +37,7 @@ export class PersonalAccountCreator extends AccountCreator {
   }
 }
 
-export class TeamAccountCreator extends AccountCreator {
+export class TeamAccountCreateInDto extends AccountCreateInDto {
 
   constructor(name, shortName, adminKey, subscriptionPlan, billingInterval) {
 

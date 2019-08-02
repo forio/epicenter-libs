@@ -74,7 +74,7 @@ export class RouteBuilder {
   }
 }
 
-export const route = new RouteBuilder().withServer('http://epistage2.foriodev.com').withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
+export const route = new RouteBuilder().withServer('http://epistage1.foriodev.com').withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
 
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
@@ -112,9 +112,10 @@ function request(method, uri, body, partialRoute, includeAuthorization) {
   let headers = {
     'Content-type': 'application/json; charset=UTF-8'
   };
+  let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
 
-  if (includeAuthorization && store.StorageManager.getItem(utility.AUTH_TOKEN)) {
-    headers['Authorization'] = `Bearer ${store.StorageManager.getItem(utility.AUTH_TOKEN)}`;
+  if (includeAuthorization && authToken) {
+    headers['Authorization'] = `Bearer ${authToken}`;
   }
 
   return fetch(`${currentRoute.server}/v${currentRoute.version}/${currentRoute.accountShortName}/${currentRoute.projectShortName}${uri}`, {

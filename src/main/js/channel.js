@@ -1,10 +1,10 @@
+import * as store from './store.js';
 import * as utility from './utility.js';
-
 import {createRequire} from 'module';
 import {fileURLToPath as fromURL} from 'url';
 
 const AUTH_TOKEN_KEY = "com.forio.epicenter.token";
-const URL = "https://test.forio.com:9015/epicenter/websocket/cometd";
+const URL = "http://epistage1.foriodev.com:9015/epicenter/cometd";
 
 const require = createRequire(fromURL(import.meta.url));
 
@@ -16,36 +16,42 @@ class CometDChannel {
       require('cometd-nodejs-client').adapt();
     }
 
-    var lib = require('cometd');
+    let lib = require('cometd');
 
     this.cometd = new lib.CometD();
   }
 
   connect() {
 
-    console.log("1..........................................");
+    this.cometd.configure({
+      url: URL,
+    });
+
+    let handshakeProps = {};
+    let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
+
+    if (authToken) {
+      handshakeProps = {
+        ext: {
+          [AUTH_TOKEN_KEY]: authToken
+        }
+      }
+    }
 
     this.cometd.websocketEnabled = true;
 
-    this.cometd.configure({
-      url: URL
-    });
-
-    console.log("2..........................................");
-    this.cometd.handshake({
-      ext: {
-        AUTH_KEY_TOKEN: ""
+    this.cometd.handshake(handshakeProps, function (handshakeReply) {
+        if (!handshakeReply.successful) {
+          throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
+        }
       }
-    }, function (handshakeReply) {
-      console.log("3..........................................");
-      console.log(handshakeReply);
-      if (!handshakeReply.successful) {
-        throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
-      }
-    });
-
-    console.log("4..........................................");
+    );
   }
 }
 
-export const ChannelManager = new CometDChannel();
+const cometDChannel = new CometDChannel();
+
+export function connect() {
+
+  cometDChannel.connect();
+}

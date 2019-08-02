@@ -2,38 +2,35 @@ import * as router from './router.js';
 import * as store from './store.js';
 import * as utility from './utility.js';
 
-export class Authentication {
+export function authenticate(token) {
 
-  authenticate(token) {
+  return new Promise((resolve, reject) => {
+    router.POST('/authentication', token, token.withRoute(), false)
+      .then(result => {
+        store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
 
-    return new Promise((resolve, reject) => {
-      router.POST('/authentication', token, token.withRoute(), false)
-        .then(result => {
-          store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
+        resolve(result);
+      })
+      .catch(fault => {
+        reject(fault);
+      });
+  });
+}
 
-          resolve(result);
-        })
-        .catch(fault => {
-          reject(fault);
-        });
-    });
-  }
+export function upgrade(upgrade) {
 
-  upgrade(upgrade) {
+  return new Promise((resolve, reject) => {
+    router.PATCH('/authentication', upgrade, upgrade.withRoute())
+      .then(result => {
+        store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
 
-    return new Promise((resolve, reject) => {
-      router.PATCH('/authentication', upgrade, upgrade.withRoute())
-        .then(result => {
-          store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
+        resolve(result);
+      })
+      .catch(fault => {
 
-          resolve(result);
-        })
-        .catch(fault => {
-
-          reject(fault);
-        });
-    });
-  }
+        reject(fault);
+      });
+  });
 }
 
 class AuthenticationToken {
