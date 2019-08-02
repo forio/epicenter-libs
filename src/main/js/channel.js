@@ -1,7 +1,5 @@
 import * as store from './store.js';
 import * as utility from './utility.js';
-import {createRequire} from 'module';
-import {fileURLToPath as fromURL} from 'url';
 
 const AUTH_TOKEN_KEY = "com.forio.epicenter.token";
 const URL = "http://epistage1.foriodev.com:9015/epicenter/cometd";
@@ -12,33 +10,25 @@ const State = {
   CONNECTED: 2,
 };
 
-const require = createRequire(fromURL(import.meta.url));
+export class Channel {
 
-class CometDChannel {
+  constructor(cometd) {
 
-  constructor() {
-
-    if (typeof window == 'undefined') {
-      require('cometd-nodejs-client').adapt();
-    }
-
-    let lib = require('cometd');
-
-    this.cometd = new lib.CometD();
+    this.cometd = cometd;
     this.state = State.DISCONNECTED;
+
+    this.cometd.configure({
+      url: URL
+    });
   }
 
   connect() {
 
     if (this.state !== State.CONNECTED) {
       if (this.state === State.CONNECTING) {
-        setTimeout(connect, 500)
+        setTimeout(() => this.connect(), 500)
       } else {
         this.state = State.CONNECTING;
-
-        this.cometd.configure({
-          url: URL,
-        });
 
         let handshakeProps = {};
         let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
@@ -46,18 +36,20 @@ class CometDChannel {
         if (authToken) {
           handshakeProps = {
             ext: {
-              [AUTH_TOKEN_KEY]: authToken
+              [AUTH_TOKEN_KEY]: authToken,
+              ack: true,
             }
           }
         }
 
+        this.cometd.ackEnabled = true;
         this.cometd.websocketEnabled = true;
 
-        this.cometd.handshake(handshakeProps, function (handshakeReply) {
+        this.cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
-              cometDChannel.state = State.CONNECTED;
+              this.state = State.CONNECTED;
             } else {
-              cometDChannel.state = State.DISCONNECTED;
+              this.state = State.DISCONNECTED;
               throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
             }
           }
@@ -65,11 +57,4 @@ class CometDChannel {
       }
     }
   }
-}
-
-const cometDChannel = new CometDChannel();
-
-export function connect() {
-
-  cometDChannel.connect();
 }

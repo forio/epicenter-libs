@@ -4,8 +4,6 @@
   "type": "module",
   "main": "epicenter.js",
   "dependencies": {
-    "cometd": "^4.0.4",
-    "cometd-nodejs-client": "^1.0.4",
     "es6-promise": "^4.2.6",
     "isomorphic-fetch": "^2.2.1"
   }
