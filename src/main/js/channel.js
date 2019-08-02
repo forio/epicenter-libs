@@ -19,33 +19,38 @@ class CometDChannel {
     let lib = require('cometd');
 
     this.cometd = new lib.CometD();
+    this.connected = false;
   }
 
   connect() {
 
-    this.cometd.configure({
-      url: URL,
-    });
+    if (!this.connected) {
+      this.cometd.configure({
+        url: URL,
+      });
 
-    let handshakeProps = {};
-    let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
+      let handshakeProps = {};
+      let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
 
-    if (authToken) {
-      handshakeProps = {
-        ext: {
-          [AUTH_TOKEN_KEY]: authToken
+      if (authToken) {
+        handshakeProps = {
+          ext: {
+            [AUTH_TOKEN_KEY]: authToken
+          }
         }
       }
+
+      this.cometd.websocketEnabled = true;
+
+      this.cometd.handshake(handshakeProps, function (handshakeReply) {
+          if (handshakeReply.successful) {
+            this.connected = true;
+          } else {
+            throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
+          }
+        }
+      );
     }
-
-    this.cometd.websocketEnabled = true;
-
-    this.cometd.handshake(handshakeProps, function (handshakeReply) {
-        if (!handshakeReply.successful) {
-          throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
-        }
-      }
-    );
   }
 }
 
