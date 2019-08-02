@@ -5,6 +5,8 @@ epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenti
     console.log(foo);
 
     epicenter.channel.connect();
+    epicenter.channel.connect();
+    epicenter.channel.connect();
 
     /*
     epicenter.authentication.upgrade(new epicenter.authentication.AdminUpgrade("berkteam"))
