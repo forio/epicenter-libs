@@ -1,8 +1,9 @@
+import * as router from './router.js';
 import * as store from './store.js';
 import * as utility from './utility.js';
 
 const AUTH_TOKEN_KEY = "com.forio.epicenter.token";
-const URL = "http://epistage1.foriodev.com:9015/epicenter/cometd";
+const COMETD_URL_POSTSCRIPT = ":9015/epicenter/cometd";
 
 const State = {
   DISCONNECTED: 0,
@@ -21,7 +22,7 @@ export class Channel {
     this.#state = State.DISCONNECTED;
 
     this.#cometd.configure({
-      url: URL,
+      url: router.getApiHttpScheme() + "://" + router.getApiHttpHost() + COMETD_URL_POSTSCRIPT,
       logLevel: logLevel
     });
   }

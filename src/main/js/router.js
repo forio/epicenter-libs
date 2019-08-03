@@ -37,6 +37,16 @@ class Route {
   }
 }
 
+export function getApiHttpHost() {
+
+  return "epistage1.foriodev.com";
+}
+
+export function getApiHttpScheme() {
+
+  return "http";
+}
+
 export class RouteBuilder {
 
   constructor() {
@@ -74,7 +84,7 @@ export class RouteBuilder {
   }
 }
 
-export const route = new RouteBuilder().withServer('http://epistage1.foriodev.com').withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
+export const route = new RouteBuilder().withServer(getApiHttpScheme() + "://" + getApiHttpHost()).withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
 
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
