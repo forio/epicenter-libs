@@ -54,9 +54,22 @@ export class ChannelManager {
     this.#cometd.addListener("/meta/handshake", (handshakeReply) => {
       if (handshakeReply.successful) {
         if (channels) {
+
+          let subscribeProps = {};
+          let authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
+
+          if (authToken) {
+            subscribeProps = {
+              ext: {
+                [AUTH_TOKEN_KEY]: authToken,
+                ack: true,
+              }
+            }
+          }
+
           this.#cometd.batch(() => {
             channels.forEach((channel) => {
-              this.#cometd.subscribe(channel.compose(), channel.messageCallback,
+              this.#cometd.subscribe(channel.compose(), channel.messageCallback, subscribeProps,
                 (subscribeReply) => {
                   if (!subscribeReply.successful) {
                     throw new utility.EpicenterError(`Unable to subscribe to the channel ${channel.compose()}`);

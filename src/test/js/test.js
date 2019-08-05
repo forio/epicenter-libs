@@ -12,7 +12,7 @@ epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenti
     console.log(foo);
 
     let cometd = new lib.CometD();
-    let channelManager = new epicenter.channel.ChannelManager(cometd, 'debug', new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.PROJECT, "projectKey", epicenter.utility.PushCategory.PRESENCE, (message) => console.log("$$$$$$$$$$$$$$$$:" + message)));
+    let channelManager = new epicenter.channel.ChannelManager(cometd, 'debug', new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.PROJECT, "0000016c5387b8d2acbe17f8e6da0ca0a48e", epicenter.utility.PushCategory.PRESENCE, (message) => console.log("$$$$$$$$$$$$$$$$:" + message)));
 
     channelManager.handshake();
 
