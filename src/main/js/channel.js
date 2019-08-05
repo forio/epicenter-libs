@@ -3,6 +3,8 @@ import * as store from './store.js';
 import * as utility from './utility.js';
 
 /*
+  Example of use with dojo and the reload extension, similar code should work for jquery and other extensions (if imported, the 'ack' extension is properly initialized by default)...
+
         <script type="text/javascript" src="dojo.js"></script>
         <script type="text/javascript">
             require(["dojo", "dojo/on", "dojox/cometd", "dojox/cometd/reload", "dojo/domReady!"],
