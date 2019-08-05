@@ -3,13 +3,14 @@ import * as store from './store.js';
 import * as utility from './utility.js';
 
 /*
-  Example of use with dojo and the reload extension, similar code should work for jquery and other extensions (if imported, the 'ack' extension is properly initialized by default)...
+  Example of use with dojo and the reload extension, similar code should work for jquery and other extensions.
+  if imported, the 'ack' extension may be properly initialized by setting the 'requireAcknowledgement' flag)...
 
         <script type="text/javascript" src="dojo.js"></script>
         <script type="text/javascript">
             require(["dojo", "dojo/on", "dojox/cometd", "dojox/cometd/reload", "dojo/domReady!"],
             function (dojo, on, cometd) {
-              let channelManager = new epicenter.channel.ChannelManager(cometd, 'debug',
+              let channelManager = new epicenter.channel.ChannelManager(cometd, 'error', true,
                 new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.PROJECT, "0000016c5387b8d2acbe17f8e6da0ca0a48e", epicenter.utility.PushCategory.PRESENCE,
                   (message) => console.log(message)));
 
