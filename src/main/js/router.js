@@ -49,38 +49,40 @@ export function getApiHttpScheme() {
 
 export class RouteBuilder {
 
+  #route;
+
   constructor() {
 
-    this.route = new Route();
+    this.#route = new Route();
   }
 
   withServer(server) {
-    this.route.server = server;
+    this.#route.server = server;
 
     return this;
   }
 
   withVersion(version) {
-    this.route.version = version;
+    this.#route.version = version;
 
     return this;
   }
 
   withAccountShortName(accountShortName) {
-    this.route.accountShortName = accountShortName;
+    this.#route.accountShortName = accountShortName;
 
     return this;
   }
 
   withProjectShortName(projectShortName) {
-    this.route.projectShortName = projectShortName;
+    this.#route.projectShortName = projectShortName;
 
     return this;
   }
 
   build() {
 
-    return this.route;
+    return this.#route;
   }
 }
 

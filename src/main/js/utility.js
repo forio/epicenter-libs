@@ -1,5 +1,21 @@
 export const AUTH_TOKEN = Symbol('authorization token');
 
+export const ScopeBoundary = {
+  PROJECT: "project",
+  GROUP: "group",
+  EPISODE: "episode",
+  WORLD: "world",
+  RUN: "run"
+};
+
+export const PushCategory = {
+  CONSENSUS: "consensus",
+  GENERAL: "general",
+  PRESENCE: "presence",
+  RUN: "run",
+  SYSTEM: "system"
+};
+
 export class EpicenterError extends Error {
 
   constructor(message) {

@@ -1,32 +1,34 @@
 class SessionStore {
 
+  #store;
+
   constructor() {
 
     if ((typeof window !== 'undefined') && (typeof window.sessionStorage !== 'undefined') && window.sessionStorage) {
-      this.store = window.sessionStorage;
+      this.#store = window.sessionStorage;
     } else {
-      this.store = new Map();
+      this.#store = new Map();
     }
   }
 
   getItem(key) {
 
-    return this.store.get(key);
+    return this.#store.get(key);
   }
 
   setItem(key, value) {
 
-    this.store.set(key, value);
+    this.#store.set(key, value);
   }
 
   removeItem(key) {
 
-    this.store.delete(key);
+    this.#store.delete(key);
   }
 
   clear() {
 
-    this.store.clear();
+    this.#store.clear();
   }
 }
 
