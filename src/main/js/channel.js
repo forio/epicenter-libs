@@ -32,7 +32,7 @@ export class Channel {
 
   compose() {
 
-    return "/" + this.#scopeBoundary + "/" + this.#scopeKey + "/" + this.#category;
+    return "/" + this.#scopeBoundary + "/" + this.#scopeKey + "/" + this.#pushCategory;
   }
 }
 
@@ -41,7 +41,7 @@ export class ChannelManager {
   #cometd;
   #state;
 
-  constructor(cometd, logLevel = 'error', callback, ...channels) {
+  constructor(cometd, logLevel = 'error', ...channels) {
 
     this.#cometd = cometd;
     this.#state = State.DISCONNECTED;
@@ -53,14 +53,18 @@ export class ChannelManager {
 
     this.#cometd.addListener("/meta/handshake", (handshakeReply) => {
       if (handshakeReply.successful) {
-        channels.forEach((channel) => {
-          this.#cometd.subscribe(channel.compose(), channel.messageCallback,
-            (subscribeReply) => {
-              if (!subscribeReply.successful) {
-                throw new utility.EpicenterError(`Unable to subscribe to the channel ${channel.compose()}`);
-              }
+        if (channels) {
+          this.#cometd.batch(() => {
+            channels.forEach((channel) => {
+              this.#cometd.subscribe(channel.compose(), channel.messageCallback,
+                (subscribeReply) => {
+                  if (!subscribeReply.successful) {
+                    throw new utility.EpicenterError(`Unable to subscribe to the channel ${channel.compose()}`);
+                  }
+                });
             });
-        });
+          });
+        }
       }
     });
   }

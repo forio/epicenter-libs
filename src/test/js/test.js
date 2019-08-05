@@ -11,9 +11,8 @@ epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenti
   .then(foo => {
     console.log(foo);
 
-
     let cometd = new lib.CometD();
-    let channelManager = new epicenter.channel.ChannelManager(cometd, 'debug');
+    let channelManager = new epicenter.channel.ChannelManager(cometd, 'debug', new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.PROJECT, "projectKey", epicenter.utility.PushCategory.PRESENCE, (message) => console.log("$$$$$$$$$$$$$$$$:" + message)));
 
     channelManager.handshake();
 
