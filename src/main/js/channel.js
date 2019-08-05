@@ -58,11 +58,13 @@ export class ChannelManager {
 
   #cometd;
   #state;
+  #requireAcknowledgement;
 
-  constructor(cometd, logLevel = 'error', ...channels) {
+  constructor(cometd, logLevel = 'error', requireAcknowledgement = false, ...channels) {
 
     this.#cometd = cometd;
     this.#state = State.DISCONNECTED;
+    this.#requireAcknowledgement = requireAcknowledgement;
 
     this.#cometd.configure({
       url: router.getApiHttpScheme() + "://" + router.getApiHttpHost() + COMETD_URL_POSTSCRIPT,
@@ -79,8 +81,7 @@ export class ChannelManager {
           if (authToken) {
             subscribeProps = {
               ext: {
-                [AUTH_TOKEN_KEY]: authToken,
-                ack: true,
+                [AUTH_TOKEN_KEY]: authToken
               }
             }
           }
@@ -120,12 +121,12 @@ export class ChannelManager {
           handshakeProps = {
             ext: {
               [AUTH_TOKEN_KEY]: authToken,
-              ack: true,
+              ack: this.#requireAcknowledgement,
             }
           }
         }
 
-        this.#cometd.ackEnabled = true;
+        this.#cometd.ackEnabled = this.#requireAcknowledgement;
         this.#cometd.websocketEnabled = true;
 
         this.#cometd.handshake(handshakeProps, (handshakeReply) => {
