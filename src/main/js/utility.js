@@ -1,4 +1,4 @@
-export const AUTH_TOKEN = Symbol('authorization token');
+export const AUTH_TOKEN = Symbol('com.forio.epicenter.token');
 
 export const ScopeBoundary = {
   PROJECT: "project",
