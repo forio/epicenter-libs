@@ -12,7 +12,10 @@ epicenter.authentication.authenticate(new epicenter.authentication.UserAuthentic
     console.log(foo);
 
     let cometd = new lib.CometD();
-    let channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.GROUP, "0000016c5387b8d2acbe17f8e6da0ca0a5a2", epicenter.utility.PushCategory.PRESENCE, (message) => console.log("$$$$$$$$$$$$$$$$:" + JSON.stringify(message))));
+    let channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.GROUP, "0000016c5387b8d2acbe17f8e6da0ca0a5a2", epicenter.utility.PushCategory.PRESENCE, (message) => {
+      console.log("$$$$$$$$$$$$$$$$0:" + JSON.stringify(message));
+      console.log("$$$$$$$$$$$$$$$$1:" + message.type);
+    }));
 
     channelManager.handshake();
 

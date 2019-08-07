@@ -89,7 +89,7 @@ export class ChannelManager {
 
           this.#cometd.batch(() => {
             channels.forEach((channel) => {
-              this.#cometd.subscribe(channel.compose(), channel.messageCallback, subscribeProps,
+              this.#cometd.subscribe(channel.compose(), (message) => channel.messageCallback(JSON.parse(message.data)), subscribeProps,
                 (subscribeReply) => {
                   if (!subscribeReply.successful) {
                     throw new utility.EpicenterError(`Unable to subscribe to the channel ${channel.compose()}`);
