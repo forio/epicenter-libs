@@ -4,12 +4,13 @@ export class Config {
 
   constructor() {
 
+    this._apiVersion = 3;
+
     if (typeof window == 'undefined') {
       this._apiScheme = "http";
       this._apiHost = "epistage1.foriodev.com";
-      this._apiVersion = 3;
     } else {
-      fetch(window.location.host + "/config", {
+      fetch(`${window.location.host}/epicenter/v${this._apiVersion}/config`, {
         method: "GET",
         cache: 'no-cache',
         redirect: 'follow',
@@ -19,9 +20,8 @@ export class Config {
 
         if (contentType && contentType.includes('application/json')) {
           if ((response.status >= 200) && (response.status < 400)) {
-            this._apiScheme = response.body.apiScheme;
-            this._apiHost = response.body.apiHost;
-            this._apiVersion = response.body.apiVersion;
+            this._apiScheme = response.body.api.host;
+            this._apiHost = response.body.api.protocol;
           } else {
             throw new utility.Fault(response.status, error);
           }
