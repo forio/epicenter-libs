@@ -1,6 +1,12 @@
 import 'isomorphic-fetch';
+import * as config from './config.js';
 import * as store from './store.js';
 import * as utility from './utility.js';
+
+const DEFAULT_CONFIGURATION = new config.Config();
+
+const DEFAULT_ACCOUNT_SHORT_NAME = "epicenter";
+const DEFAULT_PROJECT_SHORT_NAME = "manager";
 
 class Route {
 
@@ -37,14 +43,19 @@ class Route {
   }
 }
 
-export function getApiHttpHost() {
-
-  return "epistage1.foriodev.com";
-}
-
 export function getApiHttpScheme() {
 
-  return "http";
+  return DEFAULT_CONFIGURATION.apiScheme;
+}
+
+export function getApiHttpHost() {
+
+  return DEFAULT_CONFIGURATION.apiHost;
+}
+
+export function getAPIVersion() {
+
+  return DEFAULT_CONFIGURATION.apiVersion;
 }
 
 export class RouteBuilder {
@@ -86,7 +97,7 @@ export class RouteBuilder {
   }
 }
 
-export const route = new RouteBuilder().withServer(getApiHttpScheme() + "://" + getApiHttpHost()).withVersion(3).withAccountShortName('epicenter').withProjectShortName('manager').build();
+export const route = new RouteBuilder().withServer(getApiHttpScheme() + "://" + getApiHttpHost()).withVersion(getAPIVersion()).withAccountShortName(DEFAULT_ACCOUNT_SHORT_NAME).withProjectShortName(DEFAULT_PROJECT_SHORT_NAME).build();
 
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
