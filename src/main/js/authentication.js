@@ -4,41 +4,41 @@ import * as utility from './utility.js';
 
 export function authenticate(token) {
 
-  return new Promise((resolve, reject) => {
-    router.POST('/authentication', token, token.withRoute(), false)
-      .then(result => {
-        store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
+    return new Promise((resolve, reject) => {
+        router.POST('/authentication', token, token.withRoute(), false)
+            .then((result) => {
+                store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
 
-        resolve(result);
-      })
-      .catch(fault => {
-        reject(fault);
-      });
-  });
+                resolve(result);
+            })
+            .catch((fault) => {
+                reject(fault);
+            });
+    });
 }
 
 export function upgrade(upgrade) {
 
-  return new Promise((resolve, reject) => {
-    router.PATCH('/authentication', upgrade, upgrade.withRoute())
-      .then(result => {
-        store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
+    return new Promise((resolve, reject) => {
+        router.PATCH('/authentication', upgrade, upgrade.withRoute())
+            .then((result) => {
+                store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
 
-        resolve(result);
-      })
-      .catch(fault => {
+                resolve(result);
+            })
+            .catch((fault) => {
 
-        reject(fault);
-      });
-  });
+                reject(fault);
+            });
+    });
 }
 
 class AuthenticationToken {
 
-  constructor(objectType) {
+    constructor(objectType) {
 
-    this.objectType = objectType;
-  }
+        this.objectType = objectType;
+    }
 }
 
 export class AdminAuthenticationToken extends AuthenticationToken {
@@ -47,92 +47,92 @@ export class AdminAuthenticationToken extends AuthenticationToken {
 
   constructor(handle, password, accountShortName) {
 
-    super('admin');
+      super('admin');
 
-    this.handle = handle;
-    this.password = password;
+      this.handle = handle;
+      this.password = password;
 
-    this.#accountShortName = accountShortName;
+      this.#accountShortName = accountShortName;
   }
 
   withRoute() {
 
 
-    return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
+      return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
   }
 }
 
 export class UserAuthenticationToken extends AuthenticationToken {
 
-  #accountShortName;
-  #projectShortName;
+    #accountShortName;
+    #projectShortName;
 
-  constructor(accountShortName, projectShortName, modality, handle, password, groupKey, mfaCode) {
+    constructor(accountShortName, projectShortName, modality, handle, password, groupKey, mfaCode) {
 
-    super('user');
+        super('user');
 
-    this.modality = modality;
-    this.handle = handle;
-    this.password = password;
-    this.groupKey = groupKey;
-    this.mfaCode = mfaCode;
+        this.modality = modality;
+        this.handle = handle;
+        this.password = password;
+        this.groupKey = groupKey;
+        this.mfaCode = mfaCode;
 
-    this.#accountShortName = accountShortName;
-    this.#projectShortName = projectShortName;
-  }
+        this.#accountShortName = accountShortName;
+        this.#projectShortName = projectShortName;
+    }
 
-  withRoute() {
+    withRoute() {
 
-    return new router.RouteBuilder().withAccountShortName(this.#accountShortName).withProjectShortName(this.#projectShortName).build();
-  }
+        return new router.RouteBuilder().withAccountShortName(this.#accountShortName).withProjectShortName(this.#projectShortName).build();
+    }
 }
 
 class Upgrade {
 
-  constructor(objectType) {
+    constructor(objectType) {
 
-    this.objectType = objectType;
-  }
+        this.objectType = objectType;
+    }
 }
 
 export class AdminUpgrade extends Upgrade {
 
-  #accountShortName = null;
+    #accountShortName = null;
 
-  constructor(accountShortName) {
+    constructor(accountShortName) {
 
-    super('admin');
+        super('admin');
 
-    this.#accountShortName = accountShortName;
-  }
+        this.#accountShortName = accountShortName;
+    }
 
-  withRoute() {
+    withRoute() {
 
 
-    return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
-  }
+        return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
+    }
 }
 
 export class UserUpgrade extends Upgrade {
 
-  #accountShortName;
-  #projectShortName;
+    #accountShortName;
+    #projectShortName;
 
-  constructor(accountShortName, projectShortName, groupKey) {
+    constructor(accountShortName, projectShortName, groupKey) {
 
-    super('user');
+        super('user');
 
 
-    this.groupKey = groupKey;
+        this.groupKey = groupKey;
 
-    this.#accountShortName = accountShortName;
-    this.#projectShortName = projectShortName;
-  }
+        this.#accountShortName = accountShortName;
+        this.#projectShortName = projectShortName;
+    }
 
-  withRoute() {
+    withRoute() {
 
-    return new router.RouteBuilder().withAccountShortName(this.#accountShortName).withProjectShortName(this.#projectShortName).build();
-  }
+        return new router.RouteBuilder().withAccountShortName(this.#accountShortName).withProjectShortName(this.#projectShortName).build();
+    }
 }
 
 

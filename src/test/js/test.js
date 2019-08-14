@@ -7,17 +7,17 @@ const require = createRequire(fromURL(import.meta.url));
 require('cometd-nodejs-client').adapt();
 const lib = require('cometd');
 
-epicenter.authentication.authenticate(new epicenter.authentication.UserAuthenticationToken("berkent", "foobar", "NONE", "david.berkman", "passw0rd", "0000016c5387b8d2acbe17f8e6da0ca0a5a2", null))
-  .then(foo => {
-    console.log(foo);
+epicenter.authentication.authenticate(new epicenter.authentication.UserAuthenticationToken('berkent', 'foobar', 'NONE', 'david.berkman', 'passw0rd', '0000016c5387b8d2acbe17f8e6da0ca0a5a2', null))
+    .then((foo) => {
+        console.log(foo);
 
-    let cometd = new lib.CometD();
-    let channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.GROUP, "0000016c5387b8d2acbe17f8e6da0ca0a5a2", epicenter.utility.PushCategory.PRESENCE, (message) => {
-      console.log("$$$$$$$$$$$$$$$$0:" + JSON.stringify(message));
-      console.log("$$$$$$$$$$$$$$$$1:" + message.type);
-    }));
+        const cometd = new lib.CometD();
+        const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.GROUP, '0000016c5387b8d2acbe17f8e6da0ca0a5a2', epicenter.utility.PushCategory.PRESENCE, (message) => {
+            console.log(`$$$$$$$$$$$$$$$$0:${ JSON.stringify(message)}`);
+            console.log(`$$$$$$$$$$$$$$$$1:${ message.type}`);
+        }));
 
-    channelManager.handshake();
+        channelManager.handshake();
 
     /*
     epicenter.authentication.upgrade(new epicenter.authentication.AdminUpgrade("berkteam"))
@@ -30,8 +30,8 @@ epicenter.authentication.authenticate(new epicenter.authentication.UserAuthentic
       })
       .catch(fault => console.log(JSON.stringify(fault)));
      */
-  })
-  .catch(fault => console.log(JSON.stringify(fault)));
+    })
+    .catch((fault) => console.log(JSON.stringify(fault)));
 
 /*
 epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenticationToken("dberkman@forio.com", "logos1174!"))
