@@ -3,7 +3,7 @@
   "dependencies": {
     "cometd": "^4.0.4",
     "cometd-nodejs-client": "^1.0.4",
-    "epicenter-libs": "file:../../main/js"
+    "epicenter-libs": "file:../../src"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.2",
