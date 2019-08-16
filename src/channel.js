@@ -51,7 +51,7 @@ export class Channel {
 
     compose() {
 
-        return `/${ this.#scopeBoundary }/${ this.#scopeKey }/${ this.#pushCategory}`;
+        return `/${this.#scopeBoundary}/${this.#scopeKey}/${this.#pushCategory}`;
     }
 }
 
@@ -105,6 +105,12 @@ export class ChannelManager {
     reload() {
 
         this.#cometd.reload();
+        // window.sessionStorage.setItem(stateKey, JSON.stringify({
+        //     username: _username,
+        //     useServer: _id('useServer').prop('checked'),
+        //     altServer: _id('altServer').val()
+        // }));
+        this.#cometd.getTransport().abort();
     }
 
     handshake() {

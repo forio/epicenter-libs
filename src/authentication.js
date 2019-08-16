@@ -8,7 +8,6 @@ export function authenticate(token) {
         router.POST('/authentication', token, token.withRoute(), false)
             .then((result) => {
                 store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
-
                 resolve(result);
             })
             .catch((fault) => {
@@ -43,23 +42,25 @@ class AuthenticationToken {
 
 export class AdminAuthenticationToken extends AuthenticationToken {
 
-  #accountShortName = null;
+    #accountShortName = null;
 
-  constructor(handle, password, accountShortName) {
+    constructor(handle, password, accountShortName) {
 
-      super('admin');
+        super('admin');
 
-      this.handle = handle;
-      this.password = password;
+        this.handle = handle;
+        this.password = password;
 
-      this.#accountShortName = accountShortName;
-  }
+        this.#accountShortName = accountShortName;
+    }
 
-  withRoute() {
+    withRoute() {
 
 
-      return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
-  }
+        return (!this.#accountShortName) ?
+            null :
+            new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
+    }
 }
 
 export class UserAuthenticationToken extends AuthenticationToken {
@@ -68,8 +69,8 @@ export class UserAuthenticationToken extends AuthenticationToken {
     #projectShortName;
 
     constructor(accountShortName, projectShortName, modality, handle, password, groupKey, mfaCode) {
-
         super('user');
+
 
         this.modality = modality;
         this.handle = handle;
@@ -83,9 +84,13 @@ export class UserAuthenticationToken extends AuthenticationToken {
 
     withRoute() {
 
-        return new router.RouteBuilder().withAccountShortName(this.#accountShortName).withProjectShortName(this.#projectShortName).build();
+        return new router.RouteBuilder()
+            .withAccountShortName(this.#accountShortName)
+            .withProjectShortName(this.#projectShortName)
+            .build();
     }
 }
+
 
 class Upgrade {
 
@@ -107,8 +112,6 @@ export class AdminUpgrade extends Upgrade {
     }
 
     withRoute() {
-
-
         return (!this.#accountShortName) ? null : new router.RouteBuilder().withAccountShortName(this.#accountShortName).build();
     }
 }

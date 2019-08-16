@@ -115,7 +115,6 @@ export function PATCH(uri, body, partialRoute, includeAuthorization = true) {
 }
 
 export function POST(uri, body, partialRoute, includeAuthorization = true) {
-
     return request('POST', uri, body, partialRoute, includeAuthorization);
 }
 
@@ -125,7 +124,6 @@ export function PUT(uri, body, partialRoute, includeAuthorization = true) {
 }
 
 function request(method, uri, body, partialRoute, includeAuthorization) {
-
     const currentRoute = (!partialRoute) ? route : new RouteBuilder()
         .withServer(partialRoute.server ? partialRoute.server : route.server)
         .withVersion(partialRoute.version ? partialRoute.version : route.version)

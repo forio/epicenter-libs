@@ -4,7 +4,7 @@
   "type": "module",
   "main": "epicenter.js",
   "scripts": {
-    "build": "webpack --config webpack.js --mode=development"
+    "build": "webpack --config webpack.js --watch --mode=development"
   },
   "dependencies": {
     "es6-promise": "^4.2.6",

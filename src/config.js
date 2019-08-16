@@ -6,7 +6,7 @@ export class Config {
 
         this._apiVersion = 3;
 
-        if (typeof window === 'undefined') {
+        if (typeof window === 'undefined' || window.location.protocol !== 'https') {
             this._apiScheme = 'http';
             this._apiHost = 'epistage1.foriodev.com';
         } else {
