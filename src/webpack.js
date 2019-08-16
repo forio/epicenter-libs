@@ -10,6 +10,8 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'public'),
         filename: 'epicenter.js',
+        library: 'epicenter',
+        libraryTarget: 'umd',
     },
     // resolve: {
     //     alias: {
