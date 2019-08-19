@@ -111,7 +111,7 @@ export class ChannelManager {
         //     altServer: _id('altServer').val()
         // }));
         this.#cometd.getTransport().abort();
-    }
+    };
 
     handshake() {
 
