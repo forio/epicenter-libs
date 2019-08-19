@@ -102,7 +102,7 @@ export class ChannelManager {
         });
     }
 
-    reload() {
+    reload = () => {
 
         this.#cometd.reload();
         // window.sessionStorage.setItem(stateKey, JSON.stringify({
