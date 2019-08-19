@@ -68,7 +68,7 @@ export class ChannelManager {
         this.#requireAcknowledgement = requireAcknowledgement;
 
         this.#cometd.configure({
-            url: `${router.getApiHttpScheme() }://${ router.getApiHttpHost() }${COMETD_URL_POSTSCRIPT}`,
+            url: `${router.getApiHttpScheme()}://${router.getApiHttpHost()}${COMETD_URL_POSTSCRIPT}`,
             logLevel: logLevel,
         });
 
@@ -143,8 +143,7 @@ export class ChannelManager {
                         this.#state = State.DISCONNECTED;
                         throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
                     }
-                }
-                );
+                });
             }
         }
     }

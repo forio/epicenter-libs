@@ -1,10 +1,5 @@
 export const AUTH_TOKEN = Symbol('com.forio.epicenter.token');
 
-/* eslint-disable no-new-func */
-export const isNode = new Function('try {return this===global;}catch(e){return false;}');
-export const isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
-
-
 export const ScopeBoundary = {
     PROJECT: 'project',
     GROUP: 'group',
@@ -66,6 +61,22 @@ export class Result {
         this.status = status;
         this.headers = headers;
         this.body = body;
+    }
+}
+
+export function isNode() {
+    try {
+        return this === global;
+    } catch (e) {
+        return false;
+    }
+}
+
+export function isBrowser() {
+    try {
+        return this === window;
+    } catch (e) {
+        return false;
     }
 }
 
