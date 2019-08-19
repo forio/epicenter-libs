@@ -65,19 +65,11 @@ export class Result {
 }
 
 export function isNode() {
-    try {
-        return this === global;
-    } catch (e) {
-        return false;
-    }
+    return (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
 }
 
 export function isBrowser() {
-    try {
-        return this === window;
-    } catch (e) {
-        return false;
-    }
+    return (typeof window !== 'undefined');
 }
 
 export function EpicenterPromise(promise) {
