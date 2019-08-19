@@ -1,4 +1,4 @@
-import { isNode } from './utility';
+import { isNode } from './utility.js';
 
 class NodeStore {
     #store = new Map();
