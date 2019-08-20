@@ -18,6 +18,7 @@ epicenter.authentication.authenticate(new epicenter.authentication.UserAuthentic
         }));
 
         channelManager.handshake();
+        console.log("COOOOOOMET!!!!!");
 
     /*
     epicenter.authentication.upgrade(new epicenter.authentication.AdminUpgrade("berkteam"))

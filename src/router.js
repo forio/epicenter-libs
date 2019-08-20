@@ -97,7 +97,7 @@ export class RouteBuilder {
     }
 }
 
-export const route = new RouteBuilder().withServer(`${getApiHttpScheme() }://${ getApiHttpHost()}`).withVersion(getAPIVersion()).withAccountShortName(DEFAULT_ACCOUNT_SHORT_NAME).withProjectShortName(DEFAULT_PROJECT_SHORT_NAME).build();
+export const route = new RouteBuilder().withServer(`${getApiHttpScheme()}://${getApiHttpHost()}`).withVersion(getAPIVersion()).withAccountShortName(DEFAULT_ACCOUNT_SHORT_NAME).withProjectShortName(DEFAULT_PROJECT_SHORT_NAME).build();
 
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
@@ -123,7 +123,7 @@ export function PUT(uri, body, partialRoute, includeAuthorization = true) {
     return request('PUT', uri, body, partialRoute, includeAuthorization);
 }
 
-function request(method, uri, body, partialRoute, includeAuthorization) {
+async function request(method, uri, body, partialRoute, includeAuthorization) {
     const currentRoute = (!partialRoute) ? route : new RouteBuilder()
         .withServer(partialRoute.server ? partialRoute.server : route.server)
         .withVersion(partialRoute.version ? partialRoute.version : route.version)
@@ -139,27 +139,24 @@ function request(method, uri, body, partialRoute, includeAuthorization) {
         headers.Authorization = `Bearer ${authToken}`;
     }
 
-    return fetch(`${currentRoute.server}/v${currentRoute.version}/${currentRoute.accountShortName}/${currentRoute.projectShortName}${uri}`, {
+    let response = await fetch(`${currentRoute.server}/v${currentRoute.version}/${currentRoute.accountShortName}/${currentRoute.projectShortName}${uri}`, {
         method: method,
         cache: 'no-cache',
         headers: headers,
         redirect: 'follow',
-        body: body ? JSON.stringify(body) : null,
-    }).then((response) => {
-
-        const contentType = response.headers.get('content-type');
-
-        if (contentType && contentType.includes('application/json')) {
-
-            return new Promise((resolve, reject) => {
-                if ((response.status >= 200) && (response.status < 400)) {
-                    response.json().then((body) => resolve(new utility.Result(response.status, response.headers, body)));
-                } else {
-                    response.json().then((error) => reject(new utility.Fault(response.status, error)));
-                }
-            });
-        } else {
-            throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
-        }
+        body: body ? JSON.stringify(body) : null
     });
+
+    const contentType = response.headers.get('content-type');
+
+    if (contentType && contentType.includes('application/json')) {
+        if ((response.status >= 200) && (response.status < 400)) {
+
+            return new utility.Result(response.status, response.headers, await response.json());
+        } else {
+            throw new utility.Fault(response.status, await response.json());
+        }
+    } else {
+        throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+    }
 }

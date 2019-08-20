@@ -2,34 +2,22 @@ import * as router from './router.js';
 import * as store from './store.js';
 import * as utility from './utility.js';
 
-export function authenticate(token) {
+export async function authenticate(token) {
 
-    return new Promise((resolve, reject) => {
-        router.POST('/authentication', token, token.withRoute(), false)
-            .then((result) => {
-                store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
-                resolve(result);
-            })
-            .catch((fault) => {
-                reject(fault);
-            });
-    });
+    let response = await router.POST('/authentication', token, token.withRoute(), false);
+
+    store.StorageManager.setItem(utility.AUTH_TOKEN, response.body.session);
+
+    return response;
 }
 
-export function upgrade(upgrade) {
+export async function upgrade(upgrade) {
 
-    return new Promise((resolve, reject) => {
-        router.PATCH('/authentication', upgrade, upgrade.withRoute())
-            .then((result) => {
-                store.StorageManager.setItem(utility.AUTH_TOKEN, result.body.session);
+    let response = await router.PATCH('/authentication', upgrade, upgrade.withRoute());
 
-                resolve(result);
-            })
-            .catch((fault) => {
+    store.StorageManager.setItem(utility.AUTH_TOKEN, response.body.session);
 
-                reject(fault);
-            });
-    });
+    return response;
 }
 
 class AuthenticationToken {

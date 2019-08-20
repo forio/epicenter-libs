@@ -1,20 +1,19 @@
 import * as router from './router.js';
-import * as utility from './utility.js';
 
-export function create(createDto) {
+export async function create(createDto) {
 
-    return utility.EpicenterPromise(router.POST('/account', createDto, null));
+    return await router.POST('/account', createDto, null);
 }
 
 // should take an updater
-export function update(updateDto) {
+export async function update(updateDto) {
 
-    return utility.EpicenterPromise(router.PATCH('/account', updateDto, null));
+    return await router.PATCH('/account', updateDto, null);
 }
 
-export function remove(accountShortName) {
+export async function remove(accountShortName) {
 
-    return utility.EpicenterPromise(router.DELETE('/account', new router.RouteBuilder().withAccountShortName(accountShortName).build()));
+    return await router.DELETE('/account', new router.RouteBuilder().withAccountShortName(accountShortName).build());
 }
 
 class AccountCreateInDto {
