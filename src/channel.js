@@ -59,6 +59,7 @@ export class ChannelManager {
 
     #cometd;
     #state;
+    #url;
     #requireAcknowledgement;
 
     constructor(cometd, logLevel = 'error', requireAcknowledgement = false, ...channels) {
@@ -66,9 +67,10 @@ export class ChannelManager {
         this.#cometd = cometd;
         this.#state = State.DISCONNECTED;
         this.#requireAcknowledgement = requireAcknowledgement;
+        this.#url = `${router.getApiHttpScheme()}://${router.getApiHttpHost()}${COMETD_URL_POSTSCRIPT}`;
 
         this.#cometd.configure({
-            url: `${router.getApiHttpScheme()}://${router.getApiHttpHost()}${COMETD_URL_POSTSCRIPT}`,
+            url: this.#url,
             logLevel: logLevel,
         });
 
@@ -141,7 +143,7 @@ export class ChannelManager {
                         this.#state = State.CONNECTED;
                     } else {
                         this.#state = State.DISCONNECTED;
-                        throw new utility.EpicenterError(`Unable to connect to the CometD server at ${URL}`);
+                        throw new utility.EpicenterError(`Unable to connect to the CometD server at ${this.#url}`);
                     }
                 });
             }
