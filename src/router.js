@@ -99,6 +99,22 @@ export class RouteBuilder {
 
 export const route = new RouteBuilder().withServer(`${getApiHttpScheme()}://${getApiHttpHost()}`).withVersion(getAPIVersion()).withAccountShortName(DEFAULT_ACCOUNT_SHORT_NAME).withProjectShortName(DEFAULT_PROJECT_SHORT_NAME).build();
 
+export function toRoute(obj) {
+
+    let routeBuilder = new RouteBuilder();
+
+    if (obj.accountShortName) {
+        routeBuilder.withAccountShortName(obj.accountShortName);
+        delete obj.accountShortName;
+    }
+    if (obj.projectShortName) {
+        routeBuilder.withProjectShortName(obj.projectShortName);
+        delete obj.projectShortName;
+    }
+
+    return routeBuilder.build();
+}
+
 export function GET(uri, partialRoute, includeAuthorization = true) {
 
     return request('GET', uri, null, partialRoute, includeAuthorization);

@@ -2,34 +2,36 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Test for Browsers</title>
-    <script type="text/javascript" src="cometd/cometd.js"></script>
-    <script type="text/javascript" src="cometd/AckExtension.js"></script>
-    <script type="text/javascript" src="cometd/ReloadExtension.js"></script>
-    <script src="../../src/public/epicenter.js"></script>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Test for Browsers</title>
+  <script type="text/javascript" src="cometd/cometd.js"></script>
+  <script type="text/javascript" src="cometd/AckExtension.js"></script>
+  <script type="text/javascript" src="cometd/ReloadExtension.js"></script>
+  <script src="../../src/public/epicenter.js"></script>
 </head>
 
 <body class="container">
-    Something ElSE!
-    <script>
-        epicenter.authentication.authenticate(new epicenter.authentication.UserAuthenticationToken('berkent', 'foobar', 'NONE', 'david.berkman2', 'passw0rd', '0000016c5387b8d2acbe17f8e6da0ca0a5a2', null))
-            .then((foo) => {
-                console.log(foo);
+Something ElSE!
+<script>
+    epicenter.authentication.authenticate({accountShortName: 'berkent', projectShortName: 'foobar', handle: 'david.berkman2', password: 'passw0rd', groupKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2'})
+        .then((foo) => {
+            console.log(foo);
 
-                const cometd = new org.cometd.CometD();
-                cometd.registerExtension('reload', new org.cometd.ReloadExtension());
+            const cometd = new org.cometd.CometD();
+            cometd.registerExtension('reload', new org.cometd.ReloadExtension());
 
-                const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, new epicenter.channel.Channel(epicenter.utility.ScopeBoundary.GROUP, '0000016c5387b8d2acbe17f8e6da0ca0a5a2', epicenter.utility.PushCategory.PRESENCE, (message) => {
+            const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, {
+                scopeBoundary: epicenter.utility.ScopeBoundary.GROUP, scopeKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2', pushCategory: epicenter.utility.PushCategory.PRESENCE, messageCallback: (message) => {
                     console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
                     console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);
-                }));
-                window.onunload = channelManager.reload;
-                channelManager.handshake();
-            })
-            .catch((fault) => console.error(JSON.stringify(fault)));
-    </script>
+                }
+            });
+            window.onunload = channelManager.reload;
+            channelManager.handshake();
+        })
+        .catch((fault) => console.error(JSON.stringify(fault)));
+</script>
 </body>
 
 </html>
