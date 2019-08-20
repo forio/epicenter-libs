@@ -2,13 +2,13 @@ import * as router from './router.js';
 
 export async function create(createDto) {
 
-    return await router.POST('/account', createDto, null);
+    return await router.POST('/account', createDto);
 }
 
 // should take an updater
 export async function update(updateDto) {
 
-    return await router.PATCH('/account', updateDto, null);
+    return await router.PATCH('/account', updateDto);
 }
 
 export async function remove(accountShortName) {
