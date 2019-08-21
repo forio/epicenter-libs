@@ -16,7 +16,7 @@ epicenter.authentication.authenticate({accountShortName: "berkent", projectShort
             scopeBoundary: epicenter.utility.ScopeBoundary.GROUP, scopeKey: "0000016c5387b8d2acbe17f8e6da0ca0a5a2", pushCategory: epicenter.utility.PushCategory.PRESENCE, messageCallback: (message) => {
                 console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
                 console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);
-                epicenter.presence.group({accountShortName: "berkent", projectShortName: "foobar", groupKey: "0000016c5387b8d2acbe17f8e6da0ca0a5a2"}).then((bar) => console.log(JSON.stringify(bar)));
+                epicenter.presence.forGroup({accountShortName: "berkent", projectShortName: "foobar", groupKey: "0000016c5387b8d2acbe17f8e6da0ca0a5a2"}).then((bar) => console.log(JSON.stringify(bar)));
             }
         });
 

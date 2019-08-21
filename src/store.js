@@ -1,7 +1,9 @@
 import { isNode } from './utility.js';
 
 class NodeStore {
+
     #store = new Map();
+
     getItem(key) {
         return this.#store.get(key);
     }
@@ -17,7 +19,9 @@ class NodeStore {
 }
 
 class BrowserStore {
+
     #store = window.sessionStorage;
+
     getItem(key) {
         return this.#store.getItem(key.toString());
     }
