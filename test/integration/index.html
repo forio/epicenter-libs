@@ -14,7 +14,13 @@
 <body class="container">
 Something
 <script>
-    epicenter.authentication.authenticate({accountShortName: 'berkent', projectShortName: 'foobar', handle: 'david.berkman', password: 'passw0rd', groupKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2'})
+    epicenter.authentication.authenticate({
+        accountShortName: 'berkent',
+        projectShortName: 'foobar',
+        handle: 'david.berkman',
+        password: 'passw0rd',
+        groupKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2'
+    })
         .then((foo) => {
             console.log(foo);
 
@@ -22,7 +28,10 @@ Something
             cometd.registerExtension('reload', new org.cometd.ReloadExtension());
 
             const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, {
-                scopeBoundary: epicenter.utility.ScopeBoundary.GROUP, scopeKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2', pushCategory: epicenter.utility.PushCategory.PRESENCE, messageCallback: (message) => {
+                scopeBoundary: epicenter.utility.ScopeBoundary.GROUP,
+                scopeKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2',
+                pushCategory: epicenter.utility.PushCategory.PRESENCE,
+                messageCallback: (message) => {
                     console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
                     console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);
                 }

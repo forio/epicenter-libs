@@ -1,40 +1,49 @@
 import { isNode } from './utility.js';
 
-class NodeStore {
-
-    #store = new Map();
-
-    getItem(key) {
-        return this.#store.get(key);
-    }
-    setItem(key, value) {
-        this.#store.set(key, value);
-    }
-    removeItem(key) {
-        this.#store.delete(key);
+class Store {
+    #store;
+    constructor(store) {
+        this.#store = store;
     }
     clear() {
         this.#store.clear();
     }
+    get store() {
+        return this.#store;
+    }
 }
 
-class BrowserStore {
 
-    #store = window.sessionStorage;
-
+class NodeStore extends Store {
+    constructor() {
+        super(new Map());
+    }
     getItem(key) {
-        return this.#store.getItem(key.toString());
+        return super.store.get(key);
     }
     setItem(key, value) {
-        this.#store.setItem(key.toString(), value);
+        super.store.set(key, value);
     }
     removeItem(key) {
-        this.#store.removeItem(key.toString());
-    }
-    clear() {
-        this.#store.clear();
+        super.store.delete(key);
     }
 }
 
-export const StorageManager = isNode() ? new NodeStore() : new BrowserStore();
+class BrowserStore extends Store {
+    constructor() {
+        super(window.sessionStorage);
+    }
+    getItem(key) {
+        return super.store.getItem(key.toString());
+    }
+    setItem(key, value) {
+        super.store.setItem(key.toString(), value);
+    }
+    removeItem(key) {
+        super.store.removeItem(key.toString());
+    }
+}
+
+const storeManager = isNode() ? new NodeStore() : new BrowserStore();
+export default storeManager;
 

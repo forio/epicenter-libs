@@ -1,11 +1,17 @@
-import * as router from './router.js';
+import Router from './router.js';
 
-export async function forGroup(obj) {
-
-    return await router.GET(`/presence/group/${obj.groupKey}`, router.toRoute(obj));
+export async function forGroup(groupKey, options) {
+    const { accountShortName, projectShortName } = options;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/presence/group/${groupKey}`);
 }
 
-export async function forWorld(obj) {
-
-    return await router.GET(`/presence/world/${obj.worldKey}`, router.toRoute(obj));
+export async function forWorld(worldKey, options) {
+    const { accountShortName, projectShortName } = options;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/presence/world/${worldKey}`);
 }

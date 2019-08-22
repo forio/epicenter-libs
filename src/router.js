@@ -1,14 +1,44 @@
 import 'isomorphic-fetch';
-import * as config from './config.js';
-import * as store from './store.js';
+import config from './config.js';
+import store from './store.js';
 import * as utility from './utility.js';
-
-const DEFAULT_CONFIGURATION = new config.Config();
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 
-class Route {
+async function request(url, { method, body, includeAuthorization }) {
+    const headers = {
+        'Content-type': 'application/json; charset=UTF-8',
+    };
+    const authToken = store.getItem(utility.AUTH_TOKEN);
+
+    if (includeAuthorization && authToken) {
+        headers.Authorization = `Bearer ${authToken}`;
+    }
+
+    const response = await fetch(url, {
+        method: method,
+        cache: 'no-cache',
+        headers: headers,
+        redirect: 'follow',
+        body: body ? JSON.stringify(body) : null,
+    });
+
+    const contentType = response.headers.get('content-type');
+    if (!contentType && !contentType.includes('application/json')) {
+        throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+    }
+
+    if ((response.status >= 200) && (response.status < 400)) {
+        return new utility.Result(response.status, response.headers, await response.json());
+    } else {
+        throw new utility.Fault(response.status, await response.json());
+    }
+}
+
+export default class Router {
+    _accountShortName = DEFAULT_ACCOUNT_SHORT_NAME;
+    _projectShortName = DEFAULT_PROJECT_SHORT_NAME;
 
     get server() {
         return this._server;
@@ -41,138 +71,89 @@ class Route {
     set projectShortName(value) {
         this._projectShortName = value;
     }
-}
-
-export function getApiHttpScheme() {
-
-    return DEFAULT_CONFIGURATION.apiScheme;
-}
-
-export function getApiHttpHost() {
-
-    return DEFAULT_CONFIGURATION.apiHost;
-}
-
-export function getAPIVersion() {
-
-    return DEFAULT_CONFIGURATION.apiVersion;
-}
-
-export class RouteBuilder {
-
-    _route;
-
-    constructor() {
-
-        this._route = new Route();
-    }
 
     withServer(server) {
-        this._route.server = server;
-
+        this.server = server || this.server;
         return this;
     }
 
     withVersion(version) {
-        this._route.version = version;
-
+        this.version = version || this.version;
         return this;
     }
 
     withAccountShortName(accountShortName) {
-        this._route.accountShortName = accountShortName;
-
+        this.accountShortName = accountShortName || this.accountShortName;
         return this;
     }
 
     withProjectShortName(projectShortName) {
-        this._route.projectShortName = projectShortName;
-
+        this.projectShortName = projectShortName || this.projectShortName;
         return this;
     }
 
-    build() {
-
-        return this._route;
-    }
-}
-
-export const route = new RouteBuilder().withServer(`${getApiHttpScheme()}://${getApiHttpHost()}`).withVersion(getAPIVersion()).withAccountShortName(DEFAULT_ACCOUNT_SHORT_NAME).withProjectShortName(DEFAULT_PROJECT_SHORT_NAME).build();
-
-export function toRoute(obj) {
-
-    let routeBuilder = new RouteBuilder();
-
-    if (obj.accountShortName) {
-        routeBuilder.withAccountShortName(obj.accountShortName);
-        delete obj.accountShortName;
-    }
-    if (obj.projectShortName) {
-        routeBuilder.withProjectShortName(obj.projectShortName);
-        delete obj.projectShortName;
+    getURL(uri) {
+        return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uri}`;
     }
 
-    return routeBuilder.build();
-}
+    //Network Requests
+    async get(uri, options) {
+        await config.load();
+        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.version) this.withVersion(config.apiVersion);
 
-export function GET(uri, partialRoute, includeAuthorization = true) {
-
-    return request('GET', uri, null, partialRoute, includeAuthorization);
-}
-
-export function DELETE(uri, partialRoute, includeAuthorization = true) {
-
-    return request('DELETE', uri, null, partialRoute, includeAuthorization);
-}
-
-export function PATCH(uri, body, partialRoute, includeAuthorization = true) {
-
-    return request('PATCH', uri, body, partialRoute, includeAuthorization);
-}
-
-export function POST(uri, body, partialRoute, includeAuthorization = true) {
-    return request('POST', uri, body, partialRoute, includeAuthorization);
-}
-
-export function PUT(uri, body, partialRoute, includeAuthorization = true) {
-
-    return request('PUT', uri, body, partialRoute, includeAuthorization);
-}
-
-async function request(method, uri, body, partialRoute, includeAuthorization) {
-    const currentRoute = (!partialRoute) ? route : new RouteBuilder()
-        .withServer(partialRoute.server ? partialRoute.server : route.server)
-        .withVersion(partialRoute.version ? partialRoute.version : route.version)
-        .withAccountShortName(partialRoute.accountShortName ? partialRoute.accountShortName : route.accountShortName)
-        .withProjectShortName(partialRoute.projectShortName ? partialRoute.projectShortName : route.projectShortName)
-        .build();
-    const headers = {
-        'Content-type': 'application/json; charset=UTF-8',
-    };
-    const authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
-
-    if (includeAuthorization && authToken) {
-        headers.Authorization = `Bearer ${authToken}`;
+        return request(this.getURL(uri), {
+            includeAuthorization: true,
+            ...options,
+            method: 'GET',
+        });
     }
 
-    let response = await fetch(`${currentRoute.server}/v${currentRoute.version}/${currentRoute.accountShortName}/${currentRoute.projectShortName}${uri}`, {
-        method: method,
-        cache: 'no-cache',
-        headers: headers,
-        redirect: 'follow',
-        body: body ? JSON.stringify(body) : null
-    });
+    async delete(uri, options) {
+        await config.load();
+        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.version) this.withVersion(config.apiVersion);
 
-    const contentType = response.headers.get('content-type');
+        return request(this.getURL(uri), {
+            includeAuthorization: true,
+            ...options,
+            method: 'DELETE',
+        });
+    }
 
-    if (contentType && contentType.includes('application/json')) {
-        if ((response.status >= 200) && (response.status < 400)) {
+    async patch(uri, options) {
+        await config.load();
+        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.version) this.withVersion(config.apiVersion);
 
-            return new utility.Result(response.status, response.headers, await response.json());
-        } else {
-            throw new utility.Fault(response.status, await response.json());
-        }
-    } else {
-        throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+        return request(this.getURL(uri), {
+            includeAuthorization: true,
+            ...options,
+            method: 'PATCH',
+        });
+    }
+
+    async post(uri, options) {
+        await config.load();
+        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.version) this.withVersion(config.apiVersion);
+
+        return request(this.getURL(uri), {
+            includeAuthorization: true,
+            ...options,
+            method: 'POST',
+        });
+    }
+
+    async put(uri, options) {
+        await config.load();
+        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.version) this.withVersion(config.apiVersion);
+
+        return request(this.getURL(uri), {
+            includeAuthorization: true,
+            ...options,
+            method: 'PUT',
+        });
     }
 }

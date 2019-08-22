@@ -1,5 +1,5 @@
-import * as router from './router.js';
-import * as store from './store.js';
+import store from './store.js';
+import config from './config.js';
 import * as utility from './utility.js';
 
 /*
@@ -47,19 +47,22 @@ export class ChannelManager {
         this.#cometd = cometd;
         this.#state = State.DISCONNECTED;
         this.#requireAcknowledgement = requireAcknowledgement;
-        this.#url = `${router.getApiHttpScheme()}://${router.getApiHttpHost()}${COMETD_URL_POSTSCRIPT}`;
+        this.initialized = this.init(logLevel, channels);
+    }
 
+    async init(logLevel, channels) {
+        await config.load();
+        this.#url = `${config.apiScheme}://${config.apiHost}${COMETD_URL_POSTSCRIPT}`;
         this.#cometd.configure({
             url: this.#url,
             logLevel: logLevel,
         });
-
         this.#cometd.addListener('/meta/handshake', (handshakeReply) => {
             if (handshakeReply.successful) {
                 if (channels) {
 
                     let subscribeProps = {};
-                    const authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
+                    const authToken = store.getItem(utility.AUTH_TOKEN);
 
                     if (authToken) {
                         subscribeProps = {
@@ -87,6 +90,7 @@ export class ChannelManager {
     reload = () => {
 
         this.#cometd.reload();
+        // Store any channel related things you need in session storage
         // window.sessionStorage.setItem(stateKey, JSON.stringify({
         //     username: _username,
         //     useServer: _id('useServer').prop('checked'),
@@ -95,8 +99,8 @@ export class ChannelManager {
         this.#cometd.getTransport().abort();
     };
 
-    handshake() {
-
+    async handshake() {
+        await this.initialized;
         if (this.#state !== State.CONNECTED) {
             if (this.#state === State.CONNECTING) {
                 setTimeout(() => this.handshake(), 500);
@@ -104,7 +108,7 @@ export class ChannelManager {
                 this.#state = State.CONNECTING;
 
                 let handshakeProps = {};
-                const authToken = store.StorageManager.getItem(utility.AUTH_TOKEN);
+                const authToken = store.getItem(utility.AUTH_TOKEN);
 
                 if (authToken) {
                     handshakeProps = {
