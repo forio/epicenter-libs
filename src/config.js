@@ -2,10 +2,6 @@ import 'isomorphic-fetch';
 import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
 
 class Config {
-
-    constructor() {
-    }
-
     get apiScheme() {
         return this._apiScheme;
     }
