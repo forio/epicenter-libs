@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import fetch from 'cross-fetch';
 import config from './config.js';
 import store from './store.js';
 import * as utility from './utility.js';

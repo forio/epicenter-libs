@@ -13,6 +13,7 @@ module.exports = {
         library: 'epicenter',
         libraryTarget: 'umd',
     },
+    // TODO -- we should leverage these -- don't how yet
     // resolve: {
     //     alias: {
     //         actions: path.resolve(__dirname, 'src', 'actions'),

@@ -1,4 +1,4 @@
-import 'isomorphic-fetch';
+import fetch from 'cross-fetch';
 import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
 
 class Config {

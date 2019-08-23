@@ -1,5 +1,8 @@
 {
   "type": "module",
+  "scripts": {
+    "test-node": "node --experimental-modules node/test.js"
+  },
   "dependencies": {
     "acorn": "^6.0.0",
     "cometd": "^4.0.4",

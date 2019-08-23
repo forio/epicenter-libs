@@ -11,8 +11,10 @@ class Store {
     get store() {
         return this.#store;
     }
+    set store(store) {
+        this.#store = store;
+    }
 }
-
 
 class NodeStore extends Store {
     constructor() {

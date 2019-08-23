@@ -3,6 +3,10 @@
 module.exports = {
     "globals": {
         "epicenter": true,
+        "chai": true,
+        "sinon": true,
+        /* namespace used by cometd */
+        "org": true,
     },
     'parser': 'babel-eslint',
     'parserOptions': {
