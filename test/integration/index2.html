@@ -28,9 +28,9 @@ Something
             cometd.registerExtension('reload', new org.cometd.ReloadExtension());
 
             const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, {
-                scopeBoundary: epicenter.utility.ScopeBoundary.GROUP,
+                scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.GROUP,
                 scopeKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2',
-                pushCategory: epicenter.utility.PushCategory.PRESENCE,
+                pushCategory: epicenter.utility.PUSH_CATEGORY.PRESENCE,
                 messageCallback: (message) => {
                     console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
                     console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);

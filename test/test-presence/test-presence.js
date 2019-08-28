@@ -1,63 +1,104 @@
+
+const { Channel } = epicenter;
 const userOne = {
-    accountShortName: 'berkent',
-    projectShortName: 'foobar',
-    handle: 'david.berkman',
-    password: 'passw0rd',
-    groupKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2',
+    accountShortName: 'wallace',
+    projectShortName: 'project',
+    handle: 'wallace-dev0',
+    password: 'admin123',
+    groupKey: '0000016ccf590d85eecb2373547c5cfd95f2',
+    worldKey: '0000016ccf590d85eecb2373547c5cfd9a7f',
 };
-
 const userTwo = {
-    accountShortName: 'berkent',
-    projectShortName: 'foobar',
-    handle: 'david.berkman2',
-    password: 'passw0rd',
-    groupKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2',
+    accountShortName: 'wallace',
+    projectShortName: 'project',
+    handle: 'wallace-dev2',
+    password: 'admin123',
+    groupKey: '0000016ccf590d85eecb2373547c5cfd95f2',
 };
 
-describe('Presence APIs', () => {
-    let clock;
-    beforeEach(() => {
-        clock = sinon.useFakeTimers();
-    });
-
-    afterEach(() => {
-        clock.restore();
-    });
-
-    it('should alert channel on login', (done) => {
-        const cometd = new org.cometd.CometD();
+describe('Presence APIs', function() {
+    it('Should accurately report the number of users online in the group', function(done) {
+        this.timeout(0);
         const onMessage = (message) => {
             console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
             console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);
         };
-        const onMessageSpy = sinon.spy(onMessage);
 
-        epicenter.authentication.authenticate(userOne).then((res) => {
-            cometd.registerExtension('reload', new org.cometd.ReloadExtension());
-            const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, {
-                scopeBoundary: epicenter.utility.ScopeBoundary.GROUP,
-                scopeKey: '0000016c5387b8d2acbe17f8e6da0ca0a5a2',
-                pushCategory: epicenter.utility.PushCategory.PRESENCE,
-                messageCallback: onMessage,
-            });
-            window.onunload = channelManager.reload;
-            return channelManager.handshake();
-        })
-            .catch((fault) => console.error(JSON.stringify(fault)))
-            .then(() => epicenter.authentication.authenticate(userTwo))
+        let numUsersBefore;
+        let numUsersAfter;
+        let waitTime;
+
+        // Login as a user without a world & subscribe to the group ch
+        epicenter.authentication.authenticate(userTwo)
             .then((res) => {
-                clock.tick(20000);
-                chai.expect(onMessageSpy.calledOnce, 'Received no update from channel after 100ms').to.equal(true);
+                const presenceChannel = new Channel({
+                    scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.GROUP,
+                    scopeKey: userTwo.groupKey,
+                    pushCategory: epicenter.utility.PUSH_CATEGORY.PRESENCE,
+                    update: onMessage,
+                });
+                return presenceChannel.subscribe();
             })
-            .then(done)
+            .then(() => epicenter.presence.forGroup(userTwo.groupKey, {
+                accountShortName: userTwo.accountShortName,
+                projectShortName: userTwo.projectShortName,
+            }))
+            .then((res) => {
+                numUsersBefore = res.body.length;
+                waitTime = Math.round(res.body[0].ttlSeconds / 2) * 1000 + 5000;
+            })
+            .then(() => epicenter.channelManager.disconnect())
+            .then(() => new Promise((resolve, reject) => setTimeout(() => resolve(), waitTime)))
+            .then(() => epicenter.presence.forGroup(userTwo.groupKey, {
+                accountShortName: userTwo.accountShortName,
+                projectShortName: userTwo.projectShortName,
+            }))
+            .then((res) => numUsersAfter = res.body.length)
+            .then(() => chai.expect(numUsersBefore).to.equal(numUsersAfter + 1))
+            .then(() => done())
             .catch(done);
     });
 
-    it('should accurately report the number of users online', (done) => {
-        epicenter.presence.forGroup(userOne.groupKey, { accountShortName: userOne.accountShortName }).then((res) => {
-            chai.expect(res.body).with.length(2);
-        })
-            .then(done)
+    it('Should clean up session between authenticates', function(done) {
+        this.timeout(0);
+
+        const onMessage = (message) => {
+            console.log(`$$$$$$$$$$$$$$$$0:${JSON.stringify(message)}`);
+            console.log(`$$$$$$$$$$$$$$$$1:${message.type}`);
+        };
+
+        // Login as a user without a world & subscribe to the group ch
+        epicenter.authentication.authenticate(userTwo)
+            .then((res) => {
+                const presenceChannel = new Channel({
+                    scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.GROUP,
+                    scopeKey: userTwo.groupKey,
+                    pushCategory: epicenter.utility.PUSH_CATEGORY.PRESENCE,
+                    update: onMessage,
+                });
+                return presenceChannel.subscribe();
+            })
+            .then(() => epicenter.presence.forGroup(userTwo.groupKey, {
+                accountShortName: userTwo.accountShortName,
+                projectShortName: userTwo.projectShortName,
+            }))
+            // Purposely do no cleanup, and just log into a different user;
+            // this one belongs to a world and wants to sub to world ch
+            .then(() => epicenter.authentication.authenticate(userOne))
+            .then((res) => {
+                const presenceChannel = new Channel({
+                    scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.WORLD,
+                    scopeKey: userOne.worldKey,
+                    pushCategory: epicenter.utility.PUSH_CATEGORY.PRESENCE,
+                    update: onMessage,
+                });
+                return presenceChannel.subscribe();
+            })
+            .then(() => epicenter.presence.forWorld(userOne.worldKey, {
+                accountShortName: userOne.accountShortName,
+                projectShortName: userOne.projectShortName,
+            }))
+            .then(() => done())
             .catch(done);
     });
 });

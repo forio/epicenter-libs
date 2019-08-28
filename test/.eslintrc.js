@@ -225,7 +225,6 @@ module.exports = {
         'no-dupe-class-members': 2,
         'no-var': 2,
         'object-shorthand': 0,
-        'prefer-arrow-callback': 1,
         'prefer-const': 1,
         'prefer-spread': 1,
         'prefer-template': 1,
