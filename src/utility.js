@@ -1,6 +1,6 @@
 export const AUTH_TOKEN = Symbol('com.forio.epicenter.token');
 
-export const ScopeBoundary = {
+export const SCOPE_BOUNDARY = {
     PROJECT: 'project',
     GROUP: 'group',
     EPISODE: 'episode',
@@ -8,7 +8,7 @@ export const ScopeBoundary = {
     RUN: 'run',
 };
 
-export const PushCategory = {
+export const PUSH_CATEGORY = {
     CONSENSUS: 'consensus',
     GENERAL: 'general',
     PRESENCE: 'presence',
