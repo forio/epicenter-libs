@@ -78,4 +78,5 @@ class Config {
     }
 }
 
-export default new Config();
+const configManager = new Config();
+export default configManager;
