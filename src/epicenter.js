@@ -7,5 +7,6 @@ export const account = accountModule;
 export const authentication = authenticationModule;
 export const presence = presenceModule;
 export const utility = utilityModule;
+export { default as store } from './store';
 export { default as channelManager } from './channel-manager';
 export { default as Channel } from './channel';

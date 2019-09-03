@@ -17,6 +17,11 @@ const userTwo = {
 };
 
 describe('Presence APIs', function() {
+    afterEach('Logging out after each test', function(done) {
+        epicenter.authentication.logout()
+            .then(() => done());
+    });
+
     it('Should accurately report the number of users online in the group', function(done) {
         this.timeout(0);
         const onMessage = (message) => {
@@ -59,7 +64,7 @@ describe('Presence APIs', function() {
             .catch(done);
     });
 
-    it('Should clean up session between authenticates', function(done) {
+    it('Should clean up between sessions', function(done) {
         this.timeout(0);
 
         const onMessage = (message) => {
@@ -82,8 +87,9 @@ describe('Presence APIs', function() {
                 accountShortName: userTwo.accountShortName,
                 projectShortName: userTwo.projectShortName,
             }))
-            // Purposely do no cleanup, and just log into a different user;
-            // this one belongs to a world and wants to sub to world ch
+            .then(() => epicenter.authentication.logout())
+            // log into a different user; this one belongs to a world
+            // and wants to sub to world ch -- expect no errors
             .then(() => epicenter.authentication.authenticate(userOne))
             .then((res) => {
                 const presenceChannel = new Channel({
