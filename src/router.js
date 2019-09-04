@@ -11,7 +11,6 @@ async function request(url, { method, body, includeAuthorization }) {
         'Content-type': 'application/json; charset=UTF-8',
     };
     const authToken = store.getItem(utility.AUTH_TOKEN);
-
     if (includeAuthorization && authToken) {
         headers.Authorization = `Bearer ${authToken}`;
     }
@@ -37,9 +36,6 @@ async function request(url, { method, body, includeAuthorization }) {
 }
 
 export default class Router {
-    _accountShortName = DEFAULT_ACCOUNT_SHORT_NAME;
-    _projectShortName = DEFAULT_PROJECT_SHORT_NAME;
-
     get server() {
         return this._server;
     }
@@ -96,12 +92,17 @@ export default class Router {
         return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uri}`;
     }
 
-    //Network Requests
-    async get(uri, options) {
+    async configure() {
         await config.load();
         if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+        if (!this.accountShortName) this.withAccountShortName(config.accountShortName);
+        if (!this.projectShortName) this.withProjectShortName(config.projectShortName);
         if (!this.version) this.withVersion(config.apiVersion);
+    }
 
+    //Network Requests
+    async get(uri, options) {
+        await this.configure();
         return request(this.getURL(uri), {
             includeAuthorization: true,
             ...options,
@@ -110,10 +111,7 @@ export default class Router {
     }
 
     async delete(uri, options) {
-        await config.load();
-        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
-        if (!this.version) this.withVersion(config.apiVersion);
-
+        await this.configure();
         return request(this.getURL(uri), {
             includeAuthorization: true,
             ...options,
@@ -122,10 +120,7 @@ export default class Router {
     }
 
     async patch(uri, options) {
-        await config.load();
-        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
-        if (!this.version) this.withVersion(config.apiVersion);
-
+        await this.configure();
         return request(this.getURL(uri), {
             includeAuthorization: true,
             ...options,
@@ -134,10 +129,7 @@ export default class Router {
     }
 
     async post(uri, options) {
-        await config.load();
-        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
-        if (!this.version) this.withVersion(config.apiVersion);
-
+        await this.configure();
         return request(this.getURL(uri), {
             includeAuthorization: true,
             ...options,
@@ -146,10 +138,7 @@ export default class Router {
     }
 
     async put(uri, options) {
-        await config.load();
-        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
-        if (!this.version) this.withVersion(config.apiVersion);
-
+        await this.configure();
         return request(this.getURL(uri), {
             includeAuthorization: true,
             ...options,

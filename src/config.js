@@ -2,6 +2,10 @@ import fetch from 'cross-fetch';
 import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
 
 class Config {
+    _apiVersion = 3;
+    _apiScheme = 'http';
+    _apiHost = 'epistage1.foriodev.com';
+
     get apiScheme() {
         return this._apiScheme;
     }
@@ -26,6 +30,22 @@ class Config {
         this._apiVersion = apiVersion;
     }
 
+    get accountShortName() {
+        return this._accountShortName;
+    }
+
+    set accountShortName(accountShortName) {
+        this._accountShortName = accountShortName;
+    }
+
+    get projectShortName() {
+        return this._projectShortName;
+    }
+
+    set projectShortName(projectShortName) {
+        this._projectShortName = projectShortName;
+    }
+
     loadNode() {
         // TODO -- use process env variables instead here for Node server
         this._apiVersion = 3;
@@ -34,11 +54,18 @@ class Config {
     }
 
     async loadBrowser() {
-        const response = await fetch(`${window.location.host}/epicenter/v${this._apiVersion}/config`, {
+        const { protocol, host, pathname } = window.location;
+        const response = await fetch(`${protocol}//${host}/epicenter/v${this._apiVersion}/config`, {
             method: 'GET',
             cache: 'no-cache',
             redirect: 'follow',
         });
+        const match = pathname.match(/\/app\/(\w+)\/(\w+)/);
+        if (match) {
+            const [account, project] = match.slice(1);
+            this.accountShortName = account;
+            this.projectShortName = project;
+        }
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
@@ -46,17 +73,19 @@ class Config {
         }
 
         if ((response.status >= 200) && (response.status < 400)) {
-            this._apiScheme = response.body.api.host;
-            this._apiHost = response.body.api.protocol;
+            const body = await response.json();
+            this.apiScheme = body.api.protocol;
+            this.apiHost = body.api.host;
         } else {
             throw new Fault(response.status, await response.json());
         }
     }
 
     async load() {
-        if (this.apiScheme && this.apiHost && this.apiVersion) {
+        if (this.loaded) {
             return;
         }
+        this.loaded = true;
 
         if (isNode()) {
             this.loadNode();
@@ -69,9 +98,9 @@ class Config {
         }
 
         if (window.location.protocol.includes('file')) {
-            this._apiVersion = 3;
-            this._apiScheme = 'http';
-            this._apiHost = 'epistage1.foriodev.com';
+            this.apiVersion = 3;
+            this.apiScheme = 'http';
+            this.apiHost = 'epistage1.foriodev.com';
             return;
         }
         throw new EpicenterError('Could not identify environment; no configuration was setup');
