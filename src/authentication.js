@@ -13,14 +13,14 @@ export async function logout() {
 }
 
 export async function authenticate(options) {
-    const { handle, password, group, objectType = 'user', ...others } = options;
+    const { handle, password, groupKey, objectType = 'user', ...others } = options;
     const { accountShortName, projectShortName } = others;
 
     const response = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/authentication', {
-            body: { handle, password, group, objectType },
+            body: { handle, password, groupKey, objectType },
             includeAuthorization: false,
         });
     await logout();
