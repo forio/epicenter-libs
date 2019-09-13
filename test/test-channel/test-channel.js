@@ -42,7 +42,7 @@ describe('Channel APIs', function() {
             update: (message) => console.log(message),
         });
         channelManager.disconnect()
-            .then(() => authentication.authenticate(userOne))
+            .then(() => authentication.login(userOne))
             .then(() => channel.subscribe())
             .then(() => chai.expect(channelManager.cometd.getStatus()).to.equal('connected'))
             .then(() => authentication.logout())
@@ -57,7 +57,7 @@ describe('Channel APIs', function() {
             pushCategory: utility.PUSH_CATEGORY.PRESENCE,
             update: (message) => console.log(message),
         });
-        authentication.authenticate(userOne)
+        authentication.login(userOne)
             .then((res) => channel.subscribe())
             .then(() => channelManager.disconnect())
             .then(() => chai.expect(channelManager.subscriptions.size).to.equal(0))

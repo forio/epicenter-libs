@@ -12,7 +12,7 @@ export async function logout() {
     }
 }
 
-export async function authenticate(options) {
+export async function login(options) {
     const { handle, password, groupKey, objectType = 'user', ...others } = options;
     const { accountShortName, projectShortName } = others;
 
@@ -31,10 +31,11 @@ export async function authenticate(options) {
 
 export async function upgrade(options) {
     const { objectType = 'admin', ...others } = options;
-    const { accountShortName } = others;
+    const { accountShortName, projectShortName } = others;
     
     const response = await new Router()
         .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
         .patch('/authentication', {
             body: { objectType },
         });
@@ -42,4 +43,13 @@ export async function upgrade(options) {
 
     store.setItem(utility.AUTH_TOKEN, response.body.session);
     return response;
+}
+
+export async function getSession() {
+    const response = await new Router().get('/authentication');
+    return response;
+}
+
+export function hasSession() {
+    return store.getItem(utility.AUTH_TOKEN);
 }

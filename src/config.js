@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch';
 import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
 
+
 class Config {
     _apiVersion = 3;
     _apiScheme = 'http';
@@ -46,26 +47,39 @@ class Config {
         this._projectShortName = projectShortName;
     }
 
-    loadNode() {
-        // TODO -- use process env variables instead here for Node server
-        this._apiVersion = 3;
-        this._apiScheme = 'http';
-        this._apiHost = 'epistage1.foriodev.com';
+    isLocal() {
+        if (!isBrowser()) return false;
+        const host = window.location.host;
+        return host === '127.0.0.1' ||
+            host.indexOf('local.') === 0 ||
+            host.indexOf('ngrok') !== -1 ||
+            host.indexOf('localhost') === 0;
     }
 
-    async loadBrowser() {
-        const { protocol, host, pathname } = window.location;
-        const response = await fetch(`${protocol}//${host}/epicenter/v${this._apiVersion}/config`, {
-            method: 'GET',
-            cache: 'no-cache',
-            redirect: 'follow',
-        });
+    getPathAccountProject(pathname) {
         const match = pathname.match(/\/app\/(\w+)\/(\w+)/);
         if (match) {
             const [account, project] = match.slice(1);
             this.accountShortName = account;
             this.projectShortName = project;
         }
+    }
+
+    loadNode() {
+        // TODO -- use process env variables instead here for Node server
+    }
+
+    async loadBrowser() {
+        const isLocal = this.isLocal();
+        const protocol = window.location.protocol;
+        const host = isLocal ? this._apiHost : window.location.host;
+        if (!isLocal) this.getPathAccountProject(window.location.pathname);
+
+        const response = await fetch(`${protocol}//${host}/epicenter/v${this._apiVersion}/config`, {
+            method: 'GET',
+            cache: 'no-cache',
+            redirect: 'follow',
+        });
 
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {

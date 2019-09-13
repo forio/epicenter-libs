@@ -7,7 +7,7 @@ const require = createRequire(fromURL(import.meta.url));
 require('cometd-nodejs-client').adapt();
 const lib = require('cometd');
 
-epicenter.authentication.authenticate({
+epicenter.authentication.login({
     accountShortName: 'berkent',
     projectShortName: 'foobar',
     handle: 'david.berkman2',
@@ -44,7 +44,7 @@ epicenter.authentication.authenticate({
 }).catch((fault) => console.log(fault, JSON.stringify(fault)));
 
 /*
-epicenter.authentication.authenticate(new epicenter.authentication.AdminAuthenticationToken('dberkman@forio.com', 'logos1174!'))
+epicenter.authentication.login(new epicenter.authentication.AdminAuthenticationToken('dberkman@forio.com', 'logos1174!'))
   .then(foo => {
     console.log(foo);
 

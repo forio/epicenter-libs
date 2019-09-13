@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>401 Handling</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./main.css">
+    <script src="./epicenter.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Decisions</h1>
+        <p>Hello, <span id="display-name"></span></p>
+        <p> Lets make some decisions:</p>
+        <div class="buttons">
+            <button id="presence">Presence</button>
+            <button id="logout">Logout</button>
+        </div>
+        <ul id="users"></ul>
+    </div>
+</body>
+<script>
+    const { config, authentication, Channel, utility, errorManager } = epicenter;
+    const displayNameEl = document.getElementById('display-name');
+    const presenceEl = document.getElementById('presence');
+    const logoutEl = document.getElementById('logout');
+    const usersEl = document.getElementById('users');
+
+    // analogous to endpoints.js
+    if (config.isLocal()) {
+        config.accountShortName = 'test';
+        config.projectShortName = 'a-project';
+    }
+
+    // Checks if a session exists
+    if (!authentication.hasSession()) {
+        window.location.href = '/login.html';
+    }
+
+    const handleByReLog = (error, retry) => {
+        // let query = '';
+        // if (error.code) {
+        //     query = query.concat(`?error=${error.code}`);
+        // }
+        // window.location.href = `/login.html${query}`;
+        // authentication.logout();
+    };
+
+    const handleByReAuth = (error, retry) => {
+        if (error.code === 'AUTHENTICATION_EXPIRED' || error.code === 'AUTHENTICATION_INVALIDATED') {
+            return authentication.upgrade({ userType: 'user' }).then(() => retry());
+        }
+        return handleByReLog(error, retry);
+    };
+
+    const subscribe = () => {
+        new Channel({
+            scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
+            scopeKey: '0000016d081b115c68ceb9c1e8727823c0c3',
+            pushCategory: utility.PUSH_CATEGORY.PRESENCE,
+            update: (message) => console.log('Message received!', message),
+        }).subscribe();
+    };
+    subscribe();
+
+
+    // register error handler for 401`s 
+    errorManager.registerHandler((error) => error.status === 401, handleByReLog);
+
+    // globally stored session
+    let session = {};
+
+    // Gets session data for use in app, should fail if the session has been invalidated
+    authentication.getSession().then((res) => {
+        session = res.body;
+        displayNameEl.innerText = session.displayName;
+        new Channel({
+            scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
+            scopeKey: session.groupKey,
+            pushCategory: utility.PUSH_CATEGORY.PRESENCE,
+            update: (message) => console.log('Message received!', message),
+        }).subscribe();
+    });
+
+    logoutEl.onclick = (e) => {
+        authentication.logout();
+        window.location.href = '/login.html';
+    };
+
+    presenceEl.onclick = (e) => {
+        if (presenceEl.innerText !== 'Presence') return;
+
+        presenceEl.innerText = 'Fetching';
+        epicenter.presence.forGroup(session.groupKey).then((res) => {
+            const membersOnline = res.body;
+            usersEl.innerHTML = '';
+            membersOnline.forEach((member) => {
+                const item = document.createElement('li');
+                item.innerText = member.user.displayName;
+                usersEl.append(item);
+            });
+            presenceEl.innerText = 'Fetched';
+            setTimeout(() => presenceEl.innerText = 'Presence', 2000);
+        });
+    };
+
+</script>
+</html>

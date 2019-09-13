@@ -9,5 +9,6 @@ export const presence = presenceModule;
 export const utility = utilityModule;
 export { default as config } from './config';
 export { default as store } from './store';
+export { default as errorManager } from './error-manager';
 export { default as channelManager } from './channel-manager';
 export { default as Channel } from './channel';

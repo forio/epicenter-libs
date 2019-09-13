@@ -3,14 +3,15 @@ import ReloadExtension from 'cometd/ReloadExtension';
 import store from './store.js';
 import config from './config.js';
 import * as utility from './utility.js';
+import errorManager from './error-manager.js';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const COMETD_URL_POSTSCRIPT = ':9015/epicenter/cometd';
 
-const DISCONNECTING = 0;
-const DISCONNECTED = 1;
-const CONNECTING = 2;
-const CONNECTED = 3;
+const DISCONNECTING = 'DISCONNECTING';
+const DISCONNECTED = 'DISCONNECTED';
+const CONNECTING = 'CONNECTING';
+const CONNECTED = 'CONNECTED';
 
 class ChannelManager {
 
@@ -65,10 +66,9 @@ class ChannelManager {
         this.initialized = true;
     }
 
-    async handshake() {
-        await this.init({
-            logLevel: 'error',
-        });
+    // Connects to CometD server
+    async handshake(options = {}) {
+        await this.init({ logLevel: 'error' });
 
         if (this.state !== DISCONNECTED) {
             return Promise.reject(new utility.EpicenterError(`Connection state should be DISCONNECTED during handshake; State: ${this.state}`));
@@ -88,12 +88,30 @@ class ChannelManager {
         this.cometd.ackEnabled = this.requireAcknowledgement;
         this.cometd.websocketEnabled = true;
         return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
-            if (!handshakeReply.successful) {
-                this.state = DISCONNECTED;
-                reject(new utility.EpicenterError(`Unable to connect to the CometD server at ${this.url}`));
-            } else {
+            if (handshakeReply.successful) {
                 this.state = CONNECTED;
-                resolve();
+                resolve(handshakeReply);
+                return;
+            }
+
+            // TODO: ask David what can be done here to make this look more like our conventional error
+            const error = new utility.Fault('cometd', { information: handshakeReply });
+            const defaultErrorHandler = (e) => {
+                this.state = DISCONNECTED;
+                reject(e);
+            };
+
+            if (options.inert) {
+                defaultErrorHandler(error);
+                return;
+            }
+
+            const retry = () => this.handshake({ inert: true });
+            try {
+                const result = errorManager.handle(error, retry);
+                resolve(result);
+            } catch (e) {
+                defaultErrorHandler(e);
             }
         }));
     }
@@ -104,8 +122,8 @@ class ChannelManager {
 
         const prevState = this.state;
         this.state = DISCONNECTING;
-        return new Promise((resolve, reject) => this.cometd.disconnect((res) => {
-            if (!res.successful) {
+        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
+            if (!disconnectReply.successful) {
                 this.state = prevState;
                 reject(new utility.EpicenterError('Unable to disconnect from CometD server'));
             } else {
@@ -126,8 +144,8 @@ class ChannelManager {
             await this.handshake();
         }
         return new Promise((resolve, reject) => this.cometd.batch(() => {
-            const subscription = this.cometd.subscribe(path, update, subscriptionProps, (res) => {
-                if (!res.successful) {
+            const subscription = this.cometd.subscribe(path, update, subscriptionProps, (subscribeReply) => {
+                if (!subscribeReply.successful) {
                     reject(new utility.EpicenterError(`Unable to subscribe to the channel ${path}`));
                 } else {
                     resolve(subscription);

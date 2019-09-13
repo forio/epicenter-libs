@@ -34,7 +34,7 @@ describe('Presence APIs', function() {
         let waitTime;
 
         // Login as a user without a world & subscribe to the group ch
-        epicenter.authentication.authenticate(userTwo)
+        epicenter.authentication.login(userTwo)
             .then((res) => {
                 const presenceChannel = new Channel({
                     scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.GROUP,
@@ -73,7 +73,7 @@ describe('Presence APIs', function() {
         };
 
         // Login as a user without a world & subscribe to the group ch
-        epicenter.authentication.authenticate(userTwo)
+        epicenter.authentication.login(userTwo)
             .then((res) => {
                 const presenceChannel = new Channel({
                     scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.GROUP,
@@ -90,7 +90,7 @@ describe('Presence APIs', function() {
             .then(() => epicenter.authentication.logout())
             // log into a different user; this one belongs to a world
             // and wants to sub to world ch -- expect no errors
-            .then(() => epicenter.authentication.authenticate(userOne))
+            .then(() => epicenter.authentication.login(userOne))
             .then((res) => {
                 const presenceChannel = new Channel({
                     scopeBoundary: epicenter.utility.SCOPE_BOUNDARY.WORLD,

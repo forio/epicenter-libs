@@ -2,11 +2,12 @@ import fetch from 'cross-fetch';
 import config from './config.js';
 import store from './store.js';
 import * as utility from './utility.js';
+import errorManager from './error-manager.js';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 
-async function request(url, { method, body, includeAuthorization }) {
+async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
@@ -30,9 +31,13 @@ async function request(url, { method, body, includeAuthorization }) {
 
     if ((response.status >= 200) && (response.status < 400)) {
         return new utility.Result(response.status, response.headers, await response.json());
-    } else {
-        throw new utility.Fault(response.status, await response.json());
     }
+
+    const error = new utility.Fault(response.status, await response.json());
+    if (inert) throw error;
+
+    const retry = () => request(url, { method, body, includeAuthorization, inert: true });
+    return errorManager.handle(error, retry);
 }
 
 export default class Router {
