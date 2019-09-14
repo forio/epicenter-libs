@@ -11,7 +11,7 @@ const COMETD_URL_POSTSCRIPT = ':9015/epicenter/cometd';
 const DISCONNECTING = 'DISCONNECTING';
 const DISCONNECTED = 'DISCONNECTED';
 const CONNECTING = 'CONNECTING';
-const CONNECTED = 'CONNECTED';
+const CONNECTED = 'connected';
 
 class ChannelManager {
 
@@ -58,8 +58,6 @@ class ChannelManager {
                 if (this.state === CONNECTED) {
                     this.cometd.reload();
                     this.cometd.getTransport().abort();
-                } else {
-                    this.disconnect();
                 }
             };
         }
@@ -69,7 +67,7 @@ class ChannelManager {
     // Connects to CometD server
     async handshake(options = {}) {
         await this.init({ logLevel: 'error' });
-
+        console.log('%c begining handshake', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
         if (this.state !== DISCONNECTED) {
             return Promise.reject(new utility.EpicenterError(`Connection state should be DISCONNECTED during handshake; State: ${this.state}`));
         }
@@ -87,7 +85,7 @@ class ChannelManager {
 
         this.cometd.ackEnabled = this.requireAcknowledgement;
         this.cometd.websocketEnabled = true;
-        return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
+        const res = new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
                 this.state = CONNECTED;
                 resolve(handshakeReply);
@@ -114,15 +112,18 @@ class ChannelManager {
                 defaultErrorHandler(e);
             }
         }));
+        console.log('%c COMETD STATUS HANDSHAKE', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
+        return res;
     }
 
     async disconnect() {
+        await this.init({ logLevel: 'error' });
         await this.empty();
         if (this.state !== CONNECTED) return Promise.resolve();
 
         const prevState = this.state;
         this.state = DISCONNECTING;
-        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
+        const res = new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
             if (!disconnectReply.successful) {
                 this.state = prevState;
                 reject(new utility.EpicenterError('Unable to disconnect from CometD server'));
@@ -131,9 +132,12 @@ class ChannelManager {
                 resolve();
             }
         }));
+        console.log('%c COMETD STATUS DISCONNECT', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
+        return res;
     }
 
-    async add(channel) {
+    async add(channel, options = {}) {
+        await this.init({ logLevel: 'error' });
         const { path, update } = channel;
         const subscriptionProps = {};
         const authToken = store.getItem(utility.AUTH_TOKEN);
@@ -145,13 +149,27 @@ class ChannelManager {
         }
         return new Promise((resolve, reject) => this.cometd.batch(() => {
             const subscription = this.cometd.subscribe(path, update, subscriptionProps, (subscribeReply) => {
-                if (!subscribeReply.successful) {
-                    reject(new utility.EpicenterError(`Unable to subscribe to the channel ${path}`));
-                } else {
-                    resolve(subscription);
+                if (subscribeReply.successful) {
+                    this.subscriptions.set(subscription.channel, subscription);
+                    resolve(subscribeReply);
+                    return;
+                }
+
+                const error = new utility.Fault('cometd', { information: subscribeReply });
+                
+                if (options.inert) {
+                    reject(error);
+                    return;
+                }
+
+                const retry = () => this.handshake({ inert: true });
+                try {
+                    const result = errorManager.handle(error, retry);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
                 }
             });
-            this.subscriptions.set(subscription.channel, subscription);
         }));
     }
 

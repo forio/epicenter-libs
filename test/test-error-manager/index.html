@@ -40,30 +40,28 @@
     }
 
     const handleByReLog = (error, retry) => {
-        // let query = '';
-        // if (error.code) {
-        //     query = query.concat(`?error=${error.code}`);
-        // }
-        // window.location.href = `/login.html${query}`;
+        let query = '';
+        if (error.code) {
+            query = query.concat(`?error=${error.code}`);
+        }
+        window.location.href = `/login.html${query}`;
         // authentication.logout();
     };
 
     const handleByReAuth = (error, retry) => {
         if (error.code === 'AUTHENTICATION_EXPIRED' || error.code === 'AUTHENTICATION_INVALIDATED') {
-            return authentication.upgrade({ userType: 'user' }).then(() => retry());
+            console.log('%c Some stuff is expired', 'font-size: 20px; color: #FB15B9FF;');
+            // return authentication.upgrade({ userType: 'user' }).then(() => retry());
         }
         return handleByReLog(error, retry);
     };
 
-    const subscribe = () => {
-        new Channel({
-            scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
-            scopeKey: '0000016d081b115c68ceb9c1e8727823c0c3',
-            pushCategory: utility.PUSH_CATEGORY.PRESENCE,
-            update: (message) => console.log('Message received!', message),
-        }).subscribe();
-    };
-    subscribe();
+    new Channel({
+        scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
+        scopeKey: '0000016d081b115c68ceb9c1e8727823c0c3',
+        pushCategory: utility.PUSH_CATEGORY.PRESENCE,
+        update: (message) => console.log('Message received!', message),
+    }).subscribe();
 
 
     // register error handler for 401`s 
