@@ -49,9 +49,8 @@
     };
 
     const handleByReAuth = (error, retry) => {
-        if (error.code === 'AUTHENTICATION_EXPIRED' || error.code === 'AUTHENTICATION_INVALIDATED') {
-            console.log('%c Some stuff is expired', 'font-size: 20px; color: #FB15B9FF;');
-            // return authentication.upgrade({ userType: 'user' }).then(() => retry());
+        if (error.code === 'AUTHENTICATION_INVALIDATED') {
+            return authentication.upgrade({ objectType: 'user', inert: true }).then(() => retry());
         }
         return handleByReLog(error, retry);
     };
@@ -65,7 +64,7 @@
 
 
     // register error handler for 401`s 
-    errorManager.registerHandler((error) => error.status === 401, handleByReLog);
+    errorManager.registerHandler((error) => error.status === 401, handleByReAuth);
 
     // globally stored session
     let session = {};

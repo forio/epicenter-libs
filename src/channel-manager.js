@@ -8,10 +8,22 @@ import errorManager from './error-manager.js';
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const COMETD_URL_POSTSCRIPT = ':9015/epicenter/cometd';
 
-const DISCONNECTING = 'DISCONNECTING';
-const DISCONNECTED = 'DISCONNECTED';
-const CONNECTING = 'CONNECTING';
+const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
+
+
+class CometdError extends Error {
+    constructor(reply) {
+
+        super();
+        const { error, successful } = reply;
+        if (error && error.includes('403') && !successful) {
+            this.status = 401;
+        }
+        this.information = reply;
+    }
+}
+
 
 class ChannelManager {
 
@@ -55,7 +67,7 @@ class ChannelManager {
 
         if (!utility.isNode() && utility.isBrowser()) {
             window.onunload = () => {
-                if (this.state === CONNECTED) {
+                if (this.cometd.getStatus() === CONNECTED) {
                     this.cometd.reload();
                     this.cometd.getTransport().abort();
                 }
@@ -67,12 +79,11 @@ class ChannelManager {
     // Connects to CometD server
     async handshake(options = {}) {
         await this.init({ logLevel: 'error' });
-        console.log('%c begining handshake', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
-        if (this.state !== DISCONNECTED) {
-            return Promise.reject(new utility.EpicenterError(`Connection state should be DISCONNECTED during handshake; State: ${this.state}`));
+
+        if (this.cometd.getStatus() !== DISCONNECTED) {
+            return Promise.resolve();
         }
 
-        this.state = CONNECTING;
         const handshakeProps = {};
         const authToken = store.getItem(utility.AUTH_TOKEN);
 
@@ -85,17 +96,14 @@ class ChannelManager {
 
         this.cometd.ackEnabled = this.requireAcknowledgement;
         this.cometd.websocketEnabled = true;
-        const res = new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
+        return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
-                this.state = CONNECTED;
                 resolve(handshakeReply);
                 return;
             }
 
-            // TODO: ask David what can be done here to make this look more like our conventional error
-            const error = new utility.Fault('cometd', { information: handshakeReply });
+            const error = new CometdError(handshakeReply);
             const defaultErrorHandler = (e) => {
-                this.state = DISCONNECTED;
                 reject(e);
             };
 
@@ -112,28 +120,20 @@ class ChannelManager {
                 defaultErrorHandler(e);
             }
         }));
-        console.log('%c COMETD STATUS HANDSHAKE', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
-        return res;
     }
 
     async disconnect() {
         await this.init({ logLevel: 'error' });
         await this.empty();
-        if (this.state !== CONNECTED) return Promise.resolve();
+        if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
-        const prevState = this.state;
-        this.state = DISCONNECTING;
-        const res = new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
+        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
             if (!disconnectReply.successful) {
-                this.state = prevState;
                 reject(new utility.EpicenterError('Unable to disconnect from CometD server'));
             } else {
-                this.state = DISCONNECTED;
                 resolve();
             }
         }));
-        console.log('%c COMETD STATUS DISCONNECT', 'font-size: 20px; color: #FB15B9FF;', this.cometd.getStatus());
-        return res;
     }
 
     async add(channel, options = {}) {
@@ -144,7 +144,7 @@ class ChannelManager {
         if (authToken) {
             subscriptionProps.ext = { [AUTH_TOKEN_KEY]: authToken };
         }
-        if (this.state !== CONNECTED) {
+        if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
         }
         return new Promise((resolve, reject) => this.cometd.batch(() => {
@@ -155,7 +155,7 @@ class ChannelManager {
                     return;
                 }
 
-                const error = new utility.Fault('cometd', { information: subscribeReply });
+                const error = new CometdError(subscribeReply);
                 
                 if (options.inert) {
                     reject(error);
