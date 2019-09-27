@@ -32,24 +32,17 @@ export class Fault extends Error {
 
         super();
 
+        const { information, message, cause } = error;
         this.status = status;
-        this.message = error.message;
+        this.message = message;
 
-        if (error.information) {
-            if (error.information.code) {
-                this.code = error.information.code;
-
-                if (Object.keys(error.information).length > 1) {
-                    this.information = error.information;
-                    delete this.information.code;
-                }
-            } else if (Object.keys(error.information).length > 0) {
-                this.information = error.information;
-            }
+        if (information) {
+            const { code, ...rest } = information;
+            this.code = code;
+            this.information = rest;
         }
-
-        if (error.cause) {
-            this.cause = new Fault(error.cause);
+        if (cause) {
+            this.cause = new Fault(cause);
         }
     }
 }
