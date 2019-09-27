@@ -30,7 +30,7 @@ export async function login(options) {
 }
 
 export async function upgrade(options) {
-    const { objectType = 'admin', ...others } = options;
+    const { objectType = 'admin', inert, ...others } = options;
     const { accountShortName, projectShortName } = others;
     
     const response = await new Router()
@@ -38,6 +38,7 @@ export async function upgrade(options) {
         .withProjectShortName(projectShortName)
         .patch('/authentication', {
             body: { objectType },
+            inert,
         });
     await logout();
 

@@ -7,6 +7,7 @@ module.exports = {
     entry: [
         './epicenter.js',
     ],
+    // devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
     output: {
         path: path.join(__dirname, 'public'),
         filename: 'epicenter.js',
