@@ -57,7 +57,7 @@ class Config {
     }
 
     getPathAccountProject(pathname) {
-        const match = pathname.match(/\/app\/(\w+)\/(\w+)/);
+        const match = pathname.match(/\/app\/([\w-]+)\/([\w-]+)/);
         if (match) {
             const [account, project] = match.slice(1);
             this.accountShortName = account;
