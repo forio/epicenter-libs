@@ -6,7 +6,7 @@ import * as utility from './utility.js';
 import errorManager from './error-manager.js';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
-const COMETD_URL_POSTSCRIPT = ':9015/epicenter/cometd';
+const COMETD_URL_POSTSCRIPT = '/v3/epicenter/cometd';
 
 const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
