@@ -64,16 +64,3 @@ export function isNode() {
 export function isBrowser() {
     return (typeof window !== 'undefined');
 }
-
-export function EpicenterPromise(promise) {
-
-    return new Promise((resolve, reject) => {
-        promise
-            .then((result) => {
-                resolve(result);
-            })
-            .catch((fault) => {
-                reject(fault);
-            });
-    });
-}

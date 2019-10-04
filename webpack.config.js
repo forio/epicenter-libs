@@ -5,7 +5,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: [
-        './epicenter.js',
+        './src/epicenter.js',
     ],
     // devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
     output: {

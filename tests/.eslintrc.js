@@ -1,6 +1,7 @@
 'use strict';
 // More lenient version of our eslint
 module.exports = {
+    "root": true,
     "globals": {
         "epicenter": true,
         "chai": true,
