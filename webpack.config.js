@@ -1,13 +1,14 @@
 'use strict';
 const path = require('path');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
     entry: [
         './src/epicenter.js',
     ],
-    // devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
+    devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
     output: {
         path: path.join(__dirname, 'public'),
         filename: 'epicenter.js',
@@ -54,5 +55,6 @@ module.exports = {
     },
     plugins: [
         new WebpackCleanupPlugin(),
+        new BundleAnalyzerPlugin(),
     ],
 };

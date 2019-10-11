@@ -5,7 +5,7 @@ import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
 class Config {
     _apiVersion = 3;
     _apiScheme = 'http';
-    _apiHost = 'epistage1.foriodev.com';
+    _apiHost = 'test.forio.com';
 
     get apiScheme() {
         return this._apiScheme;
@@ -96,9 +96,7 @@ class Config {
     }
 
     async load() {
-        if (this.loaded) {
-            return;
-        }
+        if (this.loaded) return;
         this.loaded = true;
 
         if (isNode()) {
@@ -114,9 +112,10 @@ class Config {
         if (window.location.protocol.includes('file')) {
             this.apiVersion = 3;
             this.apiScheme = 'http';
-            this.apiHost = 'epistage1.foriodev.com';
+            this.apiHost = 'test.forio.com';
             return;
         }
+
         throw new EpicenterError('Could not identify environment; no configuration was setup');
     }
 }

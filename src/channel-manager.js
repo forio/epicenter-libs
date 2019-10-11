@@ -103,12 +103,9 @@ class ChannelManager {
             }
 
             const error = new CometdError(handshakeReply);
-            const defaultErrorHandler = (e) => {
-                reject(e);
-            };
 
             if (options.inert) {
-                defaultErrorHandler(error);
+                reject(error);
                 return;
             }
 
@@ -117,7 +114,7 @@ class ChannelManager {
                 const result = errorManager.handle(error, retry);
                 resolve(result);
             } catch (e) {
-                defaultErrorHandler(e);
+                reject(e);
             }
         }));
     }
@@ -138,6 +135,8 @@ class ChannelManager {
 
     async add(channel, options = {}) {
         await this.init({ logLevel: 'error' });
+        // TODO, after you sort out the publish function, circle back and make sure your publish
+        // sends out correctly formatted data for the update functions.
         const { path, update } = channel;
         const subscriptionProps = {};
         const authToken = store.getItem(utility.AUTH_TOKEN);
@@ -147,8 +146,9 @@ class ChannelManager {
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
         }
+        const handleCometdUpdate = ({ channel, data }) => update(JSON.parse(data));
         return new Promise((resolve, reject) => this.cometd.batch(() => {
-            const subscription = this.cometd.subscribe(path, update, subscriptionProps, (subscribeReply) => {
+            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply) => {
                 if (subscribeReply.successful) {
                     this.subscriptions.set(subscription.channel, subscription);
                     resolve(subscribeReply);
