@@ -27,6 +27,7 @@ export default class Channel {
     }
 
     unsubscribe() {
+        this.subscription = null;
         channelManager.remove(this.subscription);
     }
 }

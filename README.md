@@ -5,7 +5,7 @@ Intended for use w/ Node 12
 UPDATEME: (ideally before a major knowledge transfer to avoid frequent update responsibilities); what follows below is just a few makeshift notes; any formatting, clarification, or additional details you want to tack on are greatly appreciated
 
 ## Transition Guide (v2 &rarr; v3)
-* Everything has a scope Project, Group, Episode, World, Run
+* Everything has a scopeBoundary: Project, Group, Episode, World, Run, 
 * Use `key` — `id` is now internalized, now the long value of the row id in the database
 * All `key`s are GUIDs (globally unique ids)
 * objectType - `user` or `admin`; used for a thing? permissions or something

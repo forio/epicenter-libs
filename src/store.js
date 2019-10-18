@@ -46,6 +46,6 @@ class BrowserStore extends Store {
     }
 }
 
-const storeManager = isNode() ? new NodeStore() : new BrowserStore();
-export default storeManager;
+const store = isNode() ? new NodeStore() : new BrowserStore();
+export default store;
 
