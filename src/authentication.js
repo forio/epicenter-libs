@@ -1,12 +1,12 @@
 import Router from './router.js';
-import store from './store.js';
+import identification from './identification.js';
 import channelManager from './channel-manager.js';
 import * as utility from './utility.js';
 
 export async function logout() {
     try {
         await channelManager.disconnect();
-        store.removeItem(utility.AUTH_TOKEN);
+        identification.remove();
     } catch (err) {
         throw new utility.EpicenterError('Encountered error while logging out');
     }
@@ -25,14 +25,14 @@ export async function login(options) {
         });
     await logout();
 
-    store.setItem(utility.AUTH_TOKEN, response.body.session);
+    identification.set(response.body);
     return response;
 }
 
 export async function upgrade(options) {
     const { objectType = 'admin', inert, ...others } = options;
     const { accountShortName, projectShortName } = others;
-    
+
     const response = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -42,15 +42,29 @@ export async function upgrade(options) {
         });
     await logout();
 
-    store.setItem(utility.AUTH_TOKEN, response.body.session);
+    identification.set(response.body);
     return response;
 }
 
-export async function getSession() {
-    const response = await new Router().get('/authentication');
+export async function sso(options) {
+    const { accountShortName, projectShortName } = options;
+
+    const response = await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get('/registration/sso');
+
+    identification.set(response.body);
     return response;
 }
 
-export function hasSession() {
-    return store.getItem(utility.AUTH_TOKEN);
-}
+// export async function getSession() {
+//     const response = await new Router().get('/authentication');
+
+//     identification.set(response.body);
+//     return response;
+// }
+
+// export function hasSession() {
+//     return store.getItem(utility.SESSION);
+// }

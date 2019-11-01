@@ -1,6 +1,6 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import store from './store.js';
+import identification from './identification';
 import config from './config.js';
 import * as utility from './utility.js';
 import errorManager from './error-manager.js';
@@ -85,11 +85,11 @@ class ChannelManager {
         }
 
         const handshakeProps = {};
-        const authToken = store.getItem(utility.AUTH_TOKEN);
+        const identity = identification.get();
 
-        if (authToken) {
+        if (identity) {
             handshakeProps.ext = {
-                [AUTH_TOKEN_KEY]: authToken,
+                [AUTH_TOKEN_KEY]: identity.session,
                 ack: this.requireAcknowledgement,
             };
         }
@@ -109,7 +109,7 @@ class ChannelManager {
                 return;
             }
 
-            const retry = () => this.handshake({ inert: true });
+            const retry = () => this.handshake({ ...options, inert: true });
             try {
                 const result = errorManager.handle(error, retry);
                 resolve(result);
@@ -136,12 +136,12 @@ class ChannelManager {
     async add(channel, options = {}) {
         await this.init({ logLevel: 'error' });
         // TODO, after you sort out the publish function, circle back and make sure your publish
-        // sends out correctly formatted data for the update functions.
+        // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
         const { path, update } = channel;
         const subscriptionProps = {};
-        const authToken = store.getItem(utility.AUTH_TOKEN);
-        if (authToken) {
-            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: authToken };
+        const identity = identification.get();
+        if (identity) {
+            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.session };
         }
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
@@ -156,7 +156,7 @@ class ChannelManager {
                 }
 
                 const error = new CometdError(subscribeReply);
-                
+
                 if (options.inert) {
                     reject(error);
                     return;

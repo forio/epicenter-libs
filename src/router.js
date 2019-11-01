@@ -1,8 +1,8 @@
 import fetch from 'cross-fetch';
 import config from './config.js';
-import store from './store.js';
-import * as utility from './utility.js';
+import identification from './identification';
 import errorManager from './error-manager.js';
+import * as utility from './utility.js';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
@@ -11,9 +11,9 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
-    const authToken = store.getItem(utility.AUTH_TOKEN);
-    if (includeAuthorization && authToken) {
-        headers.Authorization = `Bearer ${authToken}`;
+    const identity = identification.get();
+    if (includeAuthorization && identity) {
+        headers.Authorization = `Bearer ${identity.session}`;
     }
 
     const response = await fetch(url, {

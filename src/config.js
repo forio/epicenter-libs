@@ -1,11 +1,15 @@
 import fetch from 'cross-fetch';
-import { isBrowser, isNode, EpicenterError, Fault } from './utility.js';
-
+import { isBrowser, isNode, EpicenterError, Fault, last, BROWSER_STORAGE_TYPES } from './utility.js';
+import identification from './identification.js';
+const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
 
 class Config {
     _apiVersion = 3;
     _apiScheme = 'http';
-    _apiHost = 'test.forio.com';
+    _apiHost = 'api.forio.com';
+    _localConfigProtocol = 'https:'
+    _localConfigHost = 'test.forio.com';
+    _browserStorageType = COOKIE;
 
     get apiScheme() {
         return this._apiScheme;
@@ -21,6 +25,38 @@ class Config {
 
     set apiHost(apiHost) {
         this._apiHost = apiHost;
+    }
+
+    set browserStorageType(browserStorageType) {
+        if (browserStorageType !== COOKIE && browserStorageType !== SESSION) {
+            throw new EpicenterError(`Invalid browserStorageType: "${browserStorageType}", please use "${COOKIE}" or "${SESSION}".`);
+        }
+        this._browserStorageType = browserStorageType;
+        if (this._browserStorageType !== browserStorageType) {
+            identification.reinitStore();
+        }
+    }
+
+    get browserStorageType() {
+        return this._browserStorageType;
+    }
+
+    get localConfigProtocol() {
+        return this._localConfigProtocol;
+    }
+
+    set localConfigProtocol(localConfigProtocol) {
+        if (last(localConfigProtocol) !== ':') {
+            localConfigProtocol = `${localConfigProtocol}:`;
+        }
+        this._localConfigProtocol = localConfigProtocol;
+    }
+    get localConfigHost() {
+        return this._localConfigHost;
+    }
+
+    set localConfigHost(localConfigHost) {
+        this._localConfigHost = localConfigHost;
     }
 
     get apiVersion() {
@@ -71,8 +107,8 @@ class Config {
 
     async loadBrowser() {
         const isLocal = this.isLocal();
-        const protocol = window.location.protocol;
-        const host = isLocal ? this._apiHost : window.location.host;
+        const protocol = isLocal ? this.localConfigProtocol : window.location.protocol;
+        const host = isLocal ? this.localConfigHost : window.location.host;
         if (!isLocal) this.getPathAccountProject(window.location.pathname);
 
         const response = await fetch(`${protocol}//${host}/epicenter/v${this._apiVersion}/config`, {
@@ -106,13 +142,6 @@ class Config {
 
         if (isBrowser() && window.location.protocol.includes('http')) {
             await this.loadBrowser();
-            return;
-        }
-
-        if (window.location.protocol.includes('file')) {
-            this.apiVersion = 3;
-            this.apiScheme = 'http';
-            this.apiHost = 'test.forio.com';
             return;
         }
 

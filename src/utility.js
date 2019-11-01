@@ -1,4 +1,8 @@
-export const AUTH_TOKEN = Symbol('com.forio.epicenter.token');
+
+export const BROWSER_STORAGE_TYPES = {
+    COOKIE: 'COOKIE',
+    SESSION: 'SESSION',
+};
 
 export const SCOPE_BOUNDARY = {
     PROJECT: 'PROJECT',
@@ -28,7 +32,7 @@ export const LOCK_TYPE = {
     PARTICIPANT: 'PARTICIPANT',
     ANONYMOUS: 'ANONYMOUS',
 };
-
+// Generic error from Epicenter Libs
 export class EpicenterError extends Error {
 
     constructor(message) {
@@ -38,7 +42,7 @@ export class EpicenterError extends Error {
         this.message = message;
     }
 }
-
+// For API calls to the backend
 export class Fault extends Error {
 
     constructor(status, error) {
@@ -67,18 +71,14 @@ export class Result {
         this.status = status;
         this.headers = headers;
         this.body = body;
+
     }
 }
 
-export function isNode() {
-    return (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
-}
+export const isNode = () => (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
+export const isBrowser = () => (typeof window !== 'undefined');
 
-export function isBrowser() {
-    return (typeof window !== 'undefined');
-}
-
-export function toQueryString(qOptions, keys) {
+export const toQueryString = (qOptions, keys) => {
     keys = keys || Object.keys(qOptions);
     const qString = keys.flatMap((key) => {
         const value = qOptions[key];
@@ -88,4 +88,6 @@ export function toQueryString(qOptions, keys) {
     }).join('&');
 
     return qString ? `?${qString}` : '';
-}
+};
+
+export const last = (strOrArr) => strOrArr[strOrArr.length - 1];

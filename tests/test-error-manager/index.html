@@ -63,7 +63,7 @@
     }).subscribe();
 
 
-    // register error handler for 401`s 
+    // register error handler for 401`s
     errorManager.registerHandler((error) => error.status === 401, handleByReAuth);
 
     // globally stored session
