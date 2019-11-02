@@ -2,7 +2,7 @@
   "name": "epicenter-libs",
   "version": "1.0.0",
   "type": "module",
-  "main": "epicenter.js",
+  "main": "public/epicenter.js",
   "scripts": {
     "build": "webpack --config webpack.config.js --watch --mode=development"
   },
@@ -22,11 +22,12 @@
     "@babel/preset-env": "^7.5.5",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
+    "css-loader": "^3.2.0",
     "eslint": "^6.1.0",
+    "mini-css-extract-plugin": "^0.8.0",
     "uglifyjs-webpack-plugin": "^2.2.0",
     "webpack": "^4.39.2",
     "webpack-bundle-analyzer": "^3.5.2",
-    "webpack-cleanup-plugin": "^0.5.1",
-    "webpack-cli": "^3.3.7"
+    "webpack-cleanup-plugin": "^0.5.1"
   }
 }

@@ -20,7 +20,7 @@ class Store {
 }
 
 const nodeMap = new Map();
-class NodeStore extends Store {
+export class NodeStore extends Store {
     constructor() {
         super(nodeMap);
     }
@@ -35,7 +35,7 @@ class NodeStore extends Store {
     }
 }
 
-class SessionStore extends Store {
+export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
@@ -50,32 +50,21 @@ class SessionStore extends Store {
     }
 }
 
-class CookieStore {
+export class CookieStore {
     constructor(options) {
         const defaults = { domain: `.${window.location.hostname}`, path: '/' };
         this.options = { ...defaults, ...options };
     }
     getItem(key) {
-        return JSON.parse(cookies.getItem(key));
+        return JSON.parse(cookies.getItem(key.toString()));
     }
     setItem(key, value) {
-        return cookies.setItem(key, JSON.stringify(value), this.options);
+        return cookies.setItem(key.toString(), JSON.stringify(value), this.options);
     }
     removeItem(key) {
-        return cookies.removeItem(key, this.options);
+        return cookies.removeItem(key.toString(), this.options);
     }
     clear() {
         return cookies.clear();
     }
 }
-
-/* Store Factory */
-export const getIdentificationStore = () => {
-    if (isNode()) return new NodeStore();
-    switch (config.browserStorageType) {
-        case SESSION: return new SessionStore();
-        case COOKIE:
-        default: return new CookieStore();
-    }
-};
-

@@ -1,24 +1,24 @@
-import { getIdentificationStore } from './store.js';
-
 
 const SESSION_KEY = Symbol('com.forio.epicenter.session');
 class Identification {
-    #store = getIdentificationStore();
-    reinitStore() {
-        this.#store = getIdentificationStore();
+    #store
+    constructor(store) {
+        this.#store = store;
+    }
+    useStore(store) {
+        this.#store = store;
     }
     get() {
-        const session = this.#store.getIem(SESSION_KEY);
+        const session = this.#store.getItem(SESSION_KEY.description);
         return session;
     }
     set(session) {
-        this.#store.setItem(SESSION_KEY, session);
+        this.#store.setItem(SESSION_KEY.description, session);
     }
     remove() {
-        this.#store.removeItem(SESSION_KEY);
+        this.#store.removeItem(SESSION_KEY.description);
     }
 }
 
-const identification = new Identification();
-export default identification;
+export default Identification;
 

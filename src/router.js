@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch';
 import config from './config.js';
-import identification from './identification';
 import errorManager from './error-manager.js';
 import * as utility from './utility.js';
 
@@ -11,7 +10,7 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
-    const identity = identification.get();
+    const identity = config.identification.get();
     if (includeAuthorization && identity) {
         headers.Authorization = `Bearer ${identity.session}`;
     }

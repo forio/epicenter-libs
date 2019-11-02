@@ -1,0 +1,88 @@
+
+
+html {
+    font-size: 1em;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 100vh;
+    height: 100%;
+    color: darkslategray;
+}
+
+input {
+    padding: 0.25rem;
+    font-size: 1rem;
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 0.5rem;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 0;
+}
+
+#login-error {
+    padding: 1rem;
+    border: 1px solid rgb(76, 148, 255);
+    background-color: lightblue;
+    border-radius: 2px;
+    display: none;
+}
+
+#login-error.visible {
+    display: block;
+}
+
+main {
+    width: 30rem;
+}
+
+fieldset {
+    margin: 1rem 0;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+/* Button CSS taken shamelessly from epicenter UI */
+button {
+    position: relative;
+    vertical-align: middle;
+
+    border: 1px solid rgb(76, 148, 255);
+    border-radius: 20px;
+    display: inline-block;
+    overflow: hidden;
+    margin-bottom: 0;
+    padding: 6px 24px;
+
+    background-color: transparent;
+    color: rgb(76, 148, 255);
+
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: all 0.3s;
+    user-select: none;
+}
+
+button:hover {
+    background-color: rgb(76, 148, 255);
+    border-color: rgb(76, 148, 255);
+    color: rgb(245, 248, 249);
+
+    outline: none;
+}

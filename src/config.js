@@ -1,7 +1,17 @@
 import fetch from 'cross-fetch';
 import { isBrowser, isNode, EpicenterError, Fault, last, BROWSER_STORAGE_TYPES } from './utility.js';
-import identification from './identification.js';
+import { NodeStore, SessionStore, CookieStore } from './store.js';
+import Identification from './identification.js';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
+
+const getIdentificationStore = (browserStorageType) => {
+    if (isNode()) return new NodeStore();
+    switch (browserStorageType) {
+        case SESSION: return new SessionStore();
+        case COOKIE:
+        default: return new CookieStore();
+    }
+};
 
 class Config {
     _apiVersion = 3;
@@ -10,6 +20,7 @@ class Config {
     _localConfigProtocol = 'https:'
     _localConfigHost = 'test.forio.com';
     _browserStorageType = COOKIE;
+    _identification = new Identification(getIdentificationStore(this.browserStorageType));
 
     get apiScheme() {
         return this._apiScheme;
@@ -27,13 +38,22 @@ class Config {
         this._apiHost = apiHost;
     }
 
+    get identification() {
+        return this._identification;
+    }
+
+    set identification(identification) {
+        this._identification = identification;
+    }
+
     set browserStorageType(browserStorageType) {
         if (browserStorageType !== COOKIE && browserStorageType !== SESSION) {
             throw new EpicenterError(`Invalid browserStorageType: "${browserStorageType}", please use "${COOKIE}" or "${SESSION}".`);
         }
-        this._browserStorageType = browserStorageType;
         if (this._browserStorageType !== browserStorageType) {
-            identification.reinitStore();
+            this._browserStorageType = browserStorageType;
+            const store = getIdentificationStore(browserStorageType);
+            this.identification.useStore(store);
         }
     }
 
@@ -51,6 +71,7 @@ class Config {
         }
         this._localConfigProtocol = localConfigProtocol;
     }
+
     get localConfigHost() {
         return this._localConfigHost;
     }
@@ -149,5 +170,5 @@ class Config {
     }
 }
 
-const configManager = new Config();
-export default configManager;
+const config = new Config();
+export default config;

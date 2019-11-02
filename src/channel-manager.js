@@ -1,6 +1,5 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import identification from './identification';
 import config from './config.js';
 import * as utility from './utility.js';
 import errorManager from './error-manager.js';
@@ -85,7 +84,7 @@ class ChannelManager {
         }
 
         const handshakeProps = {};
-        const identity = identification.get();
+        const identity = config.identification.get();
 
         if (identity) {
             handshakeProps.ext = {
@@ -139,7 +138,7 @@ class ChannelManager {
         // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
         const { path, update } = channel;
         const subscriptionProps = {};
-        const identity = identification.get();
+        const identity = config.identification.get();
         if (identity) {
             subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.session };
         }
