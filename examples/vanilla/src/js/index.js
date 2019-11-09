@@ -26,7 +26,7 @@ channelManager.handshake();
 displayNameEl.innerText = session.displayName;
 
 /* Handle error handlers */
-const handleByReLog = (error) => {
+const handleByRelog = (error) => {
     let query = '';
     if (error.code) {
         query = query.concat(`?error=${error.code}`);
@@ -35,13 +35,30 @@ const handleByReLog = (error) => {
     // authentication.logout();
 };
 
+const handleSSO = () => {
+
+};
+
+const handleUnknown = () => {
+    window.location.href = '/unknown.html';
+};
+
+const handleByLoginMethod = (error) => {
+    switch (session.loginMethod.objectType) {
+        case 'native': return handleByRelog(error);
+        case 'sso': return handleSSO(error);
+        case 'none':
+        default: return handleUnknown(error);
+    }
+};
+
 const handleByReAuth = (error, retry) => {
     if (error.code === 'AUTHENTICATION_INVALIDATED') {
         return authentication.upgrade({ objectType: 'user', inert: true })
             .then(() => retry())
-            .catch(() => handleByReLog(error));
+            .catch(() => handleByLoginMethod(error));
     }
-    return handleByReLog(error);
+    return handleByLoginMethod(error);
 };
 
 errorManager.registerHandler((error) => error.status === 401, handleByReAuth);

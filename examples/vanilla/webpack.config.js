@@ -52,6 +52,11 @@ module.exports = {
             template: './src/html/login.html',
             chunks: ['login'],
         }),
+        new HtmlWebpackPlugin({
+            filename: 'unknown.html',
+            template: './src/html/unknown.html',
+            chunks: [],
+        }),
         new MiniCssExtractPlugin({
             filename: '[name].css',
         }),
