@@ -137,7 +137,7 @@ class Config {
             cache: 'no-cache',
             redirect: 'follow',
         });
-
+        console.log('%c resp', 'font-size: 20px; color: #FB15B9FF;', response);
         const contentType = response.headers.get('content-type');
         if (!contentType || !contentType.includes('application/json')) {
             throw new EpicenterError('Invalid configuration response');
@@ -150,11 +150,12 @@ class Config {
         } else {
             throw new Fault(response.status, await response.json());
         }
+        this.loaded = true;
+        return response;
     }
 
     async load() {
         if (this.loaded) return;
-        this.loaded = true;
 
         if (isNode()) {
             this.loadNode();
