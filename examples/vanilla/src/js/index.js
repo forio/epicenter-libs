@@ -19,7 +19,6 @@ const session = authentication.getLocalSession();
 if (!session) {
     window.location.href = '/login.html';
 }
-console.log('%c session', 'font-size: 20px; color: #FB15B9FF;', session);
 
 channelManager.handshake();
 
@@ -41,6 +40,7 @@ const handleSSO = () => {
 
 const handleUnknown = () => {
     window.location.href = '/unknown.html';
+    // authentication.logout();
 };
 
 const handleByLoginMethod = (error) => {
