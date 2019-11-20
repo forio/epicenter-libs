@@ -43,5 +43,37 @@ describe('Authentication', () => {
                     req.method.toUpperCase().should.equal('POST');
                 });
         });
+        it('should go to the right url', async() => {
+            const endpoints = { account: 'forio-dev', project: 'epi-v3' };
+
+            config.accountShortName = endpoints.account;
+            config.projectShortName = endpoints.project;
+
+            await authentication.login({
+                handle: 'joe',
+                password: 'pass',
+                objectType: 'user',
+            })
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${endpoints.account}/${endpoints.project}/authentication`);
+                });
+        });
+
+        it('should send requests to body', async() => {
+            await authentication.login({
+                handle: 'joe',
+                password: 'pass',
+                objectType: 'user',
+            })
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.requestBody.should.equal(JSON.stringify({
+                        handle: 'joe',
+                        password: 'pass',
+                        objectType: 'user',
+                    }));
+                });
+        });
     });
 });
