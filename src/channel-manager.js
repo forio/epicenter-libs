@@ -88,7 +88,7 @@ class ChannelManager {
 
         if (identity) {
             handshakeProps.ext = {
-                [AUTH_TOKEN_KEY]: identity.session,
+                [AUTH_TOKEN_KEY]: identity.token,
                 ack: this.requireAcknowledgement,
             };
         }
@@ -140,7 +140,7 @@ class ChannelManager {
         const subscriptionProps = {};
         const identity = config.identification.get();
         if (identity) {
-            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.session };
+            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.token };
         }
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();

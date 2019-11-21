@@ -12,8 +12,8 @@ class Identification {
         const session = this.#store.getItem(SESSION_KEY.description);
         return session;
     }
-    set(session) {
-        this.#store.setItem(SESSION_KEY.description, session);
+    set(identity) {
+        this.#store.setItem(SESSION_KEY.description, identity);
     }
     remove() {
         this.#store.removeItem(SESSION_KEY.description);
