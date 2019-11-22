@@ -75,5 +75,15 @@ describe('Authentication', () => {
                     }));
                 });
         });
+
+        it('should not do a DELETE', async() => {
+            server.requests = [];
+            await authentication.logout()
+                .then((res) => {
+                    expect(config.identification.get()).to.equal(null);
+                    server.requests.should.be.empty;
+                });
+        });
+
     });
 });
