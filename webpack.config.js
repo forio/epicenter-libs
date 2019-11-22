@@ -55,6 +55,8 @@ module.exports = {
     },
     plugins: [
         new WebpackCleanupPlugin(),
-        new BundleAnalyzerPlugin(),
+        new BundleAnalyzerPlugin({
+            analyzerPort: '1234',
+        }),
     ],
 };

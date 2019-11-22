@@ -1,7 +1,4 @@
-import { isNode, BROWSER_STORAGE_TYPES } from './utility.js';
-import config from './config.js';
 import cookies from './cookies.js';
-const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
 
 class Store {
     #store;

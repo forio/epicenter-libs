@@ -84,7 +84,7 @@ class ChannelManager {
         }
 
         const handshakeProps = {};
-        const identity = config.identification.get();
+        const identity = config.identification;
 
         if (identity) {
             handshakeProps.ext = {
@@ -138,7 +138,7 @@ class ChannelManager {
         // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
         const { path, update } = channel;
         const subscriptionProps = {};
-        const identity = config.identification.get();
+        const identity = config.identification;
         if (identity) {
             subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.token };
         }
