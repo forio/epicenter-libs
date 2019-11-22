@@ -12,7 +12,7 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     };
     const identity = config.identification.get();
     if (includeAuthorization && identity) {
-        headers.Authorization = `Bearer ${identity.session}`;
+        headers.Authorization = `Bearer ${identity.token}`;
     }
 
     const response = await fetch(url, {
