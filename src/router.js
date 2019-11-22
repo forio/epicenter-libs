@@ -10,7 +10,7 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
-    const identity = config.identification.get();
+    const identity = config.identification;
     if (includeAuthorization && identity) {
         headers.Authorization = `Bearer ${identity.token}`;
     }

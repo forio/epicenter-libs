@@ -6,7 +6,7 @@ import * as utility from './utility.js';
 export async function logout() {
     try {
         await channelManager.disconnect();
-        config.identification.remove();
+        config.identification = undefined;
     } catch (err) {
         throw new utility.EpicenterError('Encountered error while logging out');
     }
@@ -25,7 +25,7 @@ export async function login(options) {
         });
     await logout();
 
-    config.identification.set(response.body);
+    config.identification = response.body;
     return response;
 }
 
@@ -42,7 +42,7 @@ export async function upgrade(options) {
         });
     await logout();
 
-    config.identification.set(response.body);
+    config.identification = response.body;
     return response;
 }
 
@@ -54,17 +54,17 @@ export async function sso(options) {
         .withProjectShortName(projectShortName)
         .get('/registration/sso');
 
-    config.identification.set(response.body);
+    config.identification = response.body;
     return response;
 }
 
 export async function getSession() {
     const response = await new Router().get('/authentication');
 
-    config.identification.set(response.body);
+    config.identification = response.body;
     return response;
 }
 
 export function getLocalSession() {
-    return config.identification.get();
+    return config.identification;
 }

@@ -1,17 +1,6 @@
 import fetch from 'cross-fetch';
-import { isBrowser, isNode, EpicenterError, Fault, last, BROWSER_STORAGE_TYPES } from './utility.js';
-import { NodeStore, SessionStore, CookieStore } from './store.js';
-import Identification from './identification.js';
-const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
-
-const getIdentificationStore = (browserStorageType) => {
-    if (isNode()) return new NodeStore();
-    switch (browserStorageType) {
-        case SESSION: return new SessionStore();
-        case COOKIE:
-        default: return new CookieStore();
-    }
-};
+import { isBrowser, isNode, EpicenterError, Fault, last } from './utility.js';
+import identification from './identification.js';
 
 class Config {
     _apiVersion = 3;
@@ -19,8 +8,7 @@ class Config {
     _apiHost = 'api.forio.com';
     _localConfigProtocol = 'https:'
     _localConfigHost = 'test.forio.com';
-    _browserStorageType = COOKIE;
-    _identification = new Identification(getIdentificationStore(this.browserStorageType));
+    _identification = identification;
 
     get apiScheme() {
         return this._apiScheme;
@@ -39,26 +27,23 @@ class Config {
     }
 
     get identification() {
-        return this._identification;
+        return this._identification.getIdentity();
     }
 
-    set identification(identification) {
-        this._identification = identification;
+    set identification(identity) {
+        if (!identity) {
+            this._identification.remove();
+        } else {
+            this._identification.setIdentity(identity);
+        }
     }
 
-    set browserStorageType(browserStorageType) {
-        if (browserStorageType !== COOKIE && browserStorageType !== SESSION) {
-            throw new EpicenterError(`Invalid browserStorageType: "${browserStorageType}", please use "${COOKIE}" or "${SESSION}".`);
-        }
-        if (this._browserStorageType !== browserStorageType) {
-            this._browserStorageType = browserStorageType;
-            const store = getIdentificationStore(browserStorageType);
-            this.identification.useStore(store);
-        }
+    set browserStorageType(storeType) {
+        this._identification.useStore(storeType);
     }
 
     get browserStorageType() {
-        return this._browserStorageType;
+        return this._identification.type;
     }
 
     get localConfigProtocol() {

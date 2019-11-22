@@ -1,18 +1,39 @@
 
+import { NodeStore, SessionStore, CookieStore } from './store.js';
+import { isNode, EpicenterError, BROWSER_STORAGE_TYPES } from './utility.js';
+const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
+
+const getIdentificationStore = (browserStorageType) => {
+    if (isNode()) return new NodeStore();
+    switch (browserStorageType) {
+        case SESSION: return new SessionStore();
+        case COOKIE:
+        default: return new CookieStore();
+    }
+};
+
 const SESSION_KEY = Symbol('com.forio.epicenter.session');
 class Identification {
+    type
     #store
-    constructor(store) {
-        this.#store = store;
+
+    constructor(type) {
+        this._identification.useStore(type);
     }
-    useStore(store) {
-        this.#store = store;
+    useStore(storeType) {
+        if (storeType !== COOKIE && storeType !== SESSION) {
+            throw new EpicenterError(`Invalid Storage Type: "${storeType}", please use "${COOKIE}" or "${SESSION}".`);
+        }
+        if (this.type !== storeType) {
+            this.type = storeType;
+            this.#store = getIdentificationStore(storeType);
+        }
     }
-    get() {
+    getIdentity() {
         const session = this.#store.getItem(SESSION_KEY.description);
         return session;
     }
-    set(identity) {
+    setIdentity(identity) {
         this.#store.setItem(SESSION_KEY.description, identity);
     }
     remove() {
@@ -20,5 +41,6 @@ class Identification {
     }
 }
 
-export default Identification;
+const identification = new Identification(COOKIE);
+export default identification;
 
