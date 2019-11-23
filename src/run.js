@@ -23,8 +23,8 @@ export async function create(options = {}) {
                 },
                 trackingKey,
                 modelFile: model,
-                modelContext: {},
-                executionContext: {},
+                modelContext: {/* Overrides model ctx2 but not stored for clone.  */},
+                executionContext: {/* Carries over for clones. Carries arguments for model file worker on model initialization */},
             },
         });
 }
@@ -111,12 +111,12 @@ export async function query(options = {}) {
     const { scopeBoundary, scopeKey, model, accountShortName, projectShortName, ...others } = options;
     const { filter, sort, first, max, timeout, projections } = others;
     const queryString = toQueryString({ filter, sort, first, max, timeout, projections });
-    
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/run/${scopeBoundary}/${scopeKey}/${model}${queryString}`);
-    
+
 }
 
 export async function introspect(model, options = {}) {
