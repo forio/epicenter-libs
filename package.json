@@ -8,6 +8,11 @@
     "test": "karma start --browsers ChromeHeadless karma.conf.js",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.js --single-run"
   },
+  "pre-push": {
+    "run": [
+      "single-test"
+    ]
+  },
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "acorn": "^6.0.0",
