@@ -1,6 +1,7 @@
 
 import { NodeStore, SessionStore, CookieStore } from './store.js';
 import { isNode, EpicenterError, BROWSER_STORAGE_TYPES } from './utility.js';
+import cookies from './cookies.js';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
 
 const getIdentificationStore = (browserStorageType) => {
@@ -13,6 +14,7 @@ const getIdentificationStore = (browserStorageType) => {
 };
 
 const SESSION_KEY = Symbol('com.forio.epicenter.session');
+const EPI_SSO_KEY = 'epicenter.v3.sso';
 class Identification {
     type
     #store
@@ -35,6 +37,15 @@ class Identification {
     }
     setIdentity(identity) {
         this.#store.setItem(SESSION_KEY.description, identity);
+    }
+    consumeSSO() {
+        if (isNode()) return;
+        const session = JSON.parse(cookies.getItem(EPI_SSO_KEY));
+        console.log('%c got sso session', 'font-size: 20px; color: #FB15B9FF;', session);
+        if (session) {
+            this.#store.setItem(SESSION_KEY.description, session);
+            // cookies.removeItem(EPI_SSO_KEY);
+        }
     }
     remove() {
         this.#store.removeItem(SESSION_KEY.description);

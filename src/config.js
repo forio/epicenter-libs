@@ -9,6 +9,7 @@ class Config {
     _localConfigProtocol = 'https:'
     _localConfigHost = 'test.forio.com';
     _identification = identification;
+    _supportSSO = false;
 
     get apiScheme() {
         return this._apiScheme;
@@ -27,6 +28,7 @@ class Config {
     }
 
     get identification() {
+        if (this._supportSSO) this._identification.consumeSSO();
         return this._identification.getIdentity();
     }
 
@@ -35,6 +37,16 @@ class Config {
             this._identification.remove();
         } else {
             this._identification.setIdentity(identity);
+        }
+    }
+
+    get supportSSO() {
+        return this._supportSSO;
+    }
+
+    set supportSSO(useSSO) {
+        if (!this._supportSSO && useSSO) {
+            this._identification.consumeSSO();
         }
     }
 
