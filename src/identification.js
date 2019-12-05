@@ -20,7 +20,7 @@ class Identification {
     #store
 
     constructor(type) {
-        this._identification.useStore(type);
+        this.useStore(type);
     }
     useStore(storeType) {
         if (storeType !== COOKIE && storeType !== SESSION) {
