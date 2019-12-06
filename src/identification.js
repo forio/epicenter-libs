@@ -40,6 +40,10 @@ class Identification {
     }
     consumeSSO() {
         if (isNode()) return;
+        /* Double parse here b/c the backend serializes it as a string; the first parse
+         * converts it into a json string, the second parse converts the json string into
+         * json. Yes, it's weird, no, we can't change it (unless we want to rewrite
+         * Interface Builder code to accommodate) */
         const session = JSON.parse(JSON.parse(`"${cookies.getItem(EPI_SSO_KEY)}"`));
         if (session) {
             this.#store.setItem(SESSION_KEY.description, session);
