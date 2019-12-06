@@ -297,7 +297,6 @@ describe('Run API Service', () => {
 
                     paramKeys.forEach((key) => urlParams.get(key).should.equal(testOptions[key]));
                     assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/${testOptions.scopeBoundary}/${testOptions.scopeKey}/${testOptions.model}`) === 0);
-                    console.warn(req.url);
                 });
         });
     });
@@ -492,17 +491,21 @@ describe('Run API Service', () => {
             timeout: '12345',
             ritual: 'REANIMATE',
         };
+        const testUpdate = {
+            'varname#selector@dialect': 123456,
+            'varname2#selector2@dialect2': 654987,
+            'varname3#selector3@dialect3': 987654,
+        };
         const testRunKey = '123456789';
-        const testVar = 'var1';
         it('should Do a PATCH', async() => {
-            await run.updateVariables(testRunKey, testVar, testOptions)
+            await run.updateVariables(testRunKey, testUpdate, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
                     req.method.toUpperCase().should.equal('PATCH');
                 });
         });
         it('should create a proper URL; single runKey', async() => {
-            await run.getVariable(testRunKey, testVar, testOptions)
+            await run.updateVariables(testRunKey, testUpdate, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
                     const urlParams = new URLSearchParams(req.url.split('?')[1]);
@@ -510,7 +513,31 @@ describe('Run API Service', () => {
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('ritual').should.equal(testOptions.ritual);
 
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}`) === 0);
+                });
+        });
+        it('should create a proper URL; multiple runKeys', async() => {
+            const key1 = '123456789';
+            const key2 = '987654321';
+            const testRunKeyArr = [key1, key2];
+            await run.updateVariables(testRunKeyArr, testUpdate, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
+                    urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
                     assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                });
+        });
+        it('should pass the Body appropriately', async() => {
+            await run.updateVariables(testRunKey, testUpdate, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const reqBody = JSON.parse(req.requestBody);
+
+                    Object.keys(testUpdate).forEach((key) => reqBody[key].should.equal(testUpdate[key]));
                 });
         });
     });
