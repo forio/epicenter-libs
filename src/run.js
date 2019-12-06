@@ -199,7 +199,7 @@ export async function getMetaData(runKey, variables, options) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/operation/${runKey}${suffix}`);
+        .get(`/run/meta${suffix}`);
 }
 
 export async function updateMetaData(runKey, update, options = {}) {

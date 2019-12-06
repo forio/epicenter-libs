@@ -296,7 +296,7 @@ describe('Run API Service', () => {
                     const paramKeys = ['filter', 'sort', 'first', 'max', 'timeout', 'projections'];
 
                     paramKeys.forEach((key) => urlParams.get(key).should.equal(testOptions[key]));
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/${testOptions.scopeBoundary}/${testOptions.scopeKey}/${testOptions.model}`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/${testOptions.scopeBoundary}/${testOptions.scopeKey}/${testOptions.model}?`) === 0);
                 });
         });
     });
@@ -346,7 +346,7 @@ describe('Run API Service', () => {
 
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('ritual').should.equal(testOptions.ritual);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation/${testRunKey}`) > -1);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation/${testRunKey}?`) > -1);
                 });
         });
         it('should create a proper URL with multiple runKeys', async() => {
@@ -361,7 +361,7 @@ describe('Run API Service', () => {
                     urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
                     urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation/?`) === 0);
                 });
         });
     });
@@ -390,7 +390,7 @@ describe('Run API Service', () => {
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('ritual').should.equal(testOptions.ritual);
                     urlParams.get('include').should.equal(testVars.join(';'));
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/?`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys', async() => {
@@ -406,7 +406,7 @@ describe('Run API Service', () => {
                     urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('include').should.equal(testVars.join(';'));
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/?`) === 0);
                 });
         });
     });
@@ -434,7 +434,7 @@ describe('Run API Service', () => {
 
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('ritual').should.equal(testOptions.ritual);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/${testVar}`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/${testVar}?`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys, single variable', async() => {
@@ -450,7 +450,7 @@ describe('Run API Service', () => {
                     urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('include').should.equal(testVar);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/?`) === 0);
                 });
         });
         it('should create a proper URL; single runKey, multiple variables', async() => {
@@ -463,7 +463,7 @@ describe('Run API Service', () => {
                     urlParams.get('ritual').should.equal(testOptions.ritual);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('include').should.equal(testVars.join(';'));
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/?`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys, multiple variables', async() => {
@@ -480,7 +480,7 @@ describe('Run API Service', () => {
                     urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('include').should.equal(testVars.join(';'));
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/?`) === 0);
                 });
         });
     });
@@ -513,7 +513,7 @@ describe('Run API Service', () => {
                     urlParams.get('timeout').should.equal(testOptions.timeout);
                     urlParams.get('ritual').should.equal(testOptions.ritual);
 
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}?`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys', async() => {
@@ -528,7 +528,7 @@ describe('Run API Service', () => {
                     urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
                     urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
                     urlParams.get('timeout').should.equal(testOptions.timeout);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable?`) === 0);
                 });
         });
         it('should pass the Body appropriately', async() => {
@@ -538,6 +538,36 @@ describe('Run API Service', () => {
                     const reqBody = JSON.parse(req.requestBody);
 
                     Object.keys(testUpdate).forEach((key) => reqBody[key].should.equal(testUpdate[key]));
+                });
+        });
+    });
+    describe('Get Metadata', () => {
+        const testOptions = {
+            accountShortName: endpoints.account,
+            projectShortName: endpoints.project,
+            timeout: '12345',
+            ritual: 'REANIMATE',
+        };
+        const testRunKey = '123456789';
+        const testVars = ['var1', 'var2', 'var3'];
+        it('should Do a GET', async() => {
+            await run.getMetaData(testRunKey, testVars, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.method.toUpperCase().should.equal('GET');
+                });
+        });
+        it('should create a proper URL; single runKey', async() => {
+            await run.getMetaData(testRunKey, testVars, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+
+                    console.warn(req.url);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/meta/${testRunKey}?`) === 0);
                 });
         });
     });
