@@ -40,7 +40,7 @@ class Identification {
     }
     consumeSSO() {
         if (isNode()) return;
-        const session = JSON.parse(`'${cookies.getItem(EPI_SSO_KEY)}'`);
+        const session = JSON.parse(`"${cookies.getItem(EPI_SSO_KEY)}"`);
         console.log('%c got sso session', 'font-size: 20px; color: #FB15B9FF;', session);
         if (session) {
             this.#store.setItem(SESSION_KEY.description, session);
