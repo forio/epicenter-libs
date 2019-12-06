@@ -40,10 +40,11 @@ class Identification {
     }
     consumeSSO() {
         if (isNode()) return;
-        const session = JSON.parse(JSON.parse(`"${cookies.getItem(EPI_SSO_KEY)}"`));
+        const myCookies = new CookieStore();
+        const session = JSON.parse(JSON.parse(`"${myCookies.getItem(EPI_SSO_KEY)}"`));
         if (session) {
             this.#store.setItem(SESSION_KEY.description, session);
-            cookies.removeItem(EPI_SSO_KEY);
+            myCookies.removeItem(EPI_SSO_KEY);
         }
     }
     remove() {
