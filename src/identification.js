@@ -1,7 +1,7 @@
 
 import { NodeStore, SessionStore, CookieStore } from './store.js';
 import { isNode, EpicenterError, BROWSER_STORAGE_TYPES } from './utility.js';
-import cookies from './cookies.js';
+import cookies from './cookies';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
 
 const getIdentificationStore = (browserStorageType) => {
@@ -40,11 +40,10 @@ class Identification {
     }
     consumeSSO() {
         if (isNode()) return;
-        const myCookies = new CookieStore();
-        const session = JSON.parse(JSON.parse(`"${myCookies.getItem(EPI_SSO_KEY)}"`));
+        const session = JSON.parse(JSON.parse(`"${cookies.getItem(EPI_SSO_KEY)}"`));
         if (session) {
             this.#store.setItem(SESSION_KEY.description, session);
-            myCookies.removeItem(EPI_SSO_KEY);
+            new CookieStore().removeItem(EPI_SSO_KEY);
         }
     }
     remove() {
