@@ -305,6 +305,70 @@ describe('Run API Service', () => {
                 });
         });
     });
-
-    //TODO: Continue with introspect
+    describe('Introspect', () => {
+        const testOptions = {
+            accountShortName: endpoints.account,
+            projectShortName: endpoints.project,
+        };
+        const testModel = 'test-model.py';
+        it('should Do a GET', async() => {
+            await run.introspect(testModel, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.method.toUpperCase().should.equal('GET');
+                });
+        });
+        it('should create a proper URL', async() => {
+            await run.introspect(testModel, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/introspect/${testModel}`);
+                });
+        });
+    });
+    describe('Operation', () => {
+        const testOptions = {
+            accountShortName: endpoints.account,
+            projectShortName: endpoints.project,
+            timeout: 12345,
+            ritual: 'REANIMATE',
+        };
+        const testRunKey = 123456789;
+        const testName = 'test-operation';
+        const testArgs = ['arg1', 'arg2', 'arg3'];
+        it('should Do a GET', async() => {
+            await run.operation(testRunKey, testName, testArgs, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.method.toUpperCase().should.equal('POST');
+                });
+        });
+        it('should create a proper URL', async() => {
+            await run.operation(testRunKey, testName, testArgs, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const expectedQueryString = utility.toQueryString({
+                        ritual: testOptions.ritual,
+                        timeout: testOptions.timeout,
+                    });
+                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) > -1);
+                });
+        });
+        it('should create a proper URL with multiple runKeys', async() => {
+            const key1 = 123456789;
+            const key2 = 987654321;
+            const testRunKeyArr = [key1, key2];
+            await run.operation(testRunKeyArr, testName, testArgs, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const expectedQueryString = utility.toQueryString({
+                        runKey: testRunKeyArr,
+                        timeout: testOptions.timeout,
+                    });
+                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) > -1);
+                });
+        });
+    });
 });
