@@ -118,7 +118,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a POST', async() => {
             await run.clone(testRunKey, testOptions)
                 .then((res) => {
@@ -148,7 +148,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a POST', async() => {
             await run.restore(testRunKey, testOptions)
                 .then((res) => {
@@ -169,7 +169,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a POST', async() => {
             await run.rewind(testRunKey, testOptions)
                 .then((res) => {
@@ -196,7 +196,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a PATCH', async() => {
             await run.update(testRunKey, testOptions)
                 .then((res) => {
@@ -230,7 +230,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a DELETE', async() => {
             await run.remove(testRunKey, testOptions)
                 .then((res) => {
@@ -251,7 +251,7 @@ describe('Run API Service', () => {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         it('should Do a GET', async() => {
             await run.get(testRunKey, testOptions)
                 .then((res) => {
@@ -270,13 +270,13 @@ describe('Run API Service', () => {
     describe('Query', () => {
         const testOptions = {
             scopeBoundary: 'PROJECT',
-            scopeKey: 123456789,
+            scopeKey: '123456789',
             model: 'model.vmf',
             filter: 'vartest=23;trackingKey=1234;hidden=true',
             sort: 'created',
-            first: 20,
-            max: 15,
-            timeout: 20,
+            first: '20',
+            max: '15',
+            timeout: '20',
             projections: 'vartest=23;trackingKey=1234;hidden=true',
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
@@ -292,16 +292,12 @@ describe('Run API Service', () => {
             await run.query(testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        filter: testOptions.filter,
-                        sort: testOptions.sort,
-                        first: testOptions.first,
-                        max: testOptions.max,
-                        timeout: testOptions.timeout,
-                        projections: testOptions.projections,
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`${testOptions.scopeBoundary}/${testOptions.scopeKey}/${testOptions.model}`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+                    const paramKeys = ['filter', 'sort', 'first', 'max', 'timeout', 'projections'];
+
+                    paramKeys.forEach((key) => urlParams.get(key).should.equal(testOptions[key]));
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/${testOptions.scopeBoundary}/${testOptions.scopeKey}/${testOptions.model}`) === 0);
+                    console.warn(req.url);
                 });
         });
     });
@@ -330,10 +326,10 @@ describe('Run API Service', () => {
         const testOptions = {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
-            timeout: 12345,
+            timeout: '12345',
             ritual: 'REANIMATE',
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         const testName = 'test-operation';
         const testArgs = ['arg1', 'arg2', 'arg3'];
         it('should Do a GET', async() => {
@@ -343,31 +339,30 @@ describe('Run API Service', () => {
                     req.method.toUpperCase().should.equal('POST');
                 });
         });
-        it('should create a proper URL', async() => {
+        it('should create a proper URL with one runKey', async() => {
             await run.operation(testRunKey, testName, testArgs, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        ritual: testOptions.ritual,
-                        timeout: testOptions.timeout,
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation/${testRunKey}`) > -1);
                 });
         });
         it('should create a proper URL with multiple runKeys', async() => {
-            const key1 = 123456789;
-            const key2 = 987654321;
+            const key1 = '123456789';
+            const key2 = '987654321';
             const testRunKeyArr = [key1, key2];
             await run.operation(testRunKeyArr, testName, testArgs, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        runKey: testRunKeyArr,
-                        timeout: testOptions.timeout,
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
+                    urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/operation`) === 0);
                 });
         });
     });
@@ -375,10 +370,10 @@ describe('Run API Service', () => {
         const testOptions = {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
-            timeout: 12345,
+            timeout: '12345',
             ritual: 'REANIMATE',
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         const testVars = ['var1', 'var2', 'var3'];
         it('should Do a GET', async() => {
             await run.getVariables(testRunKey, testVars, testOptions)
@@ -391,29 +386,28 @@ describe('Run API Service', () => {
             await run.getVariables(testRunKey, testVars, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        ritual: testOptions.ritual,
-                        timeout: testOptions.timeout,
-                        include: testVars.join(';'),
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+                    urlParams.get('include').should.equal(testVars.join(';'));
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys', async() => {
-            const key1 = 123456789;
-            const key2 = 987654321;
+            const key1 = '123456789';
+            const key2 = '987654321';
             const testRunKeyArr = [key1, key2];
             await run.getVariables(testRunKeyArr, testVars, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        runKey: testRunKeyArr,
-                        timeout: testOptions.timeout,
-                        include: testVars.join(';'),
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
+                    urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('include').should.equal(testVars.join(';'));
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
                 });
         });
     });
@@ -421,10 +415,10 @@ describe('Run API Service', () => {
         const testOptions = {
             accountShortName: endpoints.account,
             projectShortName: endpoints.project,
-            timeout: 12345,
+            timeout: '12345',
             ritual: 'REANIMATE',
         };
-        const testRunKey = 123456789;
+        const testRunKey = '123456789';
         const testVar = 'var1';
         it('should Do a GET', async() => {
             await run.getVariable(testRunKey, testVar, testOptions)
@@ -437,27 +431,27 @@ describe('Run API Service', () => {
             await run.getVariable(testRunKey, testVar, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        timeout: testOptions.timeout,
-                        ritual: testOptions.ritual,
-                    });
-                    req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/${testVar}${expectedQueryString}`);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable/${testRunKey}/${testVar}`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys, single variable', async() => {
-            const key1 = 123456789;
-            const key2 = 987654321;
+            const key1 = '123456789';
+            const key2 = '987654321';
             const testRunKeyArr = [key1, key2];
             await run.getVariable(testRunKeyArr, testVar, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        runKey: testRunKeyArr,
-                        timeout: testOptions.timeout,
-                        include: [testVar].join(';'),
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
+                    urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('include').should.equal(testVar);
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
                 });
         });
         it('should create a proper URL; single runKey, multiple variables', async() => {
@@ -465,31 +459,58 @@ describe('Run API Service', () => {
             await run.getVariable(testRunKey, testVars, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        ritual: testOptions.ritual,
-                        timeout: testOptions.timeout,
-                        include: testVars.join(';'),
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) > -1);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('include').should.equal(testVars.join(';'));
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
                 });
         });
         it('should create a proper URL; multiple runKeys, multiple variables', async() => {
-            const key1 = 123456789;
-            const key2 = 987654321;
+            const key1 = '123456789';
+            const key2 = '987654321';
             const testRunKeyArr = [key1, key2];
             const testVars = ['var1', 'var2', 'var3'];
             await run.getVariable(testRunKeyArr, testVars, testOptions)
                 .then((res) => {
                     const req = server.requests.pop();
-                    const expectedQueryString = utility.toQueryString({
-                        runKey: testRunKeyArr,
-                        timeout: testOptions.timeout,
-                        include: testVars.join(';'),
-                    });
-                    assert.isTrue(req.url.indexOf(expectedQueryString) > -1);
-                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) > -1);
-                    console.warn(req.url);
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.getAll('runKey')[0].should.equal(testRunKeyArr[0]);
+                    urlParams.getAll('runKey')[1].should.equal(testRunKeyArr[1]);
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('include').should.equal(testVars.join(';'));
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
+                });
+        });
+    });
+    describe('Update Variable', () => {
+        const testOptions = {
+            accountShortName: endpoints.account,
+            projectShortName: endpoints.project,
+            timeout: '12345',
+            ritual: 'REANIMATE',
+        };
+        const testRunKey = '123456789';
+        const testVar = 'var1';
+        it('should Do a PATCH', async() => {
+            await run.updateVariables(testRunKey, testVar, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    req.method.toUpperCase().should.equal('PATCH');
+                });
+        });
+        it('should create a proper URL; single runKey', async() => {
+            await run.getVariable(testRunKey, testVar, testOptions)
+                .then((res) => {
+                    const req = server.requests.pop();
+                    const urlParams = new URLSearchParams(req.url.split('?')[1]);
+
+                    urlParams.get('timeout').should.equal(testOptions.timeout);
+                    urlParams.get('ritual').should.equal(testOptions.ritual);
+
+                    assert.isTrue(req.url.indexOf(`https://${config.localConfigHost}/v${config.apiVersion}/${testOptions.accountShortName}/${testOptions.projectShortName}/run/variable`) === 0);
                 });
         });
     });
