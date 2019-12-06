@@ -137,7 +137,7 @@ export async function operation(runKey, name, args, options = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/run/operation/${runKey}${queryString}`, {
+        .post(`/run/operation/${Array.isArray(runKey) ? '' : runKey}${queryString}`, {
             body: {
                 name,
                 arguments: args,
