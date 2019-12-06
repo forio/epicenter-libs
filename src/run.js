@@ -151,12 +151,12 @@ export async function getVariables(runKey, variables, options) {
     const include = variables.join(';');
     const suffix = Array.isArray(runKey) ?
         toQueryString({ runKey, timeout, include }) :
-        `/${runKey}${toQueryString({ ritual, timeout, include })}`;
+        `/${toQueryString({ ritual, timeout, include })}`;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/operation/${runKey}${suffix}`);
+        .get(`/run/variable/${Array.isArray(runKey) ? '' : runKey}${suffix}`);
 }
 
 export async function getVariable(runKey, variable, options = {}) {
@@ -164,7 +164,8 @@ export async function getVariable(runKey, variable, options = {}) {
     const { timeout, ritual } = others;
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
-        return getVariables(runKey, variable, options);
+        const variables = Array.isArray(variable) ? variable : [variable];
+        return getVariables(runKey, variables, options);
     }
     const queryString = toQueryString({ timeout, ritual });
 
