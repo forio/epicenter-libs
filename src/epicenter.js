@@ -1,8 +1,9 @@
 
-export { default as config } from './config';
-export { default as errorManager } from './error-manager';
-export { default as channelManager } from './channel-manager';
-export { default as Channel } from './channel';
+export { default as config } from './config.js';
+export { default as identification } from './identification.js';
+export { default as errorManager } from './error-manager.js';
+export { default as channelManager } from './channel-manager.js';
+export { default as Channel } from './channel.js';
 
 import * as accountModule from './account.js';
 import * as authenticationModule from './authentication.js';
