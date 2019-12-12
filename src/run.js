@@ -23,8 +23,8 @@ export async function create(options = {}) {
                 },
                 trackingKey,
                 modelFile: model,
-                modelContext: {},
-                executionContext: {},
+                modelContext: {/* Overrides model ctx2 but not stored for clone.  */},
+                executionContext: {/* Carries over for clones. Carries arguments for model file worker on model initialization */},
             },
         });
 }
@@ -111,12 +111,12 @@ export async function query(options = {}) {
     const { scopeBoundary, scopeKey, model, accountShortName, projectShortName, ...others } = options;
     const { filter, sort, first, max, timeout, projections } = others;
     const queryString = toQueryString({ filter, sort, first, max, timeout, projections });
-    
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/run/${scopeBoundary}/${scopeKey}/${model}${queryString}`);
-    
+
 }
 
 export async function introspect(model, options = {}) {
@@ -137,7 +137,7 @@ export async function operation(runKey, name, args, options = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/run/operation/${runKey}${queryString}`, {
+        .post(`/run/operation/${Array.isArray(runKey) ? '' : runKey}${queryString}`, {
             body: {
                 name,
                 arguments: args,
@@ -151,12 +151,12 @@ export async function getVariables(runKey, variables, options) {
     const include = variables.join(';');
     const suffix = Array.isArray(runKey) ?
         toQueryString({ runKey, timeout, include }) :
-        `/${runKey}${toQueryString({ ritual, timeout, include })}`;
+        `/${toQueryString({ ritual, timeout, include })}`;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/operation/${runKey}${suffix}`);
+        .get(`/run/variable/${Array.isArray(runKey) ? '' : runKey}${suffix}`);
 }
 
 export async function getVariable(runKey, variable, options = {}) {
@@ -164,7 +164,8 @@ export async function getVariable(runKey, variable, options = {}) {
     const { timeout, ritual } = others;
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
-        return getVariables(runKey, variable, options);
+        const variables = Array.isArray(variable) ? variable : [variable];
+        return getVariables(runKey, variables, options);
     }
     const queryString = toQueryString({ timeout, ritual });
 
@@ -198,7 +199,7 @@ export async function getMetaData(runKey, variables, options) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/operation/${runKey}${suffix}`);
+        .get(`/run/meta${suffix}`);
 }
 
 export async function updateMetaData(runKey, update, options = {}) {

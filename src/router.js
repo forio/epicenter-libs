@@ -24,7 +24,7 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     });
 
     const contentType = response.headers.get('content-type');
-    if (!contentType && !contentType.includes('application/json')) {
+    if (!contentType || !contentType.includes('application/json')) {
         throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
     }
 
