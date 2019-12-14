@@ -12,6 +12,10 @@ export const SCOPE_BOUNDARY = {
     RUN: 'RUN',
 };
 
+export const RITUALS = {
+
+};
+
 export const PUSH_CATEGORY = {
     CONSENSUS: 'CONSENSUS',
     GENERAL: 'GENERAL',
@@ -78,10 +82,10 @@ export class Result {
 export const isNode = () => (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
 export const isBrowser = () => (typeof window !== 'undefined');
 
-export const toQueryString = (qOptions, keys) => {
-    keys = keys || Object.keys(qOptions);
-    const qString = keys.flatMap((key) => {
-        const value = qOptions[key];
+export const toQueryString = (queryObject, ordering) => {
+    ordering = ordering || Object.keys(queryObject);
+    const qString = ordering.flatMap((key) => {
+        const value = queryObject[key];
         if (value === undefined) return [];
         if (Array.isArray(value)) return value.map((v) => `${key}=${v}`);
         return `${key}=${value}`;
@@ -91,3 +95,4 @@ export const toQueryString = (qOptions, keys) => {
 };
 
 export const last = (strOrArr) => strOrArr[strOrArr.length - 1];
+export const prefix = (pre, str) => str.startsWith(pre) ? str : `${pre}${str}`;

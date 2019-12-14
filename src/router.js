@@ -92,8 +92,8 @@ export default class Router {
         return this;
     }
 
-    getURL(uri) {
-        return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uri}`;
+    getURL(uriComponent) {
+        return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uriComponent}`;
     }
 
     async configure() {
@@ -105,45 +105,45 @@ export default class Router {
     }
 
     //Network Requests
-    async get(uri, options) {
+    async get(uriComponent, options) {
         await this.configure();
-        return request(this.getURL(uri), {
+        return request(this.getURL(uriComponent), {
             includeAuthorization: true,
             ...options,
             method: 'GET',
         });
     }
 
-    async delete(uri, options) {
+    async delete(uriComponent, options) {
         await this.configure();
-        return request(this.getURL(uri), {
+        return request(this.getURL(uriComponent), {
             includeAuthorization: true,
             ...options,
             method: 'DELETE',
         });
     }
 
-    async patch(uri, options) {
+    async patch(uriComponent, options) {
         await this.configure();
-        return request(this.getURL(uri), {
+        return request(this.getURL(uriComponent), {
             includeAuthorization: true,
             ...options,
             method: 'PATCH',
         });
     }
 
-    async post(uri, options) {
+    async post(uriComponent, options) {
         await this.configure();
-        return request(this.getURL(uri), {
+        return request(this.getURL(uriComponent), {
             includeAuthorization: true,
             ...options,
             method: 'POST',
         });
     }
 
-    async put(uri, options) {
+    async put(uriComponent, options) {
         await this.configure();
-        return request(this.getURL(uri), {
+        return request(this.getURL(uriComponent), {
             includeAuthorization: true,
             ...options,
             method: 'PUT',
