@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch';
 import { isBrowser, isNode, EpicenterError, Fault, last } from './utility.js';
-import identification from './identification.js';
 
 class Config {
     _apiVersion = 3;
@@ -8,7 +7,6 @@ class Config {
     _apiHost = 'api.forio.com';
     _localConfigProtocol = 'https:'
     _localConfigHost = 'test.forio.com';
-    _identification = identification;
 
     get apiScheme() {
         return this._apiScheme;
@@ -24,26 +22,6 @@ class Config {
 
     set apiHost(apiHost) {
         this._apiHost = apiHost;
-    }
-
-    get identification() {
-        return this._identification.getIdentity();
-    }
-
-    set identification(identity) {
-        if (!identity) {
-            this._identification.remove();
-        } else {
-            this._identification.setIdentity(identity);
-        }
-    }
-
-    set browserStorageType(storeType) {
-        this._identification.useStore(storeType);
-    }
-
-    get browserStorageType() {
-        return this._identification.type;
     }
 
     get localConfigProtocol() {
@@ -107,8 +85,9 @@ class Config {
         }
     }
 
-    loadNode() {
+    async loadNode() {
         // TODO -- use process env variables instead here for Node server
+        return;
     }
 
     async loadBrowser() {
@@ -135,21 +114,20 @@ class Config {
         } else {
             throw new Fault(response.status, await response.json());
         }
-        this.loaded = true;
         return response;
     }
-
+    /* Test this in Vanilla/React example */
     async load() {
-        if (this.loaded) return;
+        if (this.loading) return await this.loading;
 
         if (isNode()) {
-            this.loadNode();
-            return;
+            this.loading = this.loadNode();
+            return await this.loading;
         }
 
         if (isBrowser() && window.location.protocol.includes('http')) {
-            await this.loadBrowser();
-            return;
+            this.loading = this.loadBrowser();
+            return await this.loading;
         }
 
         throw new EpicenterError('Could not identify environment; no configuration was setup');
