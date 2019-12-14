@@ -1,5 +1,6 @@
 import fetch from 'cross-fetch';
 import config from './config.js';
+import identification from './identification.js';
 import errorManager from './error-manager.js';
 import * as utility from './utility.js';
 
@@ -10,9 +11,9 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
-    const identity = config.identification;
-    if (includeAuthorization && identity) {
-        headers.Authorization = `Bearer ${identity.token}`;
+    const { session } = identification;
+    if (includeAuthorization && session) {
+        headers.Authorization = `Bearer ${session.token}`;
     }
 
     const response = await fetch(url, {

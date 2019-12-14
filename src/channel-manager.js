@@ -1,6 +1,7 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
 import config from './config.js';
+import identification from './identification.js';
 import * as utility from './utility.js';
 import errorManager from './error-manager.js';
 
@@ -84,11 +85,11 @@ class ChannelManager {
         }
 
         const handshakeProps = {};
-        const identity = config.identification;
+        const { session } = identification;
 
-        if (identity) {
+        if (session) {
             handshakeProps.ext = {
-                [AUTH_TOKEN_KEY]: identity.token,
+                [AUTH_TOKEN_KEY]: session.token,
                 ack: this.requireAcknowledgement,
             };
         }
@@ -136,11 +137,11 @@ class ChannelManager {
         await this.init({ logLevel: 'error' });
         // TODO, after you sort out the publish function, circle back and make sure your publish
         // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
-        const { path, update } = channel;
         const subscriptionProps = {};
-        const identity = config.identification;
-        if (identity) {
-            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: identity.token };
+        const { session } = identification;
+        const { path, update } = channel;
+        if (session) {
+            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
         }
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
