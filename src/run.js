@@ -195,9 +195,6 @@ export async function getVariables(runKey, variables, optionals) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
-    console.log('%c REGULAR LOG', 'font-size: 20px; color: #FB15B9FF;');
-    console.warn('%c REGULAR WARN', 'font-size: 20px; color: #FB15B9FF;');
-    console.error('%c REGULAR ERROR', 'font-size: 20px; color: #FB15B9FF;');
     if (ritual !== RITUALS.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
