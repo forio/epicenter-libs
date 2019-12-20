@@ -1,14 +1,12 @@
 import Router from './router';
-import { LOCK_TYPE, SCOPE_BOUNDARY, toQueryString, prefix } from './utility';
+import { LOCK_TYPE, SCOPE_BOUNDARY, RITUALS, prefix } from './utility';
 
 
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey, pseudonymKey } = scope;
     const {
         accountShortName, projectShortName, readLock, writeLock,
-        morphology, ephemeral, trackingKey,
-        modelContext = {/* Is not recorded for clone. Overrides model ctx2 file. */},
-        executionContext = {/* Affected by clone. Carries arguments for model file worker on model initialization */},
+        morphology, ephemeral, trackingKey, modelContext, executionContext,
     } = optionals;
 
     const defaultLock = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
@@ -32,17 +30,17 @@ export async function create(model, scope, optionals = {}) {
                 morphology,
                 trackingKey,
                 modelFile: model,
-                modelContext,
-                executionContext,
+                modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
+                executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
                 ephemeral,
             },
         });
 }
 
-export async function clone(runKey, trackingKey, optionals = {}) {
+export async function clone(runKey, optionals = {}) {
     const {
         accountShortName, projectShortName, ephemeral,
-        modelContext = {}, executionContext = {},
+        trackingKey, modelContext = {}, executionContext = {},
     } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -96,12 +94,12 @@ export async function update(runKey, update, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ? toQueryString({ runKey }) : '';
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .patch(`/run${uriComponent}${queryString}`, {
+        .withSearchParams(hasMultiple ? { runKey } : '')
+        .patch(`/run${uriComponent}`, {
             body: {
                 readLock,
                 writeLock,
@@ -137,27 +135,28 @@ export async function query(model, scope, optionals = {}) {
         accountShortName, projectShortName,
     } = optionals;
 
-    const queryString = toQueryString({
+    const query = {
         filter: [
-            ...filter.variables.map((statement) => prefix('var.', statement)),
-            ...filter.metaData.map((statement) => prefix('meta.', statement)),
+            ...(filter.variables || []).map((statement) => prefix('var.', statement)),
+            ...(filter.metadata || []).map((statement) => prefix('meta.', statement)),
         ].join(';'),
         sort: sort.join(';'),
         first,
         max,
         timeout,
         projections: [
-            ...projections.variables.map((name) => prefix('var.', name)),
-            ...projections.metaData.map((name) => prefix('meta.', name)),
+            ...(projections.variables || []).map((name) => prefix('var.', name)),
+            ...(projections.metadata || []).map((name) => prefix('meta.', name)),
         ].join(';'),
-    });
-    const uriComponent = `/run/${scopeBoundary}/${scopeKey}/${model}${queryString}`;
+    };
+    const uriComponent = `/run/${scopeBoundary}/${scopeKey}/${model}`;
     const router = new Router()
         .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName);
+        .withProjectShortName(projectShortName)
+        .withSearchParams(query);
 
-    const url = router.getURL(uriComponent);
-    return encodeURI(url).length > MAX_URL_LENGTH ?
+    const url = await router.getURL(uriComponent);
+    return encodeURI(url.toString()).length > MAX_URL_LENGTH ?
         [/* Use the POST variant */] :
         await router.get(uriComponent);
 }
@@ -174,18 +173,17 @@ export async function operation(runKey, name, args, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout }) :
-        toQueryString({ ritual, timeout });
+    const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/run/operation${uriComponent}${queryString}`, {
+        .withSearchParams(searchParams)
+        .post(`/run/operation${uriComponent}`, {
             body: { name, arguments: args },
         });
 }
@@ -195,18 +193,20 @@ export async function getVariables(runKey, variables, optionals) {
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout, include }) :
-        toQueryString({ ritual, timeout, include });
+    const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    console.log('%c REGULAR LOG', 'font-size: 20px; color: #FB15B9FF;');
+    console.warn('%c REGULAR WARN', 'font-size: 20px; color: #FB15B9FF;');
+    console.error('%c REGULAR ERROR', 'font-size: 20px; color: #FB15B9FF;');
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/variable${uriComponent}${queryString}`);
+        .withSearchParams(searchParams)
+        .get(`/run/variable${uriComponent}`);
 }
 
 export async function getVariable(runKey, variable, optionals = {}) {
@@ -216,83 +216,79 @@ export async function getVariable(runKey, variable, optionals = {}) {
         const variables = Array.isArray(variable) ? variable : [variable];
         return getVariables(runKey, variables, optionals);
     }
-    const queryString = toQueryString({ timeout, ritual });
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/variable/${runKey}/${variable}${queryString}`);
+        .withSearchParams({ timeout, ritual })
+        .get(`/run/variable/${runKey}/${variable}`);
 }
 
 export async function updateVariables(runKey, update, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout }) :
-        toQueryString({ ritual, timeout });
+    const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .patch(`/run/variable${uriComponent}${queryString}`, { body: update });
+        .withSearchParams(searchParams)
+        .patch(`/run/variable${uriComponent}`, { body: update });
 }
 
-export async function getMetaData(runKey, variables, optionals = {}) {
+export async function getMetadata(runKey, variables, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout, include }) :
-        toQueryString({ ritual, timeout, include });
+    const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/meta${uriComponent}${queryString}`);
+        .withSearchParams(searchParams)
+        .get(`/run/meta${uriComponent}`);
 }
 
-export async function updateMetaData(runKey, update, optionals = {}) {
+export async function updateMetadata(runKey, update, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout }) :
-        toQueryString({ ritual, timeout });
+    const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .patch(`/run/meta${uriComponent}${queryString}`, { body: update });
+        .withSearchParams(searchParams)
+        .patch(`/run/meta${uriComponent}`, { body: update });
 }
 
 export async function action(runKey, actionList, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const queryString = hasMultiple ?
-        toQueryString({ runKey, timeout }) :
-        toQueryString({ ritual, timeout });
+    const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual && hasMultiple) {
-        console.warn(`Warning: detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
+    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/run/action${uriComponent}${queryString}`, { body: actionList });
+        .withSearchParams(searchParams)
+        .post(`/run/action${uriComponent}`, { body: actionList });
 }

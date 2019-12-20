@@ -2,7 +2,7 @@ import fetch from 'cross-fetch';
 import config from './config.js';
 import identification from './identification.js';
 import errorManager from './error-manager.js';
-import * as utility from './utility.js';
+import { Fault, EpicenterError, Result, toQueryString, prefix } from './utility.js';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
@@ -26,14 +26,14 @@ async function request(url, { method, body, includeAuthorization, inert }) {
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-        throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+        throw new EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
     }
 
     if ((response.status >= 200) && (response.status < 400)) {
-        return new utility.Result(response.status, response.headers, await response.json());
+        return new Result(response.status, response.headers, await response.json());
     }
 
-    const error = new utility.Fault(response.status, await response.json());
+    const error = new Fault(response.status, await response.json());
     if (inert) throw error;
 
     const retry = () => request(url, { method, body, includeAuthorization, inert: true });
@@ -73,28 +73,39 @@ export default class Router {
         this._projectShortName = value;
     }
 
+    get searchParams() {
+        return this._searchParams || '';
+    }
+
+    set searchParams(value) {
+        this._searchParams = toQueryString(value);
+    }
+
     withServer(server) {
-        this.server = server || this.server;
+        if (server) this.server = server;
         return this;
     }
 
     withVersion(version) {
-        this.version = version || this.version;
+        if (version) this.version = version;
         return this;
     }
 
     withAccountShortName(accountShortName) {
-        this.accountShortName = accountShortName || this.accountShortName;
+        if (accountShortName) this.accountShortName = accountShortName;
         return this;
     }
 
     withProjectShortName(projectShortName) {
-        this.projectShortName = projectShortName || this.projectShortName;
+        if (projectShortName) this.projectShortName = projectShortName;
         return this;
     }
 
-    getURL(uriComponent) {
-        return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uriComponent}`;
+    withSearchParams(searchParams) {
+        if (!searchParams) return this;
+        const isEmpty = typeof searchParams === 'object' && Object.entries(searchParams).length === 0;
+        if (!isEmpty) this.searchParams = searchParams;
+        return this;
     }
 
     async configure() {
@@ -105,10 +116,18 @@ export default class Router {
         if (!this.version) this.withVersion(config.apiVersion);
     }
 
+    async getURL(uriComponent) {
+        await this.configure();
+        const url = new URL(`${this.server}`);
+        url.pathname = `v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
+        url.search = this.searchParams;
+        return url;
+    }
+
     //Network Requests
     async get(uriComponent, options) {
-        await this.configure();
-        return request(this.getURL(uriComponent), {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'GET',
@@ -116,8 +135,8 @@ export default class Router {
     }
 
     async delete(uriComponent, options) {
-        await this.configure();
-        return request(this.getURL(uriComponent), {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'DELETE',
@@ -125,8 +144,8 @@ export default class Router {
     }
 
     async patch(uriComponent, options) {
-        await this.configure();
-        return request(this.getURL(uriComponent), {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'PATCH',
@@ -134,8 +153,8 @@ export default class Router {
     }
 
     async post(uriComponent, options) {
-        await this.configure();
-        return request(this.getURL(uriComponent), {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'POST',
@@ -143,8 +162,8 @@ export default class Router {
     }
 
     async put(uriComponent, options) {
-        await this.configure();
-        return request(this.getURL(uriComponent), {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'PUT',

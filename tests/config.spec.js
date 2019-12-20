@@ -2,12 +2,7 @@ import { expect } from 'chai';
 const { config, utility } = epicenter;
 
 describe('Config', () => {
-    it('Should properly set config browserStorageType', () => {
-        expect(config.browserStorageType).to.equal('COOKIE');
+    it('Should only call config once in a series of network calls', () => {
 
-        config.browserStorageType = 'SESSION';
-        expect(config.browserStorageType).to.equal('SESSION');
-
-        expect(() => config.browserStorageType = 'TEST').to.throw(utility.EpicenterError);
     });
 });
