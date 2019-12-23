@@ -275,7 +275,7 @@ describe('Run API Service', () => {
     describe('Operation', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];
@@ -308,7 +308,7 @@ describe('Run API Service', () => {
     describe('Get Variables', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];
@@ -342,7 +342,7 @@ describe('Run API Service', () => {
     describe('Get Variable', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];
@@ -397,7 +397,7 @@ describe('Run API Service', () => {
     describe('Update Variable', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const UPDATE = {
             'varname#selector@dialect': 123456,
@@ -438,7 +438,7 @@ describe('Run API Service', () => {
     describe('Get Metadata', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];
@@ -472,7 +472,7 @@ describe('Run API Service', () => {
         const OPTIONALS = {
 
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];
@@ -513,7 +513,7 @@ describe('Run API Service', () => {
     describe('Action', () => {
         const OPTIONALS = {
             timeout: '12345',
-            ritual: utility.RITUALS.REANIMATE,
+            ritual: utility.RITUAL.REANIMATE,
         };
         const RUN_KEY = '123456789';
         const RUN_KEYS = ['123456789', '987654321'];

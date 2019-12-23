@@ -1,5 +1,5 @@
 
-export const BROWSER_STORAGE_TYPES = {
+export const BROWSER_STORAGE_TYPE = {
     COOKIE: 'COOKIE',
     SESSION: 'SESSION',
 };
@@ -12,7 +12,7 @@ export const SCOPE_BOUNDARY = {
     RUN: 'RUN',
 };
 
-export const RITUALS = {
+export const RITUAL = {
     NONE: 'NONE',
     INTER: 'INTER',
     REANIMATE: 'REANIMATE',

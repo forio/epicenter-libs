@@ -1,5 +1,5 @@
 import Router from './router';
-import { LOCK_TYPE, SCOPE_BOUNDARY, RITUALS, prefix } from './utility';
+import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL, prefix } from './utility';
 
 
 export async function create(model, scope, optionals = {}) {
@@ -175,7 +175,7 @@ export async function operation(runKey, name, args, optionals = {}) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
@@ -195,7 +195,7 @@ export async function getVariables(runKey, variables, optionals) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
@@ -227,7 +227,7 @@ export async function updateVariables(runKey, update, optionals = {}) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
@@ -245,7 +245,7 @@ export async function getMetadata(runKey, variables, optionals = {}) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
@@ -262,7 +262,7 @@ export async function updateMetadata(runKey, update, optionals = {}) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
@@ -279,7 +279,7 @@ export async function action(runKey, actionList, optionals = {}) {
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
 
-    if (ritual !== RITUALS.EXORCISE && hasMultiple) {
+    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 

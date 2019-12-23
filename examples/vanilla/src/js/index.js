@@ -11,7 +11,7 @@ const usersEl = document.getElementById('users');
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = utility.BROWSER_STORAGE_TYPES.SESSION;
+    config.browserStorageType = utility.BROWSER_STORAGE_TYPE.SESSION;
 }
 
 /* Simple rerouting logic */
