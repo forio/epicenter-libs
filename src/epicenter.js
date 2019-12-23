@@ -1,3 +1,5 @@
+/* Epicenter Libs -- 0.0.0 */
+export const version = '0.0.0';
 
 export { default as config } from './config.js';
 export { default as identification } from './identification.js';
@@ -16,3 +18,4 @@ export const authentication = authenticationModule;
 export const presence = presenceModule;
 export const utility = utilityModule;
 export const run = runModule;
+
