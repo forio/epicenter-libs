@@ -131,7 +131,7 @@ const MAX_URL_LENGTH = 2048;
 export async function query(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        filter, sort, first, max, timeout, projections,
+        filter = {}, sort = [], first, max, timeout, projections = {},
         accountShortName, projectShortName,
     } = optionals;
 
