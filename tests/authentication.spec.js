@@ -1,4 +1,4 @@
-const { config, authentication } = epicenter;
+const { config, identification, authentication } = epicenter;
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
 chai.use(require('sinon-chai'));
@@ -75,15 +75,20 @@ describe('Authentication', () => {
                     }));
                 });
         });
-
         it('should not do a DELETE', async() => {
             server.requests = [];
             await authentication.logout()
                 .then((res) => {
-                    expect(config.identification.get()).to.equal(null);
+                    expect(identification.session).to.equal(null);
                     server.requests.should.be.empty;
                 });
         });
-
+        it('should store the authentication payload as the session', async() => {
+            await authentication.login({
+                handle: 'joe',
+                password: 'pass',
+                objectType: 'user',
+            }).then((res) => expect(identification.session).to.deep.equal(res.body));
+        });
     });
 });

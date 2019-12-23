@@ -15,7 +15,12 @@ module.exports = function(config) {
         ],
         port: 9876,  // karma web server port
         colors: true,
-        logLevel: config.LOG_INFO,
+        browserConsoleLogOptions: {
+            level: 'error',
+            format: '%b %t: %m',
+            terminal: true,
+        },
+        logLevel: 'error',
         browsers: ['ChromeHeadless'],
         autoWatch: true,
         // singleRun: false, // Karma captures browsers, runs the tests and exits
@@ -27,10 +32,6 @@ module.exports = function(config) {
         // browsers: ['Chrome'],
         hostname: 'local.forio.com',
         reporters: ['mocha'],
-        browserConsoleLogOptions: {
-            terminal: true,
-        },
-        // logLevel: 'debug',
         mochaReporter: {
             showDiff: 'unified',
             ignoreSkipped: true,
