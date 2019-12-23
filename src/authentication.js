@@ -22,6 +22,7 @@ export async function login(options) {
         .post('/authentication', {
             body: { handle, password, groupKey, objectType },
             includeAuthorization: false,
+            inert: true,
         });
     await logout();
 
