@@ -169,7 +169,7 @@ export async function introspect(model, optionals = {}) {
         .get(`/run/introspect/${model}`);
 }
 
-export async function operation(runKey, name, args, optionals = {}) {
+export async function operation(runKey, name, args = [], optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
