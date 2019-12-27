@@ -1,8 +1,11 @@
 'use strict';
+const webpack = require('webpack');
 const path = require('path');
 const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+const VERSION = '0.0.0';
 
 module.exports = {
     entry: [
@@ -55,8 +58,8 @@ module.exports = {
     },
     plugins: [
         new WebpackCleanupPlugin(),
-        new BundleAnalyzerPlugin({
-            analyzerPort: '1234',
-        }),
+        new BundleAnalyzerPlugin({ analyzerPort: '1234' }),
+        new webpack.BannerPlugin({ banner: `Epicenter v${VERSION}` }),
+        new webpack.DefinePlugin({ VERSION: JSON.stringify(VERSION) }),
     ],
 };
