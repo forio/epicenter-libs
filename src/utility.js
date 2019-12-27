@@ -1,5 +1,5 @@
 
-export const BROWSER_STORAGE_TYPES = {
+export const BROWSER_STORAGE_TYPE = {
     COOKIE: 'COOKIE',
     SESSION: 'SESSION',
 };
@@ -10,6 +10,13 @@ export const SCOPE_BOUNDARY = {
     EPISODE: 'EPISODE',
     WORLD: 'WORLD',
     RUN: 'RUN',
+};
+
+export const RITUAL = {
+    NONE: 'NONE',
+    INTER: 'INTER',
+    REANIMATE: 'REANIMATE',
+    EXORCISE: 'EXORCISE',
 };
 
 export const PUSH_CATEGORY = {
@@ -78,16 +85,18 @@ export class Result {
 export const isNode = () => (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
 export const isBrowser = () => (typeof window !== 'undefined');
 
-export const toQueryString = (qOptions, keys) => {
-    keys = keys || Object.keys(qOptions);
-    const qString = keys.flatMap((key) => {
-        const value = qOptions[key];
-        if (value === undefined) return [];
+
+export const toQueryString = (query) => {
+    if (typeof query === 'string') return query;
+    if (typeof query !== 'object') return '';
+    const queryArray = Array.isArray(query) ? query : Object.entries(query);
+    return queryArray.flatMap(([key, value]) => {
+        if (key === undefined || key === '') return [];
+        if (value === undefined || value === '') return [];
         if (Array.isArray(value)) return value.map((v) => `${key}=${v}`);
         return `${key}=${value}`;
     }).join('&');
-
-    return qString ? `?${qString}` : '';
 };
 
 export const last = (strOrArr) => strOrArr[strOrArr.length - 1];
+export const prefix = (pre, str) => str.startsWith(pre) ? str : `${pre}${str}`;

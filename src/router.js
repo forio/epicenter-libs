@@ -1,7 +1,8 @@
 import fetch from 'cross-fetch';
 import config from './config.js';
+import identification from './identification.js';
 import errorManager from './error-manager.js';
-import * as utility from './utility.js';
+import { Fault, EpicenterError, Result, toQueryString, prefix } from './utility.js';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
@@ -10,9 +11,9 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
-    const identity = config.identification;
-    if (includeAuthorization && identity) {
-        headers.Authorization = `Bearer ${identity.token}`;
+    const { session } = identification;
+    if (includeAuthorization && session) {
+        headers.Authorization = `Bearer ${session.token}`;
     }
 
     const response = await fetch(url, {
@@ -24,15 +25,15 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     });
 
     const contentType = response.headers.get('content-type');
-    if (!contentType && !contentType.includes('application/json')) {
-        throw new utility.EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+    if (!contentType || !contentType.includes('application/json')) {
+        throw new EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
     }
 
     if ((response.status >= 200) && (response.status < 400)) {
-        return new utility.Result(response.status, response.headers, await response.json());
+        return new Result(response.status, response.headers, await response.json());
     }
 
-    const error = new utility.Fault(response.status, await response.json());
+    const error = new Fault(response.status, await response.json());
     if (inert) throw error;
 
     const retry = () => request(url, { method, body, includeAuthorization, inert: true });
@@ -72,28 +73,39 @@ export default class Router {
         this._projectShortName = value;
     }
 
+    get searchParams() {
+        return this._searchParams || '';
+    }
+
+    set searchParams(value) {
+        this._searchParams = toQueryString(value);
+    }
+
     withServer(server) {
-        this.server = server || this.server;
+        if (server) this.server = server;
         return this;
     }
 
     withVersion(version) {
-        this.version = version || this.version;
+        if (version) this.version = version;
         return this;
     }
 
     withAccountShortName(accountShortName) {
-        this.accountShortName = accountShortName || this.accountShortName;
+        if (accountShortName) this.accountShortName = accountShortName;
         return this;
     }
 
     withProjectShortName(projectShortName) {
-        this.projectShortName = projectShortName || this.projectShortName;
+        if (projectShortName) this.projectShortName = projectShortName;
         return this;
     }
 
-    getURL(uri) {
-        return `${this.server}/v${this.version}/${this.accountShortName}/${this.projectShortName}${uri}`;
+    withSearchParams(searchParams) {
+        if (!searchParams) return this;
+        const isEmpty = typeof searchParams === 'object' && Object.entries(searchParams).length === 0;
+        if (!isEmpty) this.searchParams = searchParams;
+        return this;
     }
 
     async configure() {
@@ -104,46 +116,54 @@ export default class Router {
         if (!this.version) this.withVersion(config.apiVersion);
     }
 
-    //Network Requests
-    async get(uri, options) {
+    async getURL(uriComponent) {
         await this.configure();
-        return request(this.getURL(uri), {
+        const url = new URL(`${this.server}`);
+        url.pathname = `v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
+        url.search = this.searchParams;
+        return url;
+    }
+
+    //Network Requests
+    async get(uriComponent, options) {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'GET',
         });
     }
 
-    async delete(uri, options) {
-        await this.configure();
-        return request(this.getURL(uri), {
+    async delete(uriComponent, options) {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'DELETE',
         });
     }
 
-    async patch(uri, options) {
-        await this.configure();
-        return request(this.getURL(uri), {
+    async patch(uriComponent, options) {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'PATCH',
         });
     }
 
-    async post(uri, options) {
-        await this.configure();
-        return request(this.getURL(uri), {
+    async post(uriComponent, options) {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'POST',
         });
     }
 
-    async put(uri, options) {
-        await this.configure();
-        return request(this.getURL(uri), {
+    async put(uriComponent, options) {
+        const url = await this.getURL(uriComponent);
+        return request(url, {
             includeAuthorization: true,
             ...options,
             method: 'PUT',

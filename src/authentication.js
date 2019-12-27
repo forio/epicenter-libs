@@ -1,12 +1,12 @@
 import Router from './router.js';
-import config from './config.js';
+import identification from './identification.js';
 import channelManager from './channel-manager.js';
 import * as utility from './utility.js';
 
 export async function logout() {
     try {
+        identification.session = undefined;
         await channelManager.disconnect();
-        config.identification = undefined;
     } catch (err) {
         throw new utility.EpicenterError('Encountered error while logging out');
     }
@@ -22,10 +22,11 @@ export async function login(options) {
         .post('/authentication', {
             body: { handle, password, groupKey, objectType },
             includeAuthorization: false,
+            inert: true,
         });
     await logout();
 
-    config.identification = response.body;
+    identification.session = response.body;
     return response;
 }
 
@@ -42,7 +43,7 @@ export async function upgrade(options) {
         });
     await logout();
 
-    config.identification = response.body;
+    identification.session = response.body;
     return response;
 }
 
@@ -54,17 +55,17 @@ export async function sso(options) {
         .withProjectShortName(projectShortName)
         .get('/registration/sso');
 
-    config.identification = response.body;
+    identification.session = response.body;
     return response;
 }
 
 export async function getSession() {
     const response = await new Router().get('/authentication');
 
-    config.identification = response.body;
+    identification.session = response.body;
     return response;
 }
 
 export function getLocalSession() {
-    return config.identification;
+    return identification.session;
 }
