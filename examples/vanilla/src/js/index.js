@@ -10,6 +10,7 @@ const mainEl = document.getElementById('main');
 const formEl = document.getElementById('form');
 const inputEl = document.getElementById('text-box');
 const submitEl = document.getElementById('submit');
+const chatBoxEl = document.getElementById('chat-box');
 
 const session = authentication.getLocalSession();
 
@@ -22,12 +23,16 @@ if (config.isLocal()) {
 const channel = new Channel({
     scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
     scopeKey: session.groupKey,
-    pushCategory: utility.PUSH_CATEGORY.PRESENCE,
+    pushCategory: utility.PUSH_CATEGORY.CHAT,
 });
 const initFacilitator = () => {
     mainEl.classList.add('is-facilitator');
     channel.subscribe((data) => {
         console.log('%c some guy', 'font-size: 20px; color: #FB15B9FF;', data);
+        const messageEl = document.createElement('div');
+        const { user, text } = data;
+        messageEl.innerText = `${user}: ${text}`;
+        chatBoxEl.append(messageEl);
     });
 };
 
@@ -72,6 +77,7 @@ const load = () => {
         if (error.code) {
             query = query.concat(`?error=${error.code}`);
         }
+        console.log('%c badbad', 'font-size: 20px; color: #FB15B9FF;', error);
         // window.location.href = `/login.html${query}`;
         // authentication.logout();
     };

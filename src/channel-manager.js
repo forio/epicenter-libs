@@ -4,6 +4,7 @@ import config from './config.js';
 import identification from './identification.js';
 import * as utility from './utility.js';
 import errorManager from './error-manager.js';
+import { channelsEnabled } from './project.js';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const COMETD_URL_POSTSCRIPT = '/v3/epicenter/cometd';
@@ -21,6 +22,7 @@ class CometdError extends Error {
             this.status = 401;
         }
         this.information = reply;
+        this.message = error;
     }
 }
 
@@ -76,8 +78,14 @@ class ChannelManager {
         this.initialized = true;
     }
 
+    async checkEnabled() {
+        const enabled = await channelsEnabled();
+        if (!enabled) throw new utility.EpicenterError('Push Channels are not enabled on this project');
+    }
+
     // Connects to CometD server
     async handshake(options = {}) {
+        await this.checkEnabled();
         await this.init();
 
         if (this.cometd.getStatus() !== DISCONNECTED) {
@@ -149,8 +157,11 @@ class ChannelManager {
         if (session) {
             subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
         }
-        console.log('%c adding', 'font-size: 20px; color: #FB15B9FF;', subscriptionProps);
-        const handleCometdUpdate = ({ channel, data }) => update(JSON.parse(data));
+
+        const handleCometdUpdate = ({ channel, data }) => {
+            data = typeof data === 'string' ? JSON.parse(data) : data;
+            return update(data);
+        };
         const promises = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
             const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply) => {
@@ -159,7 +170,7 @@ class ChannelManager {
                     resolve(subscribeReply);
                     return;
                 }
-                console.log('%c got bad reply', 'font-size: 20px; color: #FB15B9FF;', subscribeReply);
+
                 const error = new CometdError(subscribeReply);
 
                 if (options.inert) {
@@ -179,7 +190,7 @@ class ChannelManager {
         return Promise.all(promises);
     }
 
-    async publish(channel, content, options) {
+    async publish(channel, content, options = {}) {
         await this.init();
         const channels = [].concat(channel);
 
@@ -193,13 +204,12 @@ class ChannelManager {
         }
         const promises = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            const subscription = this.cometd.publish(path, content, publishProps, (publishReply) => {
+            this.cometd.publish(path, content, publishProps, (publishReply) => {
                 if (publishReply.successful) {
-                    this.subscriptions.set(subscription.channel, subscription);
                     resolve(publishReply);
                     return;
                 }
-                console.log('%c got bad reply', 'font-size: 20px; color: #FB15B9FF;', publishReply);
+
                 const error = new CometdError(publishReply);
 
                 if (options.inert) {
@@ -223,8 +233,12 @@ class ChannelManager {
         await this.init();
         this.subscriptions.delete(subscription.channel);
         return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply) => {
-            console.log('%c unsubreply', 'font-size: 20px; color: #FB15B9FF;', unsubscribeReply);
-            resolve();
+            if (unsubscribeReply.successful) {
+                resolve(unsubscribeReply);
+            }
+            const error = new CometdError(unsubscribeReply);
+            reject(error);
+            /* Not using error handling here yet -- should we? */
         }));
     }
 

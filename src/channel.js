@@ -13,6 +13,9 @@ export default class Channel {
             const { scopeBoundary, scopeKey, pushCategory } = scope;
             this.path = `/${scopeBoundary}/${scopeKey}/${pushCategory}`;
         }
+        if (channelManager.subscriptions.has(this.path)) {
+            this.subscription = channelManager.subscriptions.get(this.path);
+        }
     }
 
     publish(content) {
