@@ -1,4 +1,3 @@
-const { config, run, utility } = epicenter;
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
 chai.use(require('sinon-chai'));
@@ -12,6 +11,7 @@ const ENDPOINTS = {
 };
 
 describe('Run API Service', () => {
+    const { config, run, utility } = epicenter;
     let server;
     let token;
 

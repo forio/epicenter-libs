@@ -2,25 +2,27 @@ import channelManager from './channel-manager.js';
 
 export default class Channel {
 
-    #scopeBoundary;
-    #scopeKey;
-    #pushCategory;
+    path;
     update;
     subscription;
 
-    constructor({ scopeBoundary, scopeKey, pushCategory, update }) {
-        this.#scopeBoundary = scopeBoundary;
-        this.#scopeKey = scopeKey;
-        this.#pushCategory = pushCategory;
+    constructor(scope) {
+        if (typeof scope === 'string') {
+            this.path = scope;
+        } else if (typeof scope === 'object') {
+            const { scopeBoundary, scopeKey, pushCategory } = scope;
+            this.path = `/${scopeBoundary}/${scopeKey}/${pushCategory}`;
+        }
+    }
+
+    publish(content) {
+        return channelManager.publish(this, content);
+    }
+
+    async subscribe(update, options) {
+        if (this.subscription) this.unsubscribe();
         this.update = update;
-    }
-
-    get path() {
-        return `/${this.#scopeBoundary}/${this.#scopeKey}/${this.#pushCategory}`;
-    }
-
-    async subscribe() {
-        return channelManager.add(this).then((subscription) => {
+        return channelManager.add(this, update, options).then((subscription) => {
             this.subscription = subscription;
             return subscription;
         });
