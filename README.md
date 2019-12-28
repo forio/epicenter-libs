@@ -19,8 +19,22 @@ UPDATEME: (ideally before a major knowledge transfer to avoid frequent update re
 * Add some sort of error handling for when Epicenter drops your permissions (will occur after a certain period of time); how should this affect channels, what should client receive, etc.
 
 ## How to Use Examples
+### Vanilla JavaScript
+```
+cd examples/vanilla
+npm install
+npm start
+```
+### React Redux
+```
+cd examples/react-redux
+npm install
+npm start
+```
+### Node
 
-
-## How to Test Node
-
-## How to Test Browser
+## How to Run Tests
+```
+npm run build
+npm run test    #in a seperate terminal
+```

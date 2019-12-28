@@ -14,6 +14,7 @@ module.exports = {
         filename: 'epicenter.js',
         library: 'epicenter',
         libraryTarget: 'umd',
+        globalObject: 'this',
     },
     // TODO -- we should leverage these -- don't how yet
     // resolve: {
