@@ -1,4 +1,4 @@
-import Router from './router.js';
+import { Router } from 'utils';
 
 export async function createAccount(options) {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = options;

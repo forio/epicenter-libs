@@ -1,18 +1,18 @@
-import cookies from './cookies.js';
+import { cookies } from 'utils';
 
 class Store {
-    #store;
+    _store;
     constructor(store) {
-        this.#store = store;
+        this._store = store;
     }
     clear() {
-        this.#store.clear();
+        this._store.clear();
     }
     get store() {
-        return this.#store;
+        return this._store;
     }
     set store(store) {
-        this.#store = store;
+        this._store = store;
     }
 }
 

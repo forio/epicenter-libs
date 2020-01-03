@@ -18,24 +18,27 @@ module.exports = {
         library: 'epicenter',
         libraryTarget: 'umd',
     },
-    // TODO -- we should leverage these -- don't how yet
-    // resolve: {
-    //     alias: {
-    //         actions: path.resolve(__dirname, 'src', 'actions'),
-    //         components: path.resolve(__dirname, 'src', 'components'),
-    //         containers: path.resolve(__dirname, 'src', 'containers'),
-    //         css: path.resolve(__dirname, 'src', 'static', 'css'),
-    //         fonts: path.resolve(__dirname, 'src', 'static', 'fonts'),
-    //         img: path.resolve(__dirname, 'src', 'static', 'img'),
-    //         libs: path.resolve(__dirname, 'src', 'static', 'libs'),
-    //         data: path.resolve(__dirname, 'src', 'static', 'data'),
-    //         documents: path.resolve(__dirname, 'src', 'static', 'documents'),
-    //         lang: path.resolve(__dirname, 'lang'),
-    //         reducers: path.resolve(__dirname, 'src', 'reducers'),
-    //         utils: path.resolve(__dirname, 'src', 'utils'),
-    //     },
-    //     extensions: ['.js', '.jsx'],
-    // },
+    resolve: {
+        alias: {
+            '~': path.resolve(__dirname, 'src'),
+            adapters: path.resolve(__dirname, 'src', 'adapters'),
+            constants: path.resolve(__dirname, 'src', 'constants'),
+            utils: path.resolve(__dirname, 'src', 'utils'),
+
+            // components: path.resolve(__dirname, 'src', 'components'),
+            // containers: path.resolve(__dirname, 'src', 'containers'),
+            // css: path.resolve(__dirname, 'src', 'static', 'css'),
+            // fonts: path.resolve(__dirname, 'src', 'static', 'fonts'),
+            // img: path.resolve(__dirname, 'src', 'static', 'img'),
+            // libs: path.resolve(__dirname, 'src', 'static', 'libs'),
+            // data: path.resolve(__dirname, 'src', 'static', 'data'),
+            // documents: path.resolve(__dirname, 'src', 'static', 'documents'),
+            // lang: path.resolve(__dirname, 'lang'),
+            // reducers: path.resolve(__dirname, 'src', 'reducers'),
+            // utils: path.resolve(__dirname, 'src', 'utils'),
+        },
+        extensions: ['.js'],
+    },
     module: {
         rules: [{
             test: /\.js$/,

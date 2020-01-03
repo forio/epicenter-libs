@@ -1,10 +1,10 @@
-import { authentication, config, utility } from 'epicenter';
+import { authAdapter, config, BROWSER_STORAGE_TYPE } from 'epicenter';
 import '../css/common.css';
 
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = utility.BROWSER_STORAGE_TYPE.SESSION;
+    config.browserStorageType = BROWSER_STORAGE_TYPE.SESSION;
 }
 
 const identifyError = (code) => {
@@ -37,7 +37,7 @@ document.getElementById('submit').onclick = (e) => {
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
 
-    authentication.login({
+    authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
     }).then((res) => {

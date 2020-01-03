@@ -1,4 +1,4 @@
-import { config, authentication, presence, channelManager, errorManager, utility, Channel } from 'epicenter';
+import { config, authAdapter, presenceAdapter, cometdAdapter, errorManager, Channel, BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
 import '../css/common.css';
 
 /* Define DOM elements */
@@ -12,23 +12,22 @@ const inputEl = document.getElementById('text-box');
 const submitEl = document.getElementById('submit');
 const chatBoxEl = document.getElementById('chat-box');
 
-const session = authentication.getLocalSession();
+const session = authAdapter.getLocalSession();
 
 /* Configuration */
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = utility.BROWSER_STORAGE_TYPE.SESSION;
+    config.browserStorageType = BROWSER_STORAGE_TYPE.SESSION;
 }
-const channel = new Channel({
-    scopeBoundary: utility.SCOPE_BOUNDARY.GROUP,
-    scopeKey: session.groupKey,
-    pushCategory: utility.PUSH_CATEGORY.CHAT,
-});
+
 const initFacilitator = () => {
     mainEl.classList.add('is-facilitator');
-    channel.subscribe((data) => {
-        console.log('%c some guy', 'font-size: 20px; color: #FB15B9FF;', data);
+    new Channel({
+        scopeBoundary: SCOPE_BOUNDARY.GROUP,
+        scopeKey: session.groupKey,
+        pushCategory: PUSH_CATEGORY.CHAT,
+    }).subscribe((data) => {
         const messageEl = document.createElement('div');
         const { user, text } = data;
         messageEl.innerText = `${user}: ${text}`;
@@ -38,14 +37,17 @@ const initFacilitator = () => {
 
 const initStudent = () => {
     mainEl.classList.add('is-student');
-    channelManager.handshake();
+    cometdAdapter.handshake();
     let waiting = false;
     formEl.onsubmit = (e) => {
         e.preventDefault();
         if (waiting) return;
         const value = inputEl.value;
-        console.log('%c pubthis', 'font-size: 20px; color: #FB15B9FF;', value);
-        channel.publish({
+        new Channel({
+            scopeBoundary: SCOPE_BOUNDARY.GROUP,
+            scopeKey: session.groupKey,
+            pushCategory: PUSH_CATEGORY.CHAT,
+        }).publish({
             user: session.displayName,
             text: value,
         });
@@ -77,9 +79,8 @@ const load = () => {
         if (error.code) {
             query = query.concat(`?error=${error.code}`);
         }
-        console.log('%c badbad', 'font-size: 20px; color: #FB15B9FF;', error);
         // window.location.href = `/login.html${query}`;
-        // authentication.logout();
+        // authAdapter.logout();
     };
 
     const handleSSO = () => {
@@ -88,7 +89,7 @@ const load = () => {
 
     const handleUnknown = () => {
         window.location.href = '/unknown.html';
-        // authentication.logout();
+        // authAdapter.logout();
     };
 
     const handleByLoginMethod = (error) => {
@@ -102,7 +103,7 @@ const load = () => {
 
     const handleByReAuth = (error, retry) => {
         if (error.code === 'AUTHENTICATION_INVALIDATED') {
-            return authentication.upgrade({ objectType: 'user', inert: true })
+            return authAdapter.upgrade({ objectType: 'user', inert: true })
                 .then(() => retry())
                 .catch(() => handleByLoginMethod(error));
         }
@@ -113,14 +114,14 @@ const load = () => {
 
     /* Handle onclicks */
     logoutEl.onclick = (e) => {
-        authentication.logout();
+        authAdapter.logout();
         window.location.href = '/login.html';
     };
     presenceEl.onclick = (e) => {
         if (presenceEl.innerText !== 'Presence') return;
 
         presenceEl.innerText = 'Fetching';
-        presence.forGroup(session.groupKey).then((res) => {
+        presenceAdapter.forGroup(session.groupKey).then((res) => {
             const membersOnline = res.body;
             usersEl.innerHTML = '';
             membersOnline.forEach((member) => {

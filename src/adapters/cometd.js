@@ -1,10 +1,8 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import config from './config.js';
-import identification from './identification.js';
-import * as utility from './utility.js';
-import errorManager from './error-manager.js';
-import { channelsEnabled } from './project.js';
+import config from '~/config.js';
+import { EpicenterError, errorManager, identification, isNode, isBrowser } from 'utils';
+import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const COMETD_URL_POSTSCRIPT = '/v3/epicenter/cometd';
@@ -26,8 +24,7 @@ class CometdError extends Error {
     }
 }
 
-
-class ChannelManager {
+class CometdAdapter {
 
     url;
     customCometd;
@@ -53,7 +50,7 @@ class ChannelManager {
             return;
         }
 
-        if (!utility.isNode() && utility.isBrowser()) {
+        if (!isNode() && isBrowser()) {
             const cometd = await import('cometd');
             this.defaultCometd = new cometd.CometD();
         }
@@ -67,7 +64,7 @@ class ChannelManager {
             logLevel: options.logLevel,
         });
 
-        if (!utility.isNode() && utility.isBrowser()) {
+        if (!isNode() && isBrowser()) {
             window.onunload = () => {
                 if (this.cometd.getStatus() === CONNECTED) {
                     this.cometd.reload();
@@ -79,8 +76,9 @@ class ChannelManager {
     }
 
     async checkEnabled() {
-        const enabled = await channelsEnabled();
-        if (!enabled) throw new utility.EpicenterError('Push Channels are not enabled on this project');
+        const res = await channelsEnabled();
+        const enabled = res.body;
+        if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
     }
 
     // Connects to CometD server
@@ -136,7 +134,7 @@ class ChannelManager {
 
         return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
             if (!disconnectReply.successful) {
-                reject(new utility.EpicenterError('Unable to disconnect from CometD server'));
+                reject(new EpicenterError('Unable to disconnect from CometD server'));
             } else {
                 resolve();
             }
@@ -146,8 +144,6 @@ class ChannelManager {
     async add(channel, update, options = {}) {
         await this.init();
         const channels = [].concat(channel);
-        // TODO, after you sort out the publish function, circle back and make sure your publish
-        // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
 
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
@@ -251,7 +247,6 @@ class ChannelManager {
         return Promise.all(promises);
     }
 }
-const channelManager = new ChannelManager();
-window.cm = channelManager;
-export default channelManager;
+const cometdAdapter = new CometdAdapter();
+export default cometdAdapter;
 
