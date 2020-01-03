@@ -1,4 +1,4 @@
-import Router from './router.js';
+import { Router } from 'utils';
 
 export async function forGroup(groupKey, options = {}) {
     const { accountShortName, projectShortName } = options;

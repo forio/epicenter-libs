@@ -1,4 +1,4 @@
-import Router from './router.js';
+import { Router } from 'utils';
 
 export async function channelsEnabled(optionals = {}) {
     const { accountShortName, projectShortName } = optionals;

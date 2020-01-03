@@ -1,8 +1,6 @@
 import fetch from 'cross-fetch';
-import config from './config.js';
-import identification from './identification.js';
-import errorManager from './error-manager.js';
-import { Fault, EpicenterError, Result, toQueryString, prefix } from './utility.js';
+import config from '~/config.js';
+import { EpicenterError, Fault, Result, errorManager, identification, toQueryString, prefix } from 'utils';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
