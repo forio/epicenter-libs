@@ -1,4 +1,4 @@
-export const isNode = () => (typeof process !== 'undefined') && (typeof process.versions.node !== 'undefined');
+export const isNode = () => (typeof window === 'undefined' /* We don't check for process here b/c webpack generates a process global */);
 export const isBrowser = () => (typeof window !== 'undefined');
 
 export const toQueryString = (query) => {
