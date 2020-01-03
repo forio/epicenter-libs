@@ -4,6 +4,7 @@ import config from './config.js';
 import identification from './identification.js';
 import * as utility from './utility.js';
 import errorManager from './error-manager.js';
+import { channelsEnabled } from './project.js';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const COMETD_URL_POSTSCRIPT = '/v3/epicenter/cometd';
@@ -21,6 +22,7 @@ class CometdError extends Error {
             this.status = 401;
         }
         this.information = reply;
+        this.message = error;
     }
 }
 
@@ -46,7 +48,7 @@ class ChannelManager {
         return this.init(options);
     }
 
-    async init(options = {}) {
+    async init(options = { logLevel: 'error' }) {
         if (this.initialized) {
             return;
         }
@@ -76,9 +78,15 @@ class ChannelManager {
         this.initialized = true;
     }
 
+    async checkEnabled() {
+        const enabled = await channelsEnabled();
+        if (!enabled) throw new utility.EpicenterError('Push Channels are not enabled on this project');
+    }
+
     // Connects to CometD server
     async handshake(options = {}) {
-        await this.init({ logLevel: 'error' });
+        await this.checkEnabled();
+        await this.init();
 
         if (this.cometd.getStatus() !== DISCONNECTED) {
             return Promise.resolve();
@@ -109,7 +117,7 @@ class ChannelManager {
                 return;
             }
 
-            const retry = () => this.handshake({ ...options, inert: true });
+            const retry = () => this.handshake({ inert: true });
             try {
                 const result = errorManager.handle(error, retry);
                 resolve(result);
@@ -120,7 +128,9 @@ class ChannelManager {
     }
 
     async disconnect() {
-        await this.init({ logLevel: 'error' });
+        if (!this.cometd) return Promise.resolve();
+
+        await this.init();
         await this.empty();
         if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
@@ -133,21 +143,27 @@ class ChannelManager {
         }));
     }
 
-    async add(channel, options = {}) {
-        await this.init({ logLevel: 'error' });
+    async add(channel, update, options = {}) {
+        await this.init();
+        const channels = [].concat(channel);
         // TODO, after you sort out the publish function, circle back and make sure your publish
         // sends out correctly formatted (i.e., relatively uniform) data for the update functions.
-        const subscriptionProps = {};
-        const { session } = identification;
-        const { path, update } = channel;
-        if (session) {
-            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
-        }
+
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
         }
-        const handleCometdUpdate = ({ channel, data }) => update(JSON.parse(data));
-        return new Promise((resolve, reject) => this.cometd.batch(() => {
+        const subscriptionProps = {};
+        const { session } = identification;
+        if (session) {
+            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
+        }
+
+        const handleCometdUpdate = ({ channel, data }) => {
+            data = typeof data === 'string' ? JSON.parse(data) : data;
+            return update(data);
+        };
+        const promises = [];
+        this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
             const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply) => {
                 if (subscribeReply.successful) {
                     this.subscriptions.set(subscription.channel, subscription);
@@ -162,7 +178,7 @@ class ChannelManager {
                     return;
                 }
 
-                const retry = () => this.handshake({ inert: true });
+                const retry = () => this.add(channel, update, { inert: true });
                 try {
                     const result = errorManager.handle(error, retry);
                     resolve(result);
@@ -170,22 +186,72 @@ class ChannelManager {
                     reject(e);
                 }
             });
-        }));
+        }))));
+        return Promise.all(promises);
+    }
+
+    async publish(channel, content, options = {}) {
+        await this.init();
+        const channels = [].concat(channel);
+
+        if (this.cometd.getStatus() !== CONNECTED) {
+            await this.handshake();
+        }
+        const publishProps = {};
+        const { session } = identification;
+        if (session) {
+            publishProps.ext = { [AUTH_TOKEN_KEY]: session.token };
+        }
+        const promises = [];
+        this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
+            this.cometd.publish(path, content, publishProps, (publishReply) => {
+                if (publishReply.successful) {
+                    resolve(publishReply);
+                    return;
+                }
+
+                const error = new CometdError(publishReply);
+
+                if (options.inert) {
+                    reject(error);
+                    return;
+                }
+
+                const retry = () => this.publish(channel, content, { inert: true });
+                try {
+                    const result = errorManager.handle(error, retry);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }))));
+        return Promise.all(promises);
     }
 
     async remove(subscription) {
+        await this.init();
         this.subscriptions.delete(subscription.channel);
-        this.cometd.unsubscribe(subscription);
+        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply) => {
+            if (unsubscribeReply.successful) {
+                resolve(unsubscribeReply);
+            }
+            const error = new CometdError(unsubscribeReply);
+            reject(error);
+            /* Not using error handling here yet -- should we? */
+        }));
     }
 
     async empty() {
+        await this.init();
         const promises = [];
-        this.subscriptions.forEach((subscription) => {
+        this.cometd.batch(() => this.subscriptions.forEach((subscription) => {
             promises.push(this.remove(subscription));
-        });
+        }));
         return Promise.all(promises);
     }
 }
 const channelManager = new ChannelManager();
+window.cm = channelManager;
 export default channelManager;
 

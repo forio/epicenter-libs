@@ -20,8 +20,9 @@ export const RITUAL = {
 };
 
 export const PUSH_CATEGORY = {
+    CHAT: 'CHAT',
     CONSENSUS: 'CONSENSUS',
-    GENERAL: 'GENERAL',
+    CONTROL: 'CONTROL',
     PRESENCE: 'PRESENCE',
     RUN: 'RUN',
     SYSTEM: 'SYSTEM',

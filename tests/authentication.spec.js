@@ -1,4 +1,3 @@
-const { config, identification, authentication } = epicenter;
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
 chai.use(require('sinon-chai'));
@@ -7,6 +6,7 @@ const OK_CODE = 200;
 const CREATED_CODE = 201;
 
 describe('Authentication', () => {
+    const { config, identification, authentication } = epicenter;
     let server;
     let token;
 
