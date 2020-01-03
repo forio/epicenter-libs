@@ -1,5 +1,9 @@
-export const isNode = () => (typeof window === 'undefined' /* We don't check for process here b/c webpack generates a process global */);
-export const isBrowser = () => (typeof window !== 'undefined');
+// export const isNode = () => (typeof window === 'undefined' /* We don't check for process here b/c webpack generates a process global */);
+// export const isBrowser = () => (typeof window !== 'undefined');
+
+/* eslint-disable no-new-func */
+export const isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
+export const isNode = new Function('try {return this===global;}catch(e){return false;}');
 
 export const toQueryString = (query) => {
     if (typeof query === 'string') return query;

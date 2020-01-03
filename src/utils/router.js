@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch';
-import config from '~/config.js';
+import config from '~/config';
 import { EpicenterError, Fault, Result, errorManager, identification, toQueryString, prefix } from 'utils';
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
@@ -24,7 +24,7 @@ async function request(url, { method, body, includeAuthorization, inert }) {
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-        throw new EpicenterError(`Response content-type(${contentType}) does not include 'application/json'`);
+        throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json'`);
     }
 
     if ((response.status >= 200) && (response.status < 400)) {

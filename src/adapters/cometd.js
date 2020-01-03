@@ -1,6 +1,6 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import config from '~/config.js';
+import config from '~/config';
 import { EpicenterError, errorManager, identification, isNode, isBrowser } from 'utils';
 import { channelsEnabled } from 'adapters/project';
 

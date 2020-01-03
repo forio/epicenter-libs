@@ -2,7 +2,6 @@ const epicenter = require('epicenter');
 require('cometd-nodejs-client').adapt();
 const lib = require('cometd');
 
-console.log('%c madkammda', 'font-size: 20px; color: #FB15B9FF;', epicenter);
 const { authAdapter, SCOPE_BOUNDARY } = epicenter;
 authAdapter.login({
     accountShortName: 'forio-dev',

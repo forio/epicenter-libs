@@ -1,5 +1,5 @@
-import config from '~/config.js';
-import { BROWSER_STORAGE_TYPE } from 'constants';
+import config from '~/config';
+import { BROWSER_STORAGE_TYPE } from '~/constants';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 import { EpicenterError, NodeStore, SessionStore, CookieStore, cookies, isNode } from 'utils';
 
@@ -54,7 +54,6 @@ class Identification {
         return '/';
     }
     consumeSSO() {
-        console.log('%c ...node?', 'font-size: 20px; color: #FB15B9FF;', isNode, isNode());
         if (isNode()) return;
         /* Double parse here b/c the backend serializes it as a string; the first parse
          * converts it into a json string, the second parse converts the json string into

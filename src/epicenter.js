@@ -8,7 +8,7 @@ export {
     RITUAL,
     PUSH_CATEGORY,
     LOCK_TYPE,
-} from 'constants';
+} from '~/constants';
 export {
     errorManager,
     identification,
