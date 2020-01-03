@@ -139,6 +139,7 @@ export async function query(model, scope, optionals = {}) {
         filter: [
             ...(filter.variables || []).map((statement) => prefix('var.', statement)),
             ...(filter.metadata || []).map((statement) => prefix('meta.', statement)),
+            ...(filter.attr || []).map((statement) => prefix('run.', statement)),
         ].join(';'),
         sort: sort.join(';'),
         first,
@@ -147,6 +148,7 @@ export async function query(model, scope, optionals = {}) {
         projections: [
             ...(projections.variables || []).map((name) => prefix('var.', name)),
             ...(projections.metadata || []).map((name) => prefix('meta.', name)),
+            ...(projections.attr || []).map((name) => prefix('run.', name)),
         ].join(';'),
     };
     const uriComponent = `/run/${scopeBoundary}/${scopeKey}/${model}`;
@@ -156,9 +158,14 @@ export async function query(model, scope, optionals = {}) {
         .withSearchParams(query);
 
     const url = await router.getURL(uriComponent);
-    return encodeURI(url.toString()).length > MAX_URL_LENGTH ?
-        [/* Use the POST variant */] :
-        await router.get(uriComponent);
+    return encodeURI(url.toString()).length < MAX_URL_LENGTH ?
+        router.get(uriComponent) :
+        new Router()
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .post(uriComponent, {
+                body: {/* TODO: put post body here */},
+            });
 }
 
 export async function introspect(model, optionals = {}) {
