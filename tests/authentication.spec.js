@@ -1,4 +1,3 @@
-const { config, identification, authentication } = epicenter;
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
 chai.use(require('sinon-chai'));
@@ -7,6 +6,7 @@ const OK_CODE = 200;
 const CREATED_CODE = 201;
 
 describe('Authentication', () => {
+    const { config, identification, authAdapter } = epicenter;
     let server;
     let token;
 
@@ -34,7 +34,7 @@ describe('Authentication', () => {
 
     describe('Login Process', () => {
         it('should Do a POST', async() => {
-            await authentication.login({
+            await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
             })
@@ -49,7 +49,7 @@ describe('Authentication', () => {
             config.accountShortName = endpoints.account;
             config.projectShortName = endpoints.project;
 
-            await authentication.login({
+            await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
                 objectType: 'user',
@@ -61,7 +61,7 @@ describe('Authentication', () => {
         });
 
         it('should send requests to body', async() => {
-            await authentication.login({
+            await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
                 objectType: 'user',
@@ -77,14 +77,14 @@ describe('Authentication', () => {
         });
         it('should not do a DELETE', async() => {
             server.requests = [];
-            await authentication.logout()
+            await authAdapter.logout()
                 .then((res) => {
                     expect(identification.session).to.equal(null);
                     server.requests.should.be.empty;
                 });
         });
         it('should store the authentication payload as the session', async() => {
-            await authentication.login({
+            await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
                 objectType: 'user',

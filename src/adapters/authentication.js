@@ -1,14 +1,12 @@
-import Router from './router.js';
-import identification from './identification.js';
-import channelManager from './channel-manager.js';
-import * as utility from './utility.js';
+import { EpicenterError, Router, identification } from 'utils';
+import { cometdAdapter } from 'adapters';
 
 export async function logout() {
     try {
         identification.session = undefined;
-        await channelManager.disconnect();
+        await cometdAdapter.disconnect();
     } catch (err) {
-        throw new utility.EpicenterError('Encountered error while logging out');
+        throw new EpicenterError('Encountered error while logging out');
     }
 }
 

@@ -2,17 +2,18 @@
 
 module.exports = {
     "globals": {
-        "epicenter": true,
-        "VERSION": true,
+
     },
     'parser': 'babel-eslint',
     'parserOptions': {
         'sourceType': 'module',
         'ecmaVersion': 6,
         'ecmaFeatures': {
-
+            'jsx': true,
+            'experimentalObjectRestSpread': true
         }
     },
+    'plugins': ['react'],
     'env': {
         'browser': true,
         'es6': true,
@@ -154,6 +155,7 @@ module.exports = {
         'eol-last': 0,
         'func-names': 0,
         'indent': [1, 4, { 'SwitchCase': 1 }],
+        'jsx-quotes': [1, 'prefer-double'],
         'key-spacing': [2, {
             'beforeColon': false,
             'afterColon': true
@@ -177,7 +179,7 @@ module.exports = {
         'no-plusplus': 0,
         'no-spaced-func': 2,
         'no-trailing-spaces': 0,
-        // 'no-underscore-dangle': 2,
+        'no-underscore-dangle': 2,
         'no-unneeded-ternary': 2,
         'object-curly-spacing': 0,
         'one-var': [2, 'never'],
@@ -188,7 +190,7 @@ module.exports = {
             }
         }],
         'padded-blocks': [0, 'never'],
-        'quote-props': [2, 'as-needed'],
+        'quote-props': [2, 'consistent-as-needed'],
         'quotes': [2, 'single'],
         'semi-spacing': [2, {
             'before': false,
@@ -226,5 +228,38 @@ module.exports = {
         'prefer-const': 1,
         'prefer-spread': 1,
         'prefer-template': 1,
+
+        'react/forbid-prop-types': 1,
+        'react/jsx-boolean-value': [1, 'never'],
+        'react/jsx-closing-bracket-location': [1, 'tag-aligned'],
+        'react/jsx-curly-spacing': [1, 'never'],
+        'react/jsx-equals-spacing': [1, 'never'],
+        'react/jsx-handler-names': [1, {
+            'eventHandlerPrefix': 'handle',
+            'eventHandlerPropPrefix': 'on'
+        }],
+        'react/jsx-indent-props': [1, 4],
+        'react/jsx-indent': [1, 4],
+        'react/jsx-key': 2,
+        'react/jsx-no-bind': [1, {
+            'ignoreRefs': false,
+            'allowArrowFunctions': true,
+            'allowBind': true
+        }],
+        'react/jsx-no-duplicate-props': [2, { 'ignoreCase': false }],
+        'react/jsx-no-undef': 2,
+        'react/jsx-pascal-case': 2,
+        'react/jsx-uses-react': 2,
+        'react/jsx-uses-vars': 2,
+        'react/no-did-mount-set-state': 1,
+        'react/no-did-update-set-state': 1,
+        'react/no-direct-mutation-state': 1,
+        'react/no-is-mounted': 1,
+        'react/no-multi-comp': 1,
+        'react/no-unknown-property': 1,
+        'react/prefer-es6-class': 1,
+        'react/prop-types': 1,
+        'react/react-in-jsx-scope': 2,
+        'react/jsx-wrap-multilines': 1
     }
 }

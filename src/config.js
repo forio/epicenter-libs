@@ -1,8 +1,9 @@
 import fetch from 'cross-fetch';
-import { isBrowser, isNode, EpicenterError, Fault, last } from './utility.js';
+import { EpicenterError, Fault, isBrowser, isNode, last } from 'utils';
 
+const API_VERSION = 3;
 class Config {
-    _apiVersion = 3;
+    _apiVersion = API_VERSION;
     _apiScheme = 'http';
     _apiHost = 'api.forio.com';
     _localConfigProtocol = 'https:'
