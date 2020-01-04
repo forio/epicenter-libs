@@ -1,4 +1,4 @@
-// TODO -- test this code
+// Modified version of https://github.com/madmurphy/cookies.js
 const getExpiration = (vEnd) => {
     if (!vEnd) return '';
     switch (vEnd.constructor) {
@@ -10,7 +10,7 @@ const getExpiration = (vEnd) => {
             relative time to an absolute time. For instance, replacing the previous line with:
         */
         /*
-            sExpires = vEnd === Infinity ? "; expires=Fri, 31 Dec 9999 23:59:59 GMT" : "; expires=" + (new Date(vEnd * 1e3 + Date.now())).toUTCString();
+            case Number: return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : `; expires=${(new Date(vEnd * 1e3 + Date.now())).toUTCString()}`;
         */
         case String: return `; expires=${vEnd}`;
         case Date: return `; expires=${vEnd.toUTCString()}`;

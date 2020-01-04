@@ -1,5 +1,5 @@
 import { Router, prefix } from 'utils';
-import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from '~/constants';
+import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 
 export async function create(model, scope, optionals = {}) {

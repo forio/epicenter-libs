@@ -1,5 +1,6 @@
-import { config, authAdapter, presenceAdapter, cometdAdapter, errorManager, Channel, BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
+import { config, authAdapter, presenceAdapter, Channel, BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
 import '../css/common.css';
+
 
 /* Define DOM elements */
 const displayNameEl = document.getElementById('display-name');
@@ -37,7 +38,7 @@ const initFacilitator = () => {
 
 const initStudent = () => {
     mainEl.classList.add('is-student');
-    cometdAdapter.handshake();
+    presenceAdapter.connect();
     let waiting = false;
     formEl.onsubmit = (e) => {
         e.preventDefault();
@@ -59,7 +60,7 @@ const initStudent = () => {
             submitEl.disabled = false;
             submitEl.innerText = 'Send';
             waiting = false;
-        }, 1000);
+        }, 10);
     };
 };
 
@@ -72,45 +73,6 @@ const load = () => {
         initStudent();
     }
     displayNameEl.innerText = session.displayName;
-
-    /* Handle error handlers */
-    const handleByRelog = (error) => {
-        let query = '';
-        if (error.code) {
-            query = query.concat(`?error=${error.code}`);
-        }
-        // window.location.href = `/login.html${query}`;
-        // authAdapter.logout();
-    };
-
-    const handleSSO = () => {
-
-    };
-
-    const handleUnknown = () => {
-        window.location.href = '/unknown.html';
-        // authAdapter.logout();
-    };
-
-    const handleByLoginMethod = (error) => {
-        switch (session.loginMethod.objectType) {
-            case 'native': return handleByRelog(error);
-            case 'sso': return handleSSO(error);
-            case 'none':
-            default: return handleUnknown(error);
-        }
-    };
-
-    const handleByReAuth = (error, retry) => {
-        if (error.code === 'AUTHENTICATION_INVALIDATED') {
-            return authAdapter.upgrade({ objectType: 'user', inert: true })
-                .then(() => retry())
-                .catch(() => handleByLoginMethod(error));
-        }
-        return handleByLoginMethod(error);
-    };
-
-    errorManager.registerHandler((error) => error.status === 401, handleByReAuth);
 
     /* Handle onclicks */
     logoutEl.onclick = (e) => {
