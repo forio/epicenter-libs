@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const HOST = 'local.forio.com';
-const PORT = '8002';
+const PORT = '3913';
 
 module.exports = {
     entry: {

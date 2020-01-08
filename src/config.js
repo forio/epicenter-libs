@@ -1,26 +1,13 @@
 import fetch from 'cross-fetch';
-import { isBrowser, isNode, EpicenterError, Fault, last, BROWSER_STORAGE_TYPES } from './utility.js';
-import { NodeStore, SessionStore, CookieStore } from './store.js';
-import Identification from './identification.js';
-const { COOKIE, SESSION } = BROWSER_STORAGE_TYPES;
+import { EpicenterError, Fault, isBrowser, isNode, last } from 'utils';
 
-const getIdentificationStore = (browserStorageType) => {
-    if (isNode()) return new NodeStore();
-    switch (browserStorageType) {
-        case SESSION: return new SessionStore();
-        case COOKIE:
-        default: return new CookieStore();
-    }
-};
-
+const API_VERSION = 3;
 class Config {
-    _apiVersion = 3;
+    _apiVersion = API_VERSION;
     _apiScheme = 'http';
     _apiHost = 'api.forio.com';
     _localConfigProtocol = 'https:'
     _localConfigHost = 'test.forio.com';
-    _browserStorageType = COOKIE;
-    _identification = new Identification(getIdentificationStore(this.browserStorageType));
 
     get apiScheme() {
         return this._apiScheme;
@@ -36,29 +23,6 @@ class Config {
 
     set apiHost(apiHost) {
         this._apiHost = apiHost;
-    }
-
-    get identification() {
-        return this._identification;
-    }
-
-    set identification(identification) {
-        this._identification = identification;
-    }
-
-    set browserStorageType(browserStorageType) {
-        if (browserStorageType !== COOKIE && browserStorageType !== SESSION) {
-            throw new EpicenterError(`Invalid browserStorageType: "${browserStorageType}", please use "${COOKIE}" or "${SESSION}".`);
-        }
-        if (this._browserStorageType !== browserStorageType) {
-            this._browserStorageType = browserStorageType;
-            const store = getIdentificationStore(browserStorageType);
-            this.identification.useStore(store);
-        }
-    }
-
-    get browserStorageType() {
-        return this._browserStorageType;
     }
 
     get localConfigProtocol() {
@@ -122,8 +86,11 @@ class Config {
         }
     }
 
-    loadNode() {
+    async loadNode() {
         // TODO -- use process env variables instead here for Node server
+        this.apiScheme = 'https';
+        this.apiHost = 'test.forio.com';
+        return;
     }
 
     async loadBrowser() {
@@ -150,21 +117,20 @@ class Config {
         } else {
             throw new Fault(response.status, await response.json());
         }
-        this.loaded = true;
         return response;
     }
 
     async load() {
-        if (this.loaded) return;
+        if (this.loading) return await this.loading;
 
         if (isNode()) {
-            this.loadNode();
-            return;
+            this.loading = this.loadNode();
+            return await this.loading;
         }
 
         if (isBrowser() && window.location.protocol.includes('http')) {
-            await this.loadBrowser();
-            return;
+            this.loading = this.loadBrowser();
+            return await this.loading;
         }
 
         throw new EpicenterError('Could not identify environment; no configuration was setup');

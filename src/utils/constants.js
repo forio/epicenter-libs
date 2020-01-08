@@ -1,0 +1,41 @@
+export const BROWSER_STORAGE_TYPE = {
+    COOKIE: 'COOKIE',
+    SESSION: 'SESSION',
+};
+
+export const SCOPE_BOUNDARY = {
+    PROJECT: 'PROJECT',
+    GROUP: 'GROUP',
+    EPISODE: 'EPISODE',
+    WORLD: 'WORLD',
+    RUN: 'RUN',
+};
+
+export const RITUAL = {
+    NONE: 'NONE',
+    INTER: 'INTER',
+    REANIMATE: 'REANIMATE',
+    EXORCISE: 'EXORCISE',
+};
+
+export const PUSH_CATEGORY = {
+    CHAT: 'CHAT',
+    CONSENSUS: 'CONSENSUS',
+    CONTROL: 'CONTROL',
+    PRESENCE: 'PRESENCE',
+    RUN: 'RUN',
+    SYSTEM: 'SYSTEM',
+};
+
+export const LOCK_TYPE = {
+    SYSTEM: 'SYSTEM',
+    MONITER: 'MONITER',
+    AUTHOR: 'AUTHOR',
+    SUPPORT: 'SUPPORT',
+    FACILITATOR: 'FACILITATOR',
+    REVIEWER: 'REVIEWER',
+    USER: 'USER',
+    LEADER: 'LEADER',
+    PARTICIPANT: 'PARTICIPANT',
+    ANONYMOUS: 'ANONYMOUS',
+};

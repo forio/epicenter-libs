@@ -1,18 +1,18 @@
-import { authentication, config, utility } from 'epicenter';
+import { authAdapter, config, BROWSER_STORAGE_TYPE } from 'epicenter';
 import '../css/common.css';
 
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = utility.BROWSER_STORAGE_TYPES.SESSION;
+    config.browserStorageType = BROWSER_STORAGE_TYPE.SESSION;
 }
 
 const identifyError = (code) => {
     switch (code) {
-        case 'AUTHENTICATION_EVAPORATED': return 'Whoops, looks like your session was forgotten, try logging in again';
-        case 'AUTHENTICATION_EXPIRED': return 'Whoops, it looks like your session timed out, try logging in again.';
-        case 'AUTHENTICATION_FAILURE': return 'Something\'s horribly wrong with your token.';
-        case 'AUTHENTICATION_BLOCKED': return 'Uh oh! Looks like there was an issue with your account, please contact us.';
+        case 'AUTHORIZATION_EVAPORATED': return 'Whoops, looks like your session was forgotten, try logging in again';
+        case 'AUTHORIZATION_EXPIRED': return 'Whoops, it looks like your session timed out, try logging in again.';
+        case 'AUTHORIZATION_FAILURE': return 'Something\'s horribly wrong with your token.';
+        case 'AUTHORIZATION_BLOCKED': return 'Uh oh! Looks like there was an issue with your account, please contact us.';
         default: return 'Mmm, looks like an unknown error has occured...';
     }
 };
@@ -37,7 +37,7 @@ document.getElementById('submit').onclick = (e) => {
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
 
-    authentication.login({
+    authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
     }).then((res) => {
