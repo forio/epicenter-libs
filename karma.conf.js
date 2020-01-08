@@ -10,7 +10,7 @@ module.exports = function(config) {
             },
         },
         files: [
-            { pattern: 'public/epicenter.js', watched: false, included: true, served: true},
+            { pattern: 'dist/epicenter.js', watched: false, included: true, served: true},
             { pattern: 'tests/*.spec.js', watched: false },
         ],
         port: 9876,  // karma web server port
@@ -46,7 +46,7 @@ module.exports = function(config) {
                 rules: [],
             },
             output: {
-                path: path.join(__dirname, 'public', 'bundle.js'),
+                path: path.join(__dirname, 'dist', 'bundle.js'),
             },
             stats: 'errors-only',
             devtool: 'eval',

@@ -9,15 +9,15 @@ const PORT = process.env.PORT || '8118';
 const rules = [
     {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components|public)/,
+        exclude: /(node_modules|dist)/,
         loader: 'babel-loader',
     }, {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         loader: 'file-loader',
     }, {
         test: /\.(woff|woff2)$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -27,7 +27,7 @@ const rules = [
         }],
     }, {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -37,7 +37,7 @@ const rules = [
         }],
     }, {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -47,7 +47,7 @@ const rules = [
         }],
     }, {
         test: /\.gif/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -57,7 +57,7 @@ const rules = [
         }],
     }, {
         test: /\.jpg/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -67,7 +67,7 @@ const rules = [
         }],
     }, {
         test: /\.png/,
-        exclude: /(node_modules|bower_components)/,
+        exclude: /(node_modules)/,
         use: [{
             loader: 'url-loader',
             options: {
@@ -93,7 +93,7 @@ const rules = [
         }],
     }, {
         test: /\.scss$/,
-        exclude: /[\/\\](node_modules|bower_components|public)[\/\\]/,
+        exclude: /[\/\\](node_modules|dist)[\/\\]/,
         use: [{
             loader: 'style-loader',
         }, {
@@ -122,8 +122,8 @@ module.exports = {
     ],
     devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
     output: {
-        path: path.join(__dirname, 'public'),
-        publicPath: `http://${HOST}:${PORT}/`,
+        path: path.join(__dirname, 'dist'),
+        distPath: `http://${HOST}:${PORT}/`,
         filename: 'bundle.js',
     },
     resolve: {
@@ -143,7 +143,7 @@ module.exports = {
     },
     module: { rules },
     devServer: {
-        contentBase: './public',
+        contentBase: './dist',
         // do not print bundle build stats
         noInfo: true,
         // enable HMR
