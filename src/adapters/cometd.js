@@ -163,7 +163,7 @@ class CometdAdapter {
             const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply) => {
                 if (subscribeReply.successful) {
                     this.subscriptions.set(subscription.channel, subscription);
-                    resolve(subscribeReply);
+                    resolve(subscription);
                     return;
                 }
 
@@ -183,7 +183,9 @@ class CometdAdapter {
                 }
             });
         }))));
-        return Promise.all(promises);
+        return promises.length === 1 ?
+            Promise.all(promises).then(([res]) => res) :
+            Promise.all(promises);
     }
 
     async publish(channel, content, options = {}) {
@@ -222,7 +224,9 @@ class CometdAdapter {
                 }
             });
         }))));
-        return Promise.all(promises);
+        return promises.length === 1 ?
+            Promise.all(promises).then(([res]) => res) :
+            Promise.all(promises);
     }
 
     async remove(subscription) {

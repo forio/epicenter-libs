@@ -40,9 +40,11 @@ export default class Channel {
         });
     }
 
-    unsubscribe() {
-        this.subscription = null;
-        cometdAdapter.remove(this.subscription);
+    async unsubscribe() {
+        if (this.subscription) {
+            await cometdAdapter.remove(this.subscription);
+            this.subscription = null;
+        }
     }
 }
 
