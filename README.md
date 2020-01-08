@@ -49,3 +49,9 @@ npm start
 npm run build           #in a separate terminal
 npm run test
 ```
+
+## How to build for Production
+```
+npm run build-web:prod  #for browsers
+npm run build-node:prod #for node servers
+```

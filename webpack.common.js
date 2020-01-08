@@ -1,9 +1,8 @@
 'use strict';
 const webpack = require('webpack');
 const path = require('path');
-const WebpackCleanupPlugin = require('webpack-cleanup-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const VERSION = '0.0.0';
 
@@ -11,9 +10,8 @@ module.exports = {
     entry: [
         './src/epicenter.js',
     ],
-    devtool: process.env.WEBPACK_DEVTOOL || 'cheap-module-source-map',
     output: {
-        path: path.join(__dirname, 'public'),
+        path: path.join(__dirname, 'dist'),
         filename: 'epicenter.js',
         library: 'epicenter',
         libraryTarget: 'umd',
@@ -30,25 +28,12 @@ module.exports = {
     module: {
         rules: [{
             test: /\.js$/,
-            exclude: /(node_modules|public)/,
+            exclude: /(node_modules|dist)/,
             loader: 'babel-loader',
         }],
     },
-    optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                uglifyOptions: {
-                    compress: {
-                        warnings: false,
-                        drop_console: true,
-                        drop_debugger: true,
-                    },
-                },
-            }),
-        ],
-    },
     plugins: [
-        new WebpackCleanupPlugin(),
+        new CleanWebpackPlugin(),
         new BundleAnalyzerPlugin({ analyzerPort: '1234' }),
         new webpack.BannerPlugin({ banner: `Epicenter v${VERSION}` }),
         new webpack.DefinePlugin({ VERSION: JSON.stringify(VERSION) }),
