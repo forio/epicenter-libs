@@ -6279,10 +6279,39 @@ function () {
     }()
   }, {
     key: "unsubscribe",
-    value: function unsubscribe() {
-      this.subscription = null;
-      adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].remove(this.subscription);
-    }
+    value: function () {
+      var _unsubscribe = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!this.subscription) {
+                  _context2.next = 4;
+                  break;
+                }
+
+                _context2.next = 3;
+                return adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].remove(this.subscription);
+
+              case 3:
+                this.subscription = null;
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function unsubscribe() {
+        return _unsubscribe.apply(this, arguments);
+      }
+
+      return unsubscribe;
+    }()
   }]);
 
   return Channel;
@@ -6301,31 +6330,34 @@ function () {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js");
-/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! cometd/AckExtension */ "./node_modules/cometd/AckExtension.js");
-/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(cometd_AckExtension__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! cometd/ReloadExtension */ "./node_modules/cometd/ReloadExtension.js");
-/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ~/config */ "./src/config.js");
-/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
-/* harmony import */ var adapters_project__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! adapters/project */ "./src/adapters/project.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js");
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! cometd/AckExtension */ "./node_modules/cometd/AckExtension.js");
+/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! cometd/ReloadExtension */ "./node_modules/cometd/ReloadExtension.js");
+/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ~/config */ "./src/config.js");
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var adapters_project__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! adapters/project */ "./src/adapters/project.js");
+
 
 
 
@@ -6348,14 +6380,14 @@ var CONNECTED = 'connected';
 var CometdError =
 /*#__PURE__*/
 function (_Error) {
-  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_7___default()(CometdError, _Error);
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_8___default()(CometdError, _Error);
 
   function CometdError(reply) {
     var _this;
 
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, CometdError);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default()(this, CometdError);
 
-    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_5___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_6___default()(CometdError).call(this));
+    _this = _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6___default()(this, _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7___default()(CometdError).call(this));
     var error = reply.error,
         successful = reply.successful;
 
@@ -6369,36 +6401,36 @@ function (_Error) {
   }
 
   return CometdError;
-}(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_8___default()(Error));
+}(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9___default()(Error));
 
 var CometdAdapter =
 /*#__PURE__*/
 function () {
   function CometdAdapter() {
-    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, CometdAdapter);
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default()(this, CometdAdapter);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "url", void 0);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "url", void 0);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "customCometd", void 0);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "customCometd", void 0);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "defaultCometd", void 0);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "defaultCometd", void 0);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "subscriptions", new Map());
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "subscriptions", new Map());
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "state", DISCONNECTED);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "state", DISCONNECTED);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "requireAcknowledgement", true);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "requireAcknowledgement", true);
 
-    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "initialized", false);
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "initialized", false);
   }
 
-  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(CometdAdapter, [{
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(CometdAdapter, [{
     key: "reinit",
     value: function () {
-      var _reinit = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _reinit = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(customCometd, options) {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee(customCometd, options) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
@@ -6427,15 +6459,15 @@ function () {
   }, {
     key: "init",
     value: function () {
-      var _init = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _init = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2() {
         var _this2 = this;
 
         var options,
             cometd,
             _args2 = arguments;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
@@ -6451,7 +6483,7 @@ function () {
                 return _context2.abrupt("return");
 
               case 3:
-                if (!(!Object(utils__WEBPACK_IMPORTED_MODULE_12__["isNode"])() && Object(utils__WEBPACK_IMPORTED_MODULE_12__["isBrowser"])())) {
+                if (!(!Object(utils__WEBPACK_IMPORTED_MODULE_13__["isNode"])() && Object(utils__WEBPACK_IMPORTED_MODULE_13__["isBrowser"])())) {
                   _context2.next = 8;
                   break;
                 }
@@ -6465,18 +6497,18 @@ function () {
 
               case 8:
                 _context2.next = 10;
-                return _config__WEBPACK_IMPORTED_MODULE_11__["default"].load();
+                return _config__WEBPACK_IMPORTED_MODULE_12__["default"].load();
 
               case 10:
-                this.url = "".concat(_config__WEBPACK_IMPORTED_MODULE_11__["default"].apiScheme, "://").concat(_config__WEBPACK_IMPORTED_MODULE_11__["default"].apiHost).concat(COMETD_URL_POSTSCRIPT);
-                this.cometd.registerExtension('ack', new cometd_AckExtension__WEBPACK_IMPORTED_MODULE_9___default.a());
-                this.cometd.registerExtension('reload', new cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_10___default.a());
+                this.url = "".concat(_config__WEBPACK_IMPORTED_MODULE_12__["default"].apiScheme, "://").concat(_config__WEBPACK_IMPORTED_MODULE_12__["default"].apiHost).concat(COMETD_URL_POSTSCRIPT);
+                this.cometd.registerExtension('ack', new cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10___default.a());
+                this.cometd.registerExtension('reload', new cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11___default.a());
                 this.cometd.configure({
                   url: this.url,
                   logLevel: options.logLevel
                 });
 
-                if (!Object(utils__WEBPACK_IMPORTED_MODULE_12__["isNode"])() && Object(utils__WEBPACK_IMPORTED_MODULE_12__["isBrowser"])()) {
+                if (!Object(utils__WEBPACK_IMPORTED_MODULE_13__["isNode"])() && Object(utils__WEBPACK_IMPORTED_MODULE_13__["isBrowser"])()) {
                   window.onunload = function () {
                     if (_this2.cometd.getStatus() === CONNECTED) {
                       _this2.cometd.reload();
@@ -6505,16 +6537,16 @@ function () {
   }, {
     key: "checkEnabled",
     value: function () {
-      var _checkEnabled = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _checkEnabled = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3() {
         var res, enabled;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 _context3.next = 2;
-                return Object(adapters_project__WEBPACK_IMPORTED_MODULE_13__["channelsEnabled"])();
+                return Object(adapters_project__WEBPACK_IMPORTED_MODULE_14__["channelsEnabled"])();
 
               case 2:
                 res = _context3.sent;
@@ -6525,7 +6557,7 @@ function () {
                   break;
                 }
 
-                throw new utils__WEBPACK_IMPORTED_MODULE_12__["EpicenterError"]('Push Channels are not enabled on this project');
+                throw new utils__WEBPACK_IMPORTED_MODULE_13__["EpicenterError"]('Push Channels are not enabled on this project');
 
               case 6:
               case "end":
@@ -6545,9 +6577,9 @@ function () {
   }, {
     key: "handshake",
     value: function () {
-      var _handshake = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _handshake = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee4() {
         var _this3 = this;
 
         var options,
@@ -6556,7 +6588,7 @@ function () {
             _handshakeProps$ext,
             _args4 = arguments;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
@@ -6578,10 +6610,10 @@ function () {
 
               case 7:
                 handshakeProps = {};
-                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+                session = utils__WEBPACK_IMPORTED_MODULE_13__["identification"].session;
 
                 if (session) {
-                  handshakeProps.ext = (_handshakeProps$ext = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(_handshakeProps$ext, AUTH_TOKEN_KEY, session.token), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(_handshakeProps$ext, "ack", this.requireAcknowledgement), _handshakeProps$ext);
+                  handshakeProps.ext = (_handshakeProps$ext = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(_handshakeProps$ext, AUTH_TOKEN_KEY, session.token), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(_handshakeProps$ext, "ack", this.requireAcknowledgement), _handshakeProps$ext);
                 }
 
                 this.cometd.ackEnabled = this.requireAcknowledgement;
@@ -6607,7 +6639,7 @@ function () {
                     };
 
                     try {
-                      var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                      var result = utils__WEBPACK_IMPORTED_MODULE_13__["errorManager"].handle(error, retry);
                       resolve(result);
                     } catch (e) {
                       reject(e);
@@ -6632,12 +6664,12 @@ function () {
   }, {
     key: "disconnect",
     value: function () {
-      var _disconnect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _disconnect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee5() {
         var _this4 = this;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee5$(_context5) {
           while (1) {
             switch (_context5.prev = _context5.next) {
               case 0:
@@ -6668,7 +6700,7 @@ function () {
                 return _context5.abrupt("return", new Promise(function (resolve, reject) {
                   return _this4.cometd.disconnect(function (disconnectReply) {
                     if (!disconnectReply.successful) {
-                      reject(new utils__WEBPACK_IMPORTED_MODULE_12__["EpicenterError"]('Unable to disconnect from CometD server'));
+                      reject(new utils__WEBPACK_IMPORTED_MODULE_13__["EpicenterError"]('Unable to disconnect from CometD server'));
                     } else {
                       resolve();
                     }
@@ -6692,9 +6724,9 @@ function () {
   }, {
     key: "add",
     value: function () {
-      var _add = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _add = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(channel, update) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee6(channel, update) {
         var _this5 = this;
 
         var options,
@@ -6704,7 +6736,7 @@ function () {
             handleCometdUpdate,
             promises,
             _args6 = arguments;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
@@ -6725,10 +6757,10 @@ function () {
 
               case 7:
                 subscriptionProps = {};
-                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+                session = utils__WEBPACK_IMPORTED_MODULE_13__["identification"].session;
 
                 if (session) {
-                  subscriptionProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()({}, AUTH_TOKEN_KEY, session.token);
+                  subscriptionProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()({}, AUTH_TOKEN_KEY, session.token);
                 }
 
                 handleCometdUpdate = function handleCometdUpdate(_ref) {
@@ -6747,7 +6779,7 @@ function () {
                         if (subscribeReply.successful) {
                           _this5.subscriptions.set(subscription.channel, subscription);
 
-                          resolve(subscribeReply);
+                          resolve(subscription);
                           return;
                         }
 
@@ -6765,7 +6797,7 @@ function () {
                         };
 
                         try {
-                          var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                          var result = utils__WEBPACK_IMPORTED_MODULE_13__["errorManager"].handle(error, retry);
                           resolve(result);
                         } catch (e) {
                           reject(e);
@@ -6774,7 +6806,12 @@ function () {
                     }));
                   });
                 });
-                return _context6.abrupt("return", Promise.all(promises));
+                return _context6.abrupt("return", promises.length === 1 ? Promise.all(promises).then(function (_ref3) {
+                  var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref3, 1),
+                      res = _ref4[0];
+
+                  return res;
+                }) : Promise.all(promises));
 
               case 14:
               case "end":
@@ -6793,9 +6830,9 @@ function () {
   }, {
     key: "publish",
     value: function () {
-      var _publish = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _publish = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7(channel, content) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee7(channel, content) {
         var _this6 = this;
 
         var options,
@@ -6804,7 +6841,7 @@ function () {
             session,
             promises,
             _args7 = arguments;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee7$(_context7) {
           while (1) {
             switch (_context7.prev = _context7.next) {
               case 0:
@@ -6825,16 +6862,16 @@ function () {
 
               case 7:
                 publishProps = {};
-                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+                session = utils__WEBPACK_IMPORTED_MODULE_13__["identification"].session;
 
                 if (session) {
-                  publishProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()({}, AUTH_TOKEN_KEY, session.token);
+                  publishProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()({}, AUTH_TOKEN_KEY, session.token);
                 }
 
                 promises = [];
                 this.cometd.batch(function () {
-                  return channels.forEach(function (_ref3) {
-                    var path = _ref3.path;
+                  return channels.forEach(function (_ref5) {
+                    var path = _ref5.path;
                     return promises.push(new Promise(function (resolve, reject) {
                       _this6.cometd.publish(path, content, publishProps, function (publishReply) {
                         if (publishReply.successful) {
@@ -6856,7 +6893,7 @@ function () {
                         };
 
                         try {
-                          var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                          var result = utils__WEBPACK_IMPORTED_MODULE_13__["errorManager"].handle(error, retry);
                           resolve(result);
                         } catch (e) {
                           reject(e);
@@ -6865,7 +6902,12 @@ function () {
                     }));
                   });
                 });
-                return _context7.abrupt("return", Promise.all(promises));
+                return _context7.abrupt("return", promises.length === 1 ? Promise.all(promises).then(function (_ref6) {
+                  var _ref7 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref6, 1),
+                      res = _ref7[0];
+
+                  return res;
+                }) : Promise.all(promises));
 
               case 13:
               case "end":
@@ -6884,12 +6926,12 @@ function () {
   }, {
     key: "remove",
     value: function () {
-      var _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8(subscription) {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee8(subscription) {
         var _this7 = this;
 
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
@@ -6927,13 +6969,13 @@ function () {
   }, {
     key: "empty",
     value: function () {
-      var _empty = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()(
+      var _empty = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee9() {
         var _this8 = this;
 
         var promises;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
@@ -9069,7 +9111,7 @@ var identification = new Identification(COOKIE);
 /*!****************************!*\
   !*** ./src/utils/index.js ***!
   \****************************/
-/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, cookies, EpicenterError, Fault, Result, errorManager, identification, Router, isBrowser, isNode, toQueryString, last, prefix, access, NodeStore, SessionStore, CookieStore */
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, isBrowser, isNode, toQueryString, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, errorManager, identification, Router */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
