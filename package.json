@@ -5,6 +5,7 @@
   "main": "public/epicenter.js",
   "scripts": {
     "build": "webpack --config webpack.config.js --watch --mode=development",
+    "build-node": "webpack --config webpack.config.js --watch --mode=development --target='node'",
     "test": "karma start --browsers ChromeHeadless karma.conf.js",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.js --single-run"
   },

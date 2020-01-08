@@ -1,4 +1,5 @@
 import { Router } from 'utils';
+import { cometdAdapter } from 'adapters';
 
 export async function forGroup(groupKey, options = {}) {
     const { accountShortName, projectShortName } = options;
@@ -14,4 +15,8 @@ export async function forWorld(worldKey, options = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/presence/world/${worldKey}`);
+}
+
+export async function connect() {
+    cometdAdapter.handshake();
 }

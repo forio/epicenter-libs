@@ -1,7 +1,7 @@
-import config from '~/config.js';
-import { BROWSER_STORAGE_TYPE } from 'constants';
-const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
+import config from '~/config';
 import { EpicenterError, NodeStore, SessionStore, CookieStore, cookies, isNode } from 'utils';
+import { BROWSER_STORAGE_TYPE } from 'utils/constants';
+const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
 
 const SESSION_KEY = Symbol('com.forio.epicenter.session');

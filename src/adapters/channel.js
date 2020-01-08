@@ -1,6 +1,6 @@
 import { EpicenterError } from 'utils';
 import { cometdAdapter } from 'adapters';
-import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'constants';
+import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
 
 const validateScope = (scope) => {
     if (!scope) throw new EpicenterError('No scope found where one was required');

@@ -6,7 +6,7 @@ const OK_CODE = 200;
 const CREATED_CODE = 201;
 
 describe('Authentication', () => {
-    const { config, identification, authAdapter } = epicenter;
+    const { config, authAdapter } = epicenter;
     let server;
     let token;
 
@@ -79,7 +79,7 @@ describe('Authentication', () => {
             server.requests = [];
             await authAdapter.logout()
                 .then((res) => {
-                    expect(identification.session).to.equal(null);
+                    expect(authAdapter.getLocalSession()).to.equal(null);
                     server.requests.should.be.empty;
                 });
         });
@@ -88,7 +88,7 @@ describe('Authentication', () => {
                 handle: 'joe',
                 password: 'pass',
                 objectType: 'user',
-            }).then((res) => expect(identification.session).to.deep.equal(res.body));
+            }).then((res) => expect(authAdapter.getLocalSession()).to.deep.equal(res.body));
         });
     });
 });

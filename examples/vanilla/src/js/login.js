@@ -9,10 +9,10 @@ if (config.isLocal()) {
 
 const identifyError = (code) => {
     switch (code) {
-        case 'AUTHENTICATION_EVAPORATED': return 'Whoops, looks like your session was forgotten, try logging in again';
-        case 'AUTHENTICATION_EXPIRED': return 'Whoops, it looks like your session timed out, try logging in again.';
-        case 'AUTHENTICATION_FAILURE': return 'Something\'s horribly wrong with your token.';
-        case 'AUTHENTICATION_BLOCKED': return 'Uh oh! Looks like there was an issue with your account, please contact us.';
+        case 'AUTHORIZATION_EVAPORATED': return 'Whoops, looks like your session was forgotten, try logging in again';
+        case 'AUTHORIZATION_EXPIRED': return 'Whoops, it looks like your session timed out, try logging in again.';
+        case 'AUTHORIZATION_FAILURE': return 'Something\'s horribly wrong with your token.';
+        case 'AUTHORIZATION_BLOCKED': return 'Uh oh! Looks like there was an issue with your account, please contact us.';
         default: return 'Mmm, looks like an unknown error has occured...';
     }
 };

@@ -88,6 +88,8 @@ class Config {
 
     async loadNode() {
         // TODO -- use process env variables instead here for Node server
+        this.apiScheme = 'https';
+        this.apiHost = 'test.forio.com';
         return;
     }
 
@@ -117,7 +119,7 @@ class Config {
         }
         return response;
     }
-    /* Test this in Vanilla/React example */
+
     async load() {
         if (this.loading) return await this.loading;
 

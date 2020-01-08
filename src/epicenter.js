@@ -1,4 +1,3 @@
-
 const version = VERSION;
 export { default as config } from '~/config';
 export { version };
@@ -8,17 +7,14 @@ export {
     RITUAL,
     PUSH_CATEGORY,
     LOCK_TYPE,
-} from 'constants';
+} from 'utils/constants';
 export {
     errorManager,
-    identification,
-    Router,
 } from 'utils';
 export {
     Channel,
     accountAdapter,
     authAdapter,
-    cometdAdapter,
     presenceAdapter,
     projectAdapter,
     runAdapter,
