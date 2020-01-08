@@ -1,5 +1,4 @@
 package-lock.json
 .idea/
 node_modules/
-public/
 .DS_Store
