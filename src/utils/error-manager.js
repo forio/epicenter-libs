@@ -7,20 +7,15 @@ const handleByRelog = (error) => {
     if (error.code) {
         query = query.concat(`?error=${error.code}`);
     }
-    window.location.href = `/login.html${query}`;
-    authAdapter.logout();
-    return Promise.resolve();
+    return authAdapter.logout().then(() => window.location.href = `/login.html${query}`);
 };
 
 const handleSSO = () => {
-    authAdapter.logout();
-    return Promise.resolve();
+    return authAdapter.logout();
 };
 
 const handleUnknown = () => {
-    window.location.href = '/unknown.html';
-    authAdapter.logout();
-    return Promise.resolve();
+    return authAdapter.logout().then(() => window.location.href = '/unknown.html');
 };
 
 const handleByLoginMethod = (error) => {
