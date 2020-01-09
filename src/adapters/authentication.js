@@ -1,13 +1,9 @@
-import { EpicenterError, Router, identification } from 'utils';
+import { Router, identification } from 'utils';
 import { cometdAdapter } from 'adapters';
 
 export async function logout() {
-    try {
-        identification.session = undefined;
-        await cometdAdapter.disconnect();
-    } catch (err) {
-        throw new EpicenterError('Encountered error while logging out');
-    }
+    identification.session = undefined;
+    await cometdAdapter.disconnect();
 }
 
 export async function login(options) {

@@ -112,3 +112,6 @@ button:disabled {
     padding: 0.5rem;
     overflow: scroll;
 }
+#chat-box .system {
+    color: lightslategray;
+}

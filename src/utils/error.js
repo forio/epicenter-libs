@@ -4,8 +4,7 @@ export default class EpicenterError extends Error {
 
     constructor(message) {
 
-        super();
+        super(message);
 
-        this.message = message;
     }
 }
