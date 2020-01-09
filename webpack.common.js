@@ -3,8 +3,7 @@ const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-
-const VERSION = '0.0.2';
+const { version } = require('./package.json');
 
 module.exports = {
     entry: [
@@ -35,7 +34,7 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new BundleAnalyzerPlugin({ analyzerPort: '1234' }),
-        new webpack.BannerPlugin({ banner: `Epicenter v${VERSION}` }),
-        new webpack.DefinePlugin({ VERSION: JSON.stringify(VERSION) }),
+        new webpack.BannerPlugin({ banner: `Epicenter v${version}` }),
+        new webpack.DefinePlugin({ VERSION: JSON.stringify(version) }),
     ],
 };
