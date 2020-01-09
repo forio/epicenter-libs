@@ -34,6 +34,21 @@ const initFacilitator = () => {
         messageEl.innerText = `${user}: ${text}`;
         chatBoxEl.append(messageEl);
     });
+    new Channel({
+        scopeBoundary: SCOPE_BOUNDARY.GROUP,
+        scopeKey: session.groupKey,
+        pushCategory: PUSH_CATEGORY.PRESENCE,
+    }).subscribe((data) => {
+        const { content, type } = data;
+        const messageEl = document.createElement('div');
+        let text = 'done something entirely novel and unknown';
+        if (type === 'login') text = 'joined the room';
+        if (type === 'logout') text = 'left the room';
+        const user = content.user.displayName;
+        messageEl.innerText = `-- ${user} has ${text} --`;
+        messageEl.classList.add('system');
+        chatBoxEl.append(messageEl);
+    });
 };
 
 const initStudent = () => {
@@ -76,8 +91,9 @@ const load = () => {
 
     /* Handle onclicks */
     logoutEl.onclick = (e) => {
-        authAdapter.logout();
-        window.location.href = '/login.html';
+        authAdapter.logout().then(() => {
+            window.location.href = '/login.html';
+        });
     };
     presenceEl.onclick = (e) => {
         if (presenceEl.innerText !== 'Presence') return;
