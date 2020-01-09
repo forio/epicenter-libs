@@ -21,7 +21,7 @@ export default class Channel {
     constructor(scope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
         validateScope(scope);
-        this.path = `/${scopeBoundary}/${scopeKey}/${pushCategory}`;
+        this.path = `/${scopeBoundary.toLowerCase()}/${scopeKey}/${pushCategory.toLowerCase()}`;
         if (cometdAdapter.subscriptions.has(this.path)) {
             this.subscription = cometdAdapter.subscriptions.get(this.path);
         }
@@ -32,7 +32,7 @@ export default class Channel {
     }
 
     async subscribe(update, options) {
-        if (this.subscription) this.unsubscribe();
+        if (this.subscription) await this.unsubscribe();
         this.update = update;
         return cometdAdapter.add(this, update, options).then((subscription) => {
             this.subscription = subscription;
