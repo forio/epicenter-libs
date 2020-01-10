@@ -1,14 +1,15 @@
 {
   "name": "epicenter-libs",
-  "version": "0.0.2",
+  "version": "3.0.0",
   "type": "module",
   "main": "dist/epicenter.js",
   "scripts": {
     "build": "npm run build-web:dev",
+    "prod": "npm run build-web:prod",
     "build-web": "npm run build-web:dev",
+    "build-node": "npm run build-node:dev",
     "build-web:dev": "webpack --config webpack.web.dev.js",
     "build-web:prod": "webpack --config webpack.web.prod.js",
-    "build-node": "npm run build-node:dev",
     "build-node:dev": "webpack --config webpack.node.dev.js",
     "build-node:prod": "webpack --config webpack.node.prod.js",
     "test": "karma start --browsers ChromeHeadless karma.conf.js",
