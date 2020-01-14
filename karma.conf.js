@@ -16,9 +16,10 @@ module.exports = function(config) {
         port: 9876,  // karma web server port
         colors: true,
         browserConsoleLogOptions: {
-            level: 'error',
+            level: 'debug',
             format: '%b %t: %m',
-            terminal: true,
+            terminal: false,
+            path: 'browser.log',
         },
         logLevel: 'error',
         browsers: ['ChromeHeadless'],
