@@ -2,7 +2,7 @@
 
 Intended for use w/ Node v12
 
-**ATTENTION** -- current development is done on test.forio.com, you'll need to ensure the test server is on in order to make API calls; Jenkins job: https://build.forio.com/view/Ops/job/test-server-start-stop--client-staging--ops--/
+⚠️ **ATTENTION** -- for newer platform features, you'll need to use the test server: `test.forio.com`; See Jenkins job: https://build.forio.com/view/Ops/job/test-server-start-stop--client-staging--ops--/
 
 UPDATEME: (ideally before a major knowledge transfer to avoid frequent update responsibilities); what follows below is just a few makeshift notes; any formatting, clarification, or additional details you want to tack on are greatly appreciated
 
