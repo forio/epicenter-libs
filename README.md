@@ -49,10 +49,15 @@ npm start
 npm run build           #in a separate terminal
 npm run test
 ```
-Logs during test are sent to `browser.log`
+Logs during testing are sent to `browser.log`
 
-## How to build for Production
-```
-npm run build-web:prod  #for browsers
-npm run build-node:prod #for node servers
-```
+## How to Create a Production-Ready Build
+When you feel you are ready to release new version of the the libs:
+1. On the `develop` branch
+2. Update the `package.json` with the to your new version (following [semver](https://semver.org/) specifications*)
+3. Build to the `dist/` folder: `npm run prod`
+4. Make sure tests pass: `npm run test`
+5. Merge `develop` in to `master`
+6. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
+
+\* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.
