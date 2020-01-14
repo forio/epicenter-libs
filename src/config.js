@@ -1,20 +1,27 @@
-import fetch from 'cross-fetch';
-import { EpicenterError, Fault, isBrowser, isNode, last } from 'utils';
+import { EpicenterError, isBrowser, isNode } from 'utils';
 
 const API_VERSION = 3;
 class Config {
     _apiVersion = API_VERSION;
-    _apiScheme = 'http';
-    _apiHost = 'api.forio.com';
-    _localConfigProtocol = 'https:'
-    _localConfigHost = 'test.forio.com';
+    _apiProtocol = 'https';
+    _apiHost = 'forio.com';
 
-    get apiScheme() {
-        return this._apiScheme;
+    constructor() {
+        if (isBrowser()) return this.loadBrowser();
+        if (isNode()) return this.loadNode();
+        throw new EpicenterError('Could not identify environment; no configuration was setup');
     }
 
-    set apiScheme(apiScheme) {
-        this._apiScheme = apiScheme;
+    get apiProtocol() {
+        return this._apiProtocol;
+    }
+
+    set apiProtocol(apiProtocol) {
+        if (!apiProtocol.startsWith('http')) return;
+        if (apiProtocol.endsWith(':')) {
+            apiProtocol = apiProtocol.slice(0, -1);
+        }
+        this._apiProtocol = apiProtocol;
     }
 
     get apiHost() {
@@ -23,25 +30,6 @@ class Config {
 
     set apiHost(apiHost) {
         this._apiHost = apiHost;
-    }
-
-    get localConfigProtocol() {
-        return this._localConfigProtocol;
-    }
-
-    set localConfigProtocol(localConfigProtocol) {
-        if (last(localConfigProtocol) !== ':') {
-            localConfigProtocol = `${localConfigProtocol}:`;
-        }
-        this._localConfigProtocol = localConfigProtocol;
-    }
-
-    get localConfigHost() {
-        return this._localConfigHost;
-    }
-
-    set localConfigHost(localConfigHost) {
-        this._localConfigHost = localConfigHost;
     }
 
     get apiVersion() {
@@ -86,54 +74,25 @@ class Config {
         }
     }
 
-    async loadNode() {
+    loadNode() {
         // TODO -- use process env variables instead here for Node server
-        this.apiScheme = 'https';
+        this.apiProtocol = 'https';
         this.apiHost = 'test.forio.com';
         return;
     }
 
-    async loadBrowser() {
+    loadBrowser() {
         const isLocal = this.isLocal();
-        const protocol = isLocal ? this.localConfigProtocol : window.location.protocol;
-        const host = isLocal ? this.localConfigHost : window.location.host;
-        if (!isLocal) this.getPathAccountProject(window.location.pathname);
+        const { protocol, pathname, host } = window.location;
+        this.apiProtocol = isLocal ? 'https' : protocol;
+        this.apiHost = isLocal ? 'forio.com' : host;
 
-        const response = await fetch(`${protocol}//${host}/epicenter/v${this._apiVersion}/config`, {
-            method: 'GET',
-            cache: 'no-cache',
-            redirect: 'follow',
-        });
-
-        const contentType = response.headers.get('content-type');
-        if (!contentType || !contentType.includes('application/json')) {
-            throw new EpicenterError('Invalid configuration response');
+        const match = pathname.match(/\/app\/([\w-]+)\/([\w-]+)/);
+        if (match) {
+            const [account, project] = match.slice(1);
+            this.accountShortName = account;
+            this.projectShortName = project;
         }
-
-        if ((response.status >= 200) && (response.status < 400)) {
-            const body = await response.json();
-            this.apiScheme = body.api.protocol;
-            this.apiHost = body.api.host;
-        } else {
-            throw new Fault(response.status, await response.json());
-        }
-        return response;
-    }
-
-    async load() {
-        if (this.loading) return await this.loading;
-
-        if (isNode()) {
-            this.loading = this.loadNode();
-            return await this.loading;
-        }
-
-        if (isBrowser() && window.location.protocol.includes('http')) {
-            this.loading = this.loadBrowser();
-            return await this.loading;
-        }
-
-        throw new EpicenterError('Could not identify environment; no configuration was setup');
     }
 }
 

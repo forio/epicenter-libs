@@ -55,8 +55,7 @@ class CometdAdapter {
             this.defaultCometd = new cometd.CometD();
         }
 
-        await config.load();
-        this.url = `${config.apiScheme}://${config.apiHost}${COMETD_URL_POSTSCRIPT}`;
+        this.url = `${config.apiProtocol}://${config.apiHost}${COMETD_URL_POSTSCRIPT}`;
         this.cometd.registerExtension('ack', new AckExtension());
         this.cometd.registerExtension('reload', new ReloadExtension());
         this.cometd.configure({
