@@ -4,7 +4,7 @@ import '../css/common.css';
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.host = 'test.forio.com';
+    config.apiHost = 'test.forio.com';
 }
 
 const identifyError = (code) => {

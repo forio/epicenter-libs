@@ -5,7 +5,6 @@ import { EpicenterError, identification, isNode, isBrowser, errorManager } from 
 import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
-const COMETD_URL_POSTSCRIPT = '/v3/epicenter/cometd';
 
 const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
@@ -54,8 +53,9 @@ class CometdAdapter {
             const cometd = await import('cometd');
             this.defaultCometd = new cometd.CometD();
         }
-
-        this.url = `${config.apiProtocol}://${config.apiHost}${COMETD_URL_POSTSCRIPT}`;
+        // TODO: uncomment the line below -- as soon as we've received the OK from David
+        // this.url = `${config.apiProtocol}://${config.apiHost}/push/v3/epicenter/cometd`;
+        this.url = `${config.apiProtocol}://test.forio.com/v3/epicenter/cometd`;
         this.cometd.registerExtension('ack', new AckExtension());
         this.cometd.registerExtension('reload', new ReloadExtension());
         this.cometd.configure({
