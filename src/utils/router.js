@@ -107,25 +107,24 @@ export default class Router {
         return this;
     }
 
-    async configure() {
-        await config.load();
-        if (!this.server) this.withServer(`${config.apiScheme}://${config.apiHost}`);
+    configure() {
+        if (!this.server) this.withServer(`${config.apiProtocol}://${config.apiHost}`);
         if (!this.accountShortName) this.withAccountShortName(config.accountShortName);
         if (!this.projectShortName) this.withProjectShortName(config.projectShortName);
         if (!this.version) this.withVersion(config.apiVersion);
     }
 
-    async getURL(uriComponent) {
-        await this.configure();
+    getURL(uriComponent) {
+        this.configure();
         const url = new URL(`${this.server}`);
-        url.pathname = `v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
+        url.pathname = `api/v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
         url.search = this.searchParams;
         return url;
     }
 
     //Network Requests
     async get(uriComponent, options) {
-        const url = await this.getURL(uriComponent);
+        const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
             ...options,
@@ -134,7 +133,7 @@ export default class Router {
     }
 
     async delete(uriComponent, options) {
-        const url = await this.getURL(uriComponent);
+        const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
             ...options,
@@ -143,7 +142,7 @@ export default class Router {
     }
 
     async patch(uriComponent, options) {
-        const url = await this.getURL(uriComponent);
+        const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
             ...options,
@@ -152,7 +151,7 @@ export default class Router {
     }
 
     async post(uriComponent, options) {
-        const url = await this.getURL(uriComponent);
+        const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
             ...options,
@@ -161,7 +160,7 @@ export default class Router {
     }
 
     async put(uriComponent, options) {
-        const url = await this.getURL(uriComponent);
+        const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
             ...options,
