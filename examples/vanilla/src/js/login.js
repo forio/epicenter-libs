@@ -1,10 +1,10 @@
-import { authAdapter, config, BROWSER_STORAGE_TYPE } from 'epicenter';
+import { authAdapter, config } from 'epicenter';
 import '../css/common.css';
 
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = BROWSER_STORAGE_TYPE.SESSION;
+    config.host = 'test.forio.com';
 }
 
 const identifyError = (code) => {
