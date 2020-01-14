@@ -1,4 +1,4 @@
-import { config, authAdapter, presenceAdapter, Channel, BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
+import { config, authAdapter, presenceAdapter, Channel, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
 import '../css/common.css';
 
 
@@ -19,7 +19,7 @@ const session = authAdapter.getLocalSession();
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.browserStorageType = BROWSER_STORAGE_TYPE.SESSION;
+    config.apiHost = 'test.forio.com';
 }
 
 const initFacilitator = () => {

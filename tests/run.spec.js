@@ -1,25 +1,17 @@
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
+import { ENDPOINTS, SESSION_KEY, SESSION, OK_CODE, CREATED_CODE } from './common';
 chai.use(require('sinon-chai'));
-
-const OK_CODE = 200;
-const CREATED_CODE = 201;
-
-const ENDPOINTS = {
-    accountShortName: 'forio-dev',
-    projectShortName: 'epi-v3',
-};
 
 describe('Run API Service', () => {
     const { config, runAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
     let server;
-    let token;
 
     config.accountShortName = ENDPOINTS.accountShortName;
     config.projectShortName = ENDPOINTS.projectShortName;
     before(() => {
-        token = 'tHDEVEueL7tuC8LYRj4lhWhYe3GDreWPzGx';
         server = sinon.fakeServer.create();
+        document.cookies = `${SESSION_KEY}=${JSON.stringify(encodeURIComponent(SESSION))}`;
         server.respondWith(/(.*)\/config/, (xhr, id) => {
             const RESPONSE = {
                 api: { host: 'test.forio.com', protocol: 'https' },
@@ -76,7 +68,7 @@ describe('Run API Service', () => {
 
     after(() => {
         server.restore();
-        token = null;
+        document.cookie = `${SESSION_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     });
 
     describe('Create', () => {
@@ -94,9 +86,17 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run`);
+        }));
+        it('Should have authorization', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
         }));
         it('Should pass the run options to the request', async() => await runAdapter.create(MODEL, WORLD_SCOPE, OPTIONALS).then(() => {
             const req = server.requests.pop();
@@ -114,7 +114,7 @@ describe('Run API Service', () => {
             expect(reqBody.modelContext).to.be.an('object').that.is.empty;
             expect(reqBody.executionContext).to.be.an('object').that.is.empty;
 
-            req.url.should.equal(`https://${config.apiHost}/v${config.apiVersion}/${OPTIONALS.accountShortName}/${OPTIONALS.projectShortName}/run`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${OPTIONALS.accountShortName}/${OPTIONALS.projectShortName}/run`);
         }));
         it('Should use PARTICIPANT when a lock is undefined with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
             const req = server.requests.pop();
@@ -134,9 +134,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/clone/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/clone/${RUN_KEY}`);
         }));
         it('Should pass the options to the request body', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
             const req = server.requests.pop();
@@ -150,9 +154,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.restore(RUN_KEY).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.restore(RUN_KEY).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/restore/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/restore/${RUN_KEY}`);
         }));
     });
     describe('Rewind', () => {
@@ -161,9 +169,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.rewind(RUN_KEY).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.rewind(RUN_KEY).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/rewind/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/rewind/${RUN_KEY}`);
         }));
     });
     describe('Update', () => {
@@ -180,9 +192,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
         }));
+        it('Should have authorization', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
         }));
         it('Should pass the options to the request body', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
             const req = server.requests.pop();
@@ -207,9 +223,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('DELETE');
         }));
+        it('Should have authorization', async() => await runAdapter.remove(RUN_KEY).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.remove(RUN_KEY).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
         }));
     });
     describe('Get', () => {
@@ -218,9 +238,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.get(RUN_KEY).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.get(RUN_KEY).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
         }));
     });
     describe('Query', () => {
@@ -248,10 +272,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${MODEL}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${MODEL}`);
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
             searchParams.get('projections').split(';').forEach((p) => expect(p).to.satisfy((p) => p.startsWith('var.') || p.startsWith('meta.')));
@@ -267,9 +295,13 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.introspect(MODEL).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL', async() => await runAdapter.introspect(MODEL).then(() => {
             const req = server.requests.pop();
-            req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/introspect/${MODEL}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/introspect/${MODEL}`);
         }));
     });
     describe('Operation', () => {
@@ -286,10 +318,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL with one runKey', async() => await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
             searchParams.get('ritual').should.equal(OPTIONALS.ritual);
@@ -297,7 +333,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL with multiple runKeys', async() => await runAdapter.operation(RUN_KEYS, NAME, ARGUMENTS, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -317,10 +353,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.getVariables(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single runKey', async() => await runAdapter.getVariables(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -330,7 +370,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys', async() => await runAdapter.getVariables(RUN_KEYS, VARIABLES, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -352,10 +392,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.getVariable(RUN_KEY, VARIABLE, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single runKey', async() => await runAdapter.getVariable(RUN_KEY, VARIABLE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -364,7 +408,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys, single variable', async() => await runAdapter.getVariable(RUN_KEYS, VARIABLE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -375,7 +419,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; single runKey, multiple variables', async() => await runAdapter.getVariable(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -385,7 +429,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys, multiple variables', async() => await runAdapter.getVariable(RUN_KEYS, VARIABLES, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -410,10 +454,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
         }));
+        it('Should have authorization', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single RUN_KEY', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -422,7 +470,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple RUN_KEYs', async() => await runAdapter.updateVariables(RUN_KEYS, UPDATE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -447,10 +495,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         }));
+        it('Should have authorization', async() => await runAdapter.getMetadata(RUN_KEY, METADATA, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single runKey', async() => await runAdapter.getMetadata(RUN_KEY, METADATA, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -459,7 +511,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys', async() => await runAdapter.getMetadata(RUN_KEYS, METADATA, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -485,10 +537,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
         }));
+        it('Should have authorization', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single runKey', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -497,7 +553,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys', async() => await runAdapter.updateMetadata(RUN_KEYS, UPDATE, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
@@ -526,10 +582,14 @@ describe('Run API Service', () => {
             const req = server.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         }));
+        it('Should have authorization', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
+            const req = server.requests.pop();
+            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
+        }));
         it('Should create a proper URL; single runKey', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
 
             searchParams.get('timeout').should.equal(OPTIONALS.timeout);
@@ -538,7 +598,7 @@ describe('Run API Service', () => {
         it('Should create a proper URL; multiple runKeys', async() => await runAdapter.action(RUN_KEYS, ACTIONS, OPTIONALS).then(() => {
             const req = server.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action`);
             const searchParams = new URLSearchParams(search);
 
             RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
