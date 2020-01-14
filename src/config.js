@@ -3,8 +3,6 @@ import { EpicenterError, isBrowser, isNode } from 'utils';
 const API_VERSION = 3;
 class Config {
     _apiVersion = API_VERSION;
-    _apiProtocol = 'https';
-    _apiHost = 'forio.com';
 
     constructor() {
         if (isBrowser()) return this.loadBrowser();
