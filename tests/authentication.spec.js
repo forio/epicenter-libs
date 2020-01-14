@@ -1,39 +1,26 @@
 import sinon from 'sinon';
 import chai, { expect } from 'chai';
+import { CREATED_CODE, SESSION } from './common';
 chai.use(require('sinon-chai'));
-
-const OK_CODE = 200;
-const CREATED_CODE = 201;
 
 describe('Authentication', () => {
     const { config, authAdapter } = epicenter;
     let server;
-    let token;
 
     before(() => {
-        token = 'tHDEVEueL7tuC8LYRj4lhWhYe3GDreWPzGx';
         server = sinon.fakeServer.create();
-        server.respondWith(/(.*)\/config/, (xhr, id) => {
-            xhr.respond(
-                OK_CODE, { 'content-type': 'application/json' }, JSON.stringify({ api: { host: 'test.forio.com', protocol: 'https' }, clusterId: 'epicenter-test-monolith-1' })
-            );
-        });
-
         server.respondWith(/(.*)\/authentication/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(
-                { refresh_token: 'snip-refresh', access_token: token, expires: 43199 }
-            ));
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
         server.respondImmediately = true;
     });
 
     after(() => {
         server.restore();
-        token = null;
     });
 
     describe('Login Process', () => {
-        it('should Do a POST', async() => {
+        it('Should Do a POST', async() => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
@@ -43,7 +30,7 @@ describe('Authentication', () => {
                     req.method.toUpperCase().should.equal('POST');
                 });
         });
-        it('should go to the right url', async() => {
+        it('Should go to the right url', async() => {
             const endpoints = { account: 'forio-dev', project: 'epi-v3' };
 
             config.accountShortName = endpoints.account;
@@ -56,11 +43,11 @@ describe('Authentication', () => {
             })
                 .then((res) => {
                     const req = server.requests.pop();
-                    req.url.should.equal(`https://${config.localConfigHost}/v${config.apiVersion}/${endpoints.account}/${endpoints.project}/authentication`);
+                    req.url.should.equal(`${config.apiProtocol}://${config.apiHost}/api/v${config.apiVersion}/${endpoints.account}/${endpoints.project}/authentication`);
                 });
         });
 
-        it('should send requests to body', async() => {
+        it('Should send requests to body', async() => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
@@ -75,7 +62,7 @@ describe('Authentication', () => {
                     }));
                 });
         });
-        it('should not do a DELETE', async() => {
+        it('Should not do a DELETE', async() => {
             server.requests = [];
             await authAdapter.logout()
                 .then((res) => {
@@ -83,7 +70,7 @@ describe('Authentication', () => {
                     server.requests.should.be.empty;
                 });
         });
-        it('should store the authentication payload as the session', async() => {
+        it('Should store the authentication payload as the session', async() => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',

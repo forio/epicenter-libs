@@ -49,6 +49,7 @@ npm start
 npm run build           #in a separate terminal
 npm run test
 ```
+Logs during test are sent to `browser.log`
 
 ## How to build for Production
 ```
