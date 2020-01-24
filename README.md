@@ -15,6 +15,7 @@ UPDATEME: (ideally before a major knowledge transfer to avoid frequent update re
 
 ## Somes Tenets for Development
 * Code should function in both Browser and Node environments
+* Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API call (**this includes the one that might show up before a `?` in a query**)
 
 ## Todos
 * See JIRA: https://issues.forio.com/projects/EPILIBS/issues
@@ -60,4 +61,4 @@ When you feel you are ready to release new version of the the libs:
 5. Merge `develop` in to `master`
 6. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
 
-\* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.
+\* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.

@@ -18,5 +18,5 @@ export async function forWorld(worldKey, options = {}) {
 }
 
 export async function connect() {
-    cometdAdapter.handshake();
+    return cometdAdapter.handshake();
 }
