@@ -55,7 +55,7 @@ class CometdAdapter {
         }
 
         const { apiProtocol, apiHost, apiVersion } = config;
-        this.url = `${apiProtocol}://${apiHost}/api/v${apiVersion}/epicenter/cometd`;
+        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
         this.cometd.registerExtension('ack', new AckExtension());
         this.cometd.registerExtension('reload', new ReloadExtension());
         this.cometd.configure({
