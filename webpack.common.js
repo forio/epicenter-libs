@@ -33,7 +33,7 @@ module.exports = {
     },
     plugins: [
         new CleanWebpackPlugin(),
-        new BundleAnalyzerPlugin({ analyzerPort: '1234' }),
+        new BundleAnalyzerPlugin({ analyzerPort: '1234', openAnalyzer: false }),
         new webpack.BannerPlugin({ banner: `Epicenter v${version}` }),
         new webpack.DefinePlugin({ VERSION: JSON.stringify(version) }),
     ],
