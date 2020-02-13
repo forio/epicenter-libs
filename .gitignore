@@ -1,7 +1,4 @@
 .idea/
 node_modules/
 .DS_Store
-
-
-# Karma Tests' Browser Logs
-browser.log
+*.log
