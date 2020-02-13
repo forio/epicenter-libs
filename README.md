@@ -12,6 +12,17 @@ UPDATEME: (ideally before a major knowledge transfer to avoid frequent update re
 * All `key`s are GUIDs (globally unique ids)
 * objectType - special key used for generating Java object class instances on the platform, e.g., `user`, `admin`
 * v3 authorization tokens can now expire after a period of inactivity, or world assignment change
+### Hybrid v2/3 Presence Implementations
+During development, we'll expect to have some simulations act as pilots for a subset of the v3 features. Presence was one of the features we tried migrating to v3. Below is a list of steps that would occur in a typical transition for transforming v2 Presence &rarr; v3 Presence.
+
+1. Add epicenter-libs to package.json
+2. Take steps to make sim support local development on test.forio.com (for personal convenience); NOTE: this is only possible with v2 libs, if you're unfortunate enough to have to convert a sim that uses v1, you're stuck deploying your changes to the test server, as **v1 doesn't allow your to overwite it's configured api host**.
+   * Add snippet of code to ensure v3 uses the right account/project and api host when working on localhost (in your `endpoints.js`)
+   * Add a host field to sim configuration to ensure v2 uses `test.forio.com` instead of `api.forio.com`
+1. Attach a v3 login to v2 login
+2. Attach a v3 logout to v2 logout
+3. Replace presence usage
+4. Attach a handler on sim page on-mount to catch v3 401 errors and call logout
 
 ## Somes Tenets for Development
 * Code should function in both Browser and Node environments
@@ -66,3 +77,8 @@ When you feel you are ready to release new version of the the libs:
 6. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
 
 \* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.
+
+## How to Build Documentation
+```
+npm run document
+```
