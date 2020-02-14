@@ -20,34 +20,38 @@ UPDATEME: (ideally before a major knowledge transfer to avoid frequent update re
 ## Todos
 * See JIRA: https://issues.forio.com/projects/EPILIBS/issues
 
-## How to Use Examples
+## How to Use Examples (Locally)
 By default, all examples currently go to the `forio-dev/epi-v3` account/project on Epicenter. Examples files are intended to provide a sandbox environment for development, feel free to edit as you wish.
 
 ### Vanilla JavaScript (with Webpack)
 ```
-npm run build           #in a separate terminal
+npm install             # Installs dependencies for libs
+npm run build           # Builds libs to dist/ folder
 cd examples/vanilla
-npm install
-npm start
+npm install             # Install dependencies for example
+npm start               # Serves example locally at local.forio.com:3913
 ```
 ### React Redux
 ```
-npm run build           #in a separate terminal
+npm install             # Installs dependencies for libs
+npm run build           # Builds libs to dist/ folder
 cd examples/react-redux
-npm install
-npm start
+npm install             # Install dependencies for example
+npm start               # Serves example locally at local.forio.com:3913
 ```
 ### Node
 ```
-npm run build-node      #in a separate terminal
+npm install             # Installs dependencies for libs
+npm run build-node      # Builds libs (node version) to dist/ folder
 cd examples/node
-npm install
+npm install             # Install dependencies for example
 npm start
 ```
 
 ## How to Test
 ```
-npm run build           #in a separate terminal
+npm install             # Installs dependencies for libs
+npm run build           # Builds libs to dist/ folder
 npm run test
 ```
 Logs during testing are sent to `browser.log`

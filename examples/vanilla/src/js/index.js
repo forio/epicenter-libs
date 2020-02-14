@@ -19,7 +19,6 @@ const session = authAdapter.getLocalSession();
 if (config.isLocal()) {
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'epi-v3';
-    config.apiHost = 'test.forio.com';
 }
 
 const initFacilitator = () => {
