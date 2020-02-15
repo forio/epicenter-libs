@@ -11,10 +11,26 @@ export const SCOPE_BOUNDARY = {
     RUN: 'RUN',
 };
 
+/**
+ * Used in {@link https://forio.com mmm}
+ * @enum
+ */
 export const RITUAL = {
     NONE: 'NONE',
+    /**
+     * Means Epicenter will bring your run back into memory
+     * @constant
+     */
     INTER: 'INTER',
+    /**
+     * ???
+     * @constant
+     */
     REANIMATE: 'REANIMATE',
+    /**
+     *
+     * @constant
+     */
     EXORCISE: 'EXORCISE',
 };
 

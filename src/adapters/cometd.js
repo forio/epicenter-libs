@@ -1,7 +1,7 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
 import config from '~/config';
-import { EpicenterError, identification, isNode, isBrowser, errorManager } from 'utils';
+import { EpicenterError, identification, isBrowser, errorManager } from 'utils';
 import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
@@ -49,7 +49,7 @@ class CometdAdapter {
             return;
         }
 
-        if (!isNode() && isBrowser()) {
+        if (isBrowser()) {
             const cometd = await import('cometd');
             this.defaultCometd = new cometd.CometD();
         }
@@ -63,7 +63,7 @@ class CometdAdapter {
             logLevel: options.logLevel,
         });
 
-        if (!isNode() && isBrowser()) {
+        if (isBrowser()) {
             window.onunload = () => {
                 if (this.cometd.getStatus() === CONNECTED) {
                     this.cometd.reload();
