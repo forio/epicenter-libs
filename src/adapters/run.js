@@ -1,7 +1,22 @@
 import { EpicenterError, Router, prefix } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
-
+/**
+ * Create a run
+ * @memberof runAdapter
+ * @example
+ * const { runAdapter } = epicenter;
+ * runAdapter.create('myModal.py', {
+ *      scopeBoundary:
+ * });
+ * @param {string} model Name of the *model EMPEEEE* file that is hosted on Epicenter
+ * @param {Object} scope Object with the fields necessary to provide scoping for your channel
+ * @param {string} scope.scopeBoundary Scope Boundary (one of enumeration of values)
+ * @param {string} scope.scopeKey Key value of item bounded by the scope
+ * @param {string} scope.pseudonymKey Key of the user creating the run.
+ * @param {Object} [optionals={}] Object for all optional fields
+ * @returns {Object} Response with the run in the "body"
+ */
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey, pseudonymKey } = scope;
     const {
@@ -37,6 +52,13 @@ export async function create(model, scope, optionals = {}) {
         });
 }
 
+/**
+ * Clone a run
+ * @memberof runAdapter
+ * @param {string} runKey Run's key
+ * @param {Object} [optionals={}] Object for all optional fields
+ * @returns {Object} Response with the run in the "body"
+ */
 export async function clone(runKey, optionals = {}) {
     const {
         accountShortName, projectShortName, ephemeral,
