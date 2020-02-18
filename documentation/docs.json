@@ -1,0 +1,1792 @@
+[
+  {
+    "name": "Geography",
+    "description": {
+      "type": "root",
+      "children": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "These are Mapbox GL JS's ways of representing locations\nand areas on the sphere. There are things ",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 2,
+                  "column": 43,
+                  "offset": 98
+                },
+                "indent": [
+                  1
+                ]
+              }
+            },
+            {
+              "type": "emphasis",
+              "children": [
+                {
+                  "type": "text",
+                  "value": "here",
+                  "position": {
+                    "start": {
+                      "line": 2,
+                      "column": 44,
+                      "offset": 99
+                    },
+                    "end": {
+                      "line": 2,
+                      "column": 48,
+                      "offset": 103
+                    },
+                    "indent": []
+                  }
+                }
+              ],
+              "position": {
+                "start": {
+                  "line": 2,
+                  "column": 43,
+                  "offset": 98
+                },
+                "end": {
+                  "line": 2,
+                  "column": 49,
+                  "offset": 104
+                },
+                "indent": []
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 1,
+              "column": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 2,
+              "column": 49,
+              "offset": 104
+            },
+            "indent": [
+              1
+            ]
+          }
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Maybe they're worth looking at?",
+              "position": {
+                "start": {
+                  "line": 4,
+                  "column": 1,
+                  "offset": 106
+                },
+                "end": {
+                  "line": 4,
+                  "column": 32,
+                  "offset": 137
+                },
+                "indent": []
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 4,
+              "column": 1,
+              "offset": 106
+            },
+            "end": {
+              "line": 4,
+              "column": 32,
+              "offset": 137
+            },
+            "indent": []
+          }
+        },
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Maybe not.",
+              "position": {
+                "start": {
+                  "line": 6,
+                  "column": 1,
+                  "offset": 139
+                },
+                "end": {
+                  "line": 6,
+                  "column": 11,
+                  "offset": 149
+                },
+                "indent": []
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 6,
+              "column": 1,
+              "offset": 139
+            },
+            "end": {
+              "line": 6,
+              "column": 11,
+              "offset": 149
+            },
+            "indent": []
+          }
+        }
+      ],
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 7,
+          "column": 1,
+          "offset": 150
+        }
+      }
+    },
+    "kind": "note",
+    "path": [
+      {
+        "name": "Geography",
+        "kind": "note"
+      }
+    ],
+    "members": {
+      "global": [],
+      "inner": [],
+      "instance": [],
+      "events": [],
+      "static": []
+    },
+    "namespace": "Geography"
+  },
+  {
+    "description": {
+      "type": "root",
+      "children": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Used in ",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 1,
+                  "column": 9,
+                  "offset": 8
+                },
+                "indent": []
+              }
+            },
+            {
+              "type": "link",
+              "url": "https://forio.com",
+              "title": null,
+              "jsdoc": true,
+              "children": [
+                {
+                  "type": "text",
+                  "value": "mmm"
+                }
+              ],
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 9,
+                  "offset": 8
+                },
+                "end": {
+                  "line": 1,
+                  "column": 38,
+                  "offset": 37
+                },
+                "indent": []
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 1,
+              "column": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 38,
+              "offset": 37
+            },
+            "indent": []
+          }
+        }
+      ],
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 38,
+          "offset": 37
+        }
+      }
+    },
+    "tags": [
+      {
+        "title": "enum",
+        "description": null,
+        "lineNumber": 2,
+        "type": null,
+        "errors": [
+          "Braces are not balanced"
+        ]
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 14,
+        "column": 0
+      },
+      "end": {
+        "line": 17,
+        "column": 3
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 18,
+          "column": 0
+        },
+        "end": {
+          "line": 35,
+          "column": 2
+        }
+      },
+      "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js"
+    },
+    "augments": [],
+    "examples": [],
+    "implements": [],
+    "params": [],
+    "properties": [],
+    "returns": [],
+    "sees": [],
+    "throws": [],
+    "todos": [],
+    "yields": [],
+    "name": "RITUAL",
+    "kind": "constant",
+    "path": [
+      {
+        "name": "RITUAL",
+        "kind": "constant"
+      }
+    ],
+    "members": {
+      "global": [],
+      "inner": [],
+      "instance": [],
+      "events": [],
+      "static": [
+        {
+          "description": {
+            "type": "root",
+            "children": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "Means Epicenter will bring your run back into memory",
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 53,
+                        "offset": 52
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 53,
+                    "offset": 52
+                  },
+                  "indent": []
+                }
+              }
+            ],
+            "position": {
+              "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 53,
+                "offset": 52
+              }
+            }
+          },
+          "tags": [
+            {
+              "title": "constant",
+              "description": null,
+              "lineNumber": 2,
+              "name": null
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 20,
+              "column": 4
+            },
+            "end": {
+              "line": 23,
+              "column": 7
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 24,
+                "column": 4
+              },
+              "end": {
+                "line": 24,
+                "column": 18
+              }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js"
+          },
+          "augments": [],
+          "examples": [],
+          "implements": [],
+          "params": [],
+          "properties": [],
+          "returns": [],
+          "sees": [],
+          "throws": [],
+          "todos": [],
+          "yields": [],
+          "kind": "constant",
+          "name": "INTER",
+          "memberof": "RITUAL",
+          "scope": "static",
+          "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+          },
+          "path": [
+            {
+              "name": "RITUAL",
+              "kind": "constant"
+            },
+            {
+              "name": "INTER",
+              "kind": "constant",
+              "scope": "static"
+            }
+          ],
+          "namespace": "RITUAL.INTER"
+        },
+        {
+          "description": {
+            "type": "root",
+            "children": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "???",
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 4,
+                        "offset": 3
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 4,
+                    "offset": 3
+                  },
+                  "indent": []
+                }
+              }
+            ],
+            "position": {
+              "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 4,
+                "offset": 3
+              }
+            }
+          },
+          "tags": [
+            {
+              "title": "constant",
+              "description": null,
+              "lineNumber": 2,
+              "name": null
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 25,
+              "column": 4
+            },
+            "end": {
+              "line": 28,
+              "column": 7
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 29,
+                "column": 4
+              },
+              "end": {
+                "line": 29,
+                "column": 26
+              }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js"
+          },
+          "augments": [],
+          "examples": [],
+          "implements": [],
+          "params": [],
+          "properties": [],
+          "returns": [],
+          "sees": [],
+          "throws": [],
+          "todos": [],
+          "yields": [],
+          "kind": "constant",
+          "name": "REANIMATE",
+          "memberof": "RITUAL",
+          "scope": "static",
+          "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+          },
+          "path": [
+            {
+              "name": "RITUAL",
+              "kind": "constant"
+            },
+            {
+              "name": "REANIMATE",
+              "kind": "constant",
+              "scope": "static"
+            }
+          ],
+          "namespace": "RITUAL.REANIMATE"
+        },
+        {
+          "description": "",
+          "tags": [
+            {
+              "title": "constant",
+              "description": null,
+              "lineNumber": 2,
+              "name": null
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 30,
+              "column": 4
+            },
+            "end": {
+              "line": 33,
+              "column": 7
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 34,
+                "column": 4
+              },
+              "end": {
+                "line": 34,
+                "column": 24
+              }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js"
+          },
+          "augments": [],
+          "examples": [],
+          "implements": [],
+          "params": [],
+          "properties": [],
+          "returns": [],
+          "sees": [],
+          "throws": [],
+          "todos": [],
+          "yields": [],
+          "kind": "constant",
+          "name": "EXORCISE",
+          "memberof": "RITUAL",
+          "scope": "static",
+          "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+          },
+          "path": [
+            {
+              "name": "RITUAL",
+              "kind": "constant"
+            },
+            {
+              "name": "EXORCISE",
+              "kind": "constant",
+              "scope": "static"
+            }
+          ],
+          "namespace": "RITUAL.EXORCISE"
+        }
+      ]
+    },
+    "namespace": "RITUAL"
+  },
+  {
+    "description": {
+      "type": "root",
+      "children": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "type": "text",
+              "value": "Has all the run adapters see this other ",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 1,
+                  "offset": 0
+                },
+                "end": {
+                  "line": 1,
+                  "column": 41,
+                  "offset": 40
+                },
+                "indent": []
+              }
+            },
+            {
+              "type": "link",
+              "url": "https://github.com/forio",
+              "title": null,
+              "jsdoc": true,
+              "children": [
+                {
+                  "type": "text",
+                  "value": "Forio"
+                }
+              ],
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 41,
+                  "offset": 40
+                },
+                "end": {
+                  "line": 1,
+                  "column": 79,
+                  "offset": 78
+                },
+                "indent": []
+              }
+            },
+            {
+              "type": "text",
+              "value": " more comment here",
+              "position": {
+                "start": {
+                  "line": 1,
+                  "column": 79,
+                  "offset": 78
+                },
+                "end": {
+                  "line": 1,
+                  "column": 97,
+                  "offset": 96
+                },
+                "indent": []
+              }
+            }
+          ],
+          "position": {
+            "start": {
+              "line": 1,
+              "column": 1,
+              "offset": 0
+            },
+            "end": {
+              "line": 1,
+              "column": 97,
+              "offset": 96
+            },
+            "indent": []
+          }
+        }
+      ],
+      "position": {
+        "start": {
+          "line": 1,
+          "column": 1,
+          "offset": 0
+        },
+        "end": {
+          "line": 1,
+          "column": 97,
+          "offset": 96
+        }
+      }
+    },
+    "tags": [
+      {
+        "title": "namespace",
+        "description": null,
+        "lineNumber": 2,
+        "type": null,
+        "name": "runAdapter"
+      }
+    ],
+    "loc": {
+      "start": {
+        "line": 19,
+        "column": 4
+      },
+      "end": {
+        "line": 22,
+        "column": 7
+      }
+    },
+    "context": {
+      "loc": {
+        "start": {
+          "line": 23,
+          "column": 4
+        },
+        "end": {
+          "line": 23,
+          "column": 14
+        }
+      },
+      "file": "/Users/wallaceluk/Projects/epicenter-libs/src/epicenter.js"
+    },
+    "augments": [],
+    "examples": [],
+    "implements": [],
+    "params": [],
+    "properties": [],
+    "returns": [],
+    "sees": [],
+    "throws": [],
+    "todos": [],
+    "yields": [],
+    "kind": "namespace",
+    "name": "runAdapter",
+    "path": [
+      {
+        "name": "runAdapter",
+        "kind": "namespace"
+      }
+    ],
+    "members": {
+      "global": [],
+      "inner": [],
+      "instance": [],
+      "events": [],
+      "static": [
+        {
+          "description": {
+            "type": "root",
+            "children": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "Create a run",
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 13,
+                        "offset": 12
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 13,
+                    "offset": 12
+                  },
+                  "indent": []
+                }
+              }
+            ],
+            "position": {
+              "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 13,
+                "offset": 12
+              }
+            }
+          },
+          "tags": [
+            {
+              "title": "memberof",
+              "description": "runAdapter",
+              "lineNumber": 2
+            },
+            {
+              "title": "example",
+              "description": "const { runAdapter } = epicenter;\nrunAdapter.create('myModal.py', {\n     scopeBoundary:\n});",
+              "lineNumber": 3
+            },
+            {
+              "title": "param",
+              "description": "Name of the *model EMPEEEE* file that is hosted on Epicenter",
+              "lineNumber": 8,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "model"
+            },
+            {
+              "title": "param",
+              "description": "Object with the fields necessary to provide scoping for your channel",
+              "lineNumber": 9,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "name": "scope"
+            },
+            {
+              "title": "param",
+              "description": "Scope Boundary (one of enumeration of values)",
+              "lineNumber": 10,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "scope.scopeBoundary"
+            },
+            {
+              "title": "param",
+              "description": "Key value of item bounded by the scope",
+              "lineNumber": 11,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "scope.scopeKey"
+            },
+            {
+              "title": "param",
+              "description": "Key of the user creating the run.",
+              "lineNumber": 12,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "scope.pseudonymKey"
+            },
+            {
+              "title": "param",
+              "description": "Object for all optional fields",
+              "lineNumber": 13,
+              "type": {
+                "type": "OptionalType",
+                "expression": {
+                  "type": "NameExpression",
+                  "name": "Object"
+                }
+              },
+              "name": "optionals",
+              "default": "{}"
+            },
+            {
+              "title": "returns",
+              "description": "Response with the run in the \"body\"",
+              "lineNumber": 14,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 4,
+              "column": 0
+            },
+            "end": {
+              "line": 19,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 20,
+                "column": 0
+              },
+              "end": {
+                "line": 53,
+                "column": 1
+              }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js"
+          },
+          "augments": [],
+          "examples": [
+            {
+              "description": "const { runAdapter } = epicenter;\nrunAdapter.create('myModal.py', {\n     scopeBoundary:\n});"
+            }
+          ],
+          "implements": [],
+          "params": [
+            {
+              "title": "param",
+              "name": "model",
+              "lineNumber": 8,
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Name of the ",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 13,
+                            "offset": 12
+                          },
+                          "indent": []
+                        }
+                      },
+                      {
+                        "type": "emphasis",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "model EMPEEEE",
+                            "position": {
+                              "start": {
+                                "line": 1,
+                                "column": 14,
+                                "offset": 13
+                              },
+                              "end": {
+                                "line": 1,
+                                "column": 27,
+                                "offset": 26
+                              },
+                              "indent": []
+                            }
+                          }
+                        ],
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 13,
+                            "offset": 12
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 28,
+                            "offset": 27
+                          },
+                          "indent": []
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "value": " file that is hosted on Epicenter",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 28,
+                            "offset": 27
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 61,
+                            "offset": 60
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 61,
+                        "offset": 60
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 61,
+                    "offset": 60
+                  }
+                }
+              },
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              }
+            },
+            {
+              "title": "param",
+              "name": "scope",
+              "lineNumber": 9,
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Object with the fields necessary to provide scoping for your channel",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 69,
+                            "offset": 68
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 69,
+                        "offset": 68
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 69,
+                    "offset": 68
+                  }
+                }
+              },
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "properties": [
+                {
+                  "title": "param",
+                  "name": "scope.scopeBoundary",
+                  "lineNumber": 10,
+                  "description": {
+                    "type": "root",
+                    "children": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "Scope Boundary (one of enumeration of values)",
+                            "position": {
+                              "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                              },
+                              "end": {
+                                "line": 1,
+                                "column": 46,
+                                "offset": 45
+                              },
+                              "indent": []
+                            }
+                          }
+                        ],
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 46,
+                            "offset": 45
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 46,
+                        "offset": 45
+                      }
+                    }
+                  },
+                  "type": {
+                    "type": "NameExpression",
+                    "name": "string"
+                  }
+                },
+                {
+                  "title": "param",
+                  "name": "scope.scopeKey",
+                  "lineNumber": 11,
+                  "description": {
+                    "type": "root",
+                    "children": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "Key value of item bounded by the scope",
+                            "position": {
+                              "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                              },
+                              "end": {
+                                "line": 1,
+                                "column": 39,
+                                "offset": 38
+                              },
+                              "indent": []
+                            }
+                          }
+                        ],
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 39,
+                            "offset": 38
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 39,
+                        "offset": 38
+                      }
+                    }
+                  },
+                  "type": {
+                    "type": "NameExpression",
+                    "name": "string"
+                  }
+                },
+                {
+                  "title": "param",
+                  "name": "scope.pseudonymKey",
+                  "lineNumber": 12,
+                  "description": {
+                    "type": "root",
+                    "children": [
+                      {
+                        "type": "paragraph",
+                        "children": [
+                          {
+                            "type": "text",
+                            "value": "Key of the user creating the run.",
+                            "position": {
+                              "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                              },
+                              "end": {
+                                "line": 1,
+                                "column": 34,
+                                "offset": 33
+                              },
+                              "indent": []
+                            }
+                          }
+                        ],
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 34,
+                            "offset": 33
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 34,
+                        "offset": 33
+                      }
+                    }
+                  },
+                  "type": {
+                    "type": "NameExpression",
+                    "name": "string"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "param",
+              "name": "optionals",
+              "lineNumber": 13,
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Object for all optional fields",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 31,
+                            "offset": 30
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 31,
+                        "offset": 30
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 31,
+                    "offset": 30
+                  }
+                }
+              },
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "default": "{}"
+            }
+          ],
+          "properties": [],
+          "returns": [
+            {
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Response with the run in the \"body\"",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 36,
+                            "offset": 35
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 36,
+                        "offset": 35
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 36,
+                    "offset": 35
+                  }
+                }
+              },
+              "title": "returns",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            }
+          ],
+          "sees": [],
+          "throws": [],
+          "todos": [],
+          "yields": [],
+          "memberof": "runAdapter",
+          "name": "create",
+          "kind": "function",
+          "async": true,
+          "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+          },
+          "path": [
+            {
+              "name": "runAdapter",
+              "kind": "namespace"
+            },
+            {
+              "name": "create",
+              "kind": "function"
+            }
+          ],
+          "namespace": "runAdaptercreate"
+        },
+        {
+          "description": {
+            "type": "root",
+            "children": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "type": "text",
+                    "value": "Clone a run",
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 12,
+                        "offset": 11
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 12,
+                    "offset": 11
+                  },
+                  "indent": []
+                }
+              }
+            ],
+            "position": {
+              "start": {
+                "line": 1,
+                "column": 1,
+                "offset": 0
+              },
+              "end": {
+                "line": 1,
+                "column": 12,
+                "offset": 11
+              }
+            }
+          },
+          "tags": [
+            {
+              "title": "memberof",
+              "description": "runAdapter",
+              "lineNumber": 2
+            },
+            {
+              "title": "param",
+              "description": "Run's key",
+              "lineNumber": 3,
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              "name": "runKey"
+            },
+            {
+              "title": "param",
+              "description": "Object for all optional fields",
+              "lineNumber": 4,
+              "type": {
+                "type": "OptionalType",
+                "expression": {
+                  "type": "NameExpression",
+                  "name": "Object"
+                }
+              },
+              "name": "optionals",
+              "default": "{}"
+            },
+            {
+              "title": "returns",
+              "description": "Response with the run in the \"body\"",
+              "lineNumber": 5,
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            }
+          ],
+          "loc": {
+            "start": {
+              "line": 55,
+              "column": 0
+            },
+            "end": {
+              "line": 61,
+              "column": 3
+            }
+          },
+          "context": {
+            "loc": {
+              "start": {
+                "line": 62,
+                "column": 0
+              },
+              "end": {
+                "line": 78,
+                "column": 1
+              }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js"
+          },
+          "augments": [],
+          "examples": [],
+          "implements": [],
+          "params": [
+            {
+              "title": "param",
+              "name": "runKey",
+              "lineNumber": 3,
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Run's key",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 10,
+                            "offset": 9
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 10,
+                        "offset": 9
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 10,
+                    "offset": 9
+                  }
+                }
+              },
+              "type": {
+                "type": "NameExpression",
+                "name": "string"
+              }
+            },
+            {
+              "title": "param",
+              "name": "optionals",
+              "lineNumber": 4,
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Object for all optional fields",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 31,
+                            "offset": 30
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 31,
+                        "offset": 30
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 31,
+                    "offset": 30
+                  }
+                }
+              },
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              },
+              "default": "{}"
+            }
+          ],
+          "properties": [],
+          "returns": [
+            {
+              "description": {
+                "type": "root",
+                "children": [
+                  {
+                    "type": "paragraph",
+                    "children": [
+                      {
+                        "type": "text",
+                        "value": "Response with the run in the \"body\"",
+                        "position": {
+                          "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                          },
+                          "end": {
+                            "line": 1,
+                            "column": 36,
+                            "offset": 35
+                          },
+                          "indent": []
+                        }
+                      }
+                    ],
+                    "position": {
+                      "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                      },
+                      "end": {
+                        "line": 1,
+                        "column": 36,
+                        "offset": 35
+                      },
+                      "indent": []
+                    }
+                  }
+                ],
+                "position": {
+                  "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                  },
+                  "end": {
+                    "line": 1,
+                    "column": 36,
+                    "offset": 35
+                  }
+                }
+              },
+              "title": "returns",
+              "type": {
+                "type": "NameExpression",
+                "name": "Object"
+              }
+            }
+          ],
+          "sees": [],
+          "throws": [],
+          "todos": [],
+          "yields": [],
+          "memberof": "runAdapter",
+          "name": "clone",
+          "kind": "function",
+          "async": true,
+          "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+          },
+          "path": [
+            {
+              "name": "runAdapter",
+              "kind": "namespace"
+            },
+            {
+              "name": "clone",
+              "kind": "function"
+            }
+          ],
+          "namespace": "runAdapterclone"
+        }
+      ]
+    },
+    "namespace": "runAdapter"
+  }
+]

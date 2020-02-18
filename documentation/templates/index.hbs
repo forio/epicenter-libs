@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>Some documentation of some sort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="index.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img alt="some forio icon" />
+        <div class="banner">
+            This is my Documentation
+        </div>
+    </header>
+    <nav>
+        <ul>
+        {{#each libs}}
+            <li>
+                <a href="#{{name}}">{{name}}</a>
+            {{#if methods }}
+                <section class="members">
+                {{#each methods}}
+                    <a href="#{{../name}}-{{name}}">{{name}}</a>
+                {{/each}}
+                </section>
+            {{/if}}
+            </li>
+        {{/each}}
+        </ul>
+    </nav>
+    <main>
+    {{#each libs}}
+        <article id="{{name}}">
+            <h2>{{name}}</h2>
+            <p>{{description}}</p>
+        {{#if methods}}
+            <h4>Methods</h4>
+            {{#each methods}}
+            {{> method parent=../name}}
+            {{/each}}
+        {{/if}}
+        </article>
+    {{/each}}
+    </main>
+</body>
+</html>
