@@ -1,0 +1,16 @@
+{
+  "name": "epicenter-documentation",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "documentation serve --watch ../src/**",
+    "build": "documentation build ../src/** -o docs.json --config documentation.yml"
+  },
+  "author": "Forio",
+  "dependencies": {
+    "documentation": "^12.1.4",
+    "handlebars": "^4.7.3"
+  }
+}

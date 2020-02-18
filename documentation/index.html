@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>Some documentation of some sort</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="index.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img alt="some forio icon" />
+        <div class="banner">
+            This is my Documentation
+        </div>
+    </header>
+    <nav>
+        <input
+            type="text"
+            placeholder="searchy search"
+        />
+        <ul>
+            <li>
+                <a href="#runAdapter">runAdapter</a>
+                <section class="members">
+                    <a href="#runAdapter-create">create</a>
+                    <a href="#runAdapter-clone">clone</a>
+                </section>
+            </li>
+            <li></li>
+            <li></li>
+        </ul>
+    </nav>
+    <main>
+        <article id="runAdapter">
+            <h2>runAdapter</h2>
+            <p>Has all the run adapters see this other</p>
+            <h4>Methods</h4>
+            <article id="runAdapter-create">
+                <h3>create</h3>
+                <p>Create a run</p>
+                <article class="parameters">
+                    <h4>Parameters</h4>
+                    <ul>
+                        <li>
+                            <code class="name">model</code>
+                            (<code class="type">string</code>)
+                            The name of the model
+                        </li>
+                        <li>
+                            <code class="name">scope</code>
+                            (<code class="type">object</code>)
+                            Scope stuff
+                            <dl className="sub-parameters">
+                                <dt>
+                                    <code class="name">scopeBoundary</code>
+                                    (<code class="type">string</code>)
+                                </dt>
+                                <dd>wadadwa</dd>
+                                <dt>
+                                    <code class="name">scopeKey</code>
+                                    (<code class="type">string</code>)
+                                </dt>
+                                <dd>asdwad</dd>
+                                <dt>
+                                    <code class="name">psuedenymKey</code>
+                                    (<code class="type">string = ''</code>)
+                                </dt>
+                                <dd>asdwad</dd>
+                            </dl>
+                        </li>
+                        <li>
+                            <code class="name">optionals</code>
+                            (<code class="type">object = {}</code>)
+                            optional parameters
+                        </li>
+                    </ul>
+                </article>
+                <article class="returns">
+                    <h4>Returns</h4>
+                    <code class="type">object</code>:
+                    your run
+                </article>
+                <article class="example">
+                    <h4>Example</h4>
+                    <pre>
+                        <code>
+                            const { runAdapter } = epicenter;
+                            runAdapter.create('myModel.py', {
+                                scopeBoundary: 'world',
+                                scopeKey: '123214',
+                                psuedenymKey: '2314',
+                            });
+                        </code>
+                    </pre>
+                </article>
+            </article>
+        </article>
+    </main>
+</body>
+</html>
