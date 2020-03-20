@@ -1,26 +1,17 @@
 <article id="{{parent}}-{{name}}">
     <h3>{{name}}</h3>
-    <p>{{description}}</p>
-    {{#if parameters}}
+    {{#with description}}
+        {{> description }}
+    {{/with}}
+    {{#if params}}
         <article class="parameters">
             <h4>Parameters</h4>
             <ul>
-            {{#each parameters}}
-                <li>
-                    {{> param}}
-                    {{description}}
-                {{#if parameters}}
-                    <dl className="sub-parameters">
-                    {{#each parameters}}
-                        <dt>
-                            {{> param parent=../name}}
-                        </dt>
-                        <dd>{{description}}</dd>
-                    {{/each}}
-                    </dl>
-                {{/if}}
-                </li>
-            {{/each}}
+                {{#each params}}
+                    <li>
+                        {{> param}}
+                    </li>
+                {{/each}}
             </ul>
         </article>
     {{/if}}
@@ -28,7 +19,9 @@
         <article class="returns">
             <h4>Returns</h4>
             <code class="type">object</code>:
-            your run
+            {{#with description}}
+                {{> description }}
+            {{/with}}
         </article>
     {{/if}}
     {{#if example}}

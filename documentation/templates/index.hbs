@@ -16,33 +16,15 @@
     </header>
     <nav>
         <ul>
-        {{#each libs}}
-            <li>
-                <a href="#{{name}}">{{name}}</a>
-            {{#if methods }}
-                <section class="members">
-                {{#each methods}}
-                    <a href="#{{../name}}-{{name}}">{{name}}</a>
-                {{/each}}
-                </section>
-            {{/if}}
-            </li>
-        {{/each}}
+            {{#each apis}}
+                {{> apiLink }}
+            {{/each}}
         </ul>
     </nav>
     <main>
-    {{#each libs}}
-        <article id="{{name}}">
-            <h2>{{name}}</h2>
-            <p>{{description}}</p>
-        {{#if methods}}
-            <h4>Methods</h4>
-            {{#each methods}}
-            {{> method parent=../name}}
-            {{/each}}
-        {{/if}}
-        </article>
-    {{/each}}
+        {{#each apis}}
+            {{> apiDocumentation }}
+        {{/each}}
     </main>
 </body>
 </html>

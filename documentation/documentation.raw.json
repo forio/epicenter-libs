@@ -1,0 +1,3347 @@
+[
+    {
+        "name": "Geography",
+        "description": {
+            "type": "root",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "These are Mapbox GL JS's ways of representing locations\nand areas on the sphere. There are things ",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 2,
+                                    "column": 43,
+                                    "offset": 98
+                                },
+                                "indent": [
+                                    1
+                                ]
+                            }
+                        },
+                        {
+                            "type": "emphasis",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "here",
+                                    "position": {
+                                        "start": {
+                                            "line": 2,
+                                            "column": 44,
+                                            "offset": 99
+                                        },
+                                        "end": {
+                                            "line": 2,
+                                            "column": 48,
+                                            "offset": 103
+                                        },
+                                        "indent": []
+                                    }
+                                }
+                            ],
+                            "position": {
+                                "start": {
+                                    "line": 2,
+                                    "column": 43,
+                                    "offset": 98
+                                },
+                                "end": {
+                                    "line": 2,
+                                    "column": 49,
+                                    "offset": 104
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 2,
+                            "column": 49,
+                            "offset": 104
+                        },
+                        "indent": [
+                            1
+                        ]
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Maybe they're worth looking at?",
+                            "position": {
+                                "start": {
+                                    "line": 4,
+                                    "column": 1,
+                                    "offset": 106
+                                },
+                                "end": {
+                                    "line": 4,
+                                    "column": 32,
+                                    "offset": 137
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 4,
+                            "column": 1,
+                            "offset": 106
+                        },
+                        "end": {
+                            "line": 4,
+                            "column": 32,
+                            "offset": 137
+                        },
+                        "indent": []
+                    }
+                },
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Maybe not.",
+                            "position": {
+                                "start": {
+                                    "line": 6,
+                                    "column": 1,
+                                    "offset": 139
+                                },
+                                "end": {
+                                    "line": 6,
+                                    "column": 11,
+                                    "offset": 149
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 6,
+                            "column": 1,
+                            "offset": 139
+                        },
+                        "end": {
+                            "line": 6,
+                            "column": 11,
+                            "offset": 149
+                        },
+                        "indent": []
+                    }
+                }
+            ],
+            "position": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 7,
+                    "column": 1,
+                    "offset": 150
+                }
+            }
+        },
+        "kind": "note",
+        "path": [
+            {
+                "name": "Geography",
+                "kind": "note"
+            }
+        ],
+        "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": []
+        },
+        "namespace": "Geography"
+    },
+    {
+        "description": {
+            "type": "root",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Used in ",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 9,
+                                    "offset": 8
+                                },
+                                "indent": []
+                            }
+                        },
+                        {
+                            "type": "link",
+                            "url": "https://forio.com",
+                            "title": null,
+                            "jsdoc": true,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "mmm"
+                                }
+                            ],
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 9,
+                                    "offset": 8
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 38,
+                                    "offset": 37
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 38,
+                            "offset": 37
+                        },
+                        "indent": []
+                    }
+                }
+            ],
+            "position": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 38,
+                    "offset": 37
+                }
+            }
+        },
+        "tags": [
+            {
+                "title": "enum",
+                "description": null,
+                "lineNumber": 2,
+                "type": null,
+                "errors": [
+                    "Braces are not balanced"
+                ]
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 14,
+                "column": 0
+            },
+            "end": {
+                "line": 17,
+                "column": 3
+            }
+        },
+        "context": {
+            "loc": {
+                "start": {
+                    "line": 18,
+                    "column": 0
+                },
+                "end": {
+                    "line": 35,
+                    "column": 2
+                }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js",
+            "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js 00000018"
+        },
+        "augments": [],
+        "errors": [
+            {
+                "message": "Braces are not balanced"
+            }
+        ],
+        "examples": [],
+        "implements": [],
+        "params": [],
+        "properties": [],
+        "returns": [],
+        "sees": [],
+        "throws": [],
+        "todos": [],
+        "yields": [],
+        "name": "RITUAL",
+        "kind": "constant",
+        "path": [
+            {
+                "name": "RITUAL",
+                "kind": "constant"
+            }
+        ],
+        "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": [
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "Means Epicenter will bring your run back into memory",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 53,
+                                                "offset": 52
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 53,
+                                        "offset": 52
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 53,
+                                "offset": 52
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "constant",
+                            "description": null,
+                            "lineNumber": 2,
+                            "name": null
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 20,
+                            "column": 4
+                        },
+                        "end": {
+                            "line": 23,
+                            "column": 7
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 24,
+                                "column": 4
+                            },
+                            "end": {
+                                "line": 24,
+                                "column": 18
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js 00000024"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [],
+                    "implements": [],
+                    "params": [],
+                    "properties": [],
+                    "returns": [],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "kind": "constant",
+                    "name": "INTER",
+                    "memberof": "RITUAL",
+                    "scope": "static",
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "RITUAL",
+                            "kind": "constant"
+                        },
+                        {
+                            "name": "INTER",
+                            "kind": "constant",
+                            "scope": "static"
+                        }
+                    ],
+                    "namespace": "RITUAL.INTER"
+                },
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "???",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 4,
+                                                "offset": 3
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 4,
+                                        "offset": 3
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 4,
+                                "offset": 3
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "constant",
+                            "description": null,
+                            "lineNumber": 2,
+                            "name": null
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 25,
+                            "column": 4
+                        },
+                        "end": {
+                            "line": 28,
+                            "column": 7
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 29,
+                                "column": 4
+                            },
+                            "end": {
+                                "line": 29,
+                                "column": 26
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js 00000029"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [],
+                    "implements": [],
+                    "params": [],
+                    "properties": [],
+                    "returns": [],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "kind": "constant",
+                    "name": "REANIMATE",
+                    "memberof": "RITUAL",
+                    "scope": "static",
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "RITUAL",
+                            "kind": "constant"
+                        },
+                        {
+                            "name": "REANIMATE",
+                            "kind": "constant",
+                            "scope": "static"
+                        }
+                    ],
+                    "namespace": "RITUAL.REANIMATE"
+                },
+                {
+                    "description": "",
+                    "tags": [
+                        {
+                            "title": "constant",
+                            "description": null,
+                            "lineNumber": 2,
+                            "name": null
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 30,
+                            "column": 4
+                        },
+                        "end": {
+                            "line": 33,
+                            "column": 7
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 34,
+                                "column": 4
+                            },
+                            "end": {
+                                "line": 34,
+                                "column": 24
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/utils/constants.js 00000034"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [],
+                    "implements": [],
+                    "params": [],
+                    "properties": [],
+                    "returns": [],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "kind": "constant",
+                    "name": "EXORCISE",
+                    "memberof": "RITUAL",
+                    "scope": "static",
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "RITUAL",
+                            "kind": "constant"
+                        },
+                        {
+                            "name": "EXORCISE",
+                            "kind": "constant",
+                            "scope": "static"
+                        }
+                    ],
+                    "namespace": "RITUAL.EXORCISE"
+                }
+            ]
+        },
+        "namespace": "RITUAL"
+    },
+    {
+        "description": {
+            "type": "root",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Config of sorts",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 16,
+                                    "offset": 15
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 16,
+                            "offset": 15
+                        },
+                        "indent": []
+                    }
+                }
+            ],
+            "position": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 16,
+                    "offset": 15
+                }
+            }
+        },
+        "tags": [
+            {
+                "title": "namespace",
+                "description": null,
+                "lineNumber": 2,
+                "type": null,
+                "name": "config"
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 131,
+                "column": 0
+            },
+            "end": {
+                "line": 134,
+                "column": 3
+            }
+        },
+        "context": {
+            "loc": {
+                "start": {
+                    "line": 135,
+                    "column": 0
+                },
+                "end": {
+                    "line": 135,
+                    "column": 22
+                }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/config.js",
+            "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/config.js 00000135"
+        },
+        "augments": [],
+        "errors": [],
+        "examples": [],
+        "implements": [],
+        "params": [],
+        "properties": [],
+        "returns": [],
+        "sees": [],
+        "throws": [],
+        "todos": [],
+        "yields": [],
+        "kind": "namespace",
+        "name": "config",
+        "path": [
+            {
+                "name": "config",
+                "kind": "namespace"
+            }
+        ],
+        "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": [
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "Search for data within a collection.",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 37,
+                                                "offset": 36
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 37,
+                                        "offset": 36
+                                    },
+                                    "indent": []
+                                }
+                            },
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "Searching using comparison or logical operators (as opposed to exact matches) requires MongoDB syntax. See the underlying ",
+                                        "position": {
+                                            "start": {
+                                                "line": 3,
+                                                "column": 1,
+                                                "offset": 38
+                                            },
+                                            "end": {
+                                                "line": 3,
+                                                "column": 123,
+                                                "offset": 160
+                                            },
+                                            "indent": []
+                                        }
+                                    },
+                                    {
+                                        "type": "link",
+                                        "title": null,
+                                        "url": "../../../rest_apis/data_api/#searching",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Data API",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 3,
+                                                        "column": 124,
+                                                        "offset": 161
+                                                    },
+                                                    "end": {
+                                                        "line": 3,
+                                                        "column": 132,
+                                                        "offset": 169
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 3,
+                                                "column": 123,
+                                                "offset": 160
+                                            },
+                                            "end": {
+                                                "line": 3,
+                                                "column": 173,
+                                                "offset": 210
+                                            },
+                                            "indent": []
+                                        }
+                                    },
+                                    {
+                                        "type": "text",
+                                        "value": " for additional details.",
+                                        "position": {
+                                            "start": {
+                                                "line": 3,
+                                                "column": 173,
+                                                "offset": 210
+                                            },
+                                            "end": {
+                                                "line": 3,
+                                                "column": 197,
+                                                "offset": 234
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 3,
+                                        "column": 1,
+                                        "offset": 38
+                                    },
+                                    "end": {
+                                        "line": 3,
+                                        "column": 197,
+                                        "offset": 234
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 3,
+                                "column": 197,
+                                "offset": 234
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "example",
+                            "description": "// request all data associated with document 'user1'\nds.query('user1');\n\n// exact matching:\n// request all documents in collection where 'question2' is 9\nds.query('', { 'question2': 9});\n\n// comparison operators:\n// request all documents in collection where 'question2' is greater than 9\nds.query('', { 'question2': { '$gt': 9} });\n\n// logical operators:\n// request all documents in collection where 'question2' is less than 10, and 'question3' is false\nds.query('', { '$and': [ { 'question2': { '$lt':10} }, { 'question3': false }] });\n\n// regular expresssions: use any Perl-compatible regular expressions\n// request all documents in collection where 'question5' contains the string '.*day'\nds.query('', { 'question5': { '$regex': '.*day' } });",
+                            "lineNumber": 5
+                        },
+                        {
+                            "title": "memberof",
+                            "description": "config",
+                            "lineNumber": 25
+                        },
+                        {
+                            "title": "param",
+                            "description": "The id of the document to search. Pass the empty string ('') to search the entire collection.",
+                            "lineNumber": 26,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "String"
+                            },
+                            "name": "documentID"
+                        },
+                        {
+                            "title": "param",
+                            "description": "The query object. For exact matching, this object contains the field name and field value to match. For matching based on comparison, this object contains the field name and the comparison expression. For matching based on logical operators, this object contains an expression using MongoDB syntax. See the underlying [Data API](../../../rest_apis/data_api/#searching) for additional examples.",
+                            "lineNumber": 27,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            },
+                            "name": "query"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Available fields include: `sort`, and `direction` (`asc` or `desc`).",
+                            "lineNumber": 28,
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            },
+                            "name": "outputModifier"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Overrides for configuration options.",
+                            "lineNumber": 29,
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            },
+                            "name": "options"
+                        },
+                        {
+                            "title": "return",
+                            "description": "Boolean value as to if it's local",
+                            "lineNumber": 30,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Boolean"
+                            }
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 58,
+                            "column": 4
+                        },
+                        "end": {
+                            "line": 89,
+                            "column": 7
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 90,
+                                "column": 4
+                            },
+                            "end": {
+                                "line": 97,
+                                "column": 5
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/config.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/config.js 00000090"
+                    },
+                    "augments": [],
+                    "errors": [
+                        {
+                            "message": "An explicit parameter named documentID was specified but didn't match inferred information ",
+                            "commentLineNumber": 26
+                        },
+                        {
+                            "message": "An explicit parameter named query was specified but didn't match inferred information ",
+                            "commentLineNumber": 27
+                        },
+                        {
+                            "message": "An explicit parameter named outputModifier was specified but didn't match inferred information ",
+                            "commentLineNumber": 28
+                        },
+                        {
+                            "message": "An explicit parameter named options was specified but didn't match inferred information ",
+                            "commentLineNumber": 29
+                        }
+                    ],
+                    "examples": [
+                        {
+                            "description": "// request all data associated with document 'user1'\nds.query('user1');\n\n// exact matching:\n// request all documents in collection where 'question2' is 9\nds.query('', { 'question2': 9});\n\n// comparison operators:\n// request all documents in collection where 'question2' is greater than 9\nds.query('', { 'question2': { '$gt': 9} });\n\n// logical operators:\n// request all documents in collection where 'question2' is less than 10, and 'question3' is false\nds.query('', { '$and': [ { 'question2': { '$lt':10} }, { 'question3': false }] });\n\n// regular expresssions: use any Perl-compatible regular expressions\n// request all documents in collection where 'question5' contains the string '.*day'\nds.query('', { 'question5': { '$regex': '.*day' } });"
+                        }
+                    ],
+                    "implements": [],
+                    "params": [
+                        {
+                            "title": "param",
+                            "name": "documentID",
+                            "lineNumber": 26,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "The id of the document to search. Pass the empty string ('') to search the entire collection.",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 94,
+                                                        "offset": 93
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 94,
+                                                "offset": 93
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 94,
+                                        "offset": 93
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "String"
+                            }
+                        },
+                        {
+                            "title": "param",
+                            "name": "query",
+                            "lineNumber": 27,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "The query object. For exact matching, this object contains the field name and field value to match. For matching based on comparison, this object contains the field name and the comparison expression. For matching based on logical operators, this object contains an expression using MongoDB syntax. See the underlying ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 319,
+                                                        "offset": 318
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "link",
+                                                "title": null,
+                                                "url": "../../../rest_apis/data_api/#searching",
+                                                "children": [
+                                                    {
+                                                        "type": "text",
+                                                        "value": "Data API",
+                                                        "position": {
+                                                            "start": {
+                                                                "line": 1,
+                                                                "column": 320,
+                                                                "offset": 319
+                                                            },
+                                                            "end": {
+                                                                "line": 1,
+                                                                "column": 328,
+                                                                "offset": 327
+                                                            },
+                                                            "indent": []
+                                                        }
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 319,
+                                                        "offset": 318
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 369,
+                                                        "offset": 368
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": " for additional examples.",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 369,
+                                                        "offset": 368
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 394,
+                                                        "offset": 393
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 394,
+                                                "offset": 393
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 394,
+                                        "offset": 393
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            }
+                        },
+                        {
+                            "title": "param",
+                            "name": "outputModifier",
+                            "lineNumber": 28,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Available fields include: ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 27,
+                                                        "offset": 26
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "inlineCode",
+                                                "value": "sort",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 27,
+                                                        "offset": 26
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 33,
+                                                        "offset": 32
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": ", and ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 33,
+                                                        "offset": 32
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 39,
+                                                        "offset": 38
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "inlineCode",
+                                                "value": "direction",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 39,
+                                                        "offset": 38
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 50,
+                                                        "offset": 49
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": " (",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 50,
+                                                        "offset": 49
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 52,
+                                                        "offset": 51
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "inlineCode",
+                                                "value": "asc",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 52,
+                                                        "offset": 51
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 57,
+                                                        "offset": 56
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": " or ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 57,
+                                                        "offset": 56
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 61,
+                                                        "offset": 60
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "inlineCode",
+                                                "value": "desc",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 61,
+                                                        "offset": 60
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 67,
+                                                        "offset": 66
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": ").",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 67,
+                                                        "offset": 66
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 69,
+                                                        "offset": 68
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 69,
+                                                "offset": 68
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 69,
+                                        "offset": 68
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            }
+                        },
+                        {
+                            "title": "param",
+                            "name": "options",
+                            "lineNumber": 29,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Overrides for configuration options.",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 37,
+                                                        "offset": 36
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 37,
+                                                "offset": 36
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 37,
+                                        "offset": 36
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            }
+                        }
+                    ],
+                    "properties": [],
+                    "returns": [
+                        {
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Boolean value as to if it's local",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 34,
+                                                        "offset": 33
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 34,
+                                                "offset": 33
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 34,
+                                        "offset": 33
+                                    }
+                                }
+                            },
+                            "title": "returns",
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Boolean"
+                            }
+                        }
+                    ],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "memberof": "config",
+                    "name": "isLocal",
+                    "kind": "function",
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "config",
+                            "kind": "namespace"
+                        },
+                        {
+                            "name": "isLocal",
+                            "kind": "function"
+                        }
+                    ],
+                    "namespace": "configisLocal"
+                }
+            ]
+        },
+        "namespace": "config"
+    },
+    {
+        "description": {
+            "type": "root",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Has all the run adapters see this other ",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 41,
+                                    "offset": 40
+                                },
+                                "indent": []
+                            }
+                        },
+                        {
+                            "type": "link",
+                            "url": "https://github.com/forio",
+                            "title": null,
+                            "jsdoc": true,
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "Forio"
+                                }
+                            ],
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 41,
+                                    "offset": 40
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 79,
+                                    "offset": 78
+                                },
+                                "indent": []
+                            }
+                        },
+                        {
+                            "type": "text",
+                            "value": " more comment here",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 79,
+                                    "offset": 78
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 97,
+                                    "offset": 96
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 97,
+                            "offset": 96
+                        },
+                        "indent": []
+                    }
+                }
+            ],
+            "position": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 97,
+                    "offset": 96
+                }
+            }
+        },
+        "tags": [
+            {
+                "title": "namespace",
+                "description": null,
+                "lineNumber": 2,
+                "type": null,
+                "name": "runAdapter"
+            }
+        ],
+        "loc": {
+            "start": {
+                "line": 19,
+                "column": 4
+            },
+            "end": {
+                "line": 22,
+                "column": 7
+            }
+        },
+        "context": {
+            "loc": {
+                "start": {
+                    "line": 23,
+                    "column": 4
+                },
+                "end": {
+                    "line": 23,
+                    "column": 14
+                }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/epicenter.js",
+            "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/epicenter.js 00000023"
+        },
+        "augments": [],
+        "errors": [],
+        "examples": [],
+        "implements": [],
+        "params": [],
+        "properties": [],
+        "returns": [],
+        "sees": [],
+        "throws": [],
+        "todos": [],
+        "yields": [],
+        "kind": "namespace",
+        "name": "runAdapter",
+        "path": [
+            {
+                "name": "runAdapter",
+                "kind": "namespace"
+            }
+        ],
+        "members": {
+            "global": [],
+            "inner": [],
+            "instance": [],
+            "events": [],
+            "static": [
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "Create a run",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 13,
+                                                "offset": 12
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 13,
+                                        "offset": 12
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 13,
+                                "offset": 12
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "memberof",
+                            "description": "runAdapter",
+                            "lineNumber": 2
+                        },
+                        {
+                            "title": "example",
+                            "description": "const { runAdapter } = epicenter;\nrunAdapter.create('myModal.py', {\n     scopeBoundary:\n     scope:\n});",
+                            "lineNumber": 3
+                        },
+                        {
+                            "title": "param",
+                            "description": "Name of the *model EMPEEEE* file that is hosted on Epicenter <a>Link!?</a>",
+                            "lineNumber": 9,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            },
+                            "name": "model"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Object with the fields necessary to provide scoping for your channel",
+                            "lineNumber": 10,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            },
+                            "name": "scope"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Scope Boundary (one of enumeration of values)",
+                            "lineNumber": 11,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            },
+                            "name": "scope.scopeBoundary"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Key value of item bounded by the scope",
+                            "lineNumber": 12,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            },
+                            "name": "scope.scopeKey"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Key of the user creating the run.",
+                            "lineNumber": 13,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            },
+                            "name": "scope.pseudonymKey"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Object for all optional fields",
+                            "lineNumber": 14,
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            },
+                            "name": "optionals",
+                            "default": "{}"
+                        },
+                        {
+                            "title": "returns",
+                            "description": "Response with the run in the \"body\"",
+                            "lineNumber": 15,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            }
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 4,
+                            "column": 0
+                        },
+                        "end": {
+                            "line": 20,
+                            "column": 3
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 21,
+                                "column": 0
+                            },
+                            "end": {
+                                "line": 54,
+                                "column": 1
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js 00000021"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [
+                        {
+                            "description": "const { runAdapter } = epicenter;\nrunAdapter.create('myModal.py', {\n     scopeBoundary:\n     scope:\n});"
+                        }
+                    ],
+                    "implements": [],
+                    "params": [
+                        {
+                            "title": "param",
+                            "name": "model",
+                            "lineNumber": 9,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Name of the ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 13,
+                                                        "offset": 12
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "emphasis",
+                                                "children": [
+                                                    {
+                                                        "type": "text",
+                                                        "value": "model EMPEEEE",
+                                                        "position": {
+                                                            "start": {
+                                                                "line": 1,
+                                                                "column": 14,
+                                                                "offset": 13
+                                                            },
+                                                            "end": {
+                                                                "line": 1,
+                                                                "column": 27,
+                                                                "offset": 26
+                                                            },
+                                                            "indent": []
+                                                        }
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 13,
+                                                        "offset": 12
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 28,
+                                                        "offset": 27
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": " file that is hosted on Epicenter ",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 28,
+                                                        "offset": 27
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 62,
+                                                        "offset": 61
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "html",
+                                                "value": "<a>",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 62,
+                                                        "offset": 61
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 65,
+                                                        "offset": 64
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "text",
+                                                "value": "Link!?",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 65,
+                                                        "offset": 64
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 71,
+                                                        "offset": 70
+                                                    },
+                                                    "indent": []
+                                                }
+                                            },
+                                            {
+                                                "type": "html",
+                                                "value": "</a>",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 71,
+                                                        "offset": 70
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 75,
+                                                        "offset": 74
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 75,
+                                                "offset": 74
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 75,
+                                        "offset": 74
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            }
+                        },
+                        {
+                            "title": "param",
+                            "name": "scope",
+                            "lineNumber": 10,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Object with the fields necessary to provide scoping for your channel",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 69,
+                                                        "offset": 68
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 69,
+                                                "offset": 68
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 69,
+                                        "offset": 68
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            },
+                            "properties": [
+                                {
+                                    "title": "param",
+                                    "name": "scope.scopeBoundary",
+                                    "lineNumber": 11,
+                                    "description": {
+                                        "type": "root",
+                                        "children": [
+                                            {
+                                                "type": "paragraph",
+                                                "children": [
+                                                    {
+                                                        "type": "text",
+                                                        "value": "Scope Boundary (one of enumeration of values)",
+                                                        "position": {
+                                                            "start": {
+                                                                "line": 1,
+                                                                "column": 1,
+                                                                "offset": 0
+                                                            },
+                                                            "end": {
+                                                                "line": 1,
+                                                                "column": 46,
+                                                                "offset": 45
+                                                            },
+                                                            "indent": []
+                                                        }
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 46,
+                                                        "offset": 45
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 46,
+                                                "offset": 45
+                                            }
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "NameExpression",
+                                        "name": "string"
+                                    }
+                                },
+                                {
+                                    "title": "param",
+                                    "name": "scope.scopeKey",
+                                    "lineNumber": 12,
+                                    "description": {
+                                        "type": "root",
+                                        "children": [
+                                            {
+                                                "type": "paragraph",
+                                                "children": [
+                                                    {
+                                                        "type": "text",
+                                                        "value": "Key value of item bounded by the scope",
+                                                        "position": {
+                                                            "start": {
+                                                                "line": 1,
+                                                                "column": 1,
+                                                                "offset": 0
+                                                            },
+                                                            "end": {
+                                                                "line": 1,
+                                                                "column": 39,
+                                                                "offset": 38
+                                                            },
+                                                            "indent": []
+                                                        }
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 39,
+                                                        "offset": 38
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 39,
+                                                "offset": 38
+                                            }
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "NameExpression",
+                                        "name": "string"
+                                    }
+                                },
+                                {
+                                    "title": "param",
+                                    "name": "scope.pseudonymKey",
+                                    "lineNumber": 13,
+                                    "description": {
+                                        "type": "root",
+                                        "children": [
+                                            {
+                                                "type": "paragraph",
+                                                "children": [
+                                                    {
+                                                        "type": "text",
+                                                        "value": "Key of the user creating the run.",
+                                                        "position": {
+                                                            "start": {
+                                                                "line": 1,
+                                                                "column": 1,
+                                                                "offset": 0
+                                                            },
+                                                            "end": {
+                                                                "line": 1,
+                                                                "column": 34,
+                                                                "offset": 33
+                                                            },
+                                                            "indent": []
+                                                        }
+                                                    }
+                                                ],
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 34,
+                                                        "offset": 33
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 34,
+                                                "offset": 33
+                                            }
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "NameExpression",
+                                        "name": "string"
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "title": "param",
+                            "name": "optionals",
+                            "lineNumber": 14,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Object for all optional fields",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 31,
+                                                        "offset": 30
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 31,
+                                                "offset": 30
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 31,
+                                        "offset": 30
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            },
+                            "default": "{}"
+                        }
+                    ],
+                    "properties": [],
+                    "returns": [
+                        {
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Response with the run in the \"body\"",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 36,
+                                                        "offset": 35
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 36,
+                                                "offset": 35
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 36,
+                                        "offset": 35
+                                    }
+                                }
+                            },
+                            "title": "returns",
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            }
+                        }
+                    ],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "memberof": "runAdapter",
+                    "name": "create",
+                    "kind": "function",
+                    "async": true,
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "runAdapter",
+                            "kind": "namespace"
+                        },
+                        {
+                            "name": "create",
+                            "kind": "function"
+                        }
+                    ],
+                    "namespace": "runAdaptercreate"
+                },
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "Clone a run",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 12,
+                                                "offset": 11
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 12,
+                                        "offset": 11
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 12,
+                                "offset": 11
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "memberof",
+                            "description": "runAdapter",
+                            "lineNumber": 2
+                        },
+                        {
+                            "title": "param",
+                            "description": "Run's key",
+                            "lineNumber": 3,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            },
+                            "name": "runKey"
+                        },
+                        {
+                            "title": "param",
+                            "description": "Object for all optional fields",
+                            "lineNumber": 4,
+                            "type": {
+                                "type": "OptionalType",
+                                "expression": {
+                                    "type": "NameExpression",
+                                    "name": "Object"
+                                }
+                            },
+                            "name": "optionals",
+                            "default": "{}"
+                        },
+                        {
+                            "title": "returns",
+                            "description": "Response with the run in the \"body\"",
+                            "lineNumber": 5,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            }
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 56,
+                            "column": 0
+                        },
+                        "end": {
+                            "line": 62,
+                            "column": 3
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 63,
+                                "column": 0
+                            },
+                            "end": {
+                                "line": 79,
+                                "column": 1
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/adapters/run.js 00000063"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [],
+                    "implements": [],
+                    "params": [
+                        {
+                            "title": "param",
+                            "name": "runKey",
+                            "lineNumber": 3,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Run's key",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 10,
+                                                        "offset": 9
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 10,
+                                                "offset": 9
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 10,
+                                        "offset": 9
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "string"
+                            }
+                        },
+                        {
+                            "title": "param",
+                            "name": "optionals",
+                            "lineNumber": 4,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Object for all optional fields",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 31,
+                                                        "offset": 30
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 31,
+                                                "offset": 30
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 31,
+                                        "offset": 30
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            },
+                            "default": "{}"
+                        }
+                    ],
+                    "properties": [],
+                    "returns": [
+                        {
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "Response with the run in the \"body\"",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 36,
+                                                        "offset": 35
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 36,
+                                                "offset": 35
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 36,
+                                        "offset": 35
+                                    }
+                                }
+                            },
+                            "title": "returns",
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Object"
+                            }
+                        }
+                    ],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "memberof": "runAdapter",
+                    "name": "clone",
+                    "kind": "function",
+                    "async": true,
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "runAdapter",
+                            "kind": "namespace"
+                        },
+                        {
+                            "name": "clone",
+                            "kind": "function"
+                        }
+                    ],
+                    "namespace": "runAdapterclone"
+                }
+            ]
+        },
+        "namespace": "runAdapter"
+    },
+    {
+        "description": {
+            "type": "root",
+            "children": [
+                {
+                    "type": "paragraph",
+                    "children": [
+                        {
+                            "type": "text",
+                            "value": "Channel thingy",
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 15,
+                                    "offset": 14
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 15,
+                            "offset": 14
+                        },
+                        "indent": []
+                    }
+                }
+            ],
+            "position": {
+                "start": {
+                    "line": 1,
+                    "column": 1,
+                    "offset": 0
+                },
+                "end": {
+                    "line": 1,
+                    "column": 15,
+                    "offset": 14
+                }
+            }
+        },
+        "tags": [],
+        "loc": {
+            "start": {
+                "line": 15,
+                "column": 0
+            },
+            "end": {
+                "line": 15,
+                "column": 21
+            }
+        },
+        "context": {
+            "loc": {
+                "start": {
+                    "line": 16,
+                    "column": 0
+                },
+                "end": {
+                    "line": 58,
+                    "column": 1
+                }
+            },
+            "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js",
+            "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js 00000016"
+        },
+        "augments": [],
+        "errors": [],
+        "examples": [],
+        "implements": [],
+        "params": [
+            {
+                "title": "param",
+                "name": "scope",
+                "lineNumber": 2,
+                "description": {
+                    "type": "root",
+                    "children": [
+                        {
+                            "type": "paragraph",
+                            "children": [
+                                {
+                                    "type": "text",
+                                    "value": "wordsd here",
+                                    "position": {
+                                        "start": {
+                                            "line": 1,
+                                            "column": 1,
+                                            "offset": 0
+                                        },
+                                        "end": {
+                                            "line": 1,
+                                            "column": 12,
+                                            "offset": 11
+                                        },
+                                        "indent": []
+                                    }
+                                }
+                            ],
+                            "position": {
+                                "start": {
+                                    "line": 1,
+                                    "column": 1,
+                                    "offset": 0
+                                },
+                                "end": {
+                                    "line": 1,
+                                    "column": 12,
+                                    "offset": 11
+                                },
+                                "indent": []
+                            }
+                        }
+                    ],
+                    "position": {
+                        "start": {
+                            "line": 1,
+                            "column": 1,
+                            "offset": 0
+                        },
+                        "end": {
+                            "line": 1,
+                            "column": 12,
+                            "offset": 11
+                        }
+                    }
+                },
+                "type": {
+                    "type": "AllLiteral"
+                }
+            }
+        ],
+        "properties": [],
+        "returns": [],
+        "sees": [],
+        "throws": [],
+        "todos": [],
+        "yields": [],
+        "constructorComment": {
+            "description": {
+                "type": "root",
+                "children": [
+                    {
+                        "type": "paragraph",
+                        "children": [
+                            {
+                                "type": "text",
+                                "value": "Make a new channel",
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 19,
+                                        "offset": 18
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 19,
+                                "offset": 18
+                            },
+                            "indent": []
+                        }
+                    }
+                ],
+                "position": {
+                    "start": {
+                        "line": 1,
+                        "column": 1,
+                        "offset": 0
+                    },
+                    "end": {
+                        "line": 1,
+                        "column": 19,
+                        "offset": 18
+                    }
+                }
+            },
+            "tags": [
+                {
+                    "title": "param",
+                    "description": "wordsd here",
+                    "lineNumber": 2,
+                    "type": {
+                        "type": "AllLiteral"
+                    },
+                    "name": "scope"
+                }
+            ],
+            "loc": {
+                "start": {
+                    "line": 22,
+                    "column": 4
+                },
+                "end": {
+                    "line": 25,
+                    "column": 7
+                }
+            },
+            "context": {
+                "loc": {
+                    "start": {
+                        "line": 26,
+                        "column": 4
+                    },
+                    "end": {
+                        "line": 33,
+                        "column": 5
+                    }
+                },
+                "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js",
+                "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js 00000026",
+                "code": "{\n\n    path;\n    update;\n    subscription;\n\n    /**\n     * Make a new channel\n     * @param {*} scope wordsd here\n     */\n    constructor(scope) {\n        const { scopeBoundary, scopeKey, pushCategory } = scope;\n        validateScope(scope);\n        this.path = `/${scopeBoundary.toLowerCase()}/${scopeKey}/${pushCategory.toLowerCase()}`;\n        if (cometdAdapter.subscriptions.has(this.path)) {\n            this.subscription = cometdAdapter.subscriptions.get(this.path);\n        }\n    }\n\n    /** This is the publis cahh\n     * @param {*} content someom\n     * @returns {Promise} something here\n     */\n    publish(content) {\n        return cometdAdapter.publish(this, content);\n    }\n\n    async subscribe(update, options) {\n        if (this.subscription) await this.unsubscribe();\n        this.update = update;\n        return cometdAdapter.add(this, update, options).then((subscription) => {\n            this.subscription = subscription;\n            return subscription;\n        });\n    }\n\n    async unsubscribe() {\n        if (this.subscription) {\n            await cometdAdapter.remove(this.subscription);\n            this.subscription = null;\n        }\n    }\n}"
+            },
+            "augments": [],
+            "errors": [],
+            "examples": [],
+            "implements": [],
+            "params": [
+                {
+                    "title": "param",
+                    "name": "scope",
+                    "lineNumber": 2,
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "wordsd here",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 12,
+                                                "offset": 11
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 12,
+                                        "offset": 11
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 12,
+                                "offset": 11
+                            }
+                        }
+                    },
+                    "type": {
+                        "type": "AllLiteral"
+                    }
+                }
+            ],
+            "properties": [],
+            "returns": [],
+            "sees": [],
+            "throws": [],
+            "todos": [],
+            "yields": []
+        },
+        "name": "Channel",
+        "kind": "class",
+        "members": {
+            "global": [],
+            "inner": [],
+            "instance": [
+                {
+                    "description": {
+                        "type": "root",
+                        "children": [
+                            {
+                                "type": "paragraph",
+                                "children": [
+                                    {
+                                        "type": "text",
+                                        "value": "This is the publis cahh",
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 24,
+                                                "offset": 23
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 24,
+                                        "offset": 23
+                                    },
+                                    "indent": []
+                                }
+                            }
+                        ],
+                        "position": {
+                            "start": {
+                                "line": 1,
+                                "column": 1,
+                                "offset": 0
+                            },
+                            "end": {
+                                "line": 1,
+                                "column": 24,
+                                "offset": 23
+                            }
+                        }
+                    },
+                    "tags": [
+                        {
+                            "title": "param",
+                            "description": "someom",
+                            "lineNumber": 1,
+                            "type": {
+                                "type": "AllLiteral"
+                            },
+                            "name": "content"
+                        },
+                        {
+                            "title": "returns",
+                            "description": "something here",
+                            "lineNumber": 2,
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Promise"
+                            }
+                        }
+                    ],
+                    "loc": {
+                        "start": {
+                            "line": 35,
+                            "column": 4
+                        },
+                        "end": {
+                            "line": 38,
+                            "column": 7
+                        }
+                    },
+                    "context": {
+                        "loc": {
+                            "start": {
+                                "line": 39,
+                                "column": 4
+                            },
+                            "end": {
+                                "line": 41,
+                                "column": 5
+                            }
+                        },
+                        "file": "/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js",
+                        "sortKey": "!/Users/wallaceluk/Projects/epicenter-libs/src/adapters/channel.js 00000039"
+                    },
+                    "augments": [],
+                    "errors": [],
+                    "examples": [],
+                    "implements": [],
+                    "params": [
+                        {
+                            "title": "param",
+                            "name": "content",
+                            "lineNumber": 1,
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "someom",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 7,
+                                                        "offset": 6
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 7,
+                                                "offset": 6
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 7,
+                                        "offset": 6
+                                    }
+                                }
+                            },
+                            "type": {
+                                "type": "AllLiteral"
+                            }
+                        }
+                    ],
+                    "properties": [],
+                    "returns": [
+                        {
+                            "description": {
+                                "type": "root",
+                                "children": [
+                                    {
+                                        "type": "paragraph",
+                                        "children": [
+                                            {
+                                                "type": "text",
+                                                "value": "something here",
+                                                "position": {
+                                                    "start": {
+                                                        "line": 1,
+                                                        "column": 1,
+                                                        "offset": 0
+                                                    },
+                                                    "end": {
+                                                        "line": 1,
+                                                        "column": 15,
+                                                        "offset": 14
+                                                    },
+                                                    "indent": []
+                                                }
+                                            }
+                                        ],
+                                        "position": {
+                                            "start": {
+                                                "line": 1,
+                                                "column": 1,
+                                                "offset": 0
+                                            },
+                                            "end": {
+                                                "line": 1,
+                                                "column": 15,
+                                                "offset": 14
+                                            },
+                                            "indent": []
+                                        }
+                                    }
+                                ],
+                                "position": {
+                                    "start": {
+                                        "line": 1,
+                                        "column": 1,
+                                        "offset": 0
+                                    },
+                                    "end": {
+                                        "line": 1,
+                                        "column": 15,
+                                        "offset": 14
+                                    }
+                                }
+                            },
+                            "title": "returns",
+                            "type": {
+                                "type": "NameExpression",
+                                "name": "Promise"
+                            }
+                        }
+                    ],
+                    "sees": [],
+                    "throws": [],
+                    "todos": [],
+                    "yields": [],
+                    "name": "publish",
+                    "kind": "function",
+                    "memberof": "Channel",
+                    "scope": "instance",
+                    "members": {
+                        "global": [],
+                        "inner": [],
+                        "instance": [],
+                        "events": [],
+                        "static": []
+                    },
+                    "path": [
+                        {
+                            "name": "Channel",
+                            "kind": "class"
+                        },
+                        {
+                            "name": "publish",
+                            "kind": "function",
+                            "scope": "instance"
+                        }
+                    ],
+                    "namespace": "Channel#publish"
+                }
+            ],
+            "events": [],
+            "static": []
+        },
+        "path": [
+            {
+                "name": "Channel",
+                "kind": "class"
+            }
+        ],
+        "namespace": "Channel"
+    }
+]
