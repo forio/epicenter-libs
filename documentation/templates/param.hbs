@@ -1,10 +1,28 @@
 <code class="name">
-    {{~#if parent ~}}
-        {{parent}}.
-    {{~/if ~}}
-    {{~ name ~}}
+    {{name}}
 </code>
-(<code class="type">
-    {{~ type ~}}
-    {{~#if optional }} = {{default}}{{~/if ~}}
-</code>)
+{{#with type}}
+    {{> type default=../default }}
+{{/with}}
+{{#with description}}
+    {{> description }}
+{{/with}}
+{{#if properties}}
+    <dl className="sub-parameters">
+        {{#each properties}}
+            <dt>
+                <code class="name">
+                    {{name}}
+                </code>
+                {{#with type}}
+                    {{> type }}
+                {{/with}}
+            </dt>
+            <dd>
+                {{#with description}}
+                    {{> description }}
+                {{/with}}
+            </dd>
+        {{/each}}
+    </dl>
+{{/if}}

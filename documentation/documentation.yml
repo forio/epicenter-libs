@@ -1,11 +1,14 @@
+---
 toc:
-  - name: Geography
+  -
     description: |
-      These are Mapbox GL JS's ways of representing locations
-      and areas on the sphere. There are things *here*
+        These are Mapbox GL JS's ways of representing locations
+        and areas on the sphere. There are things *here*
 
-      Maybe they're worth looking at?
+        Maybe they're worth looking at?
 
-      Maybe not.
+        Maybe not.
+    name: Geography
   - RITUAL
+  - config
   - runAdapter
