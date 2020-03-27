@@ -1,27 +1,13 @@
-<code class="name">
-    {{name}}
-</code>
-{{#with type}}
-    {{> type default=../default }}
-{{/with}}
-{{#with description}}
-    {{> description }}
-{{/with}}
+{{> paramHeader }}
+{{{ descriptionHTML }}}
 {{#if properties}}
     <dl className="sub-parameters">
         {{#each properties}}
             <dt>
-                <code class="name">
-                    {{name}}
-                </code>
-                {{#with type}}
-                    {{> type }}
-                {{/with}}
+                {{> paramHeader }}
             </dt>
             <dd>
-                {{#with description}}
-                    {{> description }}
-                {{/with}}
+                {{{ descriptionHTML }}}
             </dd>
         {{/each}}
     </dl>

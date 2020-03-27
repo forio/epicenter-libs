@@ -5,13 +5,15 @@
     <meta charset="utf-8">
     <title>Some documentation of some sort</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="index.css" rel="stylesheet">
+    <link href="css/normalize.css" rel="stylesheet">
+    <link href="css/index.css" rel="stylesheet">
+    <link href="css/highlight/a11y-light.css" rel="stylesheet">
 </head>
 <body>
     <header>
-        <img alt="some forio icon" />
+        <img src="https://s3.amazonaws.com/cdn-common.forio.com/marketing/Epicenter/common/epicenter-logo-white.svg" />
         <div class="banner">
-            This is my Documentation
+            Epicenter
         </div>
     </header>
     <nav>
@@ -23,8 +25,10 @@
     </nav>
     <main>
         {{#each apis}}
-            {{> apiDocumentation }}
+            {{~> api }}
         {{/each}}
     </main>
 </body>
+<script src="js/highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
 </html>

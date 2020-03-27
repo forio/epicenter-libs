@@ -12,12 +12,17 @@ const validateScope = (scope) => {
     if (!PUSH_CATEGORY.hasOwnProperty(pushCategory)) throw new EpicenterError(`Invalid push category: ${pushCategory}`);
 };
 
+/** Channel thingy */
 export default class Channel {
 
     path;
     update;
     subscription;
 
+    /**
+     * Make a new channel
+     * @param {*} scope wordsd here
+     */
     constructor(scope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
         validateScope(scope);
@@ -27,6 +32,10 @@ export default class Channel {
         }
     }
 
+    /** This is the publis cahh
+     * @param {*} content someom
+     * @returns {Promise} something here
+     */
     publish(content) {
         return cometdAdapter.publish(this, content);
     }

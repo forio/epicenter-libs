@@ -11,6 +11,7 @@ const fs = require('fs');
 const path = require('path');
 const documentation = require('documentation');
 const Handlebars = require('handlebars');
+const minify = require('html-minifier').minify;
 
 const templates = {};
 const getTemplate = (name) => {
@@ -20,77 +21,98 @@ const getTemplate = (name) => {
     return templates[name];
 };
 
+const toHTML = ({ type, value, url, children }) => {
+    switch (type) {
+        case 'paragraph': return `<p>${children.reduce((d, child) => `${d}${toHTML(child)}`, '')}</p>`;
+        case 'link': return `<a href="${url}">${!children.length ? url : children.reduce((d, child) => `${d}${toHTML(child)}`, '')}</a>`;
+        case 'emphasis': return `<strong>${children.reduce((d, child) => `${d}${toHTML(child)}`, '')}</strong>`;
+        case 'inlineCode': return `<code>${value}</code>`;
+        case 'text':
+        default: return value;
+    }
+};
 
-// const parseFragment = (fragment) => {
-//     const { type, value, url, children } = fragment;
-//     console.log('%c type...', 'font-size: 20px; color: #FB15B9FF;', type, children);
-//     switch (type) {
-//         case 'paragraph': return children.reduce((d, child) => `${d}${parseFragment(child)}`, '');
-//         case 'link': return `<a href="${url}">${!children.length ? url : children.reduce((d, child) => `${d}${parseFragment(child)}`, '')}</a>`;
-//         case 'emphasis': return `<strong>${children.reduce((d, child) => `${d}${parseFragment(child)}`, '')}</strong>`;
-//         case 'text':
-//         default: return value;
-//     }
-// };
+const toMemberHeading = (kind) => {
+    switch (kind) {
+        case 'enum': return 'Members';
+        case 'note': return '';
+        default: return 'Methods';
+    }
+};
 
-// const parseDescription = (description) => {
-//     if (typeof description !== 'object') return description;
-//     if (description.type !== 'root' || description.children.length !== 1) console.log('Irregular description:', description);
-//     return description.children[0].children.reduce((desc, child) => `${desc}${parseFragment(child)}`, '');
-// };
+const toDescriptionHTML = (description) => {
+    if (typeof description !== 'object') return description;
+    if (description.type !== 'root') console.log('Irregular description:', description);
+    return description.children.reduce((desc, child) => `${desc}${toHTML(child)}`, '');
+};
 
-// const parseParam = (param) => ({
-//     name: param.name,
-//     description: parseDescription(param.description),
-//     type: param.type.name,
-//     default: param.default,
-// });
+const parseParam = (param) => {
+    const { name, type, description, properties } = param;
+    const typeName = type.type === 'OptionalType' ?
+        type.expression.name :
+        type.name;
+    const isOptional = type.type === 'OptionalType' || type.type === 'AllLiteral' || param.default;
+    return {
+        name,
+        properties: (properties || []).map(parseParam),
+        default: param.default,
+        typeName,
+        isOptional,
+        descriptionHTML: toDescriptionHTML(description),
+    };
+};
 
-// const parseMethods = (methods) => methods.map(({ name, description, params, examples, returns }) => ({
-//     name,
-//     description: parseDescription(description),
-//     parameters: !params.length ? undefined : params.map(parseParam),
-// }));
-
-// const parseJSON = (json) => json.map(({ name, description, members }) => ({
-//     name,
-//     methods: !members.static.length ? undefined : parseMethods(members.static),
-//     description: parseDescription(description),
-// }));
-
-Handlebars.registerPartial('apiDocumentation', getTemplate('api-documentation'));
-Handlebars.registerPartial('apiLink', getTemplate('api-link'));
-Handlebars.registerPartial('description', getTemplate('description'));
-Handlebars.registerPartial('method', getTemplate('method'));
-Handlebars.registerPartial('param', getTemplate('param'));
-Handlebars.registerPartial('type', getTemplate('type'));
-
-Handlebars.registerHelper('ifEquals', function(arg1, arg2, options) {
-    return (arg1 === arg2) ? options.fn(this) : options.inverse(this);
+const parseReturn = ({ type, description }) => ({
+    typeName: type.name,
+    descriptionHTML: toDescriptionHTML(description),
 });
 
-/* Removes unused keys from the json turned by documentation (the npm lib) */
-const blacklist = ['tags', 'position', 'loc'];
-const trimJSON = (json) => {
-    if (Array.isArray(json)) {
-        return json.map(trimJSON);
-    }
-    if (json && typeof json === 'object') {
-        return Object.keys(json).reduce((trimmed, key) => {
-            if (!blacklist.includes(key)) {
-                trimmed[key] = trimJSON(json[key]);
-            }
-            return trimmed;
-        }, {});
-    }
-    return json;
+const parseMember = ({ name, kind, description, examples, params, type, returns }) => ({
+    name,
+    kind,
+    typeName: type ? type.name : 'Function',
+    examples,
+    returns: returns.map(parseReturn),
+    params: params.map(parseParam),
+    descriptionHTML: toDescriptionHTML(description),
+});
+
+const parseJSON = ({ name, description, members, kind }) => {
+    const hasMembers =
+        members.global.length +
+        members.inner.length +
+        members.instance.length +
+        members.events.length +
+        members.static.length;
+    return {
+        name,
+        kind,
+        members: {
+            global: members.global.map(parseMember),
+            inner: members.inner.map(parseMember),
+            instance: members.instance.map(parseMember),
+            events: members.events.map(parseMember),
+            static: members.static.map(parseMember),
+        },
+        hasMembers,
+        memberHeading: toMemberHeading(kind),
+        descriptionHTML: toDescriptionHTML(description),
+    };
 };
+
+Handlebars.registerPartial('api', getTemplate('api'));
+Handlebars.registerPartial('apiLink', getTemplate('api-link'));
+Handlebars.registerPartial('member', getTemplate('member'));
+Handlebars.registerPartial('param', getTemplate('param'));
+Handlebars.registerPartial('paramHeader', getTemplate('param-header'));
 
 console.log('Starting documentation...');
 documentation.build('../src/**', { config: path.join(__dirname, 'documentation.yml') }).then((json) => {
     const index = getTemplate('index');
-    const apis = trimJSON(json);
+    const apis = json.map(parseJSON);
     const docs = Handlebars.compile(index)({ apis });
+    // const docs = minify(Handlebars.compile(index)({ apis }));
+    fs.writeFileSync(path.join(__dirname, 'documentation.raw.json'), JSON.stringify(json));
     fs.writeFileSync(path.join(__dirname, 'documentation.json'), JSON.stringify(apis));
     fs.writeFileSync(path.join(__dirname, 'documentation.html'), docs);
 });
