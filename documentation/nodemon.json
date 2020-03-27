@@ -1,0 +1,4 @@
+{
+    "verbose": true,
+    "watch": ["templates/*", "js/*", "css/*", "documentation.yml", "../src"]
+  }

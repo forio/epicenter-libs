@@ -1,0 +1,28 @@
+<article id="{{name}}">
+    <h2>{{name}}</h2>
+    {{{ descriptionHTML }}}
+
+    {{#if hasMembers}}
+        <h4>{{memberHeading}}</h4>
+    {{/if}}
+
+    {{#each members.global}}
+        {{~> member parent=../name}}
+    {{/each}}
+
+    {{#each members.inner}}
+        {{~> member parent=../name }}
+    {{/each}}
+
+    {{#each members.instance}}
+        {{~> member parent=../name }}
+    {{/each}}
+
+    {{#each members.events}}
+        {{~> member parent=../name }}
+    {{/each}}
+
+    {{#each members.static}}
+        {{~> member parent=../name }}
+    {{/each}}
+</article>

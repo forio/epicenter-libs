@@ -1,6 +1,6 @@
 ---
 toc:
-  -
+  - name: Geography
     description: |
         These are Mapbox GL JS's ways of representing locations
         and areas on the sphere. There are things *here*
@@ -8,7 +8,7 @@ toc:
         Maybe they're worth looking at?
 
         Maybe not.
-    name: Geography
-  - RITUAL
+    children:
   - config
   - runAdapter
+  - RITUAL

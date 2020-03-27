@@ -5,11 +5,13 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  * Create a run
  * @memberof runAdapter
  * @example
+ *
  * const { runAdapter } = epicenter;
  * runAdapter.create('myModal.py', {
  *      scopeBoundary:
+ *      scope:
  * });
- * @param {string} model Name of the *model EMPEEEE* file that is hosted on Epicenter
+ * @param {string} model Name of the *model EMPEEEE* file that is hosted on Epicenter <a>Link!?</a>
  * @param {Object} scope Object with the fields necessary to provide scoping for your channel
  * @param {string} scope.scopeBoundary Scope Boundary (one of enumeration of values)
  * @param {string} scope.scopeKey Key value of item bounded by the scope
