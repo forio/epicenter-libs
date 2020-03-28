@@ -19,7 +19,7 @@
     <nav>
         <ul>
                 <li>
-                    <a href="#Geography">Geography</a>
+                    <a href="#Epicenter API Adapters">Epicenter API Adapters</a>
                 </li>
                 <li>
                     <a href="#config">config</a>
@@ -43,7 +43,6 @@
                     <a href="#RITUAL">RITUAL</a>
                         <section class="member">
                                 <a href="#RITUAL-NONE">NONE</a>
-                                <a href="#RITUAL-INTER">INTER</a>
                                 <a href="#RITUAL-REANIMATE">REANIMATE</a>
                                 <a href="#RITUAL-EXORCISE">EXORCISE</a>
                         </section>
@@ -61,7 +60,6 @@
                                 <a href="#SCOPE_BOUNDARY-GROUP">GROUP</a>
                                 <a href="#SCOPE_BOUNDARY-EPISODE">EPISODE</a>
                                 <a href="#SCOPE_BOUNDARY-WORLD">WORLD</a>
-                                <a href="#SCOPE_BOUNDARY-RUN">RUN</a>
                         </section>
                 </li>
                 <li>
@@ -71,6 +69,7 @@
                                 <a href="#PUSH_CATEGORY-CONSENSUS">CONSENSUS</a>
                                 <a href="#PUSH_CATEGORY-CONTROL">CONTROL</a>
                                 <a href="#PUSH_CATEGORY-PRESENCE">PRESENCE</a>
+                                <a href="#PUSH_CATEGORY-LOBBY">LOBBY</a>
                                 <a href="#PUSH_CATEGORY-RUN">RUN</a>
                                 <a href="#PUSH_CATEGORY-SYSTEM">SYSTEM</a>
                         </section>
@@ -93,10 +92,9 @@
         </ul>
     </nav>
     <main>
-<article id="Geography">
-    <h2>Geography</h2>
-    <p>These are Mapbox GL JS's ways of representing locations
-and areas on the sphere. There are things <strong>here</strong></p><p>Maybe they're worth looking at?</p><p>Maybe not.</p>
+<article id="Epicenter API Adapters">
+    <h2>Epicenter API Adapters</h2>
+    <p>The Epicenter API Adapters are part of the epicenter.js library. This library abstracts the underlying Epicenter RESTful APIs into a set of services and utilities.</p><p>Maybe they're worth looking at?</p><p>Maybe not.</p>
 
 
 
@@ -333,14 +331,7 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
         <h3>NONE</h3>
         <code>string</code>
     </header>
-    <p>???</p>
-</article>
-<article id="RITUAL-INTER">
-    <header>
-        <h3>INTER</h3>
-        <code>string</code>
-    </header>
-    <p>???</p>
+    <p>Allow GET action against archive, no revival of run</p>
 </article>
 <article id="RITUAL-REANIMATE">
     <header>
@@ -395,7 +386,9 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
 </article>
 <article id="SCOPE_BOUNDARY">
     <h2>SCOPE_BOUNDARY</h2>
-    <p>Scope boundaries are values associated with runs. They help to define the <strong>default</strong> user permissions used when a run is created, althought further permission configuration can be done with <a href="#LOCK_TYPE">lock types</a>. Scopes also provide an index that in which a run can be queried for.</p>
+    <p>Scope boundaries are values associated with runs. They help to define the <strong>default</strong> user permissions used when a run is created, althought further permission configuration can be done with <a href="#LOCK_TYPE">lock types</a>. Scopes also provide an index that in which a run can be queried for.</p><p>Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
+Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).</p><p>psuedonymKey, goes in tandem w/ permit (lock types) --
+Data lives and dies with scope, delete the scope, you lose the data and associated scopes</p>
 
         <h4>Members</h4>
 
@@ -431,13 +424,6 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
     </header>
     <p>Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world</p>
 </article>
-<article id="SCOPE_BOUNDARY-RUN">
-    <header>
-        <h3>RUN</h3>
-        <code>string</code>
-    </header>
-    <p>Run scoped runs are only accessible to the user who created the run, and facilitators that exist in the same group as that user.</p>
-</article>
 </article>
 <article id="PUSH_CATEGORY">
     <h2>PUSH_CATEGORY</h2>
@@ -454,42 +440,55 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
         <h3>CHAT</h3>
         <code>string</code>
     </header>
-    <p>Used for messaging users, (isn't this somewhat general?)</p>
+    <p>intended for messaging users
+yes pub</p>
 </article>
 <article id="PUSH_CATEGORY-CONSENSUS">
     <header>
         <h3>CONSENSUS</h3>
         <code>string</code>
     </header>
-    <p>Used for the <a href="https://github.com/forio">Consensus API</a></p>
+    <p>Used for the <a href="https://github.com/forio">Consensus API</a>
+no pub</p>
 </article>
 <article id="PUSH_CATEGORY-CONTROL">
     <header>
         <h3>CONTROL</h3>
         <code>string</code>
     </header>
-    <p>No idea what this is for...</p>
+    <p>intended for general non-chat, sim-level communication
+yes pub</p>
 </article>
 <article id="PUSH_CATEGORY-PRESENCE">
     <header>
         <h3>PRESENCE</h3>
         <code>string</code>
     </header>
-    <p>Used for the <a href="https://github.com/forio">Presence API</a></p>
+    <p>Used for the <a href="https://github.com/forio">Presence API</a>
+no pub</p>
+</article>
+<article id="PUSH_CATEGORY-LOBBY">
+    <header>
+        <h3>LOBBY</h3>
+        <code>string</code>
+    </header>
+    <p>intended for awaiting entering games
+yes pub</p>
 </article>
 <article id="PUSH_CATEGORY-RUN">
     <header>
         <h3>RUN</h3>
         <code>string</code>
     </header>
-    <p>Used for the <a href="https://github.com/forio">Run API</a></p>
+    <p>Used for the <a href="https://github.com/forio">Run API</a>
+no pub</p>
 </article>
 <article id="PUSH_CATEGORY-SYSTEM">
     <header>
         <h3>SYSTEM</h3>
         <code>string</code>
     </header>
-    <p>Send help..</p>
+    <p>internal</p>
 </article>
 </article>
 <article id="LOCK_TYPE">
@@ -507,28 +506,29 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
         <h3>SYSTEM</h3>
         <code>string</code>
     </header>
-    <p>System?</p>
+    <p>System -- Epicenter Manager</p>
 </article>
 <article id="LOCK_TYPE-MONITER">
     <header>
         <h3>MONITER</h3>
         <code>string</code>
     </header>
-    <p>No idea</p>
+    <p>System minus -- read-only system access, write for certain accounts; think Geromel</p>
 </article>
 <article id="LOCK_TYPE-AUTHOR">
     <header>
         <h3>AUTHOR</h3>
         <code>string</code>
     </header>
-    <p>Author</p>
+    <p>Author -- Team Members (API keys)
+tied to one account (personal + current account)</p>
 </article>
 <article id="LOCK_TYPE-SUPPORT">
     <header>
         <h3>SUPPORT</h3>
         <code>string</code>
     </header>
-    <p>Team Members</p>
+    <p>Author minus</p>
 </article>
 <article id="LOCK_TYPE-FACILITATOR">
     <header>
@@ -542,21 +542,24 @@ runAdapter.create(&#x27;myModal.py&#x27;, {
         <h3>REVIEWER</h3>
         <code>string</code>
     </header>
-    <p>Reviewers</p>
+    <p>Reviewers (weaker facilitator)
+Facilitator minus</p>
 </article>
 <article id="LOCK_TYPE-USER">
     <header>
         <h3>USER</h3>
         <code>string</code>
     </header>
-    <p>Users</p>
+    <p>Users -- psuedonymKey required in scope
+e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey</p>
 </article>
 <article id="LOCK_TYPE-LEADER">
     <header>
         <h3>LEADER</h3>
         <code>string</code>
     </header>
-    <p>Leader</p>
+    <p>Leader
+Participant plus</p>
 </article>
 <article id="LOCK_TYPE-PARTICIPANT">
     <header>

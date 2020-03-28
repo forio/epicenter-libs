@@ -4,7 +4,7 @@ import { ENDPOINTS, SESSION_KEY, SESSION, OK_CODE, CREATED_CODE } from './common
 chai.use(require('sinon-chai'));
 
 describe('Run API Service', () => {
-    const { config, runAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
+    const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
     let server;
 
     config.accountShortName = ENDPOINTS.accountShortName;
@@ -109,7 +109,7 @@ describe('Run API Service', () => {
             expect(reqBody.permit.writeLock).to.equal(OPTIONALS.writeLock);
             expect(reqBody.trackingKey).to.equal(OPTIONALS.trackingKey);
             expect(reqBody.modelFile).to.equal(MODEL);
-            expect(reqBody.morphology).to.equal(OPTIONALS.morphology);
+            expect(reqBody.morphology).to.equal('MANY');
             expect(reqBody.ephemeral).to.equal(OPTIONALS.ephemeral);
             expect(reqBody.modelContext).to.be.an('object').that.is.empty;
             expect(reqBody.executionContext).to.be.an('object').that.is.empty;
@@ -121,10 +121,20 @@ describe('Run API Service', () => {
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.PARTICIPANT);
         }));
-        it('Should use USER when a lock is undefined with other scopes', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
+        it('Should not provide a pseudonymKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
+            const req = server.requests.pop();
+            const reqBody = JSON.parse(req.requestBody);
+            expect(reqBody.scope.pseudonymKey).to.not.exist;
+        }));
+        it('Should use USER when a lock is undefined with GROUP scope', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.USER);
+        }));
+        it('Should use the session\'s userKey as an pseudonymKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
+            const req = server.requests.pop();
+            const reqBody = JSON.parse(req.requestBody);
+            expect(reqBody.scope.pseudonymKey).to.equal(authAdapter.getLocalSession().userKey);
         }));
     });
     describe('Clone', () => {

@@ -78,12 +78,13 @@ const parseMember = ({ name, kind, description, examples, params, type, returns 
 });
 
 const parseJSON = ({ name, description, members, kind }) => {
-    const hasMembers =
+    const hasMembers = Boolean(
         members.global.length +
         members.inner.length +
         members.instance.length +
         members.events.length +
-        members.static.length;
+        members.static.length
+    );
     return {
         name,
         kind,

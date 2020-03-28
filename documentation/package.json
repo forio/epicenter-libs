@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "./node_modules/documentation/bin/documentation.js serve --watch ../src/**",
-    "build": "./node_modules/nodemon/bin/nodemon.js index.js"
+    "nodemon": "./node_modules/nodemon/bin/nodemon.js index.js"
   },
   "author": "Forio",
   "dependencies": {

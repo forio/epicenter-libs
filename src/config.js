@@ -5,8 +5,8 @@ class Config {
     _apiVersion = API_VERSION;
 
     constructor() {
-        if (isBrowser()) return this.constructor.loadBrowser();
-        if (isNode()) return this.constructor.loadNode();
+        if (isBrowser()) return this.loadBrowser();
+        if (isNode()) return this.loadNode();
         throw new EpicenterError('Could not identify environment; no configuration was setup');
     }
 
@@ -124,14 +124,14 @@ class Config {
             host.indexOf('localhost') === 0;
     }
 
-    static loadNode() {
+    loadNode() {
         // TODO -- use process env variables instead here for Node server
         this.apiProtocol = 'https';
         this.apiHost = 'test.forio.com';
         return;
     }
 
-    static loadBrowser() {
+    loadBrowser() {
         const isLocal = this.isLocal();
         const { protocol, pathname, host } = window.location;
         this.apiProtocol = isLocal ? 'https' : protocol;

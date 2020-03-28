@@ -1,13 +1,12 @@
 ---
 toc:
-  - name: Geography
+  - name: Epicenter API Adapters
     description: |
-        These are Mapbox GL JS's ways of representing locations
-        and areas on the sphere. There are things *here*
+      The Epicenter API Adapters are part of the epicenter.js library. This library abstracts the underlying Epicenter RESTful APIs into a set of services and utilities.
 
-        Maybe they're worth looking at?
+      Maybe they're worth looking at?
 
-        Maybe not.
+      Maybe not.
     children:
   - config
   - runAdapter
