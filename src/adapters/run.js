@@ -1,4 +1,4 @@
-import { EpicenterError, Router, prefix } from 'utils';
+import { EpicenterError, Router, prefix, identification } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
@@ -23,13 +23,15 @@ export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey, pseudonymKey } = scope;
     const {
         accountShortName, projectShortName, readLock, writeLock,
-        morphology, ephemeral, trackingKey, modelContext, executionContext,
+        ephemeral, trackingKey, modelContext, executionContext,
     } = optionals;
 
     const defaultLock = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
         LOCK_TYPE.PARTICIPANT :
         LOCK_TYPE.USER;
-
+    const defaultPseudonymKey = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
+        undefined :
+        identification.session.userKey;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -38,13 +40,13 @@ export async function create(model, scope, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    pseudonymKey,
+                    pseudonymKey: pseudonymKey || defaultPseudonymKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
                     writeLock: writeLock || defaultLock,
                 },
-                morphology,
+                morphology: 'MANY',
                 trackingKey,
                 modelFile: model,
                 modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},

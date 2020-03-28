@@ -6,6 +6,13 @@ export const BROWSER_STORAGE_TYPE = {
 
 /**
  * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #LOCK_TYPE lock types}. Scopes also provide an index that in which a run can be queried for.
+ *
+ * Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
+ * Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).
+ *
+ * psuedonymKey, goes in tandem w/ permit (lock types) --
+ * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
+ *
  * @enum {string}
  */
 export const SCOPE_BOUNDARY = {
@@ -33,12 +40,6 @@ export const SCOPE_BOUNDARY = {
      * @type {string}
      */
     WORLD: 'WORLD',
-    /**
-     * Run scoped runs are only accessible to the user who created the run, and facilitators that exist in the same group as that user.
-     * @constant
-     * @type {string}
-     */
-    RUN: 'RUN',
 };
 
 /**
@@ -47,17 +48,11 @@ export const SCOPE_BOUNDARY = {
  */
 export const RITUAL = {
     /**
-     * ???
+     * Allow GET action against archive, no revival of run
      * @constant
      * @type {string}
      */
     NONE: 'NONE',
-    /**
-     * ???
-     * @constant
-     * @type {string}
-     */
-    INTER: 'INTER',
     /**
      * A run with this ritual will be pulled into memory as needed, and will stay in memory until it's lifespan (defined in your project Settings) has expired.
      * @constant
@@ -78,37 +73,49 @@ export const RITUAL = {
  */
 export const PUSH_CATEGORY = {
     /**
-     * Used for messaging users, (isn't this somewhat general?)
+     * intended for messaging users
+     * yes pub
      * @constant
      * @type {string}
      */
     CHAT: 'CHAT',
     /**
      * Used for the {@link https://github.com/forio Consensus API}
+     * no pub
      * @constant
      * @type {string}
      */
     CONSENSUS: 'CONSENSUS',
     /**
-     * No idea what this is for...
+     * intended for general non-chat, sim-level communication
+     * yes pub
      * @constant
      * @type {string}
      */
     CONTROL: 'CONTROL',
     /**
      * Used for the {@link https://github.com/forio Presence API}
+     * no pub
      * @constant
      * @type {string}
      */
     PRESENCE: 'PRESENCE',
     /**
+     * intended for awaiting entering games
+     * yes pub
+     * @constant
+     * @type {string}
+     */
+    LOBBY: 'LOBBY',
+    /**
      * Used for the {@link https://github.com/forio Run API}
+     * no pub
      * @constant
      * @type {string}
      */
     RUN: 'RUN',
     /**
-     * Send help..
+     * internal
      * @constant
      * @type {string}
      */
@@ -121,25 +128,26 @@ export const PUSH_CATEGORY = {
  */
 export const LOCK_TYPE = {
     /**
-     * System?
+     * System -- Epicenter Manager
      * @constant
      * @type {string}
      */
     SYSTEM: 'SYSTEM',
     /**
-     * No idea
+     * System minus -- read-only system access, write for certain accounts; think Geromel
      * @constant
      * @type {string}
      */
     MONITER: 'MONITER',
     /**
-     * Author
+     * Author -- Team Members (API keys)
+     * tied to one account (personal + current account)
      * @constant
      * @type {string}
      */
     AUTHOR: 'AUTHOR',
     /**
-     * Team Members
+     * Author minus
      * @constant
      * @type {string}
      */
@@ -151,19 +159,22 @@ export const LOCK_TYPE = {
      */
     FACILITATOR: 'FACILITATOR',
     /**
-     * Reviewers
+     * Reviewers (weaker facilitator)
+     * Facilitator minus
      * @constant
      * @type {string}
      */
     REVIEWER: 'REVIEWER',
     /**
-     * Users
+     * Users -- psuedonymKey required in scope
+     * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}
      */
     USER: 'USER',
     /**
      * Leader
+     * Participant plus
      * @constant
      * @type {string}
      */
