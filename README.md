@@ -79,6 +79,9 @@ When you feel you are ready to release new version of the the libs:
 \* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.
 
 ## How to Build Documentation
+We should figure out a better build process for this one, but for the time being:
 ```
-npm run document
+cd documentation
+node index.js
 ```
+Will compile an HTML file called `documentation.html` in the same directory.
