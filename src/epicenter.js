@@ -2,7 +2,6 @@ const version = VERSION;
 export { default as config } from '~/config';
 export { version };
 export {
-    BROWSER_STORAGE_TYPE,
     SCOPE_BOUNDARY,
     RITUAL,
     PUSH_CATEGORY,
@@ -17,6 +16,9 @@ export {
     authAdapter,
     presenceAdapter,
     projectAdapter,
+    /**
+     * Has all the run adapters see this other {@link https://github.com/forio Forio} more comment here
+     * @namespace runAdapter
+     */
     runAdapter,
 } from 'adapters';
-
