@@ -1,0 +1,13 @@
+html {
+    font-size: 1em;
+}
+dt, dd {
+    margin: 0;
+}
+dl {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 1rem;
+}
+

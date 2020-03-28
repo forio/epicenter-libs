@@ -1,0 +1,13 @@
+---
+toc:
+  - name: Epicenter API Adapters
+    description: |
+      The Epicenter API Adapters are part of the epicenter.js library. This library abstracts the underlying Epicenter RESTful APIs into a set of services and utilities.
+
+      Maybe they're worth looking at?
+
+      Maybe not.
+    children:
+  - config
+  - runAdapter
+  - RITUAL
