@@ -121,20 +121,20 @@ describe('Run API Service', () => {
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.PARTICIPANT);
         }));
-        it('Should not provide a pseudonymKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
+        it('Should not provide a userKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.scope.pseudonymKey).to.not.exist;
+            expect(reqBody.scope.userKey).to.not.exist;
         }));
         it('Should use USER when a lock is undefined with GROUP scope', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.USER);
         }));
-        it('Should use the session\'s userKey as an pseudonymKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
+        it('Should use the session\'s userKey as an userKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.scope.pseudonymKey).to.equal(authAdapter.getLocalSession().userKey);
+            expect(reqBody.scope.userKey).to.equal(authAdapter.getLocalSession().userKey);
         }));
     });
     describe('Clone', () => {
