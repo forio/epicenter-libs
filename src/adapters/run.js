@@ -2,36 +2,41 @@ import { EpicenterError, Router, prefix, identification } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
- * Create a run
+ * Run API adapters -- use this to create, update, delete, and manage your runs
+ * @namespace runAdapter
+ */
+
+/**
+ * Create a run.
+ *
+ * By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
  * @memberof runAdapter
  * @example
  *
- * const { runAdapter } = epicenter;
- * runAdapter.create('myModal.py', {
- *      scopeBoundary:
- *      scope:
+ * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
+ * runAdapter.create('model.py', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP
+ *      scopeKey: 000001713a246b0b34b5b5d274c057a5b2a7
  * });
- * @param {string} model Name of the *model EMPEEEE* file that is hosted on Epicenter <a>Link!?</a>
- * @param {Object} scope Object with the fields necessary to provide scoping for your channel
- * @param {string} scope.scopeBoundary Scope Boundary (one of enumeration of values)
- * @param {string} scope.scopeKey Key value of item bounded by the scope
- * @param {string} scope.pseudonymKey Key of the user creating the run.
- * @param {Object} [optionals={}] Object for all optional fields
- * @returns {Object} Response with the run in the "body"
+ * @param {string} model Name of your model file
+ * @param {Object} scope Scope associated with your run
+ * @param {string} scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string} scope.scopeKey Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object} [optionals={}] Something meaningful about optionals
+ * @returns {Object} Something meaningful about returns
  */
 export async function create(model, scope, optionals = {}) {
-    const { scopeBoundary, scopeKey, pseudonymKey } = scope;
+    const { scopeBoundary, scopeKey } = scope;
     const {
         accountShortName, projectShortName, readLock, writeLock,
         ephemeral, trackingKey, modelContext, executionContext,
     } = optionals;
 
-    const defaultLock = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
-        LOCK_TYPE.PARTICIPANT :
-        LOCK_TYPE.USER;
-    const defaultPseudonymKey = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
-        undefined :
-        identification.session.userKey;
+    const { WORLD } = SCOPE_BOUNDARY;
+    const { PARTICIPANT, USER } = LOCK_TYPE;
+    const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
+    const userKey = scopeBoundary === WORLD ? undefined : identification.session.userKey;
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -40,7 +45,7 @@ export async function create(model, scope, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    pseudonymKey: pseudonymKey || defaultPseudonymKey,
+                    userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
@@ -153,7 +158,19 @@ export async function get(runKey, optionals = {}) {
         .get(`/run/${runKey}`);
 }
 
+
 const MAX_URL_LENGTH = 2048;
+/**
+ * Queries for runs. Use this to look u
+ * @memberof runAdapter
+ *
+ * @param {string} model Name of your model file
+ * @param {Object} scope Scope associated with your run
+ * @param {string} scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string} scope.scopeKey Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object} [optionals={}] Something meaningful about optionals
+ * @returns {Object} Something meaningful about returns
+ */
 export async function query(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {

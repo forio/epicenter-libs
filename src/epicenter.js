@@ -1,3 +1,4 @@
+/* Main file; defines public interface & load order */
 const version = VERSION;
 export { default as config } from '~/config';
 export { version };
@@ -16,9 +17,5 @@ export {
     authAdapter,
     presenceAdapter,
     projectAdapter,
-    /**
-     * Has all the run adapters see this other {@link https://github.com/forio Forio} more comment here
-     * @namespace runAdapter
-     */
     runAdapter,
 } from 'adapters';

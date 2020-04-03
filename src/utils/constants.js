@@ -24,18 +24,21 @@ export const SCOPE_BOUNDARY = {
     PROJECT: 'PROJECT',
     /**
      * Runs scoped by group, users and facilitators are allowed access only if they are in the associated group
+     * Groups are scoped by projects
      * @constant
      * @type {string}
      */
     GROUP: 'GROUP',
     /**
      * Runs scoped by episode, not sure what this one is permission-wise
+     * Episodes are scoped by groups
      * @constant
      * @type {string}
      */
     EPISODE: 'EPISODE',
     /**
      * Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world
+     * Worlds can be scoped by group or episode
      * @constant
      * @type {string}
      */
