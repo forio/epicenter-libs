@@ -5,7 +5,7 @@ export async function createAccount(options) {
     const response = await new Router()
         .post('/account', {
             body: { objectType, name, shortName, adminKey, subscriptionPlan, billingInterval },
-        });
+        }).then(({ body }) => body);
     return response;
 }
 
@@ -15,12 +15,13 @@ export async function updateAccount(options) {
     const response = await new Router()
         .patch('/account', {
             body: { objectType, name, shortName, adminKey, subscriptionPlan, billingInterval },
-        });
+        }).then(({ body }) => body);
     return response;
 }
 
 export async function removeAccount(accountShortName) {
     return await new Router()
         .withAccountShortName(accountShortName)
-        .delete('/account');
+        .delete('/account')
+        .then(({ body }) => body);
 }

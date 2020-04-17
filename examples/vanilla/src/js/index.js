@@ -98,8 +98,7 @@ const load = () => {
         if (presenceEl.innerText !== 'Presence') return;
 
         presenceEl.innerText = 'Fetching';
-        presenceAdapter.forGroup(session.groupKey).then((res) => {
-            const membersOnline = res.body;
+        presenceAdapter.forGroup(session.groupKey).then((membersOnline) => {
             usersEl.innerHTML = '';
             membersOnline.forEach((member) => {
                 const item = document.createElement('li');

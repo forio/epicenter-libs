@@ -75,8 +75,7 @@ class CometdAdapter {
     }
 
     async checkEnabled() {
-        const res = await channelsEnabled();
-        const enabled = res.body;
+        const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
     }
 

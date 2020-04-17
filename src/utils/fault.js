@@ -2,11 +2,11 @@
 /* For failed network calls */
 export default class Fault extends Error {
 
-    constructor(status, error) {
+    constructor(body, response) {
 
         super();
-
-        const { information, message, cause } = error;
+        const { status } = response;
+        const { information, message, cause } = body;
         this.status = status;
         this.message = message;
 
