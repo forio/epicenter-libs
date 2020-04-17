@@ -6,7 +6,8 @@ export async function forGroup(groupKey, options = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/presence/group/${groupKey}`);
+        .get(`/presence/group/${groupKey}`)
+        .then(({ body }) => body);
 }
 
 export async function forWorld(worldKey, options = {}) {
@@ -14,7 +15,8 @@ export async function forWorld(worldKey, options = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/presence/world/${worldKey}`);
+        .get(`/presence/world/${worldKey}`)
+        .then(({ body }) => body);
 }
 
 export async function connect() {

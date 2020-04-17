@@ -10,54 +10,55 @@ export async function login(options) {
     const { handle, password, groupKey, objectType = 'user', ...others } = options;
     const { accountShortName, projectShortName } = others;
 
-    const response = await new Router()
+    const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/authentication', {
             body: { handle, password, groupKey, objectType },
             includeAuthorization: false,
             inert: true,
-        });
+        }).then(({ body }) => body);
     await logout();
 
-    identification.session = response.body;
-    return response;
+    identification.session = session;
+    return session;
 }
 
 export async function upgrade(options) {
     const { objectType = 'admin', inert, ...others } = options;
     const { accountShortName, projectShortName } = others;
 
-    const response = await new Router()
+    const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .patch('/authentication', {
             body: { objectType },
             inert,
-        });
+        }).then(({ body }) => body);
     await logout();
 
-    identification.session = response.body;
-    return response;
+    identification.session = session;
+    return session;
 }
 
 export async function sso(options) {
     const { accountShortName, projectShortName } = options;
 
-    const response = await new Router()
+    const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get('/registration/sso');
+        .get('/registration/sso')
+        .then(({ body }) => body);
 
-    identification.session = response.body;
-    return response;
+    identification.session = session;
+    return session;
 }
 
 export async function getSession() {
-    const response = await new Router().get('/authentication');
+    const { body } = await new Router().get('/authentication');
 
-    identification.session = response.body;
-    return response;
+    identification.session = body;
+    return body;
 }
 
 export function getLocalSession() {

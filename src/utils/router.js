@@ -29,10 +29,10 @@ async function request(url, { method, body, includeAuthorization, inert }) {
     }
 
     if ((response.status >= 200) && (response.status < 400)) {
-        return new Result(response.status, response.headers, await response.json());
+        return new Result(await response.json(), response);
     }
 
-    const error = new Fault(response.status, await response.json());
+    const error = new Fault(await response.json(), response);
     if (inert) throw error;
 
     const retry = () => request(url, { method, body, includeAuthorization, inert: true });

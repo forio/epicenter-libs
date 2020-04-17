@@ -39,8 +39,7 @@ document.getElementById('submit').onclick = (e) => {
     authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
-    }).then((res) => {
-        const session = res.body;
+    }).then((session) => {
         console.log('%c Logged in with this session', 'font-size: 20px; color: #FB15B9FF;', session);
         window.location.href = '/index.html';
     });
