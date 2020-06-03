@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.0.2",
+  "version": "3.0.3-alpha",
   "type": "module",
   "main": "dist/epicenter.js",
   "scripts": {
