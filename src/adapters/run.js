@@ -164,7 +164,7 @@ export async function get(runKey, optionals = {}) {
 }
 
 
-const MAX_URL_LENGTH = 2048;
+
 /**
  * Queries for runs. Use this to look u
  * @memberof runAdapter
@@ -201,21 +201,12 @@ export async function query(model, scope, optionals = {}) {
         ].join(';'),
     };
 
-    const router = new Router()
+    return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withSearchParams(searchParams);
-
-    const uriComponent = `/run/${scopeBoundary}/${scopeKey}/${model}`;
-    const url = await router.getURL(uriComponent);
-    return encodeURI(url.toString()).length < MAX_URL_LENGTH ?
-        router.get(uriComponent).then(({ body }) => body) :
-        new Router()
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .post(uriComponent, { body: searchParams })
-            .then(({ body }) => body);
-
+        .withSearchParams(searchParams)
+        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`)
+        .then(({ body }) => body);
 }
 
 export async function introspect(model, optionals = {}) {

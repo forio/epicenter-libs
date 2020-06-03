@@ -39,7 +39,6 @@ describe('Authentication', () => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
-                objectType: 'user',
             })
                 .then((res) => {
                     const req = server.requests.pop();
@@ -58,7 +57,6 @@ describe('Authentication', () => {
                     req.requestBody.should.equal(JSON.stringify({
                         handle: 'joe',
                         password: 'pass',
-                        objectType: 'user',
                     }));
                 });
         });
@@ -74,8 +72,7 @@ describe('Authentication', () => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
-                objectType: 'user',
-            }).then((res) => expect(authAdapter.getLocalSession()).to.deep.equal(res.body));
+            }).then((session) => expect(authAdapter.getLocalSession()).to.deep.equal(session));
         });
     });
 });
