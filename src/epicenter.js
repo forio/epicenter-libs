@@ -9,6 +9,7 @@ export {
     LOCK_TYPE,
 } from 'utils/constants';
 export {
+    Router,
     errorManager,
 } from 'utils';
 export {
