@@ -1,5 +1,4 @@
-import config from '~/config';
-import { EpicenterError, NodeStore, SessionStore, CookieStore, cookies, isNode } from 'utils';
+import { EpicenterError, NodeStore, SessionStore, CookieStore, cookies, isNode, config } from 'utils';
 import { BROWSER_STORAGE_TYPE } from 'utils/constants';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 

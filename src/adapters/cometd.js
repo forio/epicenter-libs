@@ -1,7 +1,6 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import config from '~/config';
-import { EpicenterError, identification, isBrowser, errorManager } from 'utils';
+import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils';
 import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
