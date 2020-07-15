@@ -1,5 +1,4 @@
 const version = VERSION;
-export { default as config } from '~/config';
 export { version };
 export {
     BROWSER_STORAGE_TYPE,
@@ -9,8 +8,9 @@ export {
     LOCK_TYPE,
 } from 'utils/constants';
 export {
-    Router,
+    config,
     errorManager,
+    Router,
 } from 'utils';
 export {
     Channel,

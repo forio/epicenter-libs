@@ -1,6 +1,5 @@
 import fetch from 'cross-fetch';
-import config from '~/config';
-import { EpicenterError, Fault, Result, identification, toQueryString, prefix, errorManager } from 'utils';
+import { EpicenterError, Fault, Result, identification, toQueryString, prefix, errorManager, config } from 'utils';
 
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
