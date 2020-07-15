@@ -24,15 +24,15 @@ export async function login(options) {
     return session;
 }
 
-export async function upgrade(options) {
-    const { objectType = 'admin', inert, ...others } = options;
+export async function upgrade(groupKey, options) {
+    const { objectType = 'user', inert, ...others } = options;
     const { accountShortName, projectShortName } = others;
 
     const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .patch('/authentication', {
-            body: { objectType },
+            body: { objectType, groupKey },
             inert,
         }).then(({ body }) => body);
     await logout();

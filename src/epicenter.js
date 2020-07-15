@@ -1,6 +1,5 @@
 /* Main file; defines public interface & load order */
 const version = VERSION;
-export { default as config } from '~/config';
 export { version };
 export {
     SCOPE_BOUNDARY,
@@ -9,7 +8,9 @@ export {
     LOCK_TYPE,
 } from 'utils/constants';
 export {
+    config,
     errorManager,
+    Router,
 } from 'utils';
 export {
     Channel,
