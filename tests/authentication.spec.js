@@ -50,13 +50,13 @@ describe('Authentication', () => {
             await authAdapter.login({
                 handle: 'joe',
                 password: 'pass',
-                objectType: 'user',
             })
                 .then((res) => {
                     const req = server.requests.pop();
                     req.requestBody.should.equal(JSON.stringify({
                         handle: 'joe',
                         password: 'pass',
+                        objectType: 'user',
                     }));
                 });
         });
