@@ -1,8 +1,8 @@
 import { Router } from 'utils';
 import { cometdAdapter } from 'adapters';
 
-export async function forGroup(groupKey, options = {}) {
-    const { accountShortName, projectShortName } = options;
+export async function forGroup(groupKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -10,8 +10,8 @@ export async function forGroup(groupKey, options = {}) {
         .then(({ body }) => body);
 }
 
-export async function forWorld(worldKey, options = {}) {
-    const { accountShortName, projectShortName } = options;
+export async function forWorld(worldKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
