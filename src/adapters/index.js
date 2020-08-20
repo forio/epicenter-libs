@@ -4,6 +4,7 @@ import * as episodeAdapter from './episode';
 import * as presenceAdapter from './presence';
 import * as projectAdapter from './project';
 import * as runAdapter from './run';
+import * as vaultAdapter from './vault';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -15,5 +16,6 @@ export {
     presenceAdapter,
     projectAdapter,
     runAdapter,
+    vaultAdapter,
     Channel,
 };
