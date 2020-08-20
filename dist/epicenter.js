@@ -7064,13 +7064,14 @@ var cometdAdapter = new CometdAdapter();
 /*!*********************************!*\
   !*** ./src/adapters/episode.js ***!
   \*********************************/
-/*! exports provided: create, get */
+/*! exports provided: create, get, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
@@ -7105,6 +7106,21 @@ __webpack_require__.r(__webpack_exports__);
 function create(_x, _x2) {
   return _create.apply(this, arguments);
 }
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.get();
+ * episodeAdapter.get({ episodeKey: 12321 });
+ * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
+ *
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
 
 function _create() {
   _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(name, groupName) {
@@ -7148,6 +7164,21 @@ function _create() {
 function get() {
   return _get.apply(this, arguments);
 }
+/**
+ * Deletes an episode
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * const episodeKey = 1234;
+ * episodeAdapter.remove(episodeKey);
+ *
+ * @param {String}  episodeKey          Something meaningful about optionals
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
 
 function _get() {
   _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
@@ -7187,13 +7218,48 @@ function _get() {
   return _get.apply(this, arguments);
 }
 
+function remove(_x3) {
+  return _remove.apply(this, arguments);
+}
+
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(episodeKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args3 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/episode/".concat(episodeKey)).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _remove.apply(this, arguments);
+}
+
 /***/ }),
 
 /***/ "./src/adapters/index.js":
 /*!*******************************!*\
   !*** ./src/adapters/index.js ***!
   \*******************************/
-/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, Channel */
+/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, Channel */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7210,11 +7276,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return _project__WEBPACK_IMPORTED_MODULE_4__; });
 /* harmony import */ var _run__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./run */ "./src/adapters/run.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return _run__WEBPACK_IMPORTED_MODULE_5__; });
-/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+/* harmony import */ var _vault__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./vault */ "./src/adapters/vault.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return _vault__WEBPACK_IMPORTED_MODULE_6__; });
+/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
-/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+
 
 
 
@@ -8471,6 +8540,233 @@ function _getWithStrategy() {
     }, _callee18);
   }));
   return _getWithStrategy.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/vault.js":
+/*!*******************************!*\
+  !*** ./src/adapters/vault.js ***!
+  \*******************************/
+/*! exports provided: update, get, remove, create */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+/**
+ * Episode API adapters -- use this to create, update, delete, and manage your episodes
+ * @namespace vaultAdapter
+ */
+
+/**
+ * Create an episode.
+ *
+ * TODO -- add meaningful text here
+ * @memberof vaultAdapter
+ * @example
+ *
+ * const { vaultAdapter } = epicenter;
+ * vaultAdapter.update
+ *
+ * @param {string}  vaultKey            Episode name
+ * @param {Array}   items               Group to make the episode under
+ * @param {Array}   mutationKey         Group to make the episode under
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function update(_x, _x2, _x3) {
+  return _update.apply(this, arguments);
+}
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(vaultKey, items, mutationKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 3 && _args[3] !== undefined ? _args[3] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              MutationKey: mutationKey
+            }).patch("/vault/".concat(vaultKey), {
+              body: {
+                items: items
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            return _context.abrupt("return", _context.sent);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _update.apply(this, arguments);
+}
+
+function get(_x4, _x5, _x6) {
+  return _get.apply(this, arguments);
+}
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(collection, name, scope) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        userKey,
+        _args2 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 3 && _args2[3] !== undefined ? _args2[3] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            userKey = optionals.userKey ? "/".concat(optionals.userKey) : '';
+            _context2.next = 6;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/vault".concat(scopeBoundary, "/").concat(scopeKey).concat(userKey, "/").concat(collection, "/").concat(name)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 6:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function remove(_x7, _x8) {
+  return _remove.apply(this, arguments);
+}
+
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(vaultKey, mutationKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args3 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              MutationKey: mutationKey
+            })["delete"]("/vault/".concat(vaultKey)).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _remove.apply(this, arguments);
+}
+
+function create(_x9, _x10, _x11, _x12) {
+  return _create.apply(this, arguments);
+}
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(collection, name, scope, items) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        readLock,
+        writeLock,
+        WORLD,
+        PARTICIPANT,
+        USER,
+        defaultLock,
+        userKey,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 4 && _args4[4] !== undefined ? _args4[4] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock;
+            WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].WORLD;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].USER;
+            defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
+            userKey = scopeBoundary === WORLD ? undefined : utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session.userKey;
+            _context4.next = 9;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/vault/".concat(collection, "/").concat(name), {
+              body: {
+                scope: {
+                  scopeBoundary: scopeBoundary,
+                  scopeKey: scopeKey,
+                  userKey: userKey
+                },
+                permit: {
+                  readLock: readLock || defaultLock,
+                  writeLock: writeLock || defaultLock
+                },
+                items: items
+              }
+            }).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 9:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 10:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _create.apply(this, arguments);
 }
 
 /***/ }),
