@@ -16,6 +16,7 @@ export {
     Channel,
     accountAdapter,
     authAdapter,
+    episodeAdapter,
     presenceAdapter,
     projectAdapter,
     runAdapter,

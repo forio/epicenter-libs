@@ -371,8 +371,8 @@ async function serial(runKey, operations, optionals) {
     }));
 
     //Perform all operations, sequentially
-    return normalizedOps.reduce((promiseChain, { name, params }) => {
-        return promiseChain.then(() => operation(runKey, name, params, optionals));
+    return normalizedOps.reduce((promise, { name, params }) => {
+        return promise.then(() => operation(runKey, name, params, optionals));
     }, Promise.resolve());
 }
 

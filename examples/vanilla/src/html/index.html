@@ -8,7 +8,7 @@
 
 <body>
     <main id="main">
-        <h1>Decisions</h1>
+        <h2>Decisions</h2>
         <p>Hello, <span id="display-name"></span></p>
         <p class="student">Send your facilitator a message:</p>
         <p class="facilitator">See messages left by your students:</p>
@@ -23,11 +23,24 @@
             />
             <button id="submit">Send</button>
         </form>
-        <div id="buttons">
+        <div class="buttons">
             <button id="presence">Presence</button>
             <button id="logout">Logout</button>
         </div>
         <ul id="users"></ul>
+        <hr></hr>
+        <div class="facilitator">
+            <h2>Episodes</h2>
+            <input
+                id="episode-name"
+                type="text"
+            />
+            <div class="buttons">
+                <button id="episode-save">Create new episode</button>
+                <button id="episode-load">Get episodes</button>
+            </div>
+            <ul id="episode-list"></ul>
+        </div>
     </main>
 </body>
 </html>
