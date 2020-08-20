@@ -20,7 +20,7 @@ const handleUnknown = () => {
 
 const handleByLoginMethod = (error) => {
     const { session } = identification;
-    const loginType = access(session, ['loginMethod', 'objectType']);
+    const loginType = session?.loginMethod?.objectType;
     switch (loginType) {
         case 'sso': return handleSSO(error);
         case 'none':return handleUnknown(error);
