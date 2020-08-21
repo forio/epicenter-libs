@@ -41,7 +41,7 @@ export async function get(collection, name, scope, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/vault${scopeBoundary}/${scopeKey}${userKey}/${collection}/${name}`)
+        .get(`/vault/${scopeBoundary}/${scopeKey}${userKey}/${collection}/${name}`)
         .then(({ body }) => body);
 }
 
