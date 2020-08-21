@@ -20,4 +20,5 @@ export {
     presenceAdapter,
     projectAdapter,
     runAdapter,
+    vaultAdapter,
 } from 'adapters';

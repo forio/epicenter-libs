@@ -29,14 +29,13 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        accountShortName, projectShortName, readLock, writeLock,
+        accountShortName, projectShortName, readLock, writeLock, userKey,
         ephemeral, trackingKey, modelContext, executionContext,
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = LOCK_TYPE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
-    const userKey = scopeBoundary === WORLD ? undefined : identification.session.userKey;
 
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -46,7 +45,9 @@ export async function create(model, scope, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey,
+                    userKey: scopeBoundary === WORLD ?
+                        undefined :
+                        userKey ?? identification.session.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
