@@ -57,11 +57,10 @@ export async function remove(vaultKey, mutationKey, optionals = {}) {
 
 export async function create(collection, name, scope, items, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
-    const { accountShortName, projectShortName, readLock, writeLock } = optionals;
+    const { accountShortName, projectShortName, readLock, writeLock, userKey } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = LOCK_TYPE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
-    const userKey = scopeBoundary === WORLD ? undefined : identification.session.userKey;
 
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -71,7 +70,9 @@ export async function create(collection, name, scope, items, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey,
+                    userKey: scopeBoundary === WORLD ?
+                        undefined :
+                        userKey ?? identification.session.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,

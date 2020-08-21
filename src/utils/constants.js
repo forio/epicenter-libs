@@ -169,7 +169,7 @@ export const LOCK_TYPE = {
      */
     REVIEWER: 'REVIEWER',
     /**
-     * Users -- psuedonymKey required in scope
+     * Users -- psuedonymKey (userKey) required in scope
      * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}
