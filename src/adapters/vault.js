@@ -42,7 +42,10 @@ export async function get(collection, name, scope, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/vault/${scopeBoundary}/${scopeKey}${userKey}/${collection}/${name}`)
-        .then(({ body }) => body);
+        .catch((error) => {
+            if (error.status === 404) return { body: undefined };
+            return Promise.reject(error);
+        }).then(({ body }) => body);
 }
 
 export async function remove(vaultKey, mutationKey, optionals = {}) {
