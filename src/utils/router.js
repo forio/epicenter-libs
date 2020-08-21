@@ -114,11 +114,16 @@ export default class Router {
     }
 
     set searchParams(query) {
-        /* 'query' should be either an array, or string. Objects will be coerced into arrays */
+        /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
         if (typeof query === 'object' && query.constructor === Object) {
             query = Object.entries(query).reduce((arr, [key, value]) => {
                 if (Array.isArray(value)) {
+                    /* Special case for arrayed param values: use duplicated params here */
                     return [...arr, ...value.map((v) => [key, v])];
+                }
+                if (value === undefined || value === null) {
+                    /* Skip nullish values */
+                    return arr;
                 }
                 arr.push([key, value]);
                 return arr;
