@@ -73,9 +73,7 @@ export async function create(collection, name, scope, items, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey: scopeBoundary === WORLD ?
-                        undefined :
-                        userKey ?? identification.session.userKey,
+                    userKey: scopeBoundary === WORLD ? undefined : userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
