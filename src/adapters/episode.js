@@ -41,6 +41,29 @@ export async function create(name, groupName, optionals = {}) {
  * @example
  *
  * const { episodeAdapter } = epicenter;
+ * episodeAdapter.get('123124141241);
+ *
+ * @param {String}  episodeKey          The episode key
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+export async function get(episodeKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/episode/${episodeKey}`)
+        .then(({ body }) => body);
+}
+
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
  * episodeAdapter.get();
  * episodeAdapter.get({ episodeKey: 12321 });
  * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
@@ -48,15 +71,69 @@ export async function create(name, groupName, optionals = {}) {
  * @param {Object}  [optionals={}]      Something meaningful about optionals
  * @returns {Object}                    Something meaningful about returns
  */
-export async function get(optionals = {}) {
-    const { accountShortName, projectShortName, episodeKey, groupName, episodeName } = optionals;
-    let uriComponent = '';
-    if (episodeKey) uriComponent = `/${episodeKey}`;
-    if (groupName && episodeName) uriComponent = `/with/${groupName}/${episodeName}`;
+export async function query(optionals = {}) {
+    const {
+        accountShortName, projectShortName,
+        filter = [], sort = [], first = 0, max = 100,
+    } = optionals;
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/episode${uriComponent}`)
+        .withSearchParams({
+            filter: filter.join(';'),
+            sort: sort.join(';'),
+            first, max,
+        })
+        .get('/episode/search')
+        .then(({ body }) => body);
+}
+
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.withGroup('1231241342345');
+ *
+ * @param {String}  groupKey            The group key
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+export async function withGroup(groupKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/episode/in/${groupKey}`)
+        .then(({ body }) => body);
+}
+
+/**
+ * Gets episode based on group name and episode name
+ * Unsure where this would see use...
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.withName('myGroupName', 'myEpisodeName');
+ *
+ * @param {String}  groupName           The group name
+ * @param {String}  episodeName         The episode name
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+export async function withName(groupName, episodeName, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/episode/with/${groupName}/${episodeName}`)
         .then(({ body }) => body);
 }
 
