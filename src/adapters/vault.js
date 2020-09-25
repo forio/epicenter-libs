@@ -19,12 +19,11 @@ import { LOCK_TYPE, SCOPE_BOUNDARY } from 'utils/constants';
  *
  * @param {string}  vaultKey            Episode name
  * @param {Array}   items               Group to make the episode under
- * @param {Array}   mutationKey         Group to make the episode under
  * @param {Object}  [optionals={}]      Something meaningful about optionals
  * @returns {Object}                    Something meaningful about returns
  */
-export async function update(vaultKey, items, mutationKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function update(vaultKey, items, optionals = {}) {
+    const { accountShortName, projectShortName, mutationKey } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -34,22 +33,22 @@ export async function update(vaultKey, items, mutationKey, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function get(collection, name, scope, optionals = {}) {
+export async function get(collection, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName } = optionals;
     const userKey = optionals.userKey ? `/${optionals.userKey}` : '';
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/vault/${scopeBoundary}/${scopeKey}${userKey}/${collection}/${name}`)
+        .get(`/vault/${scopeBoundary}/${scopeKey}${userKey}/${collection}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
             return Promise.reject(error);
         }).then(({ body }) => body);
 }
 
-export async function remove(vaultKey, mutationKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function remove(vaultKey, optionals = {}) {
+    const { accountShortName, projectShortName, mutationKey } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -58,7 +57,7 @@ export async function remove(vaultKey, mutationKey, optionals = {}) {
         .then(({ body }) => body);
 }
 
-export async function create(collection, name, scope, items, optionals = {}) {
+export async function create(collection, scope, items, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName, readLock, writeLock, userKey } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
@@ -68,7 +67,7 @@ export async function create(collection, name, scope, items, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/vault/${collection}/${name}`, {
+        .post(`/vault/${collection}`, {
             body: {
                 scope: {
                     scopeBoundary,

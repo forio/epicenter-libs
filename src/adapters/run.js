@@ -191,9 +191,7 @@ export async function query(model, scope, optionals = {}) {
             ...(filter.attributes || []).map((statement) => prefix('run.', statement)),
         ].join(';'),
         sort: sort.join(';'),
-        first,
-        max,
-        timeout,
+        first, max, timeout,
         projections: [
             ...(projections.variables || []).map((name) => prefix('var.', name)),
             ...(projections.metadata || []).map((name) => prefix('meta.', name)),
