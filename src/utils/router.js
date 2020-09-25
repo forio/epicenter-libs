@@ -11,8 +11,8 @@ function paginate(json, url, options) {
 
     const next = async function() {
         const searchParams = new URLSearchParams(url.search);
-        const first = page.first_result + page.max_results;
-        if (page.allValues.length >= json.total_results) {
+        const first = page.firstResult + page.maxResults;
+        if (page.allValues.length >= json.totalResults) {
             page.done = true;
             return page;
         }
