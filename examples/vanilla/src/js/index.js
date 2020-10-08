@@ -1,5 +1,6 @@
 import {
-    config, authAdapter, episodeAdapter, presenceAdapter,
+    config,
+    authAdapter, episodeAdapter, presenceAdapter, runAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,
 } from 'epicenter';
 import '../css/common.css';
@@ -19,6 +20,7 @@ const episodeNameEl = document.getElementById('episode-name');
 const episodeListEl = document.getElementById('episode-list');
 const episodeSaveEl = document.getElementById('episode-save');
 const episodeLoadEl = document.getElementById('episode-load');
+const runQueryEl = document.getElementById('run-query');
 
 const session = authAdapter.getLocalSession();
 
@@ -70,6 +72,18 @@ const initFacilitator = () => {
                 item.innerText = `${episode.name}${episode.draft ? ' (Draft)' : ''}`;
                 episodeListEl.append(item);
             });
+        });
+    };
+    runQueryEl.onclick = (e) => {
+        runAdapter.query('model.xlsx', {
+            scopeBoundary: SCOPE_BOUNDARY.GROUP,
+            scopeKey: session.groupKey,
+        }, {
+            filter: { attributes: ['hidden!=true'] },
+            sort: ['-run.created'],
+            projections: { variables: ['Step', 'unit_sales', 'prices', 'profits', 'include_price_protection'] },
+        }).then((page) => {
+            console.log('%c some page', 'font-size: 20px; color: #FB15B9FF;', page);
         });
     };
 };

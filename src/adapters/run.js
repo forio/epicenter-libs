@@ -203,7 +203,7 @@ export async function query(model, scope, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, { paginate: true })
+        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, { paginated: true })
         .then(({ body }) => body);
 }
 
