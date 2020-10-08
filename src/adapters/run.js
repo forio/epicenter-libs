@@ -16,8 +16,8 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  *
  * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
  * runAdapter.create('model.py', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP
- *      scopeKey: 000001713a246b0b34b5b5d274c057a5b2a7
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
  * @param {string}  model               Name of your model file
  * @param {Object}  scope               Scope associated with your run
