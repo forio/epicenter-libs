@@ -1,3 +1,10816 @@
 /*! Epicenter v3.1.0-alpha */
-!function(t,e){"object"==typeof exports&&"object"==typeof module?module.exports=e():"function"==typeof define&&define.amd?define([],e):"object"==typeof exports?exports.epicenter=e():t.epicenter=e()}(this,(function(){return function(t){var e={};function n(r){if(e[r])return e[r].exports;var o=e[r]={i:r,l:!1,exports:{}};return t[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=t,n.c=e,n.d=function(t,e,r){n.o(t,e)||Object.defineProperty(t,e,{enumerable:!0,get:r})},n.r=function(t){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(t,"__esModule",{value:!0})},n.t=function(t,e){if(1&e&&(t=n(t)),8&e)return t;if(4&e&&"object"==typeof t&&t&&t.__esModule)return t;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:t}),2&e&&"string"!=typeof t)for(var o in t)n.d(r,o,function(e){return t[e]}.bind(null,o));return r},n.n=function(t){var e=t&&t.__esModule?function(){return t.default}:function(){return t};return n.d(e,"a",e),e},n.o=function(t,e){return Object.prototype.hasOwnProperty.call(t,e)},n.p="",n(n.s=21)}([function(t,e,n){t.exports=n(31)},function(t,e){function n(t,e,n,r,o,i,a){try{var c=t[i](a),s=c.value}catch(t){return void n(t)}c.done?e(s):Promise.resolve(s).then(r,o)}t.exports=function(t){return function(){var e=this,r=arguments;return new Promise((function(o,i){var a=t.apply(e,r);function c(t){n(a,o,i,c,s,"next",t)}function s(t){n(a,o,i,c,s,"throw",t)}c(void 0)}))}}},function(t,e){t.exports=function(t,e,n){return e in t?Object.defineProperty(t,e,{value:n,enumerable:!0,configurable:!0,writable:!0}):t[e]=n,t}},function(t,e){t.exports=function(t,e){if(!(t instanceof e))throw new TypeError("Cannot call a class as a function")}},function(t,e){function n(e){return t.exports=n=Object.setPrototypeOf?Object.getPrototypeOf:function(t){return t.__proto__||Object.getPrototypeOf(t)},n(e)}t.exports=n},function(t,e){function n(t,e){for(var n=0;n<e.length;n++){var r=e[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(t,r.key,r)}}t.exports=function(t,e,r){return e&&n(t.prototype,e),r&&n(t,r),t}},function(t,e,n){var r=n(32),o=n(33),i=n(15),a=n(34);t.exports=function(t){return r(t)||o(t)||i(t)||a()}},function(t,e,n){var r=n(14);t.exports=function(t,e){if("function"!=typeof e&&null!==e)throw new TypeError("Super expression must either be null or a function");t.prototype=Object.create(e&&e.prototype,{constructor:{value:t,writable:!0,configurable:!0}}),e&&r(t,e)}},function(t,e,n){var r=n(13),o=n(23);t.exports=function(t,e){return!e||"object"!==r(e)&&"function"!=typeof e?o(t):e}},function(t,e,n){var r=n(28),o=n(29),i=n(15),a=n(30);t.exports=function(t,e){return r(t)||o(t,e)||i(t,e)||a()}},function(t,e,n){var r=n(22);function o(e,n,i){return"undefined"!=typeof Reflect&&Reflect.get?t.exports=o=Reflect.get:t.exports=o=function(t,e,n){var o=r(t,e);if(o){var i=Object.getOwnPropertyDescriptor(o,e);return i.get?i.get.call(n):i.value}},o(e,n,i||e)}t.exports=o},function(t,e,n){var r=n(4),o=n(14),i=n(24),a=n(25);function c(e){var n="function"==typeof Map?new Map:void 0;return t.exports=c=function(t){if(null===t||!i(t))return t;if("function"!=typeof t)throw new TypeError("Super expression must either be null or a function");if(void 0!==n){if(n.has(t))return n.get(t);n.set(t,e)}function e(){return a(t,arguments,r(this).constructor)}return e.prototype=Object.create(t.prototype,{constructor:{value:e,enumerable:!1,writable:!0,configurable:!0}}),o(e,t)},c(e)}t.exports=c},function(t,e,n){var r=n(27);t.exports=function(t,e){if(null==t)return{};var n,o,i=r(t,e);if(Object.getOwnPropertySymbols){var a=Object.getOwnPropertySymbols(t);for(o=0;o<a.length;o++)n=a[o],e.indexOf(n)>=0||Object.prototype.propertyIsEnumerable.call(t,n)&&(i[n]=t[n])}return i}},function(t,e){function n(e){return"function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?t.exports=n=function(t){return typeof t}:t.exports=n=function(t){return t&&"function"==typeof Symbol&&t.constructor===Symbol&&t!==Symbol.prototype?"symbol":typeof t},n(e)}t.exports=n},function(t,e){function n(e,r){return t.exports=n=Object.setPrototypeOf||function(t,e){return t.__proto__=e,t},n(e,r)}t.exports=n},function(t,e,n){var r=n(16);t.exports=function(t,e){if(t){if("string"==typeof t)return r(t,e);var n=Object.prototype.toString.call(t).slice(8,-1);return"Object"===n&&t.constructor&&(n=t.constructor.name),"Map"===n||"Set"===n?Array.from(n):"Arguments"===n||/^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)?r(t,e):void 0}}},function(t,e){t.exports=function(t,e){(null==e||e>t.length)&&(e=t.length);for(var n=0,r=new Array(e);n<e;n++)r[n]=t[n];return r}},function(t,e,n){t.exports=function(){var t=function(){var t=0,e={};this.register=function(n){var r=++t;return e[r]=n,r},this.unregister=function(t){var n=e[t];return delete e[t],n},this.setTimeout=function(t,e){return window.setTimeout(t,e)},this.clearTimeout=function(t){window.clearTimeout(t)}};function e(){var t={};self.onmessage=function(e){var n=e.data,r=t[n.id];switch(n.type){case"setTimeout":t[n.id]=self.setTimeout((function(){delete t[n.id],self.postMessage({id:n.id})}),n.delay);break;case"clearTimeout":delete t[n.id],r&&self.clearTimeout(r);break;default:throw"Unknown command "+n.type}}}var n={isString:function(t){return null!=t&&("string"==typeof t||t instanceof String)},isArray:function(t){return null!=t&&t instanceof Array},inArray:function(t,e){for(var n=0;n<e.length;++n)if(t===e[n])return n;return-1}},r=function(){var t=[],e={};this.getTransportTypes=function(){return t.slice(0)},this.findTransportTypes=function(n,r,o){for(var i=[],a=0;a<t.length;++a){var c=t[a];!0===e[c].accept(n,r,o)&&i.push(c)}return i},this.negotiateTransport=function(n,r,o,i){for(var a=0;a<t.length;++a)for(var c=t[a],s=0;s<n.length;++s)if(c===n[s]){var u=e[c];if(!0===u.accept(r,o,i))return u}return null},this.add=function(n,r,o){for(var i=!1,a=0;a<t.length;++a)if(t[a]===n){i=!0;break}return i||("number"!=typeof o?t.push(n):t.splice(o,0,n),e[n]=r),!i},this.find=function(n){for(var r=0;r<t.length;++r)if(t[r]===n)return e[n];return null},this.remove=function(n){for(var r=0;r<t.length;++r)if(t[r]===n){t.splice(r,1);var o=e[n];return delete e[n],o}return null},this.clear=function(){t=[],e={}},this.reset=function(n){for(var r=0;r<t.length;++r)e[t[r]].reset(n)}},o=function(){var t,e,r;this.registered=function(n,r){t=n,e=r},this.unregistered=function(){t=null,e=null},this._debug=function(){e._debug.apply(e,arguments)},this._mixin=function(){return e._mixin.apply(e,arguments)},this.getConfiguration=function(){return e.getConfiguration()},this.getAdvice=function(){return e.getAdvice()},this.setTimeout=function(t,n){return e.setTimeout(t,n)},this.clearTimeout=function(t){e.clearTimeout(t)},this.convertToMessages=function(t){if(n.isString(t))try{return JSON.parse(t)}catch(e){throw this._debug("Could not convert to JSON the following string",'"'+t+'"'),e}if(n.isArray(t))return t;if(null==t)return[];if(t instanceof Object)return[t];throw"Conversion Error "+t+", typeof "+typeof t},this.accept=function(t,e,n){throw"Abstract"},this.getType=function(){return t},this.getURL=function(){return r},this.setURL=function(t){r=t},this.send=function(t,e){throw"Abstract"},this.reset=function(e){this._debug("Transport",t,"reset",e?"initial":"retry")},this.abort=function(){this._debug("Transport",t,"aborted")},this.toString=function(){return this.getType()}};o.derive=function(t){function e(){}return e.prototype=t,new e};var i=function(){var t=new o,e=o.derive(t),r=0,i=null,a=[],c=[];function s(t){for(;c.length>0;){var e=c[0],n=e[0],r=e[1];if(n.url!==t.url||n.sync!==t.sync)break;c.shift(),t.messages=t.messages.concat(n.messages),this._debug("Coalesced",n.messages.length,"messages from request",r.id)}}function u(t,e){if(this.transportSend(t,e),e.expired=!1,!t.sync){var n=this.getConfiguration().maxNetworkDelay,r=n;!0===e.metaConnect&&(r+=this.getAdvice().timeout),this._debug("Transport",this.getType(),"waiting at most",r,"ms for the response, maxNetworkDelay",n);var o=this;e.timeout=this.setTimeout((function(){e.expired=!0;var n="Request "+e.id+" of transport "+o.getType()+" exceeded "+r+" ms max network delay",i={reason:n},a=e.xhr;i.httpCode=o.xhrStatus(a),o.abortXHR(a),o._debug(n),o.complete(e,!1,e.metaConnect),t.onFailure(a,t.messages,i)}),r)}}function h(t){var e=++r,n={id:e,metaConnect:!1,envelope:t};a.length<this.getConfiguration().maxConnections-1?(a.push(n),u.call(this,t,n)):(this._debug("Transport",this.getType(),"queueing request",e,"envelope",t),c.push([t,n]))}function f(t){var e=t.id;if(this._debug("Transport",this.getType(),"/meta/connect complete, request",e),null!==i&&i.id!==e)throw"/meta/connect request mismatch, completing request "+e;i=null}function l(t,e){var r=n.inArray(t,a);if(r>=0&&a.splice(r,1),c.length>0){var o=c.shift(),i=o[0],u=o[1];if(this._debug("Transport dequeued request",u.id),e)this.getConfiguration().autoBatch&&s.call(this,i),h.call(this,i),this._debug("Transport completed request",t.id,i);else{var f=this;this.setTimeout((function(){f.complete(u,!1,u.metaConnect);var t={reason:"Previous request failed"},e=u.xhr;t.httpCode=f.xhrStatus(e),i.onFailure(e,i.messages,t)}),0)}}}function p(t){if(null!==i)throw"Concurrent /meta/connect requests not allowed, request id="+i.id+" not yet completed";var e=++r;this._debug("Transport",this.getType(),"/meta/connect send, request",e,"envelope",t);var n={id:e,metaConnect:!0,envelope:t};u.call(this,t,n),i=n}return e.complete=function(t,e,n){n?f.call(this,t):l.call(this,t,e)},e.transportSend=function(t,e){throw"Abstract"},e.transportSuccess=function(t,e,n){e.expired||(this.clearTimeout(e.timeout),this.complete(e,!0,e.metaConnect),n&&n.length>0?t.onSuccess(n):t.onFailure(e.xhr,t.messages,{httpCode:204}))},e.transportFailure=function(t,e,n){e.expired||(this.clearTimeout(e.timeout),this.complete(e,!1,e.metaConnect),t.onFailure(e.xhr,t.messages,n))},e.send=function(t,e){e?p.call(this,t):h.call(this,t)},e.abort=function(){t.abort();for(var e=0;e<a.length;++e){var n=a[e];n&&(this._debug("Aborting request",n),this.abortXHR(n.xhr)||this.transportFailure(n.envelope,n,{reason:"abort"}))}var r=i;r&&(this._debug("Aborting /meta/connect request",r),this.abortXHR(r.xhr)||this.transportFailure(r.envelope,r,{reason:"abort"})),this.reset(!0)},e.reset=function(e){t.reset(e),i=null,a=[],c=[]},e.abortXHR=function(t){if(t)try{var e=t.readyState;return t.abort(),e!==window.XMLHttpRequest.UNSENT}catch(t){this._debug(t)}return!1},e.xhrStatus=function(t){if(t)try{return t.status}catch(t){this._debug(t)}return-1},e},a=function(){var t=new i,e=o.derive(t),n=!0;return e.accept=function(t,e,r){return n||!e},e.newXMLHttpRequest=function(){return new window.XMLHttpRequest},e.xhrSend=function(t){var n=e.newXMLHttpRequest();!function(t){try{t.context=e.context}catch(t){this._debug("Could not copy transport context into XHR",t)}}(n),n.withCredentials=!0,n.open("POST",t.url,!0!==t.sync);var r=t.headers;if(r)for(var o in r)r.hasOwnProperty(o)&&n.setRequestHeader(o,r[o]);return n.setRequestHeader("Content-Type","application/json;charset=UTF-8"),n.onload=function(){200===n.status?t.onSuccess(n.responseText):t.onError(n.statusText)},n.onabort=n.onerror=function(){t.onError(n.statusText)},n.send(t.body),n},e.transportSend=function(t,e){this._debug("Transport",this.getType(),"sending request",e.id,"envelope",t);var r=this;try{var o=!0;e.xhr=this.xhrSend({transport:this,url:t.url,sync:t.sync,headers:this.getConfiguration().requestHeaders,body:JSON.stringify(t.messages),onSuccess:function(o){r._debug("Transport",r.getType(),"received response",o);var i=!1;try{var a=r.convertToMessages(o);0===a.length?(n=!1,r.transportFailure(t,e,{httpCode:204})):(i=!0,r.transportSuccess(t,e,a))}catch(o){if(r._debug(o),!i){n=!1;var c={exception:o};c.httpCode=r.xhrStatus(e.xhr),r.transportFailure(t,e,c)}}},onError:function(i,a){r._debug("Transport",r.getType(),"received error",i,a),n=!1;var c={reason:i,exception:a};c.httpCode=r.xhrStatus(e.xhr),o?r.setTimeout((function(){r.transportFailure(t,e,c)}),0):r.transportFailure(t,e,c)}}),o=!1}catch(o){n=!1,this.setTimeout((function(){r.transportFailure(t,e,{exception:o})}),0)}},e.reset=function(e){t.reset(e),n=!0},e},c=function(){var t=new i,e=o.derive(t),n=0;function r(t,e,n){var r=this;return function(){r.transportFailure(t,e,"error",n)}}return e.accept=function(t,e,n){return!0},e.jsonpSend=function(t){var e=document.getElementsByTagName("head")[0],r=document.createElement("script"),o="_cometd_jsonp_"+n++;window[o]=function(n){e.removeChild(r),delete window[o],t.onSuccess(n)};var i=t.url;i+=i.indexOf("?")<0?"?":"&",i+="jsonp="+o,i+="&message="+encodeURIComponent(t.body),r.src=i,r.async=!0!==t.sync,r.type="application/javascript",r.onerror=function(e){t.onError("jsonp "+e.type)},e.appendChild(r)},e.transportSend=function(t,e){for(var n=this,o=0,i=t.messages.length,a=[];i>0;){var c=JSON.stringify(t.messages.slice(o,o+i)),s=t.url.length+encodeURI(c).length,u=this.getConfiguration().maxURILength;if(s>u){if(1===i){var h="Bayeux message too big ("+s+" bytes, max is "+u+") for transport "+this.getType();return void this.setTimeout(r.call(this,t,e,h),0)}--i}else a.push(i),o+=i,i=t.messages.length-o}var f=t;if(a.length>1){var l=0,p=a[0];this._debug("Transport",this.getType(),"split",t.messages.length,"messages into",a.join(" + ")),(f=this._mixin(!1,{},t)).messages=t.messages.slice(l,p),f.onSuccess=t.onSuccess,f.onFailure=t.onFailure;for(var d=1;d<a.length;++d){var m=this._mixin(!1,{},t);l=p,p+=a[d],m.messages=t.messages.slice(l,p),m.onSuccess=t.onSuccess,m.onFailure=t.onFailure,this.send(m,e.metaConnect)}}this._debug("Transport",this.getType(),"sending request",e.id,"envelope",f);try{var y=!0;this.jsonpSend({transport:this,url:f.url,sync:f.sync,headers:this.getConfiguration().requestHeaders,body:JSON.stringify(f.messages),onSuccess:function(t){var r=!1;try{var o=n.convertToMessages(t);0===o.length?n.transportFailure(f,e,{httpCode:204}):(r=!0,n.transportSuccess(f,e,o))}catch(t){n._debug(t),r||n.transportFailure(f,e,{exception:t})}},onError:function(t,r){var o={reason:t,exception:r};y?n.setTimeout((function(){n.transportFailure(f,e,o)}),0):n.transportFailure(f,e,o)}}),y=!1}catch(t){this.setTimeout((function(){n.transportFailure(f,e,{exception:t})}),0)}},e},s=function(){var t,e=new o,r=o.derive(e),i=!0,a=!1,c=!0,s=null,u=null,h=!1,f=null;function l(t,e){t&&(this.webSocketClose(t,e.code,e.reason),this.onClose(t,e))}function p(t){return t===u||t===s}function d(t,e,n){for(var r=[],o=0;o<e.messages.length;++o){var i=e.messages[o];i.id&&r.push(i.id)}t.envelopes[r.join(",")]=[e,n],this._debug("Transport",this.getType(),"stored envelope, envelopes",t.envelopes)}function m(e){if(!u){var n=t.getURL().replace(/^http/,"ws");this._debug("Transport",this.getType(),"connecting to URL",n);try{var r=t.getConfiguration().protocol;e.webSocket=r?new window.WebSocket(n,r):new window.WebSocket(n),u=e}catch(t){throw i=!1,this._debug("Exception while creating WebSocket object",t),t}c=!1!==t.getConfiguration().stickyReconnect;var o=this,h=t.getConfiguration().connectTimeout;h>0&&(e.connectTimer=this.setTimeout((function(){t._debug("Transport",o.getType(),"timed out while connecting to URL",n,":",h,"ms"),l.call(o,e,{code:1e3,reason:"Connect Timeout"})}),h));var f=function(n){n=n||{code:1e3},t._debug("WebSocket onclose",e,n,"connecting",u,"current",s),e.connectTimer&&o.clearTimeout(e.connectTimer),o.onClose(e,n)};e.webSocket.onopen=function(){t._debug("WebSocket onopen",e),e.connectTimer&&o.clearTimeout(e.connectTimer),p(e)?(u=null,s=e,a=!0,o.onOpen(e)):(t._warn("Closing extra WebSocket connection",this,"active connection",s),l.call(o,e,{code:1e3,reason:"Extra Connection"}))},e.webSocket.onclose=f,e.webSocket.onerror=function(){f({code:1e3,reason:"Error"})},e.webSocket.onmessage=function(n){t._debug("WebSocket onmessage",n,e),o.onMessage(e,n)},this._debug("Transport",this.getType(),"configured callbacks on",e)}}function y(e,n,r){var o=JSON.stringify(n.messages);e.webSocket.send(o),this._debug("Transport",this.getType(),"sent",n,"/meta/connect =",r);var i=this.getConfiguration().maxNetworkDelay,a=i;r&&(a+=this.getAdvice().timeout,h=!0);for(var c=this,s=[],u=0;u<n.messages.length;++u)!function(){var r=n.messages[u];r.id&&(s.push(r.id),e.timeouts[r.id]=c.setTimeout((function(){t._debug("Transport",c.getType(),"timing out message",r.id,"after",a,"on",e),l.call(c,e,{code:1e3,reason:"Message Timeout"})}),a))}();this._debug("Transport",this.getType(),"waiting at most",a,"ms for messages",s,"maxNetworkDelay",i,", timeouts:",e.timeouts)}function g(t,e,n){try{null===t?(t=u||{envelopes:{},timeouts:{}},d.call(this,t,e,n),m.call(this,t)):(d.call(this,t,e,n),y.call(this,t,e,n))}catch(e){var r=this;this.setTimeout((function(){l.call(r,t,{code:1e3,reason:"Exception",exception:e})}),0)}}return r.reset=function(t){e.reset(t),i=!0,t&&(a=!1),c=!0,s=null,u=null,h=!1},r._notifySuccess=function(t,e){t.call(this,e)},r._notifyFailure=function(t,e,n,r){t.call(this,e,n,r)},r.onOpen=function(t){var e=t.envelopes;for(var n in this._debug("Transport",this.getType(),"opened",t,"pending messages",e),e)if(e.hasOwnProperty(n)){var r=e[n],o=r[0],i=r[1];f=o.onSuccess,y.call(this,t,o,i)}},r.onMessage=function(t,e){this._debug("Transport",this.getType(),"received websocket message",e,t);for(var r=!1,o=this.convertToMessages(e.data),i=[],a=0;a<o.length;++a){var c=o[a];if((/^\/meta\//.test(c.channel)||void 0===c.data)&&c.id){i.push(c.id);var s=t.timeouts[c.id];s&&(this.clearTimeout(s),delete t.timeouts[c.id],this._debug("Transport",this.getType(),"removed timeout for message",c.id,", timeouts",t.timeouts))}"/meta/connect"===c.channel&&(h=!1),"/meta/disconnect"!==c.channel||h||(r=!0)}for(var u=!1,l=t.envelopes,p=0;p<i.length;++p){var d=i[p];for(var m in l)if(l.hasOwnProperty(m)){var y=m.split(","),g=n.inArray(d,y);if(g>=0){u=!0,y.splice(g,1);var v=l[m][0],b=l[m][1];delete l[m],y.length>0&&(l[y.join(",")]=[v,b]);break}}}u&&this._debug("Transport",this.getType(),"removed envelope, envelopes",l),this._notifySuccess(f,o),r&&this.webSocketClose(t,1e3,"Disconnect")},r.onClose=function(t,e){this._debug("Transport",this.getType(),"closed",t,e),p(t)&&(i=c&&a,u=null,s=null);var n=t.timeouts;for(var r in t.timeouts={},n)n.hasOwnProperty(r)&&this.clearTimeout(n[r]);var o=t.envelopes;for(var f in t.envelopes={},o)if(o.hasOwnProperty(f)){var l=o[f][0];o[f][1]&&(h=!1);var d={websocketCode:e.code,reason:e.reason};e.exception&&(d.exception=e.exception),this._notifyFailure(l.onFailure,t,l.messages,d)}},r.registered=function(n,r){e.registered(n,r),t=r},r.accept=function(e,n,r){return this._debug("Transport",this.getType(),"accept, supported:",i),i&&!!window.WebSocket&&!1!==t.websocketEnabled},r.send=function(t,e){this._debug("Transport",this.getType(),"sending",t,"/meta/connect =",e),g.call(this,s,t,e)},r.webSocketClose=function(t,e,n){try{t.webSocket&&t.webSocket.close(e,n)}catch(t){this._debug(t)}},r.abort=function(){e.abort(),l.call(this,s,{code:1e3,reason:"Abort"}),this.reset(!0)},r},u=["0","1","2","3","4","5","6","7","8","9","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z",".","-",":","+","=","^","!","/","*","?","&","<",">","(",")","[","]","{","}","@","%","$","#"],h=[0,68,0,84,83,82,72,0,75,76,70,65,0,63,62,69,0,1,2,3,4,5,6,7,8,9,64,0,73,66,74,71,81,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,77,0,78,67,0,0,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,79,0,80,0,0];return{CometD:function(o){var i,u,h,f,l,p=new t,d=this,m=o||"default",y=!1,g=new r,v="disconnected",b=0,w=null,x=0,S=[],k=!1,T=0,N={},_=0,O=null,j=[],E={},P={},R={},A=!1,C=!1,I=0,L=0,U=null,D={useWorkerScheduler:!0,protocol:null,stickyReconnect:!0,connectTimeout:0,maxConnections:2,backoffIncrement:1e3,maxBackoff:6e4,logLevel:"info",maxNetworkDelay:1e4,requestHeaders:{},appendMessageTypeToURL:!0,autoBatch:!1,urls:{},maxURILength:2e3,advice:{timeout:6e4,interval:0,reconnect:void 0,maxInterval:0}};function B(t,e){try{return t[e]}catch(t){return}}function M(t){return n.isString(t)}function F(t){return null!=t&&"function"==typeof t}function K(t,e){for(var n="";--e>0&&!(t>=Math.pow(10,e));)n+="0";return n+=t}function q(t,e){if(window.console){var n=window.console[t];if(F(n)){var r=new Date;[].splice.call(e,0,0,K(r.getHours(),2)+":"+K(r.getMinutes(),2)+":"+K(r.getSeconds(),2)+"."+K(r.getMilliseconds(),3)),n.apply(window.console,e)}}}function H(t){return new RegExp("(^https?://)?(((\\[[^\\]]+])|([^:/?#]+))(:(\\d+))?)?([^?#]*)(.*)?").exec(t)}function W(t){d._debug("Configuring cometd object with",t),M(t)&&(t={url:t}),t||(t={}),D=d._mixin(!1,D,t);var n=d.getURL();if(!n)throw"Missing required configuration parameter 'url' specifying the Bayeux server URL";var r=H(n),o=r[2],i=r[8],a=r[9];if(y=d._isCrossDomain(o),D.appendMessageTypeToURL)if(void 0!==a&&a.length>0)d._info("Appending message type to URI "+i+a+" is not supported, disabling 'appendMessageTypeToURL' configuration"),D.appendMessageTypeToURL=!1;else{var c=i.split("/"),s=c.length-1;i.match(/\/$/)&&(s-=1),c[s].indexOf(".")>=0&&(d._info("Appending message type to URI "+i+" is not supported, disabling 'appendMessageTypeToURL' configuration"),D.appendMessageTypeToURL=!1)}if(window.Worker&&window.Blob&&window.URL&&D.useWorkerScheduler){var u=e.toString();u=u.substring(u.indexOf("{")+1,u.lastIndexOf("}"));var h=new window.Blob([u],{type:"application/json"}),f=window.URL.createObjectURL(h),l=new window.Worker(f);p.setTimeout=function(t,e){var n=p.register(t);return l.postMessage({id:n,type:"setTimeout",delay:e}),n},p.clearTimeout=function(t){p.unregister(t),l.postMessage({id:t,type:"clearTimeout"})},l.onmessage=function(t){var e=t.data.id,n=p.unregister(e);n&&n()}}}function X(t){if(t){var e=N[t.channel];e&&e[t.id]&&(delete e[t.id],d._debug("Removed",t.listener?"listener":"subscription",t))}}function V(t){t&&!t.listener&&X(t)}function G(){for(var t in N)if(N.hasOwnProperty(t)){var e=N[t];if(e)for(var n in e)e.hasOwnProperty(n)&&V(e[n])}}function J(t){v!==t&&(d._debug("Status",v,"->",t),v=t)}function z(){return"disconnecting"===v||"disconnected"===v}function Y(){return""+ ++b}function $(t,e,n,r,o){try{return e.call(t,r)}catch(t){var i=d.onExtensionException;if(F(i)){d._debug("Invoking extension exception handler",n,t);try{i.call(d,t,n,o,r)}catch(t){d._info("Exception during execution of extension exception handler",n,t)}}else d._info("Exception during execution of extension",n,t);return r}}function Z(t){for(var e=j.length-1;e>=0&&null!=t;--e){var n=j[e],r=n.extension.outgoing;if(F(r)){var o=$(n.extension,r,n.name,t,!0);t=void 0===o?t:o}}return t}function Q(t,e){var n=N[t];if(n)for(var r in n)if(n.hasOwnProperty(r)){var o=n[r];if(o)try{o.callback.call(o.scope,e)}catch(t){var i=d.onListenerException;if(F(i)){d._debug("Invoking listener exception handler",o,t);try{i.call(d,t,o,o.listener,e)}catch(t){d._info("Exception during execution of listener exception handler",o,t)}}else d._info("Exception during execution of listener",o,e,t)}}}function tt(t,e){Q(t,e);for(var n=t.split("/"),r=n.length-1,o=r;o>0;--o){var i=n.slice(0,o).join("/")+"/*";o===r&&Q(i,e),Q(i+="*",e)}}function et(){null!==O&&d.clearTimeout(O),O=null}function nt(t,e){et();var n=E.interval+e;d._debug("Function scheduled in",n,"ms, interval =",E.interval,"backoff =",_,t),O=d.setTimeout(t,n)}function rt(t,e,n){for(var r=0;r<t.length;++r){var o=t[r],a=o.id;w&&(o.clientId=w),null!=(o=Z(o))?(o.id=a,t[r]=o):(delete P[a],t.splice(r--,1))}if(0!==t.length){e&&(U=t[0]);var c=d.getURL();D.appendMessageTypeToURL&&(c.match(/\/$/)||(c+="/"),n&&(c+=n));var s={url:c,sync:!1,messages:t,onSuccess:function(t){try{f.call(d,t)}catch(t){d._info("Exception during handling of messages",t)}},onFailure:function(t,e,n){try{var r=d.getTransport();n.connectionType=r?r.getType():"unknown",l.call(d,t,e,n)}catch(t){d._info("Exception during handling of failure",t)}}};d._debug("Send",s),i.send(s,e)}}function ot(t){x>0||!0===k?S.push(t):rt([t],!1)}function it(){_=0}function at(){var t=S;S=[],t.length>0&&rt(t,!1)}function ct(t){J("connecting"),nt((function(){!function(){if(!z()){var t={id:Y(),channel:"/meta/connect",connectionType:i.getType()};C||(t.advice={timeout:0}),J("connecting"),d._debug("Connect sent",t),rt([t],!0,"connect"),J("connected")}}()}),t)}function st(t){t&&(E=d._mixin(!1,{},D.advice,t),d._debug("New advice",E))}function ut(t){if(et(),t&&i&&i.abort(),y=!1,i=null,J("disconnected"),w=null,x=0,it(),A=!1,C=!1,I=0,U=null,S.length>0){var e=S;S=[],l.call(d,void 0,e,{reason:"Disconnected"})}}function ht(t,e,n){var r=d.onTransportException;if(F(r)){d._debug("Invoking transport exception handler",t,e,n);try{r.call(d,n,t,e)}catch(t){d._info("Exception during execution of transport exception handler",t)}}}function ft(t,e){F(t)&&(e=t,t=void 0),w=null,G(),z()&&g.reset(!0),st({}),x=0,k=!0,u=t,h=e;var n=d.getURL(),r=g.findTransportTypes("1.0",y,n),o={id:Y(),version:"1.0",minimumVersion:"1.0",channel:"/meta/handshake",supportedConnectionTypes:r,advice:{timeout:E.timeout,interval:E.interval}},a=d._mixin(!1,{},u,o);if(d._putCallback(a.id,e),!i&&!(i=g.negotiateTransport(r,"1.0",y,n))){var c="Could not find initial transport among: "+g.getTransportTypes();throw d._warn(c),c}d._debug("Initial transport is",i.getType()),J("handshaking"),d._debug("Handshake sent",a),rt([a],!1,"handshake")}function lt(t,e){try{t.call(d,e)}catch(t){var n=d.onCallbackException;if(F(n)){d._debug("Invoking callback exception handler",t);try{n.call(d,t,e)}catch(t){d._info("Exception during execution of callback exception handler",t)}}else d._info("Exception during execution of message callback",t)}}function pt(t){var e=d._getCallback([t.id]);F(e)&&(delete P[t.id],lt(e,t))}function dt(t){var e=R[t.id];if(delete R[t.id],e){d._debug("Handling remote call response for",t,"with context",e);var n=e.timeout;n&&d.clearTimeout(n);var r=e.callback;if(F(r))return lt(r,t),!0}return!1}function mt(t){d._debug("Transport failure handling",t),t.transport&&(i=t.transport),t.url&&i.setURL(t.url);var e=t.action,n=t.delay||0;switch(e){case"handshake":!function(t){J("handshaking"),k=!0,nt((function(){ft(u,h)}),t)}(n);break;case"retry":ct(n);break;case"none":ut(!0);break;default:throw"Unknown action "+e}}function yt(t,e){pt(t),tt("/meta/handshake",t),tt("/meta/unsuccessful",t),z()&&(e.action="none"),d.onTransportFailure.call(d,t,e,mt)}function gt(t){yt(t,{cause:"failure",action:"handshake",transport:null})}function vt(t){return"disconnected"===v||!(!U||U.id!==t.id)&&(U=null,!0)}function bt(t,e){tt("/meta/connect",t),tt("/meta/unsuccessful",t),z()&&(e.action="none"),d.onTransportFailure.call(d,t,e,mt)}function wt(t){vt(t)?(C=!1,bt(t,{cause:"failure",action:"retry",transport:null})):d._debug("Mismatched /meta/connect failure",t)}function xt(t){ut(!0),pt(t),tt("/meta/disconnect",t),tt("/meta/unsuccessful",t)}function St(t){xt(t)}function kt(t){var e=N[t.subscription];if(e)for(var n in e)if(e.hasOwnProperty(n)){var r=e[n];r&&!r.listener&&(delete e[n],d._debug("Removed failed subscription",r))}pt(t),tt("/meta/subscribe",t),tt("/meta/unsuccessful",t)}function Tt(t){kt(t)}function Nt(t){pt(t),tt("/meta/unsubscribe",t),tt("/meta/unsuccessful",t)}function _t(t){Nt(t)}function Ot(t){dt(t)||(pt(t),tt("/meta/publish",t),tt("/meta/unsuccessful",t))}function jt(t){Ot(t)}function Et(t){if(I=0,null!=(t=function(t){for(var e=0;e<j.length&&null!=t;++e){var n=j[e],r=n.extension.incoming;if(F(r)){var o=$(n.extension,r,n.name,t,!1);t=void 0===o?t:o}}return t}(t)))switch(st(t.advice),t.channel){case"/meta/handshake":!function(t){var e=d.getURL();if(t.successful){var n=d._isCrossDomain(H(e)[2]),r=g.negotiateTransport(t.supportedConnectionTypes,t.version,n,e);if(null===r)return t.successful=!1,void yt(t,{cause:"negotiation",action:"none",transport:null});i!==r&&(d._debug("Transport",i.getType(),"->",r.getType()),i=r),w=t.clientId,k=!1,at(),t.reestablish=A,A=!0,pt(t),tt("/meta/handshake",t),L=t["x-messages"]||0;var o=z()?"none":E.reconnect||"retry";switch(o){case"retry":it(),0===L?ct(0):d._debug("Processing",L,"handshake-delivered messages");break;case"none":ut(!0);break;default:throw"Unrecognized advice action "+o}}else yt(t,{cause:"unsuccessful",action:E.reconnect||"handshake",transport:i})}(t);break;case"/meta/connect":!function(t){if(vt(t))if(C=t.successful){tt("/meta/connect",t);var e=z()?"none":E.reconnect||"retry";switch(e){case"retry":it(),ct(_);break;case"none":ut(!1);break;default:throw"Unrecognized advice action "+e}}else bt(t,{cause:"unsuccessful",action:E.reconnect||"retry",transport:i});else d._debug("Mismatched /meta/connect reply",t)}(t);break;case"/meta/disconnect":!function(t){t.successful?(ut(!1),pt(t),tt("/meta/disconnect",t)):xt(t)}(t);break;case"/meta/subscribe":!function(t){t.successful?(pt(t),tt("/meta/subscribe",t)):kt(t)}(t);break;case"/meta/unsubscribe":!function(t){t.successful?(pt(t),tt("/meta/unsubscribe",t)):Nt(t)}(t);break;default:!function(t){void 0!==t.data?dt(t)||(tt(t.channel,t),L>0&&0==--L&&(d._debug("Processed last handshake-delivered message"),ct(0))):void 0===t.successful?d._warn("Unknown Bayeux Message",t):t.successful?(pt(t),tt("/meta/publish",t)):Ot(t)}(t)}}function Pt(t){var e=N[t];if(e)for(var n in e)if(e.hasOwnProperty(n)&&e[n])return!0;return!1}function Rt(t,e){var n={scope:t,method:e};if(F(t))n.scope=void 0,n.method=t;else if(M(e)){if(!t)throw"Invalid scope "+t;if(n.method=t[e],!F(n.method))throw"Invalid callback "+e+" for scope "+t}else if(!F(e))throw"Invalid callback "+e;return n}function At(t,e,n,r){var o=Rt(e,n);d._debug("Adding",r?"listener":"subscription","on",t,"with scope",o.scope,"and callback",o.method);var i=++T,a={id:i,channel:t,scope:o.scope,callback:o.method,listener:r},c=N[t];return c||(c={},N[t]=c),c[i]=a,d._debug("Added",r?"listener":"subscription",a),a}this._mixin=function(t,e,n){for(var r=e||{},o=2;o<arguments.length;++o){var i=arguments[o];if(null!=i)for(var a in i)if(i.hasOwnProperty(a)){var c=B(i,a),s=B(r,a);if(c===e)continue;if(void 0===c)continue;if(t&&"object"==typeof c&&null!==c)if(c instanceof Array)r[a]=this._mixin(t,s instanceof Array?s:[],c);else{var u="object"!=typeof s||s instanceof Array?{}:s;r[a]=this._mixin(t,u,c)}else r[a]=c}}return r},this._warn=function(){q("warn",arguments)},this._info=function(){"warn"!==D.logLevel&&q("info",arguments)},this._debug=function(){"debug"===D.logLevel&&q("debug",arguments)},this._isCrossDomain=function(t){return!!(window.location&&window.location.host&&t)&&t!==window.location.host},this.send=ot,this._getCallback=function(t){return P[t]},this._putCallback=function(t,e){var n=this._getCallback(t);return F(e)&&(P[t]=e),n},this.onTransportFailure=function(t,e,n){this._debug("Transport failure",e,"for",t);var r=this.getTransportRegistry(),o=this.getURL(),a=this._isCrossDomain(H(o)[2]),c=r.findTransportTypes("1.0",a,o);if("none"===e.action){if("/meta/handshake"===t.channel&&!e.transport){var s="Could not negotiate transport, client=["+c+"], server=["+t.supportedConnectionTypes+"]";this._warn(s),ht(i.getType(),null,{reason:s,connectionType:i.getType(),transport:i})}}else if(e.delay=this.getBackoffPeriod(),"/meta/handshake"===t.channel){if(!e.transport){var u=i?i.getType():null,h=r.negotiateTransport(c,"1.0",a,o);if(h){var f=h.getType();this._debug("Transport",u,"->",f),ht(u,f,t.failure),e.action="handshake",e.transport=h}else this._warn("Could not negotiate transport, client=["+c+"]"),ht(u,null,t.failure),e.action="none"}"none"!==e.action&&this.increaseBackoffPeriod()}else{var l=(new Date).getTime();if(0===I&&(I=l),"retry"===e.action){e.delay=this.increaseBackoffPeriod();var p=E.maxInterval;if(p>0){var m=E.timeout+E.interval+p;l-I+_>m&&(e.action="handshake")}}"handshake"===e.action&&(e.delay=0,r.reset(!1),this.resetBackoffPeriod())}n.call(d,e)},this.receive=Et,f=function(t){d._debug("Received",t);for(var e=0;e<t.length;++e)Et(t[e])},l=function(t,e,n){d._debug("handleFailure",t,e,n),n.transport=t;for(var r=0;r<e.length;++r){var o=e[r],i={id:o.id,successful:!1,channel:o.channel,failure:n};switch(n.message=o,o.channel){case"/meta/handshake":gt(i);break;case"/meta/connect":wt(i);break;case"/meta/disconnect":St(i);break;case"/meta/subscribe":i.subscription=o.subscription,Tt(i);break;case"/meta/unsubscribe":i.subscription=o.subscription,_t(i);break;default:jt(i)}}},this.registerTransport=function(t,e,n){var r=g.add(t,e,n);return r&&(this._debug("Registered transport",t),F(e.registered)&&e.registered(t,this)),r},this.unregisterTransport=function(t){var e=g.remove(t);return null!==e&&(this._debug("Unregistered transport",t),F(e.unregistered)&&e.unregistered()),e},this.unregisterTransports=function(){g.clear()},this.getTransportTypes=function(){return g.getTransportTypes()},this.findTransport=function(t){return g.find(t)},this.getTransportRegistry=function(){return g},this.configure=function(t){W.call(this,t)},this.init=function(t,e){this.configure(t),this.handshake(e)},this.handshake=function(t,e){if("disconnected"!==v)throw"Illegal state: handshaken";ft(t,e)},this.disconnect=function(t,e){if(!z()){F(t)&&(e=t,t=void 0);var n={id:Y(),channel:"/meta/disconnect"},r=this._mixin(!1,{},t,n);d._putCallback(r.id,e),J("disconnecting"),rt([r],!1,"disconnect")}},this.startBatch=function(){++x,d._debug("Starting batch, depth",x)},this.endBatch=function(){!function(){if(--x,d._debug("Ending batch, depth",x),x<0)throw"Calls to startBatch() and endBatch() are not paired";0!==x||z()||k||at()}()},this.batch=function(t,e){var n=Rt(t,e);this.startBatch();try{n.method.call(n.scope),this.endBatch()}catch(t){throw this._info("Exception during execution of batch",t),this.endBatch(),t}},this.addListener=function(t,e,n){if(arguments.length<2)throw"Illegal arguments number: required 2, got "+arguments.length;if(!M(t))throw"Illegal argument type: channel must be a string";return At(t,e,n,!0)},this.removeListener=function(t){if(!t||!t.channel||!("id"in t))throw"Invalid argument: expected subscription, not "+t;X(t)},this.clearListeners=function(){N={}},this.subscribe=function(t,e,n,r,o){if(arguments.length<2)throw"Illegal arguments number: required 2, got "+arguments.length;if(!M(t))throw"Illegal argument type: channel must be a string";if(z())throw"Illegal state: disconnected";F(e)&&(o=r,r=n,n=e,e=void 0),F(r)&&(o=r,r=void 0);var i=!Pt(t),a=At(t,e,n,!1);if(i){var c={id:Y(),channel:"/meta/subscribe",subscription:t},s=this._mixin(!1,{},r,c);d._putCallback(s.id,o),ot(s)}return a},this.unsubscribe=function(t,e,n){if(arguments.length<1)throw"Illegal arguments number: required 1, got "+arguments.length;if(z())throw"Illegal state: disconnected";F(e)&&(n=e,e=void 0),this.removeListener(t);var r=t.channel;if(!Pt(r)){var o={id:Y(),channel:"/meta/unsubscribe",subscription:r},i=this._mixin(!1,{},e,o);d._putCallback(i.id,n),ot(i)}},this.resubscribe=function(t,e){if(V(t),t)return this.subscribe(t.channel,t.scope,t.callback,e)},this.clearSubscriptions=function(){G()},this.publish=function(t,e,n,r){if(arguments.length<1)throw"Illegal arguments number: required 1, got "+arguments.length;if(!M(t))throw"Illegal argument type: channel must be a string";if(/^\/meta\//.test(t))throw"Illegal argument: cannot publish to meta channels";if(z())throw"Illegal state: disconnected";F(e)?(r=e,e={},n=void 0):F(n)&&(r=n,n=void 0);var o={id:Y(),channel:t,data:e},i=this._mixin(!1,{},n,o);d._putCallback(i.id,r),ot(i)},this.publishBinary=function(t,e,n,r,o){F(e)?(o=e,e=new ArrayBuffer(0),n=!0,r=void 0):F(n)?(o=n,n=!0,r=void 0):F(r)&&(o=r,r=void 0);var i={meta:r,data:e,last:n};this.publish(t,i,{ext:{binary:{}}},o)},this.remoteCall=function(t,e,n,r,o){if(arguments.length<1)throw"Illegal arguments number: required 1, got "+arguments.length;if(!M(t))throw"Illegal argument type: target must be a string";if(z())throw"Illegal state: disconnected";if(F(e)?(o=e,e={},n=D.maxNetworkDelay,r=void 0):F(n)?(o=n,n=D.maxNetworkDelay,r=void 0):F(r)&&(o=r,r=void 0),"number"!=typeof n)throw"Illegal argument type: timeout must be a number";t.match(/^\//)||(t="/"+t);var i="/service"+t,a={id:Y(),channel:i,data:e},c=this._mixin(!1,{},r,a),s={callback:o};n>0&&(s.timeout=d.setTimeout((function(){d._debug("Timing out remote call",c,"after",n,"ms"),Ot({id:c.id,error:"406::timeout",successful:!1,failure:{message:c,reason:"Remote Call Timeout"}})}),n),d._debug("Scheduled remote call timeout",c,"in",n,"ms")),R[c.id]=s,ot(c)},this.remoteCallBinary=function(t,e,n,r,o,i){F(e)?(i=e,e=new ArrayBuffer(0),n=!0,r=void 0,o=D.maxNetworkDelay):F(n)?(i=n,n=!0,r=void 0,o=D.maxNetworkDelay):F(r)?(i=r,r=void 0,o=D.maxNetworkDelay):F(o)&&(i=o,o=D.maxNetworkDelay);var a={meta:r,data:e,last:n};this.remoteCall(t,a,o,{ext:{binary:{}}},i)},this.getStatus=function(){return v},this.isDisconnected=z,this.setBackoffIncrement=function(t){D.backoffIncrement=t},this.getBackoffIncrement=function(){return D.backoffIncrement},this.getBackoffPeriod=function(){return _},this.increaseBackoffPeriod=function(){return _<D.maxBackoff&&(_+=D.backoffIncrement),_},this.resetBackoffPeriod=function(){it()},this.setLogLevel=function(t){D.logLevel=t},this.registerExtension=function(t,e){if(arguments.length<2)throw"Illegal arguments number: required 2, got "+arguments.length;if(!M(t))throw"Illegal argument type: extension name must be a string";for(var n=!1,r=0;r<j.length;++r){var o=j[r];if(o.name===t){n=!0;break}}return n?(this._info("Could not register extension with name",t,"since another extension with the same name already exists"),!1):(j.push({name:t,extension:e}),this._debug("Registered extension",t),F(e.registered)&&e.registered(t,this),!0)},this.unregisterExtension=function(t){if(!M(t))throw"Illegal argument type: extension name must be a string";for(var e=!1,n=0;n<j.length;++n){var r=j[n];if(r.name===t){j.splice(n,1),e=!0,this._debug("Unregistered extension",t);var o=r.extension;F(o.unregistered)&&o.unregistered();break}}return e},this.getExtension=function(t){for(var e=0;e<j.length;++e){var n=j[e];if(n.name===t)return n.extension}return null},this.getName=function(){return m},this.getClientId=function(){return w},this.getURL=function(){if(i){var t=i.getURL();if(t)return t;if(t=D.urls[i.getType()])return t}return D.url},this.getTransport=function(){return i},this.getConfiguration=function(){return this._mixin(!0,{},D)},this.getAdvice=function(){return this._mixin(!0,{},E)},this.setTimeout=function(t,e){return p.setTimeout((function(){try{d._debug("Invoking timed function",t),t()}catch(e){d._debug("Exception invoking timed function",t,e)}}),e)},this.clearTimeout=function(t){p.clearTimeout(t)},window.WebSocket&&this.registerTransport("websocket",new s),this.registerTransport("long-polling",new a),this.registerTransport("callback-polling",new c)},Transport:o,RequestTransport:i,LongPollingTransport:a,CallbackPollingTransport:c,WebSocketTransport:s,Utils:n,Z85:{encode:function(t){var e=null;if(t instanceof ArrayBuffer?e=t:t.buffer instanceof ArrayBuffer?e=t.buffer:Array.isArray(t)&&(e=new Uint8Array(t).buffer),null==e)throw"Cannot Z85 encode "+t;for(var n=e.byteLength,r=n%4,o=4-(0===r?4:r),i=new DataView(e),a="",c=0,s=0;s<n+o;++s){var h=s>=n;if(c=256*c+(h?0:i.getUint8(s)),(s+1)%4==0){for(var f=52200625,l=5;l>0;--l){if(!h||l>o){var p=Math.floor(c/f)%85;a+=u[p]}f/=85}c=0}}return a},decode:function(t){for(var e=t.length%5,n=5-(0===e?5:e),r=0;r<n;++r)t+=u[u.length-1];for(var o=t.length,i=new ArrayBuffer(4*o/5-n),a=new DataView(i),c=0,s=0,f=0,l=0;l<o;++l){var p=t.charCodeAt(s++)-32;if(c=85*c+h[p],s%5==0){for(var d=16777216;d>=1;)f<a.byteLength&&a.setUint8(f++,Math.floor(c/d)%256),d/=256;c=0}}return i}}}}()},function(t,e,n){t.exports=n(17).AckExtension=function(){var t,e,n=!1;function r(e,n){t._debug(e,n)}this.registered=function(e,n){t=n,r("AckExtension: executing registration callback")},this.unregistered=function(){r("AckExtension: executing unregistration callback"),t=null},this.incoming=function(t){var o=t.channel,i=t.ext;if("/meta/handshake"===o){if(i){var a=i.ack;if("object"==typeof a){n=!0===a.enabled;var c=a.batch;"number"==typeof c&&(e=c)}else n=!0===a}r("AckExtension: server supports acknowledgements",n)}else"/meta/connect"===o&&t.successful&&n&&i&&"number"==typeof i.ack&&r("AckExtension: server sent batch",e=i.ack);return t},this.outgoing=function(o){var i=o.channel;return o.ext||(o.ext={}),"/meta/handshake"===i?(o.ext.ack=t&&!1!==t.ackEnabled,n=!1,e=0):"/meta/connect"===i&&n&&(o.ext.ack=e,r("AckExtension: client sending batch",e)),o}}},function(t,e,n){t.exports=n(17).ReloadExtension=function(t){var e,n,r={},o="org.cometd.reload",i=!1,a=!1;function c(t){if(r.handshakeResponse){a=!0;var i=e.getTransport();i&&i.abort(),s(t);var c=JSON.stringify(r);n("Reload extension saving state",c),window.sessionStorage.setItem(o,c)}}function s(t){t&&"string"==typeof t.name&&(o=t.name)}this.configure=s,this._receive=function(t){e.receive(t)},this.registered=function(t,r){(e=r).reload=c,n=e._debug},this.unregistered=function(){delete e.reload,e=null},this.outgoing=function(t){switch(t.channel){case"/meta/handshake":(r={}).url=e.getURL();var c=window.sessionStorage.getItem(o);if(n("Reload extension found state",c),c)try{var s=JSON.parse(c);if(window.sessionStorage.removeItem(o),s.handshakeResponse&&function(t){return r.url===t.url}(s)){n("Reload extension restoring state",s);var u=e._getCallback(t.id),h=this;return setTimeout((function(){n("Reload extension replaying handshake response",s.handshakeResponse),r.handshakeResponse=s.handshakeResponse,r.transportType=s.transportType,e._putCallback(t.id,u);var o=e._mixin(!0,{},r.handshakeResponse,{id:t.id,ext:{reload:!0}});o.supportedConnectionTypes=[r.transportType],h._receive(o),n("Reload extension replayed handshake response",o)}),0),i||(i=!0,e.startBatch()),null}n("Reload extension could not restore state",s)}catch(t){n("Reload extension error while trying to restore state",t)}break;case"/meta/connect":if(!0===a)return n("Reload extension aborting /meta/connect during reload"),null;r.transportType||(r.transportType=t.connectionType,n("Reload extension tracked transport type",r.transportType));break;case"/meta/disconnect":r={}}return t},this.incoming=function(t){if(t.successful)switch(t.channel){case"/meta/handshake":r.handshakeResponse||(r.handshakeResponse=t,n("Reload extension tracked handshake response",t));break;case"/meta/connect":i&&(i=!1,e.endBatch());break;case"/meta/disconnect":r={}}return t},s(t)}},function(t,e){var n=function(t){function e(){this.fetch=!1,this.DOMException=t.DOMException}return e.prototype=t,new e}("undefined"!=typeof self?self:this);!function(t){!function(e){var n="URLSearchParams"in t,r="Symbol"in t&&"iterator"in Symbol,o="FileReader"in t&&"Blob"in t&&function(){try{return new Blob,!0}catch(t){return!1}}(),i="FormData"in t,a="ArrayBuffer"in t;if(a)var c=["[object Int8Array]","[object Uint8Array]","[object Uint8ClampedArray]","[object Int16Array]","[object Uint16Array]","[object Int32Array]","[object Uint32Array]","[object Float32Array]","[object Float64Array]"],s=ArrayBuffer.isView||function(t){return t&&c.indexOf(Object.prototype.toString.call(t))>-1};function u(t){if("string"!=typeof t&&(t=String(t)),/[^a-z0-9\-#$%&'*+.^_`|~]/i.test(t))throw new TypeError("Invalid character in header field name");return t.toLowerCase()}function h(t){return"string"!=typeof t&&(t=String(t)),t}function f(t){var e={next:function(){var e=t.shift();return{done:void 0===e,value:e}}};return r&&(e[Symbol.iterator]=function(){return e}),e}function l(t){this.map={},t instanceof l?t.forEach((function(t,e){this.append(e,t)}),this):Array.isArray(t)?t.forEach((function(t){this.append(t[0],t[1])}),this):t&&Object.getOwnPropertyNames(t).forEach((function(e){this.append(e,t[e])}),this)}function p(t){if(t.bodyUsed)return Promise.reject(new TypeError("Already read"));t.bodyUsed=!0}function d(t){return new Promise((function(e,n){t.onload=function(){e(t.result)},t.onerror=function(){n(t.error)}}))}function m(t){var e=new FileReader,n=d(e);return e.readAsArrayBuffer(t),n}function y(t){if(t.slice)return t.slice(0);var e=new Uint8Array(t.byteLength);return e.set(new Uint8Array(t)),e.buffer}function g(){return this.bodyUsed=!1,this._initBody=function(t){var e;this._bodyInit=t,t?"string"==typeof t?this._bodyText=t:o&&Blob.prototype.isPrototypeOf(t)?this._bodyBlob=t:i&&FormData.prototype.isPrototypeOf(t)?this._bodyFormData=t:n&&URLSearchParams.prototype.isPrototypeOf(t)?this._bodyText=t.toString():a&&o&&((e=t)&&DataView.prototype.isPrototypeOf(e))?(this._bodyArrayBuffer=y(t.buffer),this._bodyInit=new Blob([this._bodyArrayBuffer])):a&&(ArrayBuffer.prototype.isPrototypeOf(t)||s(t))?this._bodyArrayBuffer=y(t):this._bodyText=t=Object.prototype.toString.call(t):this._bodyText="",this.headers.get("content-type")||("string"==typeof t?this.headers.set("content-type","text/plain;charset=UTF-8"):this._bodyBlob&&this._bodyBlob.type?this.headers.set("content-type",this._bodyBlob.type):n&&URLSearchParams.prototype.isPrototypeOf(t)&&this.headers.set("content-type","application/x-www-form-urlencoded;charset=UTF-8"))},o&&(this.blob=function(){var t=p(this);if(t)return t;if(this._bodyBlob)return Promise.resolve(this._bodyBlob);if(this._bodyArrayBuffer)return Promise.resolve(new Blob([this._bodyArrayBuffer]));if(this._bodyFormData)throw new Error("could not read FormData body as blob");return Promise.resolve(new Blob([this._bodyText]))},this.arrayBuffer=function(){return this._bodyArrayBuffer?p(this)||Promise.resolve(this._bodyArrayBuffer):this.blob().then(m)}),this.text=function(){var t,e,n,r=p(this);if(r)return r;if(this._bodyBlob)return t=this._bodyBlob,e=new FileReader,n=d(e),e.readAsText(t),n;if(this._bodyArrayBuffer)return Promise.resolve(function(t){for(var e=new Uint8Array(t),n=new Array(e.length),r=0;r<e.length;r++)n[r]=String.fromCharCode(e[r]);return n.join("")}(this._bodyArrayBuffer));if(this._bodyFormData)throw new Error("could not read FormData body as text");return Promise.resolve(this._bodyText)},i&&(this.formData=function(){return this.text().then(w)}),this.json=function(){return this.text().then(JSON.parse)},this}l.prototype.append=function(t,e){t=u(t),e=h(e);var n=this.map[t];this.map[t]=n?n+", "+e:e},l.prototype.delete=function(t){delete this.map[u(t)]},l.prototype.get=function(t){return t=u(t),this.has(t)?this.map[t]:null},l.prototype.has=function(t){return this.map.hasOwnProperty(u(t))},l.prototype.set=function(t,e){this.map[u(t)]=h(e)},l.prototype.forEach=function(t,e){for(var n in this.map)this.map.hasOwnProperty(n)&&t.call(e,this.map[n],n,this)},l.prototype.keys=function(){var t=[];return this.forEach((function(e,n){t.push(n)})),f(t)},l.prototype.values=function(){var t=[];return this.forEach((function(e){t.push(e)})),f(t)},l.prototype.entries=function(){var t=[];return this.forEach((function(e,n){t.push([n,e])})),f(t)},r&&(l.prototype[Symbol.iterator]=l.prototype.entries);var v=["DELETE","GET","HEAD","OPTIONS","POST","PUT"];function b(t,e){var n,r,o=(e=e||{}).body;if(t instanceof b){if(t.bodyUsed)throw new TypeError("Already read");this.url=t.url,this.credentials=t.credentials,e.headers||(this.headers=new l(t.headers)),this.method=t.method,this.mode=t.mode,this.signal=t.signal,o||null==t._bodyInit||(o=t._bodyInit,t.bodyUsed=!0)}else this.url=String(t);if(this.credentials=e.credentials||this.credentials||"same-origin",!e.headers&&this.headers||(this.headers=new l(e.headers)),this.method=(n=e.method||this.method||"GET",r=n.toUpperCase(),v.indexOf(r)>-1?r:n),this.mode=e.mode||this.mode||null,this.signal=e.signal||this.signal,this.referrer=null,("GET"===this.method||"HEAD"===this.method)&&o)throw new TypeError("Body not allowed for GET or HEAD requests");this._initBody(o)}function w(t){var e=new FormData;return t.trim().split("&").forEach((function(t){if(t){var n=t.split("="),r=n.shift().replace(/\+/g," "),o=n.join("=").replace(/\+/g," ");e.append(decodeURIComponent(r),decodeURIComponent(o))}})),e}function x(t,e){e||(e={}),this.type="default",this.status=void 0===e.status?200:e.status,this.ok=this.status>=200&&this.status<300,this.statusText="statusText"in e?e.statusText:"OK",this.headers=new l(e.headers),this.url=e.url||"",this._initBody(t)}b.prototype.clone=function(){return new b(this,{body:this._bodyInit})},g.call(b.prototype),g.call(x.prototype),x.prototype.clone=function(){return new x(this._bodyInit,{status:this.status,statusText:this.statusText,headers:new l(this.headers),url:this.url})},x.error=function(){var t=new x(null,{status:0,statusText:""});return t.type="error",t};var S=[301,302,303,307,308];x.redirect=function(t,e){if(-1===S.indexOf(e))throw new RangeError("Invalid status code");return new x(null,{status:e,headers:{location:t}})},e.DOMException=t.DOMException;try{new e.DOMException}catch(t){e.DOMException=function(t,e){this.message=t,this.name=e;var n=Error(t);this.stack=n.stack},e.DOMException.prototype=Object.create(Error.prototype),e.DOMException.prototype.constructor=e.DOMException}function k(t,n){return new Promise((function(r,i){var a=new b(t,n);if(a.signal&&a.signal.aborted)return i(new e.DOMException("Aborted","AbortError"));var c=new XMLHttpRequest;function s(){c.abort()}c.onload=function(){var t,e,n={status:c.status,statusText:c.statusText,headers:(t=c.getAllResponseHeaders()||"",e=new l,t.replace(/\r?\n[\t ]+/g," ").split(/\r?\n/).forEach((function(t){var n=t.split(":"),r=n.shift().trim();if(r){var o=n.join(":").trim();e.append(r,o)}})),e)};n.url="responseURL"in c?c.responseURL:n.headers.get("X-Request-URL");var o="response"in c?c.response:c.responseText;r(new x(o,n))},c.onerror=function(){i(new TypeError("Network request failed"))},c.ontimeout=function(){i(new TypeError("Network request failed"))},c.onabort=function(){i(new e.DOMException("Aborted","AbortError"))},c.open(a.method,a.url,!0),"include"===a.credentials?c.withCredentials=!0:"omit"===a.credentials&&(c.withCredentials=!1),"responseType"in c&&o&&(c.responseType="blob"),a.headers.forEach((function(t,e){c.setRequestHeader(e,t)})),a.signal&&(a.signal.addEventListener("abort",s),c.onreadystatechange=function(){4===c.readyState&&a.signal.removeEventListener("abort",s)}),c.send(void 0===a._bodyInit?null:a._bodyInit)}))}k.polyfill=!0,t.fetch||(t.fetch=k,t.Headers=l,t.Request=b,t.Response=x),e.Headers=l,e.Request=b,e.Response=x,e.fetch=k}({})}(n),delete n.fetch.polyfill,(e=n.fetch).default=n.fetch,e.fetch=n.fetch,e.Headers=n.Headers,e.Request=n.Request,e.Response=n.Response,t.exports=e},function(t,e,n){t.exports=n(35)},function(t,e,n){var r=n(4);t.exports=function(t,e){for(;!Object.prototype.hasOwnProperty.call(t,e)&&null!==(t=r(t)););return t}},function(t,e){t.exports=function(t){if(void 0===t)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return t}},function(t,e){t.exports=function(t){return-1!==Function.toString.call(t).indexOf("[native code]")}},function(t,e,n){var r=n(14),o=n(26);function i(e,n,a){return o()?t.exports=i=Reflect.construct:t.exports=i=function(t,e,n){var o=[null];o.push.apply(o,e);var i=new(Function.bind.apply(t,o));return n&&r(i,n.prototype),i},i.apply(null,arguments)}t.exports=i},function(t,e){t.exports=function(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(t){return!1}}},function(t,e){t.exports=function(t,e){if(null==t)return{};var n,r,o={},i=Object.keys(t);for(r=0;r<i.length;r++)n=i[r],e.indexOf(n)>=0||(o[n]=t[n]);return o}},function(t,e){t.exports=function(t){if(Array.isArray(t))return t}},function(t,e){t.exports=function(t,e){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(t)){var n=[],r=!0,o=!1,i=void 0;try{for(var a,c=t[Symbol.iterator]();!(r=(a=c.next()).done)&&(n.push(a.value),!e||n.length!==e);r=!0);}catch(t){o=!0,i=t}finally{try{r||null==c.return||c.return()}finally{if(o)throw i}}return n}}},function(t,e){t.exports=function(){throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}},function(t,e,n){var r=function(t){"use strict";var e=Object.prototype,n=e.hasOwnProperty,r="function"==typeof Symbol?Symbol:{},o=r.iterator||"@@iterator",i=r.asyncIterator||"@@asyncIterator",a=r.toStringTag||"@@toStringTag";function c(t,e,n,r){var o=e&&e.prototype instanceof h?e:h,i=Object.create(o.prototype),a=new S(r||[]);return i._invoke=function(t,e,n){var r="suspendedStart";return function(o,i){if("executing"===r)throw new Error("Generator is already running");if("completed"===r){if("throw"===o)throw i;return T()}for(n.method=o,n.arg=i;;){var a=n.delegate;if(a){var c=b(a,n);if(c){if(c===u)continue;return c}}if("next"===n.method)n.sent=n._sent=n.arg;else if("throw"===n.method){if("suspendedStart"===r)throw r="completed",n.arg;n.dispatchException(n.arg)}else"return"===n.method&&n.abrupt("return",n.arg);r="executing";var h=s(t,e,n);if("normal"===h.type){if(r=n.done?"completed":"suspendedYield",h.arg===u)continue;return{value:h.arg,done:n.done}}"throw"===h.type&&(r="completed",n.method="throw",n.arg=h.arg)}}}(t,n,a),i}function s(t,e,n){try{return{type:"normal",arg:t.call(e,n)}}catch(t){return{type:"throw",arg:t}}}t.wrap=c;var u={};function h(){}function f(){}function l(){}var p={};p[o]=function(){return this};var d=Object.getPrototypeOf,m=d&&d(d(k([])));m&&m!==e&&n.call(m,o)&&(p=m);var y=l.prototype=h.prototype=Object.create(p);function g(t){["next","throw","return"].forEach((function(e){t[e]=function(t){return this._invoke(e,t)}}))}function v(t,e){var r;this._invoke=function(o,i){function a(){return new e((function(r,a){!function r(o,i,a,c){var u=s(t[o],t,i);if("throw"!==u.type){var h=u.arg,f=h.value;return f&&"object"==typeof f&&n.call(f,"__await")?e.resolve(f.__await).then((function(t){r("next",t,a,c)}),(function(t){r("throw",t,a,c)})):e.resolve(f).then((function(t){h.value=t,a(h)}),(function(t){return r("throw",t,a,c)}))}c(u.arg)}(o,i,r,a)}))}return r=r?r.then(a,a):a()}}function b(t,e){var n=t.iterator[e.method];if(void 0===n){if(e.delegate=null,"throw"===e.method){if(t.iterator.return&&(e.method="return",e.arg=void 0,b(t,e),"throw"===e.method))return u;e.method="throw",e.arg=new TypeError("The iterator does not provide a 'throw' method")}return u}var r=s(n,t.iterator,e.arg);if("throw"===r.type)return e.method="throw",e.arg=r.arg,e.delegate=null,u;var o=r.arg;return o?o.done?(e[t.resultName]=o.value,e.next=t.nextLoc,"return"!==e.method&&(e.method="next",e.arg=void 0),e.delegate=null,u):o:(e.method="throw",e.arg=new TypeError("iterator result is not an object"),e.delegate=null,u)}function w(t){var e={tryLoc:t[0]};1 in t&&(e.catchLoc=t[1]),2 in t&&(e.finallyLoc=t[2],e.afterLoc=t[3]),this.tryEntries.push(e)}function x(t){var e=t.completion||{};e.type="normal",delete e.arg,t.completion=e}function S(t){this.tryEntries=[{tryLoc:"root"}],t.forEach(w,this),this.reset(!0)}function k(t){if(t){var e=t[o];if(e)return e.call(t);if("function"==typeof t.next)return t;if(!isNaN(t.length)){var r=-1,i=function e(){for(;++r<t.length;)if(n.call(t,r))return e.value=t[r],e.done=!1,e;return e.value=void 0,e.done=!0,e};return i.next=i}}return{next:T}}function T(){return{value:void 0,done:!0}}return f.prototype=y.constructor=l,l.constructor=f,l[a]=f.displayName="GeneratorFunction",t.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===f||"GeneratorFunction"===(e.displayName||e.name))},t.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(t,l):(t.__proto__=l,a in t||(t[a]="GeneratorFunction")),t.prototype=Object.create(y),t},t.awrap=function(t){return{__await:t}},g(v.prototype),v.prototype[i]=function(){return this},t.AsyncIterator=v,t.async=function(e,n,r,o,i){void 0===i&&(i=Promise);var a=new v(c(e,n,r,o),i);return t.isGeneratorFunction(n)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},g(y),y[a]="Generator",y[o]=function(){return this},y.toString=function(){return"[object Generator]"},t.keys=function(t){var e=[];for(var n in t)e.push(n);return e.reverse(),function n(){for(;e.length;){var r=e.pop();if(r in t)return n.value=r,n.done=!1,n}return n.done=!0,n}},t.values=k,S.prototype={constructor:S,reset:function(t){if(this.prev=0,this.next=0,this.sent=this._sent=void 0,this.done=!1,this.delegate=null,this.method="next",this.arg=void 0,this.tryEntries.forEach(x),!t)for(var e in this)"t"===e.charAt(0)&&n.call(this,e)&&!isNaN(+e.slice(1))&&(this[e]=void 0)},stop:function(){this.done=!0;var t=this.tryEntries[0].completion;if("throw"===t.type)throw t.arg;return this.rval},dispatchException:function(t){if(this.done)throw t;var e=this;function r(n,r){return a.type="throw",a.arg=t,e.next=n,r&&(e.method="next",e.arg=void 0),!!r}for(var o=this.tryEntries.length-1;o>=0;--o){var i=this.tryEntries[o],a=i.completion;if("root"===i.tryLoc)return r("end");if(i.tryLoc<=this.prev){var c=n.call(i,"catchLoc"),s=n.call(i,"finallyLoc");if(c&&s){if(this.prev<i.catchLoc)return r(i.catchLoc,!0);if(this.prev<i.finallyLoc)return r(i.finallyLoc)}else if(c){if(this.prev<i.catchLoc)return r(i.catchLoc,!0)}else{if(!s)throw new Error("try statement without catch or finally");if(this.prev<i.finallyLoc)return r(i.finallyLoc)}}}},abrupt:function(t,e){for(var r=this.tryEntries.length-1;r>=0;--r){var o=this.tryEntries[r];if(o.tryLoc<=this.prev&&n.call(o,"finallyLoc")&&this.prev<o.finallyLoc){var i=o;break}}i&&("break"===t||"continue"===t)&&i.tryLoc<=e&&e<=i.finallyLoc&&(i=null);var a=i?i.completion:{};return a.type=t,a.arg=e,i?(this.method="next",this.next=i.finallyLoc,u):this.complete(a)},complete:function(t,e){if("throw"===t.type)throw t.arg;return"break"===t.type||"continue"===t.type?this.next=t.arg:"return"===t.type?(this.rval=this.arg=t.arg,this.method="return",this.next="end"):"normal"===t.type&&e&&(this.next=e),u},finish:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.finallyLoc===t)return this.complete(n.completion,n.afterLoc),x(n),u}},catch:function(t){for(var e=this.tryEntries.length-1;e>=0;--e){var n=this.tryEntries[e];if(n.tryLoc===t){var r=n.completion;if("throw"===r.type){var o=r.arg;x(n)}return o}}throw new Error("illegal catch attempt")},delegateYield:function(t,e,n){return this.delegate={iterator:k(t),resultName:e,nextLoc:n},"next"===this.method&&(this.arg=void 0),u}},t}(t.exports);try{regeneratorRuntime=r}catch(t){Function("r","regeneratorRuntime = r")(r)}},function(t,e,n){var r=n(16);t.exports=function(t){if(Array.isArray(t))return r(t)}},function(t,e){t.exports=function(t){if("undefined"!=typeof Symbol&&Symbol.iterator in Object(t))return Array.from(t)}},function(t,e){t.exports=function(){throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.")}},function(t,e,n){"use strict";n.r(e),n.d(e,"version",(function(){return sn})),n.d(e,"SCOPE_BOUNDARY",(function(){return l})),n.d(e,"RITUAL",(function(){return p})),n.d(e,"PUSH_CATEGORY",(function(){return d})),n.d(e,"LOCK_TYPE",(function(){return m})),n.d(e,"config",(function(){return tt})),n.d(e,"errorManager",(function(){return Ye})),n.d(e,"Router",(function(){return cn})),n.d(e,"Channel",(function(){return Je})),n.d(e,"accountAdapter",(function(){return r})),n.d(e,"authAdapter",(function(){return o})),n.d(e,"episodeAdapter",(function(){return i})),n.d(e,"presenceAdapter",(function(){return a})),n.d(e,"projectAdapter",(function(){return c})),n.d(e,"runAdapter",(function(){return s})),n.d(e,"vaultAdapter",(function(){return u}));var r={};n.r(r),n.d(r,"createAccount",(function(){return ut})),n.d(r,"updateAccount",(function(){return ft})),n.d(r,"removeAccount",(function(){return pt}));var o={};n.r(o),n.d(o,"logout",(function(){return mt})),n.d(o,"login",(function(){return gt})),n.d(o,"upgrade",(function(){return bt})),n.d(o,"sso",(function(){return xt})),n.d(o,"getSession",(function(){return kt})),n.d(o,"getLocalSession",(function(){return Nt}));var i={};n.r(i),n.d(i,"create",(function(){return _t})),n.d(i,"get",(function(){return jt})),n.d(i,"query",(function(){return Pt})),n.d(i,"withGroup",(function(){return At})),n.d(i,"withName",(function(){return It})),n.d(i,"remove",(function(){return Ut}));var a={};n.r(a),n.d(a,"forGroup",(function(){return Bt})),n.d(a,"forWorld",(function(){return Ft})),n.d(a,"connect",(function(){return qt}));var c={};n.r(c),n.d(c,"channelsEnabled",(function(){return Wt}));var s={};n.r(s),n.d(s,"create",(function(){return Yt})),n.d(s,"clone",(function(){return Zt})),n.d(s,"restore",(function(){return te})),n.d(s,"rewind",(function(){return ne})),n.d(s,"update",(function(){return oe})),n.d(s,"remove",(function(){return ae})),n.d(s,"get",(function(){return se})),n.d(s,"query",(function(){return he})),n.d(s,"introspect",(function(){return le})),n.d(s,"operation",(function(){return de})),n.d(s,"getVariables",(function(){return ye})),n.d(s,"getVariable",(function(){return ve})),n.d(s,"updateVariables",(function(){return we})),n.d(s,"getMetadata",(function(){return Se})),n.d(s,"updateMetadata",(function(){return Te})),n.d(s,"action",(function(){return _e})),n.d(s,"getWithStrategy",(function(){return Pe}));var u={};n.r(u),n.d(u,"update",(function(){return Ae})),n.d(u,"get",(function(){return Ie})),n.d(u,"remove",(function(){return Ue})),n.d(u,"create",(function(){return Be}));var h="COOKIE",f="SESSION",l={PROJECT:"PROJECT",GROUP:"GROUP",EPISODE:"EPISODE",WORLD:"WORLD"},p={NONE:"NONE",REANIMATE:"REANIMATE",EXORCISE:"EXORCISE"},d={CHAT:"CHAT",CONSENSUS:"CONSENSUS",CONTROL:"CONTROL",PRESENCE:"PRESENCE",LOBBY:"LOBBY",RUN:"RUN",SYSTEM:"SYSTEM"},m={SYSTEM:"SYSTEM",MONITER:"MONITER",AUTHOR:"AUTHOR",SUPPORT:"SUPPORT",FACILITATOR:"FACILITATOR",REVIEWER:"REVIEWER",USER:"USER",LEADER:"LEADER",PARTICIPANT:"PARTICIPANT",ANONYMOUS:"ANONYMOUS"},y=new Function("try {return this===window;}catch(e){ return false;}"),g=new Function("try {return this===global;}catch(e){return false;}"),v=function(t,e){return e.startsWith(t)?e:"".concat(t).concat(e)},b=n(10),w=n.n(b),x=n(7),S=n.n(x),k=n(8),T=n.n(k),N=n(4),_=n.n(N),O=n(3),j=n.n(O),E=n(5),P=n.n(E),R=n(2),A=n.n(R);function C(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),n.push.apply(n,r)}return n}function I(t){return function(){var e,n=_()(t);if(L()){var r=_()(this).constructor;e=Reflect.construct(n,arguments,r)}else e=n.apply(this,arguments);return T()(this,e)}}function L(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(t){return!1}}var U=function(){function t(e){j()(this,t),A()(this,"_store",void 0),this._store=e}return P()(t,[{key:"clear",value:function(){this._store.clear()}},{key:"store",get:function(){return this._store},set:function(t){this._store=t}}]),t}(),D=new Map,B=function(t){S()(n,t);var e=I(n);function n(){return j()(this,n),e.call(this,D)}return P()(n,[{key:"getItem",value:function(t){return w()(_()(n.prototype),"store",this).get(t)}},{key:"setItem",value:function(t,e){return w()(_()(n.prototype),"store",this).set(t,e)}},{key:"removeItem",value:function(t){return w()(_()(n.prototype),"store",this).delete(t)}}]),n}(U),M=function(t){S()(n,t);var e=I(n);function n(){return j()(this,n),e.call(this,window.sessionStorage)}return P()(n,[{key:"getItem",value:function(t){return JSON.parse(w()(_()(n.prototype),"store",this).getItem(t.toString()))}},{key:"setItem",value:function(t,e){return w()(_()(n.prototype),"store",this).setItem(t.toString(),JSON.stringify(e))}},{key:"removeItem",value:function(t){return w()(_()(n.prototype),"store",this).removeItem(t.toString())}}]),n}(U),F=function(){function t(e){j()(this,t);var n={domain:".".concat(window.location.hostname),path:"/"};this.options=function(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?C(Object(n),!0).forEach((function(e){A()(t,e,n[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):C(Object(n)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))}))}return t}({},n,{},e)}return P()(t,[{key:"getItem",value:function(t){return JSON.parse(q.getItem(t.toString()))}},{key:"setItem",value:function(t,e){return q.setItem(t.toString(),JSON.stringify(e),this.options)}},{key:"removeItem",value:function(t){return q.removeItem(t.toString(),this.options)}},{key:"clear",value:function(){return q.clear()}}]),t}(),K=function(t){if(!t)return"";switch(t.constructor){case Number:return t===1/0?"; expires=Fri, 31 Dec 9999 23:59:59 GMT":"; max-age=".concat(t);case String:return"; expires=".concat(t);case Date:return"; expires=".concat(t.toUTCString());default:return""}},q={getItem:function(t){return t&&decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*".concat(encodeURIComponent(t).replace(/[\-\.\+\*]/g,"\\$&"),"\\s*\\=\\s*([^;]*).*$)|^.*$")),"$1"))||null},setItem:function(t,e){var n=arguments.length>2&&void 0!==arguments[2]?arguments[2]:{};if(!t||/^(?:expires|max\-age|path|domain|secure)$/i.test(t))return!1;var r=n.path,o=n.domain,i=n.end,a=n.secure,c=n.samesite,s=K(i),u=o?"; domain=".concat(o):"",h=r?"; path=".concat(r):"",f=a?"; secure":"",l=c?"; samesite":"";return document.cookie="".concat(encodeURIComponent(t),"=").concat(encodeURIComponent(e)).concat(s).concat(u).concat(h).concat(f).concat(l),!0},removeItem:function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{};if(!this.hasItem(t))return!1;var n=e.path,r=e.domain,o=r?"; domain=".concat(r):"",i=n?"; path=".concat(n):"";return document.cookie="".concat(encodeURIComponent(t),"=; expires=Thu, 01 Jan 1970 00:00:00 GMT").concat(o).concat(i),!0},hasItem:function(t){return!(!t||/^(?:expires|max\-age|path|domain|secure)$/i.test(t))&&new RegExp("(?:^|;\\s*)".concat(encodeURIComponent(t).replace(/[\-\.\+\*]/g,"\\$&"),"\\s*\\=")).test(document.cookie)},clear:function(){for(var t=document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g,"").split(/\s*(?:\=[^;]*)?;\s*/),e=t.length,n=0;n<e;n++)t[n]=decodeURIComponent(t[n]),this.removeItem(t[n]);return t}},H=n(11),W=n.n(H);function X(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(t){return!1}}var V=function(t){S()(r,t);var e,n=(e=r,function(){var t,n=_()(e);if(X()){var r=_()(this).constructor;t=Reflect.construct(n,arguments,r)}else t=n.apply(this,arguments);return T()(this,t)});function r(t){return j()(this,r),n.call(this,t)}return r}(W()(Error)),G=n(12),J=n.n(G);function z(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(t){return!1}}var Y=function(t){S()(r,t);var e,n=(e=r,function(){var t,n=_()(e);if(z()){var r=_()(this).constructor;t=Reflect.construct(n,arguments,r)}else t=n.apply(this,arguments);return T()(this,t)});function r(t,e){var o;j()(this,r),o=n.call(this);var i=e.status,a=t.information,c=t.message,s=t.cause;if(o.status=i,o.message=c,a){var u=a.code,h=J()(a,["code"]);o.code=u,o.information=h}return s&&(o.cause=new r(s)),o}return r}(W()(Error)),$=function t(e,n){j()(this,t);var r=n.status,o=n.headers;this.status=r,this.headers=o,this.body=e},Z=n(9),Q=n.n(Z),tt=new(function(){function t(){if(j()(this,t),A()(this,"_apiVersion",3),y())return this.loadBrowser();if(g())return this.loadNode();throw new V("Could not identify environment; no configuration was setup")}return P()(t,[{key:"isLocal",value:function(){if(!y())return!1;var t=window.location.host;return"127.0.0.1"===t||0===t.indexOf("local.")||-1!==t.indexOf("ngrok")||0===t.indexOf("localhost")}},{key:"loadNode",value:function(){this.apiProtocol="https",this.apiHost="test.forio.com"}},{key:"loadBrowser",value:function(){var t=this.isLocal(),e=window.location,n=e.protocol,r=e.pathname,o=e.host;this.apiProtocol=t?"https":n,this.apiHost=t?"forio.com":o;var i=r.match(/\/app\/([\w-]+)\/([\w-]+)/);if(i){var a=i.slice(1),c=Q()(a,2),s=c[0],u=c[1];this.accountShortName=s,this.projectShortName=u}}},{key:"apiProtocol",get:function(){return this._apiProtocol},set:function(t){t.startsWith("http")&&(t.endsWith(":")&&(t=t.slice(0,-1)),this._apiProtocol=t)}},{key:"apiHost",get:function(){return this._apiHost},set:function(t){this._apiHost=t}},{key:"apiVersion",get:function(){return this._apiVersion},set:function(t){}},{key:"accountShortName",get:function(){return this._accountShortName},set:function(t){this._accountShortName=t}},{key:"projectShortName",get:function(){return this._projectShortName},set:function(t){this._projectShortName=t}}]),t}()),et=h,nt=f,rt=Symbol("com.forio.epicenter.session"),ot=new(function(){function t(e){if(j()(this,t),A()(this,"type",void 0),e!==et&&e!==nt)throw new V('Invalid Storage Type: "'.concat(e,'", please use "').concat(et,'" or "').concat(nt,'".'));this.type=e,this.consumeSSO()}return P()(t,[{key:"getStore",value:function(){if(g())return B;switch(this.type){case nt:return M;case et:default:return F}}},{key:"getSessionPath",value:function(t){var e=t||this.session;if(!e||g())return"";var n=e.accountShortName,r=e.projectShortName,o=e.objectType,i=tt.isLocal(),a=!i&&"app"!==window.location.pathname.split("/")[1];return"user"===o&&n&&r&&(!i&&!a)?"/app/".concat(n,"/").concat(r):"/"}},{key:"consumeSSO",value:function(){if(!g()){var t=JSON.parse(JSON.parse('"'.concat(q.getItem("epicenter.v3.sso"),'"')));if(t){var e=t.accountShortName,n=t.projectShortName;this.session=t,q.removeItem("epicenter.v3.sso",{domain:".".concat(window.location.hostname),path:"/app/".concat(e,"/").concat(n)})}}}},{key:"session",get:function(){return(new(this.getStore())).getItem(rt.description)},set:function(t){var e=this.getStore(),n=this.getSessionPath(t);t?new e({path:n}).setItem(rt.description,t):this.session&&new e({path:n}).removeItem(rt.description)}}]),t}())(et),it=n(0),at=n.n(it),ct=n(1),st=n.n(ct);function ut(t){return ht.apply(this,arguments)}function ht(){return(ht=st()(at.a.mark((function t(e){var n,r,o,i,a,c,s,u;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=e.objectType,r=void 0===n?"personal":n,o=e.name,i=e.shortName,a=e.adminKey,c=e.subscriptionPlan,s=e.billingInterval,t.next=3,(new cn).post("/account",{body:{objectType:r,name:o,shortName:i,adminKey:a,subscriptionPlan:c,billingInterval:s}}).then((function(t){return t.body}));case 3:return u=t.sent,t.abrupt("return",u);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function ft(t){return lt.apply(this,arguments)}function lt(){return(lt=st()(at.a.mark((function t(e){var n,r,o,i,a,c,s,u;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=e.objectType,r=void 0===n?"personal":n,o=e.name,i=e.shortName,a=e.adminKey,c=e.subscriptionPlan,s=e.billingInterval,t.next=3,(new cn).patch("/account",{body:{objectType:r,name:o,shortName:i,adminKey:a,subscriptionPlan:c,billingInterval:s}}).then((function(t){return t.body}));case 3:return u=t.sent,t.abrupt("return",u);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function pt(t){return dt.apply(this,arguments)}function dt(){return(dt=st()(at.a.mark((function t(e){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,(new cn).withAccountShortName(e).delete("/account").then((function(t){return t.body}));case 2:return t.abrupt("return",t.sent);case 3:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function mt(){return yt.apply(this,arguments)}function yt(){return(yt=st()(at.a.mark((function t(){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return ot.session=void 0,t.next=3,Ge.disconnect();case 3:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function gt(t){return vt.apply(this,arguments)}function vt(){return(vt=st()(at.a.mark((function t(e){var n,r,o,i,a,c,s,u,h;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=e.handle,r=e.password,o=e.groupKey,i=e.objectType,a=void 0===i?"user":i,c=J()(e,["handle","password","groupKey","objectType"]),s=c.accountShortName,u=c.projectShortName,t.next=4,(new cn).withAccountShortName(s).withProjectShortName(u).post("/authentication",{body:{handle:n,password:r,groupKey:o,objectType:a},includeAuthorization:!1,inert:!0}).then((function(t){return t.body}));case 4:return h=t.sent,t.next=7,mt();case 7:return ot.session=h,t.abrupt("return",h);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function bt(t,e){return wt.apply(this,arguments)}function wt(){return(wt=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=n.objectType,o=void 0===r?"user":r,i=n.inert,a=J()(n,["objectType","inert"]),c=a.accountShortName,s=a.projectShortName,t.next=4,(new cn).withAccountShortName(c).withProjectShortName(s).patch("/authentication",{body:{objectType:o,groupKey:e},inert:i}).then((function(t){return t.body}));case 4:return u=t.sent,t.next=7,mt();case 7:return ot.session=u,t.abrupt("return",u);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function xt(t){return St.apply(this,arguments)}function St(){return(St=st()(at.a.mark((function t(e){var n,r,o;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=e.accountShortName,r=e.projectShortName,t.next=3,(new cn).withAccountShortName(n).withProjectShortName(r).get("/registration/sso").then((function(t){return t.body}));case 3:return o=t.sent,ot.session=o,t.abrupt("return",o);case 6:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function kt(){return Tt.apply(this,arguments)}function Tt(){return(Tt=st()(at.a.mark((function t(){var e,n;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,(new cn).get("/authentication");case 2:return e=t.sent,n=e.body,ot.session=n,t.abrupt("return",n);case 6:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Nt(){return ot.session}function _t(t,e){return Ot.apply(this,arguments)}function Ot(){return(Ot=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=s.length>2&&void 0!==s[2]?s[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.draft,c=r.runLimit,t.next=4,(new cn).withAccountShortName(o).withProjectShortName(i).post("/episode/".concat(n),{body:{name:e,draft:a,runLimit:c}}).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function jt(t){return Et.apply(this,arguments)}function Et(){return(Et=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/episode/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Pt(){return Rt.apply(this,arguments)}function Rt(){return(Rt=st()(at.a.mark((function t(){var e,n,r,o,i,a,c,s,u,h,f,l=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=l.length>0&&void 0!==l[0]?l[0]:{},n=e.accountShortName,r=e.projectShortName,o=e.filter,i=void 0===o?[]:o,a=e.sort,c=void 0===a?[]:a,s=e.first,u=void 0===s?0:s,h=e.max,f=void 0===h?100:h,t.next=4,(new cn).withAccountShortName(n).withProjectShortName(r).withSearchParams({filter:i.join(";"),sort:c.join(";"),first:u,max:f}).get("/episode/search").then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function At(t){return Ct.apply(this,arguments)}function Ct(){return(Ct=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/episode/in/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function It(t,e){return Lt.apply(this,arguments)}function Lt(){return(Lt=st()(at.a.mark((function t(e,n){var r,o,i,a=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=a.length>2&&void 0!==a[2]?a[2]:{},o=r.accountShortName,i=r.projectShortName,t.next=4,(new cn).withAccountShortName(o).withProjectShortName(i).get("/episode/with/".concat(e,"/").concat(n)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Ut(t){return Dt.apply(this,arguments)}function Dt(){return(Dt=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).delete("/episode/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Bt(t){return Mt.apply(this,arguments)}function Mt(){return(Mt=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/presence/group/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Ft(t){return Kt.apply(this,arguments)}function Kt(){return(Kt=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/presence/world/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function qt(){return Ht.apply(this,arguments)}function Ht(){return(Ht=st()(at.a.mark((function t(){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.abrupt("return",Ge.handshake());case 1:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Wt(){return Xt.apply(this,arguments)}function Xt(){return(Xt=st()(at.a.mark((function t(){var e,n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=i.length>0&&void 0!==i[0]?i[0]:{},n=e.accountShortName,r=e.projectShortName,t.next=4,(new cn).withAccountShortName(n).withProjectShortName(r).get("/project/channel/isEnabled").then((function(t){return t.body}));case 4:return o=t.sent,t.abrupt("return",o);case 6:case"end":return t.stop()}}),t)})))).apply(this,arguments)}var Vt=n(6),Gt=n.n(Vt);function Jt(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),n.push.apply(n,r)}return n}function zt(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?Jt(Object(n),!0).forEach((function(e){A()(t,e,n[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):Jt(Object(n)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))}))}return t}function Yt(t,e){return $t.apply(this,arguments)}function $t(){return($t=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,p,d,y,g,v,b,w,x=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=x.length>2&&void 0!==x[2]?x[2]:{},o=n.scopeBoundary,i=n.scopeKey,a=r.accountShortName,c=r.projectShortName,s=r.readLock,u=r.writeLock,h=r.userKey,f=r.ephemeral,p=r.trackingKey,d=r.modelContext,y=r.executionContext,g=l.WORLD,v=m.PARTICIPANT,b=m.USER,w=o===g?v:b,t.next=8,(new cn).withAccountShortName(a).withProjectShortName(c).post("/run",{body:{scope:{scopeBoundary:o,scopeKey:i,userKey:o===g?void 0:null!=h?h:ot.session.userKey},permit:{readLock:s||w,writeLock:u||w},morphology:"MANY",trackingKey:p,modelFile:e,modelContext:d||{},executionContext:y||{},ephemeral:f}}).then((function(t){return t.body}));case 8:return t.abrupt("return",t.sent);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Zt(t){return Qt.apply(this,arguments)}function Qt(){return(Qt=st()(at.a.mark((function t(e){var n,r,o,i,a,c,s,u,h,f=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=f.length>1&&void 0!==f[1]?f[1]:{},r=n.accountShortName,o=n.projectShortName,i=n.ephemeral,a=n.trackingKey,c=n.modelContext,s=void 0===c?{}:c,u=n.executionContext,h=void 0===u?{}:u,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).post("/run/clone/".concat(e),{body:{trackingKey:a,modelContext:s,executionContext:h,ephemeral:i}}).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function te(t){return ee.apply(this,arguments)}function ee(){return(ee=st()(at.a.mark((function t(e){var n,r,o,i,a,c,s,u,h=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=h.length>1&&void 0!==h[1]?h[1]:{},r=n.accountShortName,o=n.projectShortName,i=n.ephemeral,a=n.modelContext,c=void 0===a?{}:a,s=n.executionContext,u=void 0===s?{}:s,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).post("/run/restore/".concat(e),{body:{modelContext:c,executionContext:u,ephemeral:i}}).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function ne(t,e){return re.apply(this,arguments)}function re(){return(re=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=u.length>2&&void 0!==u[2]?u[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.ephemeral,c=r.modelContext,s=void 0===c?{}:c,t.next=4,(new cn).withAccountShortName(o).withProjectShortName(i).post("/run/rewind/".concat(e),{body:{rewindCount:n,modelContext:s,ephemeral:a}}).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function oe(t,e){return ie.apply(this,arguments)}function ie(){return(ie=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l,p,d=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=d.length>2&&void 0!==d[2]?d[2]:{},o=n.readLock,i=n.writeLock,a=n.trackingKey,c=n.marked,s=n.hidden,u=n.closed,h=r.accountShortName,f=r.projectShortName,l=Array.isArray(e)&&e.length>1,p=l?"":"/".concat(1===e.length?e[0]:e),t.next=7,(new cn).withAccountShortName(h).withProjectShortName(f).withSearchParams(l?{runKey:e}:"").patch("/run".concat(p),{body:{readLock:o,writeLock:i,trackingKey:a,marked:c,hidden:s,closed:u}}).then((function(t){return t.body}));case 7:return t.abrupt("return",t.sent);case 8:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function ae(t){return ce.apply(this,arguments)}function ce(){return(ce=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).delete("/run/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function se(t){return ue.apply(this,arguments)}function ue(){return(ue=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/run/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function he(t,e){return fe.apply(this,arguments)}function fe(){return(fe=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l,p,d,m,y,g,b=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=b.length>2&&void 0!==b[2]?b[2]:{},o=n.scopeBoundary,i=n.scopeKey,a=r.filter,c=void 0===a?{}:a,s=r.sort,u=void 0===s?[]:s,h=r.first,f=r.max,l=r.timeout,p=r.projections,d=void 0===p?{}:p,m=r.accountShortName,y=r.projectShortName,g={filter:[].concat(Gt()((c.variables||[]).map((function(t){return v("var.",t)}))),Gt()((c.metadata||[]).map((function(t){return v("meta.",t)}))),Gt()((c.attributes||[]).map((function(t){return v("run.",t)})))).join(";"),sort:u.join(";"),first:h,max:f,timeout:l,projections:[].concat(Gt()((d.variables||[]).map((function(t){return v("var.",t)}))),Gt()((d.metadata||[]).map((function(t){return v("meta.",t)}))),Gt()((d.attr||[]).map((function(t){return v("run.",t)})))).join(";")},t.next=6,(new cn).withAccountShortName(m).withProjectShortName(y).withSearchParams(g).get("/run/".concat(o,"/").concat(i,"/").concat(e),{paginate:!0}).then((function(t){return t.body}));case 6:return t.abrupt("return",t.sent);case 7:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function le(t){return pe.apply(this,arguments)}function pe(){return(pe=st()(at.a.mark((function t(e){var n,r,o,i=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=i.length>1&&void 0!==i[1]?i[1]:{},r=n.accountShortName,o=n.projectShortName,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).get("/run/introspect/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function de(t,e){return me.apply(this,arguments)}function me(){return(me=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=l.length>2&&void 0!==l[2]?l[2]:[],o=l.length>3&&void 0!==l[3]?l[3]:{},i=o.accountShortName,a=o.projectShortName,c=o.timeout,s=o.ritual,u=Array.isArray(e)&&e.length>1,h=u?"":"/".concat(1===e.length?e[0]:e),f=u?{runKey:e,timeout:c}:{ritual:s,timeout:c},s!==p.EXORCISE&&u&&console.warn("Detected ritual: ".concat(s," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=9,(new cn).withAccountShortName(i).withProjectShortName(a).withSearchParams(f).post("/run/operation".concat(h),{body:{name:n,arguments:r,objectType:"execute"}}).then((function(t){return t.body}));case 9:return t.abrupt("return",t.sent);case 10:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function ye(t,e){return ge.apply(this,arguments)}function ge(){return(ge=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=l.length>2&&void 0!==l[2]?l[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,s=n.join(";"),u=Array.isArray(e)&&e.length>1,h=u?"":"/".concat(1===e.length?e[0]:e),f=u?{runKey:e,timeout:a,include:s}:{ritual:c,timeout:a,include:s},c!==p.EXORCISE&&u&&console.warn("Detected ritual: ".concat(c," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=9,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams(f).get("/run/variable".concat(h)).then((function(t){return t.body}));case 9:return t.abrupt("return",t.sent);case 10:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function ve(t,e){return be.apply(this,arguments)}function be(){return(be=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(r=u.length>2&&void 0!==u[2]?u[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,!Array.isArray(e)&&!Array.isArray(n)){t.next=5;break}return s=Array.isArray(n)?n:[n],t.abrupt("return",ye(e,s,r));case 5:return t.next=7,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams({timeout:a,ritual:c}).get("/run/variable/".concat(e,"/").concat(n)).then((function(t){return t.body}));case 7:return t.abrupt("return",t.sent);case 8:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function we(t,e){return xe.apply(this,arguments)}function xe(){return(xe=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=f.length>2&&void 0!==f[2]?f[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,s=Array.isArray(e)&&e.length>1,u=s?"":"/".concat(1===e.length?e[0]:e),h=s?{runKey:e,timeout:a}:{ritual:c,timeout:a},c!==p.EXORCISE&&s&&console.warn("Detected ritual: ".concat(c," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=8,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams(h).patch("/run/variable".concat(u),{body:n}).then((function(t){return t.body}));case 8:return t.abrupt("return",t.sent);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Se(t,e){return ke.apply(this,arguments)}function ke(){return(ke=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=l.length>2&&void 0!==l[2]?l[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,s=n.join(";"),u=Array.isArray(e)&&e.length>1,h=u?"":"/".concat(1===e.length?e[0]:e),f=u?{runKey:e,timeout:a,include:s}:{ritual:c,timeout:a,include:s},c!==p.EXORCISE&&u&&console.warn("Detected ritual: ".concat(c," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=9,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams(f).get("/run/meta".concat(h)).then((function(t){return t.body}));case 9:return t.abrupt("return",t.sent);case 10:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Te(t,e){return Ne.apply(this,arguments)}function Ne(){return(Ne=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=f.length>2&&void 0!==f[2]?f[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,s=Array.isArray(e)&&e.length>1,u=s?"":"/".concat(1===e.length?e[0]:e),h=s?{runKey:e,timeout:a}:{ritual:c,timeout:a},c!==p.EXORCISE&&s&&console.warn("Detected ritual: ".concat(c," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=8,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams(h).patch("/run/meta".concat(u),{body:n}).then((function(t){return t.body}));case 8:return t.abrupt("return",t.sent);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function _e(t,e){return Oe.apply(this,arguments)}function Oe(){return(Oe=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=f.length>2&&void 0!==f[2]?f[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.timeout,c=r.ritual,s=Array.isArray(e)&&e.length>1,u=s?"":"/".concat(1===e.length?e[0]:e),h=s?{runKey:e,timeout:a}:{ritual:c,timeout:a},c!==p.EXORCISE&&s&&console.warn("Detected ritual: ".concat(c," usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE")),t.next=8,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams(h).post("/run/action".concat(u),{body:n}).then((function(t){return t.body}));case 8:return t.abrupt("return",t.sent);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function je(t,e,n){return Ee.apply(this,arguments)}function Ee(){return(Ee=st()(at.a.mark((function t(e,n,r){var o;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return o=n.map((function(t){return{name:"string"==typeof t?t:t.name,params:t.params}})),t.abrupt("return",o.reduce((function(t,n){var o=n.name,i=n.params;return t.then((function(){return de(e,o,i,r)}))}),Promise.resolve()));case 2:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Pe(t,e,n){return Re.apply(this,arguments)}function Re(){return(Re=st()(at.a.mark((function t(e,n,r){var o,i,a,c,s,u,h=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(o=h.length>3&&void 0!==h[3]?h[3]:{},i=o.initOperations,a=void 0===i?[]:i,"reuse-across-sessions"!==e){t.next=16;break}return t.next=5,he(n,r,zt({},o,{sort:["-created"]}));case 5:if(!(c=t.sent).length){t.next=8;break}return t.abrupt("return",c[0]);case 8:return t.next=10,Yt(n,r,o);case 10:return s=t.sent,t.next=13,je(s.runKey,a,o);case 13:return t.abrupt("return",s);case 16:if("reuse-never"!==e){t.next=25;break}return t.next=19,Yt(n,r,o);case 19:return u=t.sent,t.next=22,je(u.runKey,a,o);case 22:return t.abrupt("return",u);case 25:case 26:throw new V("Invalid run strategy.");case 27:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Ae(t,e){return Ce.apply(this,arguments)}function Ce(){return(Ce=st()(at.a.mark((function t(e,n){var r,o,i,a,c=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=c.length>2&&void 0!==c[2]?c[2]:{},o=r.accountShortName,i=r.projectShortName,a=r.mutationKey,t.next=4,(new cn).withAccountShortName(o).withProjectShortName(i).withSearchParams({MutationKey:a}).patch("/vault/".concat(e),{body:{items:n}}).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Ie(t,e){return Le.apply(this,arguments)}function Le(){return(Le=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=u.length>2&&void 0!==u[2]?u[2]:{},o=n.scopeBoundary,i=n.scopeKey,a=r.accountShortName,c=r.projectShortName,s=r.userKey?"/".concat(r.userKey):"",t.next=6,(new cn).withAccountShortName(a).withProjectShortName(c).get("/vault/".concat(o,"/").concat(i).concat(s,"/").concat(e)).catch((function(t){return 404===t.status?{body:void 0}:Promise.reject(t)})).then((function(t){return t.body}));case 6:return t.abrupt("return",t.sent);case 7:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Ue(t){return De.apply(this,arguments)}function De(){return(De=st()(at.a.mark((function t(e){var n,r,o,i,a=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return n=a.length>1&&void 0!==a[1]?a[1]:{},r=n.accountShortName,o=n.projectShortName,i=n.mutationKey,t.next=4,(new cn).withAccountShortName(r).withProjectShortName(o).withSearchParams({MutationKey:i}).delete("/vault/".concat(e)).then((function(t){return t.body}));case 4:return t.abrupt("return",t.sent);case 5:case"end":return t.stop()}}),t)})))).apply(this,arguments)}function Be(t,e,n){return Me.apply(this,arguments)}function Me(){return(Me=st()(at.a.mark((function t(e,n,r){var o,i,a,c,s,u,h,f,p,d,y,g,v=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return o=v.length>3&&void 0!==v[3]?v[3]:{},i=n.scopeBoundary,a=n.scopeKey,c=o.accountShortName,s=o.projectShortName,u=o.readLock,h=o.writeLock,f=o.userKey,p=l.WORLD,d=m.PARTICIPANT,y=m.USER,g=i===p?d:y,t.next=8,(new cn).withAccountShortName(c).withProjectShortName(s).post("/vault/".concat(e),{body:{scope:{scopeBoundary:i,scopeKey:a,userKey:i===p?void 0:f},permit:{readLock:u||g,writeLock:h||g},items:r}}).then((function(t){return t.body}));case 8:return t.abrupt("return",t.sent);case 9:case"end":return t.stop()}}),t)})))).apply(this,arguments)}var Fe=n(18),Ke=n.n(Fe),qe=n(19),He=n.n(qe);function We(){if("undefined"==typeof Reflect||!Reflect.construct)return!1;if(Reflect.construct.sham)return!1;if("function"==typeof Proxy)return!0;try{return Date.prototype.toString.call(Reflect.construct(Date,[],(function(){}))),!0}catch(t){return!1}}var Xe="com.forio.epicenter.token",Ve=function(t){S()(r,t);var e,n=(e=r,function(){var t,n=_()(e);if(We()){var r=_()(this).constructor;t=Reflect.construct(n,arguments,r)}else t=n.apply(this,arguments);return T()(this,t)});function r(t){var e;j()(this,r),e=n.call(this);var o=t.error,i=t.successful;return o&&o.includes("403")&&!i&&(e.status=401),e.information=t,e.message=o,e}return r}(W()(Error)),Ge=new(function(){function t(){j()(this,t),A()(this,"url",void 0),A()(this,"customCometd",void 0),A()(this,"defaultCometd",void 0),A()(this,"initialization",void 0),A()(this,"subscriptions",new Map),A()(this,"state","disconnected"),A()(this,"requireAcknowledgement",!0)}var e,r,o,i,a,c,s,u,h;return P()(t,[{key:"startup",value:(h=st()(at.a.mark((function t(){var e,r,o,i,a,c=this,s=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=s.length>0&&void 0!==s[0]?s[0]:{logLevel:"error"},t.next=3,Wt();case 3:if(t.sent){t.next=6;break}throw new V("Push Channels are not enabled on this project");case 6:if(!y()){t.next=11;break}return t.next=9,Promise.resolve().then(n.t.bind(null,17,7));case 9:r=t.sent,this.defaultCometd=new r.CometD;case 11:o=tt.apiProtocol,i=tt.apiHost,a=tt.apiVersion,this.url="".concat(o,"://").concat(i,"/push/v").concat(a,"/cometd"),this.cometd.registerExtension("ack",new Ke.a),this.cometd.registerExtension("reload",new He.a),this.cometd.configure({url:this.url,logLevel:e.logLevel}),y()&&(window.onunload=function(){"connected"===c.cometd.getStatus()&&(c.cometd.reload(),c.cometd.getTransport().abort())});case 17:case"end":return t.stop()}}),t,this)}))),function(){return h.apply(this,arguments)})},{key:"reinit",value:(u=st()(at.a.mark((function t(e,n){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,this.disconnect();case 2:return this.initialization=void 0,this.customCometd=e,t.abrupt("return",this.init(n));case 5:case"end":return t.stop()}}),t,this)}))),function(t,e){return u.apply(this,arguments)})},{key:"init",value:(s=st()(at.a.mark((function t(e){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return this.initialization||(this.initialization=this.startup(e)),t.abrupt("return",this.initialization);case 2:case"end":return t.stop()}}),t,this)}))),function(t){return s.apply(this,arguments)})},{key:"handshake",value:(c=st()(at.a.mark((function t(){var e,n,r,o,i=this,a=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return e=a.length>0&&void 0!==a[0]?a[0]:{},t.next=3,this.init();case 3:if("disconnected"===this.cometd.getStatus()){t.next=5;break}return t.abrupt("return",Promise.resolve());case 5:return n={},(r=ot.session)&&(n.ext=(o={},A()(o,Xe,r.token),A()(o,"ack",this.requireAcknowledgement),o)),this.cometd.ackEnabled=this.requireAcknowledgement,this.cometd.websocketEnabled=!0,t.abrupt("return",new Promise((function(t,r){return i.cometd.handshake(n,(function(n){if(n.successful)t(n);else{var o=new Ve(n);if(e.inert)r(o);else try{var a=Ye.handle(o,(function(){return i.handshake({inert:!0})}));t(a)}catch(t){r(t)}}}))})));case 11:case"end":return t.stop()}}),t,this)}))),function(){return c.apply(this,arguments)})},{key:"disconnect",value:(a=st()(at.a.mark((function t(){var e=this;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(this.cometd){t.next=2;break}return t.abrupt("return",Promise.resolve());case 2:return t.next=4,this.init();case 4:return t.next=6,this.empty();case 6:if("connected"===this.cometd.getStatus()){t.next=8;break}return t.abrupt("return",Promise.resolve());case 8:return t.abrupt("return",new Promise((function(t,n){return e.cometd.disconnect((function(e){e.successful?t():n(new V("Unable to disconnect from CometD server"))}))})));case 9:case"end":return t.stop()}}),t,this)}))),function(){return a.apply(this,arguments)})},{key:"add",value:(i=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u=this,h=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=h.length>2&&void 0!==h[2]?h[2]:{},t.next=3,this.init();case 3:if(o=[].concat(e),"connected"===this.cometd.getStatus()){t.next=7;break}return t.next=7,this.handshake();case 7:return i={},(a=ot.session)&&(i.ext=A()({},Xe,a.token)),c=function(t){t.channel;var e=t.data;return e="string"==typeof e?JSON.parse(e):e,n(e)},s=[],this.cometd.batch((function(){return o.forEach((function(t){var o=t.path;return s.push(new Promise((function(t,a){var s=u.cometd.subscribe(o,c,i,(function(o){if(o.successful)return u.subscriptions.set(s.channel,s),void t(s);var i=new Ve(o);if(r.inert)a(i);else try{var c=Ye.handle(i,(function(){return u.add(e,n,{inert:!0})}));t(c)}catch(t){a(t)}}))})))}))})),t.abrupt("return",1===s.length?Promise.all(s).then((function(t){return Q()(t,1)[0]})):Promise.all(s));case 14:case"end":return t.stop()}}),t,this)}))),function(t,e){return i.apply(this,arguments)})},{key:"publish",value:(o=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s=this,u=arguments;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=u.length>2&&void 0!==u[2]?u[2]:{},t.next=3,this.init();case 3:if(o=[].concat(e),"connected"===this.cometd.getStatus()){t.next=7;break}return t.next=7,this.handshake();case 7:return i={},(a=ot.session)&&(i.ext=A()({},Xe,a.token)),c=[],this.cometd.batch((function(){return o.forEach((function(t){var o=t.path;return c.push(new Promise((function(t,a){s.cometd.publish(o,n,i,(function(o){if(o.successful)t(o);else{var i=new Ve(o);if(r.inert)a(i);else try{var c=Ye.handle(i,(function(){return s.publish(e,n,{inert:!0})}));t(c)}catch(t){a(t)}}}))})))}))})),t.abrupt("return",1===c.length?Promise.all(c).then((function(t){return Q()(t,1)[0]})):Promise.all(c));case 13:case"end":return t.stop()}}),t,this)}))),function(t,e){return o.apply(this,arguments)})},{key:"remove",value:(r=st()(at.a.mark((function t(e){var n=this;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,this.init();case 2:return this.subscriptions.delete(e.channel),t.abrupt("return",new Promise((function(t,r){return n.cometd.unsubscribe(e,(function(e){e.successful&&t(e);var n=new Ve(e);r(n)}))})));case 4:case"end":return t.stop()}}),t,this)}))),function(t){return r.apply(this,arguments)})},{key:"empty",value:(e=st()(at.a.mark((function t(){var e,n=this;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,this.init();case 2:return e=[],this.cometd.batch((function(){return n.subscriptions.forEach((function(t){e.push(n.remove(t))}))})),t.abrupt("return",Promise.all(e));case 5:case"end":return t.stop()}}),t,this)}))),function(){return e.apply(this,arguments)})},{key:"cometd",get:function(){return this.customCometd||this.defaultCometd}}]),t}()),Je=function(){function t(e){j()(this,t),A()(this,"path",void 0),A()(this,"update",void 0),A()(this,"subscription",void 0);var n=e.scopeBoundary,r=e.scopeKey,o=e.pushCategory;!function(t){if(!t)throw new V("No scope found where one was required");var e=t.scopeBoundary,n=t.scopeKey,r=t.pushCategory;if(!e)throw new V("Missing scope component: scopeBoundary");if(!n)throw new V("Missing scope component: scopeKey");if(!r)throw new V("Missing scope component: pushCategory");if(!l.hasOwnProperty(e))throw new V("Invalid scope boundary: ".concat(e));if(!d.hasOwnProperty(r))throw new V("Invalid push category: ".concat(r))}(e),this.path="/".concat(n.toLowerCase(),"/").concat(r,"/").concat(o.toLowerCase()),Ge.subscriptions.has(this.path)&&(this.subscription=Ge.subscriptions.get(this.path))}var e,n;return P()(t,[{key:"publish",value:function(t){return Ge.publish(this,t)}},{key:"subscribe",value:(n=st()(at.a.mark((function t(e,n){var r=this;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(!this.subscription){t.next=3;break}return t.next=3,this.unsubscribe();case 3:return this.update=e,t.abrupt("return",Ge.add(this,e,n).then((function(t){return r.subscription=t,t})));case 5:case"end":return t.stop()}}),t,this)}))),function(t,e){return n.apply(this,arguments)})},{key:"unsubscribe",value:(e=st()(at.a.mark((function t(){return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(!this.subscription){t.next=4;break}return t.next=3,Ge.remove(this.subscription);case 3:this.subscription=null;case 4:case"end":return t.stop()}}),t,this)}))),function(){return e.apply(this,arguments)})}]),t}(),ze=function(t){var e,n=ot.session;switch(null==n||null===(e=n.loginMethod)||void 0===e?void 0:e.objectType){case"sso":return o.logout();case"none":return o.logout().then((function(){return window.location.href="/unknown.html"}));case"native":default:return function(t){var e="";return t.code&&(e=e.concat("?error=".concat(t.code))),o.logout().then((function(){return window.location.href="/login.html".concat(e)}))}(t)}},Ye=new(function(){function t(){j()(this,t),A()(this,"_handlers",[{identifier:function(t){return 401===t.status},handle:function(t,e){if("AUTHENTICATION_INVALIDATED"===t.code){var n=ot.session.groupKey;return o.upgrade(n,{objectType:"user",inert:!0}).then((function(){return e()})).catch((function(){return ze(t)}))}return g()?Promise.reject(t):ze(t)}}])}var e;return P()(t,[{key:"registerHandler",value:function(t,e){this.handlers.unshift({identifier:t,handle:e})}},{key:"handle",value:(e=st()(at.a.mark((function t(e,n,r){var o,i,a,c;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(r=r||this.handlers,o=r.findIndex((function(t){return(0,t.identifier)(e)})),i=r[o],a=o>0?r.slice(o+1):[],i){t.next=6;break}throw e;case 6:return t.prev=6,t.next=9,i.handle(e,n).catch((function(t){throw t}));case 9:c=t.sent,t.next=17;break;case 12:return t.prev=12,t.t0=t.catch(6),t.next=16,this.handle(e,n,a);case 16:c=t.sent;case 17:return t.abrupt("return",c);case 18:case"end":return t.stop()}}),t,this,[[6,12]])}))),function(t,n,r){return e.apply(this,arguments)})},{key:"handlers",get:function(){return this._handlers}}]),t}()),$e=n(13),Ze=n.n($e),Qe=n(20),tn=n.n(Qe);function en(t,e){var n=Object.keys(t);if(Object.getOwnPropertySymbols){var r=Object.getOwnPropertySymbols(t);e&&(r=r.filter((function(e){return Object.getOwnPropertyDescriptor(t,e).enumerable}))),n.push.apply(n,r)}return n}function nn(t){for(var e=1;e<arguments.length;e++){var n=null!=arguments[e]?arguments[e]:{};e%2?en(Object(n),!0).forEach((function(e){A()(t,e,n[e])})):Object.getOwnPropertyDescriptors?Object.defineProperties(t,Object.getOwnPropertyDescriptors(n)):en(Object(n)).forEach((function(e){Object.defineProperty(t,e,Object.getOwnPropertyDescriptor(n,e))}))}return t}function rn(t,e,n){var r=nn({},t,{allValues:Gt()(t.values)}),o=function(){var o=st()(at.a.mark((function o(){var i,a,c;return at.a.wrap((function(o){for(;;)switch(o.prev=o.next){case 0:if(i=new URLSearchParams(e.search),a=r.firstResult+r.maxResults,!(r.allValues.length>=t.totalResults)){o.next=5;break}return r.done=!0,o.abrupt("return",r);case 5:return i.set("first",a),e.search=i,o.next=9,on(e,nn({},n,{paginated:!1}));case 9:return c=o.sent,r.allValues=r.allValues.concat(c.values),Object.assign(r,c),o.abrupt("return",r);case 13:case"end":return o.stop()}}),o)})));return function(){return o.apply(this,arguments)}}(),i=function(){var t=st()(at.a.mark((function t(){var e,n,r;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return t.next=2,o();case 2:if(e=t.sent,n=e.done,r=e.allValues,!n){t.next=7;break}return t.abrupt("return",r);case 7:return t.next=9,i();case 9:return t.abrupt("return",t.sent);case 10:case"end":return t.stop()}}),t)})));return function(){return t.apply(this,arguments)}}();return r.next=o,r.withAll=i,r}function on(t,e){return an.apply(this,arguments)}function an(){return(an=st()(at.a.mark((function t(e,n){var r,o,i,a,c,s,u,h,f,l,p,d;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=n.method,o=n.body,i=n.includeAuthorization,a=n.inert,c=n.paginated,s={"Content-type":"application/json; charset=UTF-8"},u=ot.session,i&&u&&(s.Authorization="Bearer ".concat(u.token)),t.next=6,tn()(e,{method:r,cache:"no-cache",headers:s,redirect:"follow",body:o?JSON.stringify(o):null});case 6:if(h=t.sent,(f=h.headers.get("content-type"))&&f.includes("application/json")){t.next=10;break}throw new V("Response content-type '".concat(f,"' does not include 'application/json'"));case 10:return t.next=12,h.json();case 12:if(l=t.sent,!(h.status>=200&&h.status<400)){t.next=15;break}return t.abrupt("return",new $(c?rn(l,e,n):l,h));case 15:if(p=new Y(l,h),!a){t.next=18;break}throw p;case 18:return d=function(){return on(e,{method:r,body:o,includeAuthorization:i,inert:!0})},t.abrupt("return",Ye.handle(p,d));case 20:case"end":return t.stop()}}),t)})))).apply(this,arguments)}var cn=function(){function t(){j()(this,t)}var e,n,r,o,i;return P()(t,[{key:"withServer",value:function(t){return t&&(this.server=t),this}},{key:"withVersion",value:function(t){return t&&(this.version=t),this}},{key:"withAccountShortName",value:function(t){return t&&(this.accountShortName=t),this}},{key:"withProjectShortName",value:function(t){return t&&(this.projectShortName=t),this}},{key:"withSearchParams",value:function(t){return t?("object"===Ze()(t)&&0===Object.entries(t).length||(this.searchParams=t),this):this}},{key:"configure",value:function(){this.server||this.withServer("".concat(tt.apiProtocol,"://").concat(tt.apiHost)),this.accountShortName||this.withAccountShortName(tt.accountShortName),this.projectShortName||this.withProjectShortName(tt.projectShortName),this.version||this.withVersion(tt.apiVersion)}},{key:"getURL",value:function(t){this.configure();var e=new URL("".concat(this.server));return e.pathname="api/v".concat(this.version,"/").concat(this.accountShortName,"/").concat(this.projectShortName).concat(v("/",t)),e.search=new URLSearchParams(this.searchParams),e}},{key:"get",value:(i=st()(at.a.mark((function t(e,n){var r,o;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:if(!((r=this.getURL(e)).href.length>2048)){t.next=4;break}return o=new URL(r.href.split("?")[0]),t.abrupt("return",this.post(o,{body:r.search}));case 4:return t.abrupt("return",on(r,nn({includeAuthorization:!0},n,{method:"GET"})));case 5:case"end":return t.stop()}}),t,this)}))),function(t,e){return i.apply(this,arguments)})},{key:"delete",value:(o=st()(at.a.mark((function t(e,n){var r;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=this.getURL(e),t.abrupt("return",on(r,nn({includeAuthorization:!0},n,{method:"DELETE"})));case 2:case"end":return t.stop()}}),t,this)}))),function(t,e){return o.apply(this,arguments)})},{key:"patch",value:(r=st()(at.a.mark((function t(e,n){var r;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=this.getURL(e),t.abrupt("return",on(r,nn({includeAuthorization:!0},n,{method:"PATCH"})));case 2:case"end":return t.stop()}}),t,this)}))),function(t,e){return r.apply(this,arguments)})},{key:"post",value:(n=st()(at.a.mark((function t(e,n){var r;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=this.getURL(e),t.abrupt("return",on(r,nn({includeAuthorization:!0},n,{method:"POST"})));case 2:case"end":return t.stop()}}),t,this)}))),function(t,e){return n.apply(this,arguments)})},{key:"put",value:(e=st()(at.a.mark((function t(e,n){var r;return at.a.wrap((function(t){for(;;)switch(t.prev=t.next){case 0:return r=this.getURL(e),t.abrupt("return",on(r,nn({includeAuthorization:!0},n,{method:"PUT"})));case 2:case"end":return t.stop()}}),t,this)}))),function(t,n){return e.apply(this,arguments)})},{key:"server",get:function(){return this._server},set:function(t){this._server=t}},{key:"version",get:function(){return this._version},set:function(t){this._version=t}},{key:"accountShortName",get:function(){return this._accountShortName},set:function(t){this._accountShortName=t}},{key:"projectShortName",get:function(){return this._projectShortName},set:function(t){this._projectShortName=t}},{key:"searchParams",get:function(){return this._searchParams},set:function(t){"object"===Ze()(t)&&t.constructor===Object&&(t=Object.entries(t).reduce((function(t,e){var n=Q()(e,2),r=n[0],o=n[1];return Array.isArray(o)?[].concat(Gt()(t),Gt()(o.map((function(t){return[r,t]})))):(null==o||t.push([r,o]),t)}),[])),this._searchParams=t}}]),t}(),sn="3.1.0-alpha"}])}));
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["epicenter"] = factory();
+	else
+		root["epicenter"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ({
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayLikeToArray.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithHoles.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+}
+
+module.exports = _arrayWithoutHoles;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/assertThisInitialized.js ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+module.exports = _assertThisInitialized;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/asyncToGenerator.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+module.exports = _asyncToGenerator;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/classCallCheck.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/classCallCheck.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+module.exports = _classCallCheck;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/construct.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/construct.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+
+var isNativeReflectConstruct = __webpack_require__(/*! ./isNativeReflectConstruct */ "./node_modules/@babel/runtime/helpers/isNativeReflectConstruct.js");
+
+function _construct(Parent, args, Class) {
+  if (isNativeReflectConstruct()) {
+    module.exports = _construct = Reflect.construct;
+  } else {
+    module.exports = _construct = function _construct(Parent, args, Class) {
+      var a = [null];
+      a.push.apply(a, args);
+      var Constructor = Function.bind.apply(Parent, a);
+      var instance = new Constructor();
+      if (Class) setPrototypeOf(instance, Class.prototype);
+      return instance;
+    };
+  }
+
+  return _construct.apply(null, arguments);
+}
+
+module.exports = _construct;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/createClass.js":
+/*!************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/createClass.js ***!
+  \************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  return Constructor;
+}
+
+module.exports = _createClass;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/defineProperty.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/defineProperty.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+module.exports = _defineProperty;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/get.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/get.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var superPropBase = __webpack_require__(/*! ./superPropBase */ "./node_modules/@babel/runtime/helpers/superPropBase.js");
+
+function _get(target, property, receiver) {
+  if (typeof Reflect !== "undefined" && Reflect.get) {
+    module.exports = _get = Reflect.get;
+  } else {
+    module.exports = _get = function _get(target, property, receiver) {
+      var base = superPropBase(target, property);
+      if (!base) return;
+      var desc = Object.getOwnPropertyDescriptor(base, property);
+
+      if (desc.get) {
+        return desc.get.call(receiver);
+      }
+
+      return desc.value;
+    };
+  }
+
+  return _get(target, property, receiver || target);
+}
+
+module.exports = _get;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/getPrototypeOf.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _getPrototypeOf(o) {
+  module.exports = _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+module.exports = _getPrototypeOf;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/inherits.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/inherits.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  if (superClass) setPrototypeOf(subClass, superClass);
+}
+
+module.exports = _inherits;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/isNativeFunction.js":
+/*!*****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/isNativeFunction.js ***!
+  \*****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _isNativeFunction(fn) {
+  return Function.toString.call(fn).indexOf("[native code]") !== -1;
+}
+
+module.exports = _isNativeFunction;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/isNativeReflectConstruct.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/isNativeReflectConstruct.js ***!
+  \*************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _isNativeReflectConstruct() {
+  if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+  if (Reflect.construct.sham) return false;
+  if (typeof Proxy === "function") return true;
+
+  try {
+    Date.prototype.toString.call(Reflect.construct(Date, [], function () {}));
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+module.exports = _isNativeReflectConstruct;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArray.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArray.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+}
+
+module.exports = _iterableToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js ***!
+  \*********************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableRest.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableRest.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/nonIterableSpread.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableSpread;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/objectWithoutProperties.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/objectWithoutProperties.js ***!
+  \************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var objectWithoutPropertiesLoose = __webpack_require__(/*! ./objectWithoutPropertiesLoose */ "./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js");
+
+function _objectWithoutProperties(source, excluded) {
+  if (source == null) return {};
+  var target = objectWithoutPropertiesLoose(source, excluded);
+  var key, i;
+
+  if (Object.getOwnPropertySymbols) {
+    var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+
+    for (i = 0; i < sourceSymbolKeys.length; i++) {
+      key = sourceSymbolKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+      target[key] = source[key];
+    }
+  }
+
+  return target;
+}
+
+module.exports = _objectWithoutProperties;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/objectWithoutPropertiesLoose.js ***!
+  \*****************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _objectWithoutPropertiesLoose(source, excluded) {
+  if (source == null) return {};
+  var target = {};
+  var sourceKeys = Object.keys(source);
+  var key, i;
+
+  for (i = 0; i < sourceKeys.length; i++) {
+    key = sourceKeys[i];
+    if (excluded.indexOf(key) >= 0) continue;
+    target[key] = source[key];
+  }
+
+  return target;
+}
+
+module.exports = _objectWithoutPropertiesLoose;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var _typeof = __webpack_require__(/*! ../helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+
+var assertThisInitialized = __webpack_require__(/*! ./assertThisInitialized */ "./node_modules/@babel/runtime/helpers/assertThisInitialized.js");
+
+function _possibleConstructorReturn(self, call) {
+  if (call && (_typeof(call) === "object" || typeof call === "function")) {
+    return call;
+  }
+
+  return assertThisInitialized(self);
+}
+
+module.exports = _possibleConstructorReturn;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js":
+/*!***************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/setPrototypeOf.js ***!
+  \***************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _setPrototypeOf(o, p) {
+  module.exports = _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+module.exports = _setPrototypeOf;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/slicedToArray.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/slicedToArray.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(/*! ./arrayWithHoles */ "./node_modules/@babel/runtime/helpers/arrayWithHoles.js");
+
+var iterableToArrayLimit = __webpack_require__(/*! ./iterableToArrayLimit */ "./node_modules/@babel/runtime/helpers/iterableToArrayLimit.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableRest = __webpack_require__(/*! ./nonIterableRest */ "./node_modules/@babel/runtime/helpers/nonIterableRest.js");
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/superPropBase.js":
+/*!**************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/superPropBase.js ***!
+  \**************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+
+function _superPropBase(object, property) {
+  while (!Object.prototype.hasOwnProperty.call(object, property)) {
+    object = getPrototypeOf(object);
+    if (object === null) break;
+  }
+
+  return object;
+}
+
+module.exports = _superPropBase;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/toConsumableArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/toConsumableArray.js ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithoutHoles = __webpack_require__(/*! ./arrayWithoutHoles */ "./node_modules/@babel/runtime/helpers/arrayWithoutHoles.js");
+
+var iterableToArray = __webpack_require__(/*! ./iterableToArray */ "./node_modules/@babel/runtime/helpers/iterableToArray.js");
+
+var unsupportedIterableToArray = __webpack_require__(/*! ./unsupportedIterableToArray */ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js");
+
+var nonIterableSpread = __webpack_require__(/*! ./nonIterableSpread */ "./node_modules/@babel/runtime/helpers/nonIterableSpread.js");
+
+function _toConsumableArray(arr) {
+  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+}
+
+module.exports = _toConsumableArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/typeof.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/typeof.js ***!
+  \*******************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
+    module.exports = _typeof = function _typeof(obj) {
+      return typeof obj;
+    };
+  } else {
+    module.exports = _typeof = function _typeof(obj) {
+      return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    };
+  }
+
+  return _typeof(obj);
+}
+
+module.exports = _typeof;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/unsupportedIterableToArray.js ***!
+  \***************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(/*! ./arrayLikeToArray */ "./node_modules/@babel/runtime/helpers/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(n);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/wrapNativeSuper.js ***!
+  \****************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var getPrototypeOf = __webpack_require__(/*! ./getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+
+var setPrototypeOf = __webpack_require__(/*! ./setPrototypeOf */ "./node_modules/@babel/runtime/helpers/setPrototypeOf.js");
+
+var isNativeFunction = __webpack_require__(/*! ./isNativeFunction */ "./node_modules/@babel/runtime/helpers/isNativeFunction.js");
+
+var construct = __webpack_require__(/*! ./construct */ "./node_modules/@babel/runtime/helpers/construct.js");
+
+function _wrapNativeSuper(Class) {
+  var _cache = typeof Map === "function" ? new Map() : undefined;
+
+  module.exports = _wrapNativeSuper = function _wrapNativeSuper(Class) {
+    if (Class === null || !isNativeFunction(Class)) return Class;
+
+    if (typeof Class !== "function") {
+      throw new TypeError("Super expression must either be null or a function");
+    }
+
+    if (typeof _cache !== "undefined") {
+      if (_cache.has(Class)) return _cache.get(Class);
+
+      _cache.set(Class, Wrapper);
+    }
+
+    function Wrapper() {
+      return construct(Class, arguments, getPrototypeOf(this).constructor);
+    }
+
+    Wrapper.prototype = Object.create(Class.prototype, {
+      constructor: {
+        value: Wrapper,
+        enumerable: false,
+        writable: true,
+        configurable: true
+      }
+    });
+    return setPrototypeOf(Wrapper, Class);
+  };
+
+  return _wrapNativeSuper(Class);
+}
+
+module.exports = _wrapNativeSuper;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/regenerator/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
+
+
+/***/ }),
+
+/***/ "./node_modules/cometd/AckExtension.js":
+/*!*********************************************!*\
+  !*** ./node_modules/cometd/AckExtension.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Copyright (c) 2008-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory){
+    if (true) {
+        module.exports = factory(__webpack_require__(/*! ./cometd */ "./node_modules/cometd/cometd.js"));
+    } else {}
+}(this, function(cometdModule) {
+    /**
+     * This client-side extension enables the client to acknowledge to the server
+     * the messages that the client has received.
+     * For the acknowledgement to work, the server must be configured with the
+     * correspondent server-side ack extension. If both client and server support
+     * the ack extension, then the ack functionality will take place automatically.
+     * By enabling this extension, all messages arriving from the server will arrive
+     * via /meta/connect, so the comet communication will be slightly chattier.
+     * The fact that all messages will return via /meta/connect means also that the
+     * messages will arrive with total order, which is not guaranteed if messages
+     * can arrive via both /meta/connect and normal response.
+     * Messages are not acknowledged one by one, but instead a batch of messages is
+     * acknowledged when the /meta/connect returns.
+     */
+    return cometdModule.AckExtension = function() {
+        var _cometd;
+        var _serverSupportsAcks = false;
+        var _batch;
+
+        function _debug(text, args) {
+            _cometd._debug(text, args);
+        }
+
+        this.registered = function(name, cometd) {
+            _cometd = cometd;
+            _debug('AckExtension: executing registration callback');
+        };
+
+        this.unregistered = function() {
+            _debug('AckExtension: executing unregistration callback');
+            _cometd = null;
+        };
+
+        this.incoming = function(message) {
+            var channel = message.channel;
+            var ext = message.ext;
+            if (channel === '/meta/handshake') {
+                if (ext) {
+                    var ackField = ext.ack;
+                    if (typeof ackField === 'object') {
+                        // New format.
+                        _serverSupportsAcks = ackField.enabled === true;
+                        var batch = ackField.batch;
+                        if (typeof batch === 'number') {
+                            _batch = batch;
+                        }
+                    } else {
+                        // Old format.
+                        _serverSupportsAcks = ackField === true;
+                    }
+                }
+                _debug('AckExtension: server supports acknowledgements', _serverSupportsAcks);
+            } else if (channel === '/meta/connect' && message.successful && _serverSupportsAcks) {
+                if (ext && typeof ext.ack === 'number') {
+                    _batch = ext.ack;
+                    _debug('AckExtension: server sent batch', _batch);
+                }
+            }
+            return message;
+        };
+
+        this.outgoing = function(message) {
+            var channel = message.channel;
+            if (!message.ext) {
+                message.ext = {};
+            }
+            if (channel === '/meta/handshake') {
+                message.ext.ack = _cometd && _cometd.ackEnabled !== false;
+                _serverSupportsAcks = false;
+                _batch = 0;
+            } else if (channel === '/meta/connect') {
+                if (_serverSupportsAcks) {
+                    message.ext.ack = _batch;
+                    _debug('AckExtension: client sending batch', _batch);
+                }
+            }
+            return message;
+        };
+    };
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/cometd/ReloadExtension.js":
+/*!************************************************!*\
+  !*** ./node_modules/cometd/ReloadExtension.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Copyright (c) 2008-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+(function(root, factory) {
+    if (true) {
+        module.exports = factory(__webpack_require__(/*! ./cometd */ "./node_modules/cometd/cometd.js"));
+    } else {}
+}(this, function(cometdModule) {
+    /**
+     * The reload extension allows a page to be loaded (or reloaded)
+     * without having to re-handshake in the new (or reloaded) page,
+     * therefore resuming the existing CometD connection.
+     *
+     * When the reload() method is called, the state of the CometD
+     * connection is stored in the window.sessionStorage object.
+     * The reload() method must therefore be called by page unload
+     * handlers, often provided by JavaScript toolkits.
+     *
+     * When the page is (re)loaded, this extension checks the
+     * window.sessionStorage and restores the CometD connection,
+     * maintaining the same CometD clientId.
+     */
+    return cometdModule.ReloadExtension = function(configuration) {
+        var _cometd;
+        var _debug;
+        var _state = {};
+        var _name = 'org.cometd.reload';
+        var _batch = false;
+        var _reloading = false;
+
+        function _reload(config) {
+            if (_state.handshakeResponse) {
+                _reloading = true;
+                var transport = _cometd.getTransport();
+                if (transport) {
+                    transport.abort();
+                }
+                _configure(config);
+                var state = JSON.stringify(_state);
+                _debug('Reload extension saving state', state);
+                window.sessionStorage.setItem(_name, state);
+            }
+        }
+
+        function _similarState(oldState) {
+            // We want to check here that the CometD object
+            // did not change much between reloads.
+            // We just check the URL for now, but in future
+            // further checks may involve the transport type
+            // and other configuration parameters.
+            return _state.url === oldState.url;
+        }
+
+        function _configure(config) {
+            if (config) {
+                if (typeof config.name === 'string') {
+                    _name = config.name;
+                }
+            }
+        }
+
+        function _receive(response) {
+            _cometd.receive(response);
+        }
+
+        this.configure = _configure;
+
+        this._receive = _receive;
+
+        this.registered = function(name, cometd) {
+            _cometd = cometd;
+            _cometd.reload = _reload;
+            _debug = _cometd._debug;
+        };
+
+        this.unregistered = function() {
+            delete _cometd.reload;
+            _cometd = null;
+        };
+
+        this.outgoing = function(message) {
+            switch (message.channel) {
+                case '/meta/handshake':
+                {
+                    _state = {};
+                    _state.url = _cometd.getURL();
+
+                    var state = window.sessionStorage.getItem(_name);
+                    _debug('Reload extension found state', state);
+                    // Is there a saved handshake response from a prior load ?
+                    if (state) {
+                        try {
+                            var oldState = JSON.parse(state);
+
+                            // Remove the state, not needed anymore
+                            window.sessionStorage.removeItem(_name);
+
+                            if (oldState.handshakeResponse && _similarState(oldState)) {
+                                _debug('Reload extension restoring state', oldState);
+
+                                // Since we are going to abort this message,
+                                // we must save an eventual callback to restore
+                                // it when we replay the handshake response.
+                                var callback = _cometd._getCallback(message.id);
+
+                                var self = this;
+                                setTimeout(function() {
+                                    _debug('Reload extension replaying handshake response', oldState.handshakeResponse);
+                                    _state.handshakeResponse = oldState.handshakeResponse;
+                                    _state.transportType = oldState.transportType;
+
+                                    // Restore the callback.
+                                    _cometd._putCallback(message.id, callback);
+
+                                    var response = _cometd._mixin(true, {}, _state.handshakeResponse, {
+                                        // Keep the response message id the same as the request.
+                                        id: message.id,
+                                        // Tells applications this is a handshake replayed by the reload extension.
+                                        ext: {
+                                            reload: true
+                                        }
+                                    });
+                                    // Use the same transport as before.
+                                    response.supportedConnectionTypes = [_state.transportType];
+
+                                    self._receive(response);
+                                    _debug('Reload extension replayed handshake response', response);
+                                }, 0);
+
+                                // Delay any sends until first connect is complete.
+                                // This avoids that there is an old /meta/connect pending on server
+                                // that will be resumed to send messages to the client, when the
+                                // client has already closed the connection, thereby losing the messages.
+                                if (!_batch) {
+                                    _batch = true;
+                                    _cometd.startBatch();
+                                }
+
+                                // This handshake is aborted, as we will replay the prior handshake response
+                                return null;
+                            } else {
+                                _debug('Reload extension could not restore state', oldState);
+                            }
+                        } catch (x) {
+                            _debug('Reload extension error while trying to restore state', x);
+                        }
+                    }
+                    break;
+                }
+                case '/meta/connect':
+                {
+                    if (_reloading === true) {
+                        // The reload causes the failure of the outstanding /meta/connect,
+                        // which CometD will react to by sending another. Here we avoid
+                        // that /meta/connect messages are sent between the reload and
+                        // the destruction of the JavaScript context, so that we are sure
+                        // that the first /meta/connect is the one triggered after the
+                        // replay of the /meta/handshake by this extension.
+                        _debug('Reload extension aborting /meta/connect during reload');
+                        return null;
+                    }
+
+                    if (!_state.transportType) {
+                        _state.transportType = message.connectionType;
+                        _debug('Reload extension tracked transport type', _state.transportType);
+                    }
+                    break;
+                }
+                case '/meta/disconnect':
+                {
+                    _state = {};
+                    break;
+                }
+                default:
+                {
+                    break;
+                }
+            }
+            return message;
+        };
+
+        this.incoming = function(message) {
+            if (message.successful) {
+                switch (message.channel) {
+                    case '/meta/handshake':
+                    {
+                        // If the handshake response is already present, then we're replaying it.
+                        // Since the replay may have modified the handshake response, do not record it here.
+                        if (!_state.handshakeResponse) {
+                            // Save successful handshake response
+                            _state.handshakeResponse = message;
+                            _debug('Reload extension tracked handshake response', message);
+                        }
+                        break;
+                    }
+                    case '/meta/connect':
+                    {
+                        if (_batch) {
+                            _batch = false;
+                            _cometd.endBatch();
+                        }
+                        break;
+                    }
+                    case '/meta/disconnect':
+                    {
+                        _state = {};
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
+            }
+            return message;
+        };
+
+        _configure(configuration);
+    };
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/cometd/cometd.js":
+/*!***************************************!*\
+  !*** ./node_modules/cometd/cometd.js ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+ * Copyright (c) 2008-2020 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+/* CometD Version 4.0.7 */
+
+(function(root, factory) {
+    if (true) {
+        // CommonJS.
+        module.exports = factory();
+    } else {}
+}(this, function() {
+    /**
+     * Browsers may throttle the Window scheduler,
+     * so we may replace it with a Worker scheduler.
+     */
+    var Scheduler = function() {
+        var _ids = 0;
+        var _tasks = {};
+        this.register = function(funktion) {
+            var id = ++_ids;
+            _tasks[id] = funktion;
+            return id;
+        };
+        this.unregister = function(id) {
+            var funktion = _tasks[id];
+            delete _tasks[id];
+            return funktion;
+        };
+        this.setTimeout = function(funktion, delay) {
+            return window.setTimeout(funktion, delay);
+        };
+        this.clearTimeout = function(id) {
+            window.clearTimeout(id);
+        };
+    };
+
+    /**
+     * The scheduler code that will run in the Worker.
+     * Workers have a built-in `self` variable similar to `window`.
+     */
+    function WorkerScheduler() {
+        var _tasks = {};
+        self.onmessage = function(e) {
+            var cmd = e.data;
+            var id = _tasks[cmd.id];
+            switch (cmd.type) {
+                case 'setTimeout':
+                    _tasks[cmd.id] = self.setTimeout(function() {
+                        delete _tasks[cmd.id];
+                        self.postMessage({
+                            id: cmd.id
+                        });
+                    }, cmd.delay);
+                    break;
+                case 'clearTimeout':
+                    delete _tasks[cmd.id];
+                    if (id) {
+                        self.clearTimeout(id);
+                    }
+                    break;
+                default:
+                    throw 'Unknown command ' + cmd.type;
+            }
+        };
+    }
+
+
+    /**
+     * Utility functions.
+     */
+    var Utils = {
+        isString: function(value) {
+            if (value === undefined || value === null) {
+                return false;
+            }
+            return typeof value === 'string' || value instanceof String;
+        },
+        isArray: function(value) {
+            if (value === undefined || value === null) {
+                return false;
+            }
+            return value instanceof Array;
+        },
+        /**
+         * Returns whether the given element is contained into the given array.
+         * @param element the element to check presence for
+         * @param array the array to check for the element presence
+         * @return the index of the element, if present, or a negative index if the element is not present
+         */
+        inArray: function(element, array) {
+            for (var i = 0; i < array.length; ++i) {
+                if (element === array[i]) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+    };
+
+
+    /**
+     * A registry for transports used by the CometD object.
+     */
+    var TransportRegistry = function() {
+        var _types = [];
+        var _transports = {};
+
+        this.getTransportTypes = function() {
+            return _types.slice(0);
+        };
+
+        this.findTransportTypes = function(version, crossDomain, url) {
+            var result = [];
+            for (var i = 0; i < _types.length; ++i) {
+                var type = _types[i];
+                if (_transports[type].accept(version, crossDomain, url) === true) {
+                    result.push(type);
+                }
+            }
+            return result;
+        };
+
+        this.negotiateTransport = function(types, version, crossDomain, url) {
+            for (var i = 0; i < _types.length; ++i) {
+                var type = _types[i];
+                for (var j = 0; j < types.length; ++j) {
+                    if (type === types[j]) {
+                        var transport = _transports[type];
+                        if (transport.accept(version, crossDomain, url) === true) {
+                            return transport;
+                        }
+                    }
+                }
+            }
+            return null;
+        };
+
+        this.add = function(type, transport, index) {
+            var existing = false;
+            for (var i = 0; i < _types.length; ++i) {
+                if (_types[i] === type) {
+                    existing = true;
+                    break;
+                }
+            }
+
+            if (!existing) {
+                if (typeof index !== 'number') {
+                    _types.push(type);
+                } else {
+                    _types.splice(index, 0, type);
+                }
+                _transports[type] = transport;
+            }
+
+            return !existing;
+        };
+
+        this.find = function(type) {
+            for (var i = 0; i < _types.length; ++i) {
+                if (_types[i] === type) {
+                    return _transports[type];
+                }
+            }
+            return null;
+        };
+
+        this.remove = function(type) {
+            for (var i = 0; i < _types.length; ++i) {
+                if (_types[i] === type) {
+                    _types.splice(i, 1);
+                    var transport = _transports[type];
+                    delete _transports[type];
+                    return transport;
+                }
+            }
+            return null;
+        };
+
+        this.clear = function() {
+            _types = [];
+            _transports = {};
+        };
+
+        this.reset = function(init) {
+            for (var i = 0; i < _types.length; ++i) {
+                _transports[_types[i]].reset(init);
+            }
+        };
+    };
+
+
+    /**
+     * Base object with the common functionality for transports.
+     */
+    var Transport = function() {
+        var _type;
+        var _cometd;
+        var _url;
+
+        /**
+         * Function invoked just after a transport has been successfully registered.
+         * @param type the type of transport (for example 'long-polling')
+         * @param cometd the cometd object this transport has been registered to
+         * @see #unregistered()
+         */
+        this.registered = function(type, cometd) {
+            _type = type;
+            _cometd = cometd;
+        };
+
+        /**
+         * Function invoked just after a transport has been successfully unregistered.
+         * @see #registered(type, cometd)
+         */
+        this.unregistered = function() {
+            _type = null;
+            _cometd = null;
+        };
+
+        this._debug = function() {
+            _cometd._debug.apply(_cometd, arguments);
+        };
+
+        this._mixin = function() {
+            return _cometd._mixin.apply(_cometd, arguments);
+        };
+
+        this.getConfiguration = function() {
+            return _cometd.getConfiguration();
+        };
+
+        this.getAdvice = function() {
+            return _cometd.getAdvice();
+        };
+
+        this.setTimeout = function(funktion, delay) {
+            return _cometd.setTimeout(funktion, delay);
+        };
+
+        this.clearTimeout = function(id) {
+            _cometd.clearTimeout(id);
+        };
+
+        /**
+         * Converts the given response into an array of bayeux messages
+         * @param response the response to convert
+         * @return an array of bayeux messages obtained by converting the response
+         */
+        this.convertToMessages = function(response) {
+            if (Utils.isString(response)) {
+                try {
+                    return JSON.parse(response);
+                } catch (x) {
+                    this._debug('Could not convert to JSON the following string', '"' + response + '"');
+                    throw x;
+                }
+            }
+            if (Utils.isArray(response)) {
+                return response;
+            }
+            if (response === undefined || response === null) {
+                return [];
+            }
+            if (response instanceof Object) {
+                return [response];
+            }
+            throw 'Conversion Error ' + response + ', typeof ' + (typeof response);
+        };
+
+        /**
+         * Returns whether this transport can work for the given version and cross domain communication case.
+         * @param version a string indicating the transport version
+         * @param crossDomain a boolean indicating whether the communication is cross domain
+         * @param url the URL to connect to
+         * @return true if this transport can work for the given version and cross domain communication case,
+         * false otherwise
+         */
+        this.accept = function(version, crossDomain, url) {
+            throw 'Abstract';
+        };
+
+        /**
+         * Returns the type of this transport.
+         * @see #registered(type, cometd)
+         */
+        this.getType = function() {
+            return _type;
+        };
+
+        this.getURL = function() {
+            return _url;
+        };
+
+        this.setURL = function(url) {
+            _url = url;
+        };
+
+        this.send = function(envelope, metaConnect) {
+            throw 'Abstract';
+        };
+
+        this.reset = function(init) {
+            this._debug('Transport', _type, 'reset', init ? 'initial' : 'retry');
+        };
+
+        this.abort = function() {
+            this._debug('Transport', _type, 'aborted');
+        };
+
+        this.toString = function() {
+            return this.getType();
+        };
+    };
+
+    Transport.derive = function(baseObject) {
+        function F() {
+        }
+
+        F.prototype = baseObject;
+        return new F();
+    };
+
+
+    /**
+     * Base object with the common functionality for transports based on requests.
+     * The key responsibility is to allow at most 2 outstanding requests to the server,
+     * to avoid that requests are sent behind a long poll.
+     * To achieve this, we have one reserved request for the long poll, and all other
+     * requests are serialized one after the other.
+     */
+    var RequestTransport = function() {
+        var _super = new Transport();
+        var _self = Transport.derive(_super);
+        var _requestIds = 0;
+        var _metaConnectRequest = null;
+        var _requests = [];
+        var _envelopes = [];
+
+        function _coalesceEnvelopes(envelope) {
+            while (_envelopes.length > 0) {
+                var envelopeAndRequest = _envelopes[0];
+                var newEnvelope = envelopeAndRequest[0];
+                var newRequest = envelopeAndRequest[1];
+                if (newEnvelope.url === envelope.url &&
+                    newEnvelope.sync === envelope.sync) {
+                    _envelopes.shift();
+                    envelope.messages = envelope.messages.concat(newEnvelope.messages);
+                    this._debug('Coalesced', newEnvelope.messages.length, 'messages from request', newRequest.id);
+                    continue;
+                }
+                break;
+            }
+        }
+
+        function _transportSend(envelope, request) {
+            this.transportSend(envelope, request);
+            request.expired = false;
+
+            if (!envelope.sync) {
+                var maxDelay = this.getConfiguration().maxNetworkDelay;
+                var delay = maxDelay;
+                if (request.metaConnect === true) {
+                    delay += this.getAdvice().timeout;
+                }
+
+                this._debug('Transport', this.getType(), 'waiting at most', delay, 'ms for the response, maxNetworkDelay', maxDelay);
+
+                var self = this;
+                request.timeout = this.setTimeout(function() {
+                    request.expired = true;
+                    var errorMessage = 'Request ' + request.id + ' of transport ' + self.getType() + ' exceeded ' + delay + ' ms max network delay';
+                    var failure = {
+                        reason: errorMessage
+                    };
+                    var xhr = request.xhr;
+                    failure.httpCode = self.xhrStatus(xhr);
+                    self.abortXHR(xhr);
+                    self._debug(errorMessage);
+                    self.complete(request, false, request.metaConnect);
+                    envelope.onFailure(xhr, envelope.messages, failure);
+                }, delay);
+            }
+        }
+
+        function _queueSend(envelope) {
+            var requestId = ++_requestIds;
+            var request = {
+                id: requestId,
+                metaConnect: false,
+                envelope: envelope
+            };
+
+            // Consider the /meta/connect requests which should always be present.
+            if (_requests.length < this.getConfiguration().maxConnections - 1) {
+                _requests.push(request);
+                _transportSend.call(this, envelope, request);
+            } else {
+                this._debug('Transport', this.getType(), 'queueing request', requestId, 'envelope', envelope);
+                _envelopes.push([envelope, request]);
+            }
+        }
+
+        function _metaConnectComplete(request) {
+            var requestId = request.id;
+            this._debug('Transport', this.getType(), '/meta/connect complete, request', requestId);
+            if (_metaConnectRequest !== null && _metaConnectRequest.id !== requestId) {
+                throw '/meta/connect request mismatch, completing request ' + requestId;
+            }
+            _metaConnectRequest = null;
+        }
+
+        function _complete(request, success) {
+            var index = Utils.inArray(request, _requests);
+            // The index can be negative if the request has been aborted
+            if (index >= 0) {
+                _requests.splice(index, 1);
+            }
+
+            if (_envelopes.length > 0) {
+                var envelopeAndRequest = _envelopes.shift();
+                var nextEnvelope = envelopeAndRequest[0];
+                var nextRequest = envelopeAndRequest[1];
+                this._debug('Transport dequeued request', nextRequest.id);
+                if (success) {
+                    if (this.getConfiguration().autoBatch) {
+                        _coalesceEnvelopes.call(this, nextEnvelope);
+                    }
+                    _queueSend.call(this, nextEnvelope);
+                    this._debug('Transport completed request', request.id, nextEnvelope);
+                } else {
+                    // Keep the semantic of calling response callbacks asynchronously after the request
+                    var self = this;
+                    this.setTimeout(function() {
+                        self.complete(nextRequest, false, nextRequest.metaConnect);
+                        var failure = {
+                            reason: 'Previous request failed'
+                        };
+                        var xhr = nextRequest.xhr;
+                        failure.httpCode = self.xhrStatus(xhr);
+                        nextEnvelope.onFailure(xhr, nextEnvelope.messages, failure);
+                    }, 0);
+                }
+            }
+        }
+
+        _self.complete = function(request, success, metaConnect) {
+            if (metaConnect) {
+                _metaConnectComplete.call(this, request);
+            } else {
+                _complete.call(this, request, success);
+            }
+        };
+
+        /**
+         * Performs the actual send depending on the transport type details.
+         * @param envelope the envelope to send
+         * @param request the request information
+         */
+        _self.transportSend = function(envelope, request) {
+            throw 'Abstract';
+        };
+
+        _self.transportSuccess = function(envelope, request, responses) {
+            if (!request.expired) {
+                this.clearTimeout(request.timeout);
+                this.complete(request, true, request.metaConnect);
+                if (responses && responses.length > 0) {
+                    envelope.onSuccess(responses);
+                } else {
+                    envelope.onFailure(request.xhr, envelope.messages, {
+                        httpCode: 204
+                    });
+                }
+            }
+        };
+
+        _self.transportFailure = function(envelope, request, failure) {
+            if (!request.expired) {
+                this.clearTimeout(request.timeout);
+                this.complete(request, false, request.metaConnect);
+                envelope.onFailure(request.xhr, envelope.messages, failure);
+            }
+        };
+
+        function _metaConnectSend(envelope) {
+            if (_metaConnectRequest !== null) {
+                throw 'Concurrent /meta/connect requests not allowed, request id=' + _metaConnectRequest.id + ' not yet completed';
+            }
+
+            var requestId = ++_requestIds;
+            this._debug('Transport', this.getType(), '/meta/connect send, request', requestId, 'envelope', envelope);
+            var request = {
+                id: requestId,
+                metaConnect: true,
+                envelope: envelope
+            };
+            _transportSend.call(this, envelope, request);
+            _metaConnectRequest = request;
+        }
+
+        _self.send = function(envelope, metaConnect) {
+            if (metaConnect) {
+                _metaConnectSend.call(this, envelope);
+            } else {
+                _queueSend.call(this, envelope);
+            }
+        };
+
+        _self.abort = function() {
+            _super.abort();
+            for (var i = 0; i < _requests.length; ++i) {
+                var request = _requests[i];
+                if (request) {
+                    this._debug('Aborting request', request);
+                    if (!this.abortXHR(request.xhr)) {
+                        this.transportFailure(request.envelope, request, {reason: 'abort'});
+                    }
+                }
+            }
+            var metaConnectRequest = _metaConnectRequest;
+            if (metaConnectRequest) {
+                this._debug('Aborting /meta/connect request', metaConnectRequest);
+                if (!this.abortXHR(metaConnectRequest.xhr)) {
+                    this.transportFailure(metaConnectRequest.envelope, metaConnectRequest, {reason: 'abort'});
+                }
+            }
+            this.reset(true);
+        };
+
+        _self.reset = function(init) {
+            _super.reset(init);
+            _metaConnectRequest = null;
+            _requests = [];
+            _envelopes = [];
+        };
+
+        _self.abortXHR = function(xhr) {
+            if (xhr) {
+                try {
+                    var state = xhr.readyState;
+                    xhr.abort();
+                    return state !== window.XMLHttpRequest.UNSENT;
+                } catch (x) {
+                    this._debug(x);
+                }
+            }
+            return false;
+        };
+
+        _self.xhrStatus = function(xhr) {
+            if (xhr) {
+                try {
+                    return xhr.status;
+                } catch (x) {
+                    this._debug(x);
+                }
+            }
+            return -1;
+        };
+
+        return _self;
+    };
+
+
+    var LongPollingTransport = function() {
+        var _super = new RequestTransport();
+        var _self = Transport.derive(_super);
+        // By default, support cross domain
+        var _supportsCrossDomain = true;
+
+        _self.accept = function(version, crossDomain, url) {
+            return _supportsCrossDomain || !crossDomain;
+        };
+
+        _self.newXMLHttpRequest = function() {
+            return new window.XMLHttpRequest();
+        };
+
+        function _copyContext(xhr) {
+            try {
+                // Copy external context, to be used in other environments.
+                xhr.context = _self.context;
+            } catch (e) {
+                // May happen if XHR is wrapped by Object.seal(),
+                // Object.freeze(), or Object.preventExtensions().
+                this._debug('Could not copy transport context into XHR', e);
+            }
+        }
+
+        _self.xhrSend = function(packet) {
+            var xhr = _self.newXMLHttpRequest();
+            _copyContext(xhr);
+            xhr.withCredentials = true;
+            xhr.open('POST', packet.url, packet.sync !== true);
+            var headers = packet.headers;
+            if (headers) {
+                for (var headerName in headers) {
+                    if (headers.hasOwnProperty(headerName)) {
+                        xhr.setRequestHeader(headerName, headers[headerName]);
+                    }
+                }
+            }
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    packet.onSuccess(xhr.responseText);
+                } else {
+                    packet.onError(xhr.statusText);
+                }
+            };
+            xhr.onabort = xhr.onerror = function() {
+                packet.onError(xhr.statusText);
+            };
+            xhr.send(packet.body);
+            return xhr;
+        };
+
+        _self.transportSend = function(envelope, request) {
+            this._debug('Transport', this.getType(), 'sending request', request.id, 'envelope', envelope);
+
+            var self = this;
+            try {
+                var sameStack = true;
+                request.xhr = this.xhrSend({
+                    transport: this,
+                    url: envelope.url,
+                    sync: envelope.sync,
+                    headers: this.getConfiguration().requestHeaders,
+                    body: JSON.stringify(envelope.messages),
+                    onSuccess: function(response) {
+                        self._debug('Transport', self.getType(), 'received response', response);
+                        var success = false;
+                        try {
+                            var received = self.convertToMessages(response);
+                            if (received.length === 0) {
+                                _supportsCrossDomain = false;
+                                self.transportFailure(envelope, request, {
+                                    httpCode: 204
+                                });
+                            } else {
+                                success = true;
+                                self.transportSuccess(envelope, request, received);
+                            }
+                        } catch (x) {
+                            self._debug(x);
+                            if (!success) {
+                                _supportsCrossDomain = false;
+                                var failure = {
+                                    exception: x
+                                };
+                                failure.httpCode = self.xhrStatus(request.xhr);
+                                self.transportFailure(envelope, request, failure);
+                            }
+                        }
+                    },
+                    onError: function(reason, exception) {
+                        self._debug('Transport', self.getType(), 'received error', reason, exception);
+                        _supportsCrossDomain = false;
+                        var failure = {
+                            reason: reason,
+                            exception: exception
+                        };
+                        failure.httpCode = self.xhrStatus(request.xhr);
+                        if (sameStack) {
+                            // Keep the semantic of calling response callbacks asynchronously after the request
+                            self.setTimeout(function() {
+                                self.transportFailure(envelope, request, failure);
+                            }, 0);
+                        } else {
+                            self.transportFailure(envelope, request, failure);
+                        }
+                    }
+                });
+                sameStack = false;
+            } catch (x) {
+                _supportsCrossDomain = false;
+                // Keep the semantic of calling response callbacks asynchronously after the request
+                this.setTimeout(function() {
+                    self.transportFailure(envelope, request, {
+                        exception: x
+                    });
+                }, 0);
+            }
+        };
+
+        _self.reset = function(init) {
+            _super.reset(init);
+            _supportsCrossDomain = true;
+        };
+
+        return _self;
+    };
+
+
+    var CallbackPollingTransport = function() {
+        var _super = new RequestTransport();
+        var _self = Transport.derive(_super);
+        var jsonp = 0;
+
+        _self.accept = function(version, crossDomain, url) {
+            return true;
+        };
+
+        _self.jsonpSend = function(packet) {
+            var head = document.getElementsByTagName('head')[0];
+            var script = document.createElement('script');
+
+            var callbackName = '_cometd_jsonp_' + jsonp++;
+            window[callbackName] = function(responseText) {
+                head.removeChild(script);
+                delete window[callbackName];
+                packet.onSuccess(responseText);
+            };
+
+            var url = packet.url;
+            url += url.indexOf('?') < 0 ? '?' : '&';
+            url += 'jsonp=' + callbackName;
+            url += '&message=' + encodeURIComponent(packet.body);
+            script.src = url;
+            script.async = packet.sync !== true;
+            script.type = 'application/javascript';
+            script.onerror = function(e) {
+                packet.onError('jsonp ' + e.type);
+            };
+            head.appendChild(script);
+        };
+
+        function _failTransportFn(envelope, request, x) {
+            var self = this;
+            return function() {
+                self.transportFailure(envelope, request, 'error', x);
+            };
+        }
+
+        _self.transportSend = function(envelope, request) {
+            var self = this;
+
+            // Microsoft Internet Explorer has a 2083 URL max length
+            // We must ensure that we stay within that length
+            var start = 0;
+            var length = envelope.messages.length;
+            var lengths = [];
+            while (length > 0) {
+                // Encode the messages because all brackets, quotes, commas, colons, etc
+                // present in the JSON will be URL encoded, taking many more characters
+                var json = JSON.stringify(envelope.messages.slice(start, start + length));
+                var urlLength = envelope.url.length + encodeURI(json).length;
+
+                var maxLength = this.getConfiguration().maxURILength;
+                if (urlLength > maxLength) {
+                    if (length === 1) {
+                        var x = 'Bayeux message too big (' + urlLength + ' bytes, max is ' + maxLength + ') ' +
+                            'for transport ' + this.getType();
+                        // Keep the semantic of calling response callbacks asynchronously after the request
+                        this.setTimeout(_failTransportFn.call(this, envelope, request, x), 0);
+                        return;
+                    }
+
+                    --length;
+                    continue;
+                }
+
+                lengths.push(length);
+                start += length;
+                length = envelope.messages.length - start;
+            }
+
+            // Here we are sure that the messages can be sent within the URL limit
+
+            var envelopeToSend = envelope;
+            if (lengths.length > 1) {
+                var begin = 0;
+                var end = lengths[0];
+                this._debug('Transport', this.getType(), 'split', envelope.messages.length, 'messages into', lengths.join(' + '));
+                envelopeToSend = this._mixin(false, {}, envelope);
+                envelopeToSend.messages = envelope.messages.slice(begin, end);
+                envelopeToSend.onSuccess = envelope.onSuccess;
+                envelopeToSend.onFailure = envelope.onFailure;
+
+                for (var i = 1; i < lengths.length; ++i) {
+                    var nextEnvelope = this._mixin(false, {}, envelope);
+                    begin = end;
+                    end += lengths[i];
+                    nextEnvelope.messages = envelope.messages.slice(begin, end);
+                    nextEnvelope.onSuccess = envelope.onSuccess;
+                    nextEnvelope.onFailure = envelope.onFailure;
+                    this.send(nextEnvelope, request.metaConnect);
+                }
+            }
+
+            this._debug('Transport', this.getType(), 'sending request', request.id, 'envelope', envelopeToSend);
+
+            try {
+                var sameStack = true;
+                this.jsonpSend({
+                    transport: this,
+                    url: envelopeToSend.url,
+                    sync: envelopeToSend.sync,
+                    headers: this.getConfiguration().requestHeaders,
+                    body: JSON.stringify(envelopeToSend.messages),
+                    onSuccess: function(responses) {
+                        var success = false;
+                        try {
+                            var received = self.convertToMessages(responses);
+                            if (received.length === 0) {
+                                self.transportFailure(envelopeToSend, request, {
+                                    httpCode: 204
+                                });
+                            } else {
+                                success = true;
+                                self.transportSuccess(envelopeToSend, request, received);
+                            }
+                        } catch (x) {
+                            self._debug(x);
+                            if (!success) {
+                                self.transportFailure(envelopeToSend, request, {
+                                    exception: x
+                                });
+                            }
+                        }
+                    },
+                    onError: function(reason, exception) {
+                        var failure = {
+                            reason: reason,
+                            exception: exception
+                        };
+                        if (sameStack) {
+                            // Keep the semantic of calling response callbacks asynchronously after the request
+                            self.setTimeout(function() {
+                                self.transportFailure(envelopeToSend, request, failure);
+                            }, 0);
+                        } else {
+                            self.transportFailure(envelopeToSend, request, failure);
+                        }
+                    }
+                });
+                sameStack = false;
+            } catch (xx) {
+                // Keep the semantic of calling response callbacks asynchronously after the request
+                this.setTimeout(function() {
+                    self.transportFailure(envelopeToSend, request, {
+                        exception: xx
+                    });
+                }, 0);
+            }
+        };
+
+        return _self;
+    };
+
+
+    var WebSocketTransport = function() {
+        var _super = new Transport();
+        var _self = Transport.derive(_super);
+        var _cometd;
+        // By default WebSocket is supported
+        var _webSocketSupported = true;
+        // Whether we were able to establish a WebSocket connection
+        var _webSocketConnected = false;
+        var _stickyReconnect = true;
+        // The context contains the envelopes that have been sent
+        // and the timeouts for the messages that have been sent.
+        var _context = null;
+        var _connecting = null;
+        var _connected = false;
+        var _successCallback = null;
+
+        _self.reset = function(init) {
+            _super.reset(init);
+            _webSocketSupported = true;
+            if (init) {
+                _webSocketConnected = false;
+            }
+            _stickyReconnect = true;
+            _context = null;
+            _connecting = null;
+            _connected = false;
+        };
+
+        function _forceClose(context, event) {
+            if (context) {
+                this.webSocketClose(context, event.code, event.reason);
+                // Force immediate failure of pending messages to trigger reconnect.
+                // This is needed because the server may not reply to our close()
+                // and therefore the onclose function is never called.
+                this.onClose(context, event);
+            }
+        }
+
+        function _sameContext(context) {
+            return context === _connecting || context === _context;
+        }
+
+        function _storeEnvelope(context, envelope, metaConnect) {
+            var messageIds = [];
+            for (var i = 0; i < envelope.messages.length; ++i) {
+                var message = envelope.messages[i];
+                if (message.id) {
+                    messageIds.push(message.id);
+                }
+            }
+            context.envelopes[messageIds.join(',')] = [envelope, metaConnect];
+            this._debug('Transport', this.getType(), 'stored envelope, envelopes', context.envelopes);
+        }
+
+        function _websocketConnect(context) {
+            // We may have multiple attempts to open a WebSocket
+            // connection, for example a /meta/connect request that
+            // may take time, along with a user-triggered publish.
+            // Early return if we are already connecting.
+            if (_connecting) {
+                return;
+            }
+
+            // Mangle the URL, changing the scheme from 'http' to 'ws'.
+            var url = _cometd.getURL().replace(/^http/, 'ws');
+            this._debug('Transport', this.getType(), 'connecting to URL', url);
+
+            try {
+                var protocol = _cometd.getConfiguration().protocol;
+                context.webSocket = protocol ? new window.WebSocket(url, protocol) : new window.WebSocket(url);
+                _connecting = context;
+            } catch (x) {
+                _webSocketSupported = false;
+                this._debug('Exception while creating WebSocket object', x);
+                throw x;
+            }
+
+            // By default use sticky reconnects.
+            _stickyReconnect = _cometd.getConfiguration().stickyReconnect !== false;
+
+            var self = this;
+            var connectTimeout = _cometd.getConfiguration().connectTimeout;
+            if (connectTimeout > 0) {
+                context.connectTimer = this.setTimeout(function() {
+                    _cometd._debug('Transport', self.getType(), 'timed out while connecting to URL', url, ':', connectTimeout, 'ms');
+                    // The connection was not opened, close anyway.
+                    _forceClose.call(self, context, {code: 1000, reason: 'Connect Timeout'});
+                }, connectTimeout);
+            }
+
+            var onopen = function() {
+                _cometd._debug('WebSocket onopen', context);
+                if (context.connectTimer) {
+                    self.clearTimeout(context.connectTimer);
+                }
+
+                if (_sameContext(context)) {
+                    _connecting = null;
+                    _context = context;
+                    _webSocketConnected = true;
+                    self.onOpen(context);
+                } else {
+                    // We have a valid connection already, close this one.
+                    _cometd._warn('Closing extra WebSocket connection', this, 'active connection', _context);
+                    _forceClose.call(self, context, {code: 1000, reason: 'Extra Connection'});
+                }
+            };
+
+            // This callback is invoked when the server sends the close frame.
+            // The close frame for a connection may arrive *after* another
+            // connection has been opened, so we must make sure that actions
+            // are performed only if it's the same connection.
+            var onclose = function(event) {
+                event = event || {code: 1000};
+                _cometd._debug('WebSocket onclose', context, event, 'connecting', _connecting, 'current', _context);
+
+                if (context.connectTimer) {
+                    self.clearTimeout(context.connectTimer);
+                }
+
+                self.onClose(context, event);
+            };
+
+            var onmessage = function(wsMessage) {
+                _cometd._debug('WebSocket onmessage', wsMessage, context);
+                self.onMessage(context, wsMessage);
+            };
+
+            context.webSocket.onopen = onopen;
+            context.webSocket.onclose = onclose;
+            context.webSocket.onerror = function() {
+                // Clients should call onclose(), but if they do not we do it here for safety.
+                onclose({code: 1000, reason: 'Error'});
+            };
+            context.webSocket.onmessage = onmessage;
+
+            this._debug('Transport', this.getType(), 'configured callbacks on', context);
+        }
+
+        function _webSocketSend(context, envelope, metaConnect) {
+            var json = JSON.stringify(envelope.messages);
+            context.webSocket.send(json);
+            this._debug('Transport', this.getType(), 'sent', envelope, '/meta/connect =', metaConnect);
+
+            // Manage the timeout waiting for the response.
+            var maxDelay = this.getConfiguration().maxNetworkDelay;
+            var delay = maxDelay;
+            if (metaConnect) {
+                delay += this.getAdvice().timeout;
+                _connected = true;
+            }
+
+            var self = this;
+            var messageIds = [];
+            for (var i = 0; i < envelope.messages.length; ++i) {
+                (function() {
+                    var message = envelope.messages[i];
+                    if (message.id) {
+                        messageIds.push(message.id);
+                        context.timeouts[message.id] = self.setTimeout(function() {
+                            _cometd._debug('Transport', self.getType(), 'timing out message', message.id, 'after', delay, 'on', context);
+                            _forceClose.call(self, context, {code: 1000, reason: 'Message Timeout'});
+                        }, delay);
+                    }
+                })();
+            }
+
+            this._debug('Transport', this.getType(), 'waiting at most', delay, 'ms for messages', messageIds, 'maxNetworkDelay', maxDelay, ', timeouts:', context.timeouts);
+        }
+
+        _self._notifySuccess = function(fn, messages) {
+            fn.call(this, messages);
+        };
+
+        _self._notifyFailure = function(fn, context, messages, failure) {
+            fn.call(this, context, messages, failure);
+        };
+
+        function _send(context, envelope, metaConnect) {
+            try {
+                if (context === null) {
+                    context = _connecting || {
+                        envelopes: {},
+                        timeouts: {}
+                    };
+                    _storeEnvelope.call(this, context, envelope, metaConnect);
+                    _websocketConnect.call(this, context);
+                } else {
+                    _storeEnvelope.call(this, context, envelope, metaConnect);
+                    _webSocketSend.call(this, context, envelope, metaConnect);
+                }
+            } catch (x) {
+                // Keep the semantic of calling response callbacks asynchronously after the request.
+                var self = this;
+                this.setTimeout(function() {
+                    _forceClose.call(self, context, {
+                        code: 1000,
+                        reason: 'Exception',
+                        exception: x
+                    });
+                }, 0);
+            }
+        }
+
+        _self.onOpen = function(context) {
+            var envelopes = context.envelopes;
+            this._debug('Transport', this.getType(), 'opened', context, 'pending messages', envelopes);
+            for (var key in envelopes) {
+                if (envelopes.hasOwnProperty(key)) {
+                    var element = envelopes[key];
+                    var envelope = element[0];
+                    var metaConnect = element[1];
+                    // Store the success callback, which is independent from the envelope,
+                    // so that it can be used to notify arrival of messages.
+                    _successCallback = envelope.onSuccess;
+                    _webSocketSend.call(this, context, envelope, metaConnect);
+                }
+            }
+        };
+
+        _self.onMessage = function(context, wsMessage) {
+            this._debug('Transport', this.getType(), 'received websocket message', wsMessage, context);
+
+            var close = false;
+            var messages = this.convertToMessages(wsMessage.data);
+            var messageIds = [];
+            for (var i = 0; i < messages.length; ++i) {
+                var message = messages[i];
+
+                // Detect if the message is a response to a request we made.
+                // If it's a meta message, for sure it's a response; otherwise it's
+                // a publish message and publish responses don't have the data field.
+                if (/^\/meta\//.test(message.channel) || message.data === undefined) {
+                    if (message.id) {
+                        messageIds.push(message.id);
+
+                        var timeout = context.timeouts[message.id];
+                        if (timeout) {
+                            this.clearTimeout(timeout);
+                            delete context.timeouts[message.id];
+                            this._debug('Transport', this.getType(), 'removed timeout for message', message.id, ', timeouts', context.timeouts);
+                        }
+                    }
+                }
+
+                if ('/meta/connect' === message.channel) {
+                    _connected = false;
+                }
+                if ('/meta/disconnect' === message.channel && !_connected) {
+                    close = true;
+                }
+            }
+
+            // Remove the envelope corresponding to the messages.
+            var removed = false;
+            var envelopes = context.envelopes;
+            for (var j = 0; j < messageIds.length; ++j) {
+                var id = messageIds[j];
+                for (var key in envelopes) {
+                    if (envelopes.hasOwnProperty(key)) {
+                        var ids = key.split(',');
+                        var index = Utils.inArray(id, ids);
+                        if (index >= 0) {
+                            removed = true;
+                            ids.splice(index, 1);
+                            var envelope = envelopes[key][0];
+                            var metaConnect = envelopes[key][1];
+                            delete envelopes[key];
+                            if (ids.length > 0) {
+                                envelopes[ids.join(',')] = [envelope, metaConnect];
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            if (removed) {
+                this._debug('Transport', this.getType(), 'removed envelope, envelopes', envelopes);
+            }
+
+            this._notifySuccess(_successCallback, messages);
+
+            if (close) {
+                this.webSocketClose(context, 1000, 'Disconnect');
+            }
+        };
+
+        _self.onClose = function(context, event) {
+            this._debug('Transport', this.getType(), 'closed', context, event);
+
+            if (_sameContext(context)) {
+                // Remember if we were able to connect.
+                // This close event could be due to server shutdown,
+                // and if it restarts we want to try websocket again.
+                _webSocketSupported = _stickyReconnect && _webSocketConnected;
+                _connecting = null;
+                _context = null;
+            }
+
+            var timeouts = context.timeouts;
+            context.timeouts = {};
+            for (var id in timeouts) {
+                if (timeouts.hasOwnProperty(id)) {
+                    this.clearTimeout(timeouts[id]);
+                }
+            }
+
+            var envelopes = context.envelopes;
+            context.envelopes = {};
+            for (var key in envelopes) {
+                if (envelopes.hasOwnProperty(key)) {
+                    var envelope = envelopes[key][0];
+                    var metaConnect = envelopes[key][1];
+                    if (metaConnect) {
+                        _connected = false;
+                    }
+                    var failure = {
+                        websocketCode: event.code,
+                        reason: event.reason
+                    };
+                    if (event.exception) {
+                        failure.exception = event.exception;
+                    }
+                    this._notifyFailure(envelope.onFailure, context, envelope.messages, failure);
+                }
+            }
+        };
+
+        _self.registered = function(type, cometd) {
+            _super.registered(type, cometd);
+            _cometd = cometd;
+        };
+
+        _self.accept = function(version, crossDomain, url) {
+            this._debug('Transport', this.getType(), 'accept, supported:', _webSocketSupported);
+            // Using !! to return a boolean (and not the WebSocket object).
+            return _webSocketSupported && !!window.WebSocket && _cometd.websocketEnabled !== false;
+        };
+
+        _self.send = function(envelope, metaConnect) {
+            this._debug('Transport', this.getType(), 'sending', envelope, '/meta/connect =', metaConnect);
+            _send.call(this, _context, envelope, metaConnect);
+        };
+
+        _self.webSocketClose = function(context, code, reason) {
+            try {
+                if (context.webSocket) {
+                    context.webSocket.close(code, reason);
+                }
+            } catch (x) {
+                this._debug(x);
+            }
+        };
+
+        _self.abort = function() {
+            _super.abort();
+            _forceClose.call(this, _context, {code: 1000, reason: 'Abort'});
+            this.reset(true);
+        };
+
+        return _self;
+    };
+
+
+    /**
+     * The constructor for a CometD object, identified by an optional name.
+     * The default name is the string 'default'.
+     * @param name the optional name of this cometd object
+     */
+    var CometD = function(name) {
+        var _scheduler = new Scheduler();
+        var _cometd = this;
+        var _name = name || 'default';
+        var _crossDomain = false;
+        var _transports = new TransportRegistry();
+        var _transport;
+        var _status = 'disconnected';
+        var _messageId = 0;
+        var _clientId = null;
+        var _batch = 0;
+        var _messageQueue = [];
+        var _internalBatch = false;
+        var _listenerId = 0;
+        var _listeners = {};
+        var _backoff = 0;
+        var _scheduledSend = null;
+        var _extensions = [];
+        var _advice = {};
+        var _handshakeProps;
+        var _handshakeCallback;
+        var _callbacks = {};
+        var _remoteCalls = {};
+        var _reestablish = false;
+        var _connected = false;
+        var _unconnectTime = 0;
+        var _handshakeMessages = 0;
+        var _metaConnect = null;
+        var _config = {
+            useWorkerScheduler: true,
+            protocol: null,
+            stickyReconnect: true,
+            connectTimeout: 0,
+            maxConnections: 2,
+            backoffIncrement: 1000,
+            maxBackoff: 60000,
+            logLevel: 'info',
+            maxNetworkDelay: 10000,
+            requestHeaders: {},
+            appendMessageTypeToURL: true,
+            autoBatch: false,
+            urls: {},
+            maxURILength: 2000,
+            advice: {
+                timeout: 60000,
+                interval: 0,
+                reconnect: undefined,
+                maxInterval: 0
+            }
+        };
+
+        function _fieldValue(object, name) {
+            try {
+                return object[name];
+            } catch (x) {
+                return undefined;
+            }
+        }
+
+        /**
+         * Mixes in the given objects into the target object by copying the properties.
+         * @param deep if the copy must be deep
+         * @param target the target object
+         * @param objects the objects whose properties are copied into the target
+         */
+        this._mixin = function(deep, target, objects) {
+            var result = target || {};
+
+            // Skip first 2 parameters (deep and target), and loop over the others
+            for (var i = 2; i < arguments.length; ++i) {
+                var object = arguments[i];
+
+                if (object === undefined || object === null) {
+                    continue;
+                }
+
+                for (var propName in object) {
+                    if (object.hasOwnProperty(propName)) {
+                        var prop = _fieldValue(object, propName);
+                        var targ = _fieldValue(result, propName);
+
+                        // Avoid infinite loops
+                        if (prop === target) {
+                            continue;
+                        }
+                        // Do not mixin undefined values
+                        if (prop === undefined) {
+                            continue;
+                        }
+
+                        if (deep && typeof prop === 'object' && prop !== null) {
+                            if (prop instanceof Array) {
+                                result[propName] = this._mixin(deep, targ instanceof Array ? targ : [], prop);
+                            } else {
+                                var source = typeof targ === 'object' && !(targ instanceof Array) ? targ : {};
+                                result[propName] = this._mixin(deep, source, prop);
+                            }
+                        } else {
+                            result[propName] = prop;
+                        }
+                    }
+                }
+            }
+
+            return result;
+        };
+
+        function _isString(value) {
+            return Utils.isString(value);
+        }
+
+        function _isFunction(value) {
+            if (value === undefined || value === null) {
+                return false;
+            }
+            return typeof value === 'function';
+        }
+
+        function _zeroPad(value, length) {
+            var result = '';
+            while (--length > 0) {
+                if (value >= Math.pow(10, length)) {
+                    break;
+                }
+                result += '0';
+            }
+            result += value;
+            return result;
+        }
+
+        function _log(level, args) {
+            if (window.console) {
+                var logger = window.console[level];
+                if (_isFunction(logger)) {
+                    var now = new Date();
+                    [].splice.call(args, 0, 0, _zeroPad(now.getHours(), 2) + ':' + _zeroPad(now.getMinutes(), 2) + ':' +
+                        _zeroPad(now.getSeconds(), 2) + '.' + _zeroPad(now.getMilliseconds(), 3));
+                    logger.apply(window.console, args);
+                }
+            }
+        }
+
+        this._warn = function() {
+            _log('warn', arguments);
+        };
+
+        this._info = function() {
+            if (_config.logLevel !== 'warn') {
+                _log('info', arguments);
+            }
+        };
+
+        this._debug = function() {
+            if (_config.logLevel === 'debug') {
+                _log('debug', arguments);
+            }
+        };
+
+        function _splitURL(url) {
+            // [1] = protocol://,
+            // [2] = host:port,
+            // [3] = host,
+            // [4] = IPv6_host,
+            // [5] = IPv4_host,
+            // [6] = :port,
+            // [7] = port,
+            // [8] = uri,
+            // [9] = rest (query / fragment)
+            return new RegExp('(^https?://)?(((\\[[^\\]]+])|([^:/?#]+))(:(\\d+))?)?([^?#]*)(.*)?').exec(url);
+        }
+
+        /**
+         * Returns whether the given hostAndPort is cross domain.
+         * The default implementation checks against window.location.host
+         * but this function can be overridden to make it work in non-browser
+         * environments.
+         *
+         * @param hostAndPort the host and port in format host:port
+         * @return whether the given hostAndPort is cross domain
+         */
+        this._isCrossDomain = function(hostAndPort) {
+            if (window.location && window.location.host) {
+                if (hostAndPort) {
+                    return hostAndPort !== window.location.host;
+                }
+            }
+            return false;
+        };
+
+        function _configure(configuration) {
+            _cometd._debug('Configuring cometd object with', configuration);
+            // Support old style param, where only the Bayeux server URL was passed.
+            if (_isString(configuration)) {
+                configuration = {
+                    url: configuration
+                };
+            }
+            if (!configuration) {
+                configuration = {};
+            }
+
+            _config = _cometd._mixin(false, _config, configuration);
+
+            var url = _cometd.getURL();
+            if (!url) {
+                throw 'Missing required configuration parameter \'url\' specifying the Bayeux server URL';
+            }
+
+            // Check if we're cross domain.
+            var urlParts = _splitURL(url);
+            var hostAndPort = urlParts[2];
+            var uri = urlParts[8];
+            var afterURI = urlParts[9];
+            _crossDomain = _cometd._isCrossDomain(hostAndPort);
+
+            // Check if appending extra path is supported.
+            if (_config.appendMessageTypeToURL) {
+                if (afterURI !== undefined && afterURI.length > 0) {
+                    _cometd._info('Appending message type to URI ' + uri + afterURI + ' is not supported, disabling \'appendMessageTypeToURL\' configuration');
+                    _config.appendMessageTypeToURL = false;
+                } else {
+                    var uriSegments = uri.split('/');
+                    var lastSegmentIndex = uriSegments.length - 1;
+                    if (uri.match(/\/$/)) {
+                        lastSegmentIndex -= 1;
+                    }
+                    if (uriSegments[lastSegmentIndex].indexOf('.') >= 0) {
+                        // Very likely the CometD servlet's URL pattern is mapped to an extension, such as *.cometd
+                        // It will be difficult to add the extra path in this case
+                        _cometd._info('Appending message type to URI ' + uri + ' is not supported, disabling \'appendMessageTypeToURL\' configuration');
+                        _config.appendMessageTypeToURL = false;
+                    }
+                }
+            }
+
+            if (window.Worker && window.Blob && window.URL && _config.useWorkerScheduler) {
+                var code = WorkerScheduler.toString();
+                // Remove the function declaration, the opening brace and the closing brace.
+                code = code.substring(code.indexOf('{') + 1, code.lastIndexOf('}'));
+                var blob = new window.Blob([code], {
+                    type: 'application/json'
+                });
+                var blobURL = window.URL.createObjectURL(blob);
+                var worker = new window.Worker(blobURL);
+                _scheduler.setTimeout = function(funktion, delay) {
+                    var id = _scheduler.register(funktion);
+                    worker.postMessage({
+                        id: id,
+                        type: 'setTimeout',
+                        delay: delay
+                    });
+                    return id;
+                };
+                _scheduler.clearTimeout = function(id) {
+                    _scheduler.unregister(id);
+                    worker.postMessage({
+                        id: id,
+                        type: 'clearTimeout'
+                    });
+                };
+                worker.onmessage = function(e) {
+                    var id = e.data.id;
+                    var funktion = _scheduler.unregister(id);
+                    if (funktion) {
+                        funktion();
+                    }
+                };
+            }
+        }
+
+        function _removeListener(subscription) {
+            if (subscription) {
+                var subscriptions = _listeners[subscription.channel];
+                if (subscriptions && subscriptions[subscription.id]) {
+                    delete subscriptions[subscription.id];
+                    _cometd._debug('Removed', subscription.listener ? 'listener' : 'subscription', subscription);
+                }
+            }
+        }
+
+        function _removeSubscription(subscription) {
+            if (subscription && !subscription.listener) {
+                _removeListener(subscription);
+            }
+        }
+
+        function _clearSubscriptions() {
+            for (var channel in _listeners) {
+                if (_listeners.hasOwnProperty(channel)) {
+                    var subscriptions = _listeners[channel];
+                    if (subscriptions) {
+                        for (var id in subscriptions) {
+                            if (subscriptions.hasOwnProperty(id)) {
+                                _removeSubscription(subscriptions[id]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function _setStatus(newStatus) {
+            if (_status !== newStatus) {
+                _cometd._debug('Status', _status, '->', newStatus);
+                _status = newStatus;
+            }
+        }
+
+        function _isDisconnected() {
+            return _status === 'disconnecting' || _status === 'disconnected';
+        }
+
+        function _nextMessageId() {
+            var result = ++_messageId;
+            return '' + result;
+        }
+
+        function _applyExtension(scope, callback, name, message, outgoing) {
+            try {
+                return callback.call(scope, message);
+            } catch (x) {
+                var handler = _cometd.onExtensionException;
+                if (_isFunction(handler)) {
+                    _cometd._debug('Invoking extension exception handler', name, x);
+                    try {
+                        handler.call(_cometd, x, name, outgoing, message);
+                    } catch (xx) {
+                        _cometd._info('Exception during execution of extension exception handler', name, xx);
+                    }
+                } else {
+                    _cometd._info('Exception during execution of extension', name, x);
+                }
+                return message;
+            }
+        }
+
+        function _applyIncomingExtensions(message) {
+            for (var i = 0; i < _extensions.length; ++i) {
+                if (message === undefined || message === null) {
+                    break;
+                }
+
+                var extension = _extensions[i];
+                var callback = extension.extension.incoming;
+                if (_isFunction(callback)) {
+                    var result = _applyExtension(extension.extension, callback, extension.name, message, false);
+                    message = result === undefined ? message : result;
+                }
+            }
+            return message;
+        }
+
+        function _applyOutgoingExtensions(message) {
+            for (var i = _extensions.length - 1; i >= 0; --i) {
+                if (message === undefined || message === null) {
+                    break;
+                }
+
+                var extension = _extensions[i];
+                var callback = extension.extension.outgoing;
+                if (_isFunction(callback)) {
+                    var result = _applyExtension(extension.extension, callback, extension.name, message, true);
+                    message = result === undefined ? message : result;
+                }
+            }
+            return message;
+        }
+
+        function _notify(channel, message) {
+            var subscriptions = _listeners[channel];
+            if (subscriptions) {
+                for (var id in subscriptions) {
+                    if (subscriptions.hasOwnProperty(id)) {
+                        var subscription = subscriptions[id];
+                        // Subscriptions may come and go, so the array may have 'holes'
+                        if (subscription) {
+                            try {
+                                subscription.callback.call(subscription.scope, message);
+                            } catch (x) {
+                                var handler = _cometd.onListenerException;
+                                if (_isFunction(handler)) {
+                                    _cometd._debug('Invoking listener exception handler', subscription, x);
+                                    try {
+                                        handler.call(_cometd, x, subscription, subscription.listener, message);
+                                    } catch (xx) {
+                                        _cometd._info('Exception during execution of listener exception handler', subscription, xx);
+                                    }
+                                } else {
+                                    _cometd._info('Exception during execution of listener', subscription, message, x);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        function _notifyListeners(channel, message) {
+            // Notify direct listeners
+            _notify(channel, message);
+
+            // Notify the globbing listeners
+            var channelParts = channel.split('/');
+            var last = channelParts.length - 1;
+            for (var i = last; i > 0; --i) {
+                var channelPart = channelParts.slice(0, i).join('/') + '/*';
+                // We don't want to notify /foo/* if the channel is /foo/bar/baz,
+                // so we stop at the first non recursive globbing
+                if (i === last) {
+                    _notify(channelPart, message);
+                }
+                // Add the recursive globber and notify
+                channelPart += '*';
+                _notify(channelPart, message);
+            }
+        }
+
+        function _cancelDelayedSend() {
+            if (_scheduledSend !== null) {
+                _cometd.clearTimeout(_scheduledSend);
+            }
+            _scheduledSend = null;
+        }
+
+        function _delayedSend(operation, delay) {
+            _cancelDelayedSend();
+            var time = _advice.interval + delay;
+            _cometd._debug('Function scheduled in', time, 'ms, interval =', _advice.interval, 'backoff =', _backoff, operation);
+            _scheduledSend = _cometd.setTimeout(operation, time);
+        }
+
+        // Needed to break cyclic dependencies between function definitions
+        var _handleMessages;
+        var _handleFailure;
+
+        /**
+         * Delivers the messages to the CometD server
+         * @param messages the array of messages to send
+         * @param metaConnect true if this send is on /meta/connect
+         * @param extraPath an extra path to append to the Bayeux server URL
+         */
+        function _send(messages, metaConnect, extraPath) {
+            // We must be sure that the messages have a clientId.
+            // This is not guaranteed since the handshake may take time to return
+            // (and hence the clientId is not known yet) and the application
+            // may create other messages.
+            for (var i = 0; i < messages.length; ++i) {
+                var message = messages[i];
+                var messageId = message.id;
+
+                if (_clientId) {
+                    message.clientId = _clientId;
+                }
+
+                message = _applyOutgoingExtensions(message);
+                if (message !== undefined && message !== null) {
+                    // Extensions may have modified the message id, but we need to own it.
+                    message.id = messageId;
+                    messages[i] = message;
+                } else {
+                    delete _callbacks[messageId];
+                    messages.splice(i--, 1);
+                }
+            }
+
+            if (messages.length === 0) {
+                return;
+            }
+
+            if (metaConnect) {
+                _metaConnect = messages[0];
+            }
+
+            var url = _cometd.getURL();
+            if (_config.appendMessageTypeToURL) {
+                // If url does not end with '/', then append it
+                if (!url.match(/\/$/)) {
+                    url = url + '/';
+                }
+                if (extraPath) {
+                    url = url + extraPath;
+                }
+            }
+
+            var envelope = {
+                url: url,
+                sync: false,
+                messages: messages,
+                onSuccess: function(rcvdMessages) {
+                    try {
+                        _handleMessages.call(_cometd, rcvdMessages);
+                    } catch (x) {
+                        _cometd._info('Exception during handling of messages', x);
+                    }
+                },
+                onFailure: function(conduit, messages, failure) {
+                    try {
+                        var transport = _cometd.getTransport();
+                        failure.connectionType = transport ? transport.getType() : "unknown";
+                        _handleFailure.call(_cometd, conduit, messages, failure);
+                    } catch (x) {
+                        _cometd._info('Exception during handling of failure', x);
+                    }
+                }
+            };
+            _cometd._debug('Send', envelope);
+            _transport.send(envelope, metaConnect);
+        }
+
+        function _queueSend(message) {
+            if (_batch > 0 || _internalBatch === true) {
+                _messageQueue.push(message);
+            } else {
+                _send([message], false);
+            }
+        }
+
+        /**
+         * Sends a complete bayeux message.
+         * This method is exposed as a public so that extensions may use it
+         * to send bayeux message directly, for example in case of re-sending
+         * messages that have already been sent but that for some reason must
+         * be resent.
+         */
+        this.send = _queueSend;
+
+        function _resetBackoff() {
+            _backoff = 0;
+        }
+
+        function _increaseBackoff() {
+            if (_backoff < _config.maxBackoff) {
+                _backoff += _config.backoffIncrement;
+            }
+            return _backoff;
+        }
+
+        /**
+         * Starts a the batch of messages to be sent in a single request.
+         * @see #_endBatch(sendMessages)
+         */
+        function _startBatch() {
+            ++_batch;
+            _cometd._debug('Starting batch, depth', _batch);
+        }
+
+        function _flushBatch() {
+            var messages = _messageQueue;
+            _messageQueue = [];
+            if (messages.length > 0) {
+                _send(messages, false);
+            }
+        }
+
+        /**
+         * Ends the batch of messages to be sent in a single request,
+         * optionally sending messages present in the message queue depending
+         * on the given argument.
+         * @see #_startBatch()
+         */
+        function _endBatch() {
+            --_batch;
+            _cometd._debug('Ending batch, depth', _batch);
+            if (_batch < 0) {
+                throw 'Calls to startBatch() and endBatch() are not paired';
+            }
+
+            if (_batch === 0 && !_isDisconnected() && !_internalBatch) {
+                _flushBatch();
+            }
+        }
+
+        /**
+         * Sends the connect message
+         */
+        function _connect() {
+            if (!_isDisconnected()) {
+                var bayeuxMessage = {
+                    id: _nextMessageId(),
+                    channel: '/meta/connect',
+                    connectionType: _transport.getType()
+                };
+
+                // In case of reload or temporary loss of connection
+                // we want the next successful connect to return immediately
+                // instead of being held by the server, so that connect listeners
+                // can be notified that the connection has been re-established
+                if (!_connected) {
+                    bayeuxMessage.advice = {
+                        timeout: 0
+                    };
+                }
+
+                _setStatus('connecting');
+                _cometd._debug('Connect sent', bayeuxMessage);
+                _send([bayeuxMessage], true, 'connect');
+                _setStatus('connected');
+            }
+        }
+
+        function _delayedConnect(delay) {
+            _setStatus('connecting');
+            _delayedSend(function() {
+                _connect();
+            }, delay);
+        }
+
+        function _updateAdvice(newAdvice) {
+            if (newAdvice) {
+                _advice = _cometd._mixin(false, {}, _config.advice, newAdvice);
+                _cometd._debug('New advice', _advice);
+            }
+        }
+
+        function _disconnect(abort) {
+            _cancelDelayedSend();
+            if (abort && _transport) {
+                _transport.abort();
+            }
+            _crossDomain = false;
+            _transport = null;
+            _setStatus('disconnected');
+            _clientId = null;
+            _batch = 0;
+            _resetBackoff();
+            _reestablish = false;
+            _connected = false;
+            _unconnectTime = 0;
+            _metaConnect = null;
+
+            // Fail any existing queued message
+            if (_messageQueue.length > 0) {
+                var messages = _messageQueue;
+                _messageQueue = [];
+                _handleFailure.call(_cometd, undefined, messages, {
+                    reason: 'Disconnected'
+                });
+            }
+        }
+
+        function _notifyTransportException(oldTransport, newTransport, failure) {
+            var handler = _cometd.onTransportException;
+            if (_isFunction(handler)) {
+                _cometd._debug('Invoking transport exception handler', oldTransport, newTransport, failure);
+                try {
+                    handler.call(_cometd, failure, oldTransport, newTransport);
+                } catch (x) {
+                    _cometd._info('Exception during execution of transport exception handler', x);
+                }
+            }
+        }
+
+        /**
+         * Sends the initial handshake message
+         */
+        function _handshake(handshakeProps, handshakeCallback) {
+            if (_isFunction(handshakeProps)) {
+                handshakeCallback = handshakeProps;
+                handshakeProps = undefined;
+            }
+
+            _clientId = null;
+
+            _clearSubscriptions();
+
+            // Reset the transports if we're not retrying the handshake
+            if (_isDisconnected()) {
+                _transports.reset(true);
+            }
+
+            // Reset the advice.
+            _updateAdvice({});
+
+            _batch = 0;
+
+            // Mark the start of an internal batch.
+            // This is needed because handshake and connect are async.
+            // It may happen that the application calls init() then subscribe()
+            // and the subscribe message is sent before the connect message, if
+            // the subscribe message is not held until the connect message is sent.
+            // So here we start a batch to hold temporarily any message until
+            // the connection is fully established.
+            _internalBatch = true;
+
+            // Save the properties provided by the user, so that
+            // we can reuse them during automatic re-handshake
+            _handshakeProps = handshakeProps;
+            _handshakeCallback = handshakeCallback;
+
+            var version = '1.0';
+
+            // Figure out the transports to send to the server
+            var url = _cometd.getURL();
+            var transportTypes = _transports.findTransportTypes(version, _crossDomain, url);
+
+            var bayeuxMessage = {
+                id: _nextMessageId(),
+                version: version,
+                minimumVersion: version,
+                channel: '/meta/handshake',
+                supportedConnectionTypes: transportTypes,
+                advice: {
+                    timeout: _advice.timeout,
+                    interval: _advice.interval
+                }
+            };
+            // Do not allow the user to override important fields.
+            var message = _cometd._mixin(false, {}, _handshakeProps, bayeuxMessage);
+
+            // Save the callback.
+            _cometd._putCallback(message.id, handshakeCallback);
+
+            // Pick up the first available transport as initial transport
+            // since we don't know if the server supports it
+            if (!_transport) {
+                _transport = _transports.negotiateTransport(transportTypes, version, _crossDomain, url);
+                if (!_transport) {
+                    var failure = 'Could not find initial transport among: ' + _transports.getTransportTypes();
+                    _cometd._warn(failure);
+                    throw failure;
+                }
+            }
+
+            _cometd._debug('Initial transport is', _transport.getType());
+
+            // We started a batch to hold the application messages,
+            // so here we must bypass it and send immediately.
+            _setStatus('handshaking');
+            _cometd._debug('Handshake sent', message);
+            _send([message], false, 'handshake');
+        }
+
+        function _delayedHandshake(delay) {
+            _setStatus('handshaking');
+
+            // We will call _handshake() which will reset _clientId, but we want to avoid
+            // that between the end of this method and the call to _handshake() someone may
+            // call publish() (or other methods that call _queueSend()).
+            _internalBatch = true;
+
+            _delayedSend(function() {
+                _handshake(_handshakeProps, _handshakeCallback);
+            }, delay);
+        }
+
+        function _notifyCallback(callback, message) {
+            try {
+                callback.call(_cometd, message);
+            } catch (x) {
+                var handler = _cometd.onCallbackException;
+                if (_isFunction(handler)) {
+                    _cometd._debug('Invoking callback exception handler', x);
+                    try {
+                        handler.call(_cometd, x, message);
+                    } catch (xx) {
+                        _cometd._info('Exception during execution of callback exception handler', xx);
+                    }
+                } else {
+                    _cometd._info('Exception during execution of message callback', x);
+                }
+            }
+        }
+
+        this._getCallback = function(messageId) {
+            return _callbacks[messageId];
+        };
+
+        this._putCallback = function(messageId, callback) {
+            var result = this._getCallback(messageId);
+            if (_isFunction(callback)) {
+                _callbacks[messageId] = callback;
+            }
+            return result;
+        };
+
+        function _handleCallback(message) {
+            var callback = _cometd._getCallback([message.id]);
+            if (_isFunction(callback)) {
+                delete _callbacks[message.id];
+                _notifyCallback(callback, message);
+            }
+        }
+
+        function _handleRemoteCall(message) {
+            var context = _remoteCalls[message.id];
+            delete _remoteCalls[message.id];
+            if (context) {
+                _cometd._debug('Handling remote call response for', message, 'with context', context);
+
+                // Clear the timeout, if present.
+                var timeout = context.timeout;
+                if (timeout) {
+                    _cometd.clearTimeout(timeout);
+                }
+
+                var callback = context.callback;
+                if (_isFunction(callback)) {
+                    _notifyCallback(callback, message);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        this.onTransportFailure = function(message, failureInfo, failureHandler) {
+            this._debug('Transport failure', failureInfo, 'for', message);
+
+            var transports = this.getTransportRegistry();
+            var url = this.getURL();
+            var crossDomain = this._isCrossDomain(_splitURL(url)[2]);
+            var version = '1.0';
+            var transportTypes = transports.findTransportTypes(version, crossDomain, url);
+
+            if (failureInfo.action === 'none') {
+                if (message.channel === '/meta/handshake') {
+                    if (!failureInfo.transport) {
+                        var failure = 'Could not negotiate transport, client=[' + transportTypes + '], server=[' + message.supportedConnectionTypes + ']';
+                        this._warn(failure);
+                        _notifyTransportException(_transport.getType(), null, {
+                            reason: failure,
+                            connectionType: _transport.getType(),
+                            transport: _transport
+                        });
+                    }
+                }
+            } else {
+                failureInfo.delay = this.getBackoffPeriod();
+                // Different logic depending on whether we are handshaking or connecting.
+                if (message.channel === '/meta/handshake') {
+                    if (!failureInfo.transport) {
+                        // The transport is invalid, try to negotiate again.
+                        var oldTransportType = _transport ? _transport.getType() : null;
+                        var newTransport = transports.negotiateTransport(transportTypes, version, crossDomain, url);
+                        if (!newTransport) {
+                            this._warn('Could not negotiate transport, client=[' + transportTypes + ']');
+                            _notifyTransportException(oldTransportType, null, message.failure);
+                            failureInfo.action = 'none';
+                        } else {
+                            var newTransportType = newTransport.getType();
+                            this._debug('Transport', oldTransportType, '->', newTransportType);
+                            _notifyTransportException(oldTransportType, newTransportType, message.failure);
+                            failureInfo.action = 'handshake';
+                            failureInfo.transport = newTransport;
+                        }
+                    }
+
+                    if (failureInfo.action !== 'none') {
+                        this.increaseBackoffPeriod();
+                    }
+                } else {
+                    var now = new Date().getTime();
+
+                    if (_unconnectTime === 0) {
+                        _unconnectTime = now;
+                    }
+
+                    if (failureInfo.action === 'retry') {
+                        failureInfo.delay = this.increaseBackoffPeriod();
+                        // Check whether we may switch to handshaking.
+                        var maxInterval = _advice.maxInterval;
+                        if (maxInterval > 0) {
+                            var expiration = _advice.timeout + _advice.interval + maxInterval;
+                            var unconnected = now - _unconnectTime;
+                            if (unconnected + _backoff > expiration) {
+                                failureInfo.action = 'handshake';
+                            }
+                        }
+                    }
+
+                    if (failureInfo.action === 'handshake') {
+                        failureInfo.delay = 0;
+                        transports.reset(false);
+                        this.resetBackoffPeriod();
+                    }
+                }
+            }
+
+            failureHandler.call(_cometd, failureInfo);
+        };
+
+        function _handleTransportFailure(failureInfo) {
+            _cometd._debug('Transport failure handling', failureInfo);
+
+            if (failureInfo.transport) {
+                _transport = failureInfo.transport;
+            }
+
+            if (failureInfo.url) {
+                _transport.setURL(failureInfo.url);
+            }
+
+            var action = failureInfo.action;
+            var delay = failureInfo.delay || 0;
+            switch (action) {
+                case 'handshake':
+                    _delayedHandshake(delay);
+                    break;
+                case 'retry':
+                    _delayedConnect(delay);
+                    break;
+                case 'none':
+                    _disconnect(true);
+                    break;
+                default:
+                    throw 'Unknown action ' + action;
+            }
+        }
+
+        function _failHandshake(message, failureInfo) {
+            _handleCallback(message);
+            _notifyListeners('/meta/handshake', message);
+            _notifyListeners('/meta/unsuccessful', message);
+
+            // The listeners may have disconnected.
+            if (_isDisconnected()) {
+                failureInfo.action = 'none';
+            }
+
+            _cometd.onTransportFailure.call(_cometd, message, failureInfo, _handleTransportFailure);
+        }
+
+        function _handshakeResponse(message) {
+            var url = _cometd.getURL();
+            if (message.successful) {
+                var crossDomain = _cometd._isCrossDomain(_splitURL(url)[2]);
+                var newTransport = _transports.negotiateTransport(message.supportedConnectionTypes, message.version, crossDomain, url);
+                if (newTransport === null) {
+                    message.successful = false;
+                    _failHandshake(message, {
+                        cause: 'negotiation',
+                        action: 'none',
+                        transport: null
+                    });
+                    return;
+                } else if (_transport !== newTransport) {
+                    _cometd._debug('Transport', _transport.getType(), '->', newTransport.getType());
+                    _transport = newTransport;
+                }
+
+                _clientId = message.clientId;
+
+                // End the internal batch and allow held messages from the application
+                // to go to the server (see _handshake() where we start the internal batch).
+                _internalBatch = false;
+                _flushBatch();
+
+                // Here the new transport is in place, as well as the clientId, so
+                // the listeners can perform a publish() if they want.
+                // Notify the listeners before the connect below.
+                message.reestablish = _reestablish;
+                _reestablish = true;
+
+                _handleCallback(message);
+                _notifyListeners('/meta/handshake', message);
+
+                _handshakeMessages = message['x-messages'] || 0;
+
+                var action = _isDisconnected() ? 'none' : _advice.reconnect || 'retry';
+                switch (action) {
+                    case 'retry':
+                        _resetBackoff();
+                        if (_handshakeMessages === 0) {
+                            _delayedConnect(0);
+                        } else {
+                            _cometd._debug('Processing', _handshakeMessages, 'handshake-delivered messages');
+                        }
+                        break;
+                    case 'none':
+                        _disconnect(true);
+                        break;
+                    default:
+                        throw 'Unrecognized advice action ' + action;
+                }
+            } else {
+                _failHandshake(message, {
+                    cause: 'unsuccessful',
+                    action: _advice.reconnect || 'handshake',
+                    transport: _transport
+                });
+            }
+        }
+
+        function _handshakeFailure(message) {
+            _failHandshake(message, {
+                cause: 'failure',
+                action: 'handshake',
+                transport: null
+            });
+        }
+
+        function _matchMetaConnect(connect) {
+            if (_status === 'disconnected') {
+                return true;
+            }
+            if (_metaConnect && _metaConnect.id === connect.id) {
+                _metaConnect = null;
+                return true;
+            }
+            return false;
+        }
+
+        function _failConnect(message, failureInfo) {
+            // Notify the listeners after the status change but before the next action.
+            _notifyListeners('/meta/connect', message);
+            _notifyListeners('/meta/unsuccessful', message);
+
+            // The listeners may have disconnected.
+            if (_isDisconnected()) {
+                failureInfo.action = 'none';
+            }
+
+            _cometd.onTransportFailure.call(_cometd, message, failureInfo, _handleTransportFailure);
+        }
+
+        function _connectResponse(message) {
+            if (_matchMetaConnect(message)) {
+                _connected = message.successful;
+                if (_connected) {
+                    _notifyListeners('/meta/connect', message);
+
+                    // Normally, the advice will say "reconnect: 'retry', interval: 0"
+                    // and the server will hold the request, so when a response returns
+                    // we immediately call the server again (long polling).
+                    // Listeners can call disconnect(), so check the state after they run.
+                    var action = _isDisconnected() ? 'none' : _advice.reconnect || 'retry';
+                    switch (action) {
+                        case 'retry':
+                            _resetBackoff();
+                            _delayedConnect(_backoff);
+                            break;
+                        case 'none':
+                            _disconnect(false);
+                            break;
+                        default:
+                            throw 'Unrecognized advice action ' + action;
+                    }
+                } else {
+                    _failConnect(message, {
+                        cause: 'unsuccessful',
+                        action: _advice.reconnect || 'retry',
+                        transport: _transport
+                    });
+                }
+            } else {
+                _cometd._debug('Mismatched /meta/connect reply', message);
+            }
+        }
+
+        function _connectFailure(message) {
+            if (_matchMetaConnect(message)) {
+                _connected = false;
+                _failConnect(message, {
+                    cause: 'failure',
+                    action: 'retry',
+                    transport: null
+                });
+            } else {
+                _cometd._debug('Mismatched /meta/connect failure', message);
+            }
+        }
+
+        function _failDisconnect(message) {
+            _disconnect(true);
+            _handleCallback(message);
+            _notifyListeners('/meta/disconnect', message);
+            _notifyListeners('/meta/unsuccessful', message);
+        }
+
+        function _disconnectResponse(message) {
+            if (message.successful) {
+                // Wait for the /meta/connect to arrive.
+                _disconnect(false);
+                _handleCallback(message);
+                _notifyListeners('/meta/disconnect', message);
+            } else {
+                _failDisconnect(message);
+            }
+        }
+
+        function _disconnectFailure(message) {
+            _failDisconnect(message);
+        }
+
+        function _failSubscribe(message) {
+            var subscriptions = _listeners[message.subscription];
+            if (subscriptions) {
+                for (var id in subscriptions) {
+                    if (subscriptions.hasOwnProperty(id)) {
+                        var subscription = subscriptions[id];
+                        if (subscription && !subscription.listener) {
+                            delete subscriptions[id];
+                            _cometd._debug('Removed failed subscription', subscription);
+                        }
+                    }
+                }
+            }
+            _handleCallback(message);
+            _notifyListeners('/meta/subscribe', message);
+            _notifyListeners('/meta/unsuccessful', message);
+        }
+
+        function _subscribeResponse(message) {
+            if (message.successful) {
+                _handleCallback(message);
+                _notifyListeners('/meta/subscribe', message);
+            } else {
+                _failSubscribe(message);
+            }
+        }
+
+        function _subscribeFailure(message) {
+            _failSubscribe(message);
+        }
+
+        function _failUnsubscribe(message) {
+            _handleCallback(message);
+            _notifyListeners('/meta/unsubscribe', message);
+            _notifyListeners('/meta/unsuccessful', message);
+        }
+
+        function _unsubscribeResponse(message) {
+            if (message.successful) {
+                _handleCallback(message);
+                _notifyListeners('/meta/unsubscribe', message);
+            } else {
+                _failUnsubscribe(message);
+            }
+        }
+
+        function _unsubscribeFailure(message) {
+            _failUnsubscribe(message);
+        }
+
+        function _failMessage(message) {
+            if (!_handleRemoteCall(message)) {
+                _handleCallback(message);
+                _notifyListeners('/meta/publish', message);
+                _notifyListeners('/meta/unsuccessful', message);
+            }
+        }
+
+        function _messageResponse(message) {
+            if (message.data !== undefined) {
+                if (!_handleRemoteCall(message)) {
+                    _notifyListeners(message.channel, message);
+                    if (_handshakeMessages > 0) {
+                        --_handshakeMessages;
+                        if (_handshakeMessages === 0) {
+                            _cometd._debug('Processed last handshake-delivered message');
+                            _delayedConnect(0);
+                        }
+                    }
+                }
+            } else {
+                if (message.successful === undefined) {
+                    _cometd._warn('Unknown Bayeux Message', message);
+                } else {
+                    if (message.successful) {
+                        _handleCallback(message);
+                        _notifyListeners('/meta/publish', message);
+                    } else {
+                        _failMessage(message);
+                    }
+                }
+            }
+        }
+
+        function _messageFailure(failure) {
+            _failMessage(failure);
+        }
+
+        function _receive(message) {
+            _unconnectTime = 0;
+
+            message = _applyIncomingExtensions(message);
+            if (message === undefined || message === null) {
+                return;
+            }
+
+            _updateAdvice(message.advice);
+
+            var channel = message.channel;
+            switch (channel) {
+                case '/meta/handshake':
+                    _handshakeResponse(message);
+                    break;
+                case '/meta/connect':
+                    _connectResponse(message);
+                    break;
+                case '/meta/disconnect':
+                    _disconnectResponse(message);
+                    break;
+                case '/meta/subscribe':
+                    _subscribeResponse(message);
+                    break;
+                case '/meta/unsubscribe':
+                    _unsubscribeResponse(message);
+                    break;
+                default:
+                    _messageResponse(message);
+                    break;
+            }
+        }
+
+        /**
+         * Receives a message.
+         * This method is exposed as a public so that extensions may inject
+         * messages simulating that they had been received.
+         */
+        this.receive = _receive;
+
+        _handleMessages = function(rcvdMessages) {
+            _cometd._debug('Received', rcvdMessages);
+
+            for (var i = 0; i < rcvdMessages.length; ++i) {
+                var message = rcvdMessages[i];
+                _receive(message);
+            }
+        };
+
+        _handleFailure = function(conduit, messages, failure) {
+            _cometd._debug('handleFailure', conduit, messages, failure);
+
+            failure.transport = conduit;
+            for (var i = 0; i < messages.length; ++i) {
+                var message = messages[i];
+                var failureMessage = {
+                    id: message.id,
+                    successful: false,
+                    channel: message.channel,
+                    failure: failure
+                };
+                failure.message = message;
+                switch (message.channel) {
+                    case '/meta/handshake':
+                        _handshakeFailure(failureMessage);
+                        break;
+                    case '/meta/connect':
+                        _connectFailure(failureMessage);
+                        break;
+                    case '/meta/disconnect':
+                        _disconnectFailure(failureMessage);
+                        break;
+                    case '/meta/subscribe':
+                        failureMessage.subscription = message.subscription;
+                        _subscribeFailure(failureMessage);
+                        break;
+                    case '/meta/unsubscribe':
+                        failureMessage.subscription = message.subscription;
+                        _unsubscribeFailure(failureMessage);
+                        break;
+                    default:
+                        _messageFailure(failureMessage);
+                        break;
+                }
+            }
+        };
+
+        function _hasSubscriptions(channel) {
+            var subscriptions = _listeners[channel];
+            if (subscriptions) {
+                for (var id in subscriptions) {
+                    if (subscriptions.hasOwnProperty(id)) {
+                        if (subscriptions[id]) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        function _resolveScopedCallback(scope, callback) {
+            var delegate = {
+                scope: scope,
+                method: callback
+            };
+            if (_isFunction(scope)) {
+                delegate.scope = undefined;
+                delegate.method = scope;
+            } else {
+                if (_isString(callback)) {
+                    if (!scope) {
+                        throw 'Invalid scope ' + scope;
+                    }
+                    delegate.method = scope[callback];
+                    if (!_isFunction(delegate.method)) {
+                        throw 'Invalid callback ' + callback + ' for scope ' + scope;
+                    }
+                } else if (!_isFunction(callback)) {
+                    throw 'Invalid callback ' + callback;
+                }
+            }
+            return delegate;
+        }
+
+        function _addListener(channel, scope, callback, isListener) {
+            // The data structure is a map<channel, subscription[]>, where each subscription
+            // holds the callback to be called and its scope.
+
+            var delegate = _resolveScopedCallback(scope, callback);
+            _cometd._debug('Adding', isListener ? 'listener' : 'subscription', 'on', channel, 'with scope', delegate.scope, 'and callback', delegate.method);
+
+            var id = ++_listenerId;
+            var subscription = {
+                id: id,
+                channel: channel,
+                scope: delegate.scope,
+                callback: delegate.method,
+                listener: isListener
+            };
+
+            var subscriptions = _listeners[channel];
+            if (!subscriptions) {
+                subscriptions = {};
+                _listeners[channel] = subscriptions;
+            }
+
+            subscriptions[id] = subscription;
+
+            _cometd._debug('Added', isListener ? 'listener' : 'subscription', subscription);
+
+            return subscription;
+        }
+
+        //
+        // PUBLIC API
+        //
+
+        /**
+         * Registers the given transport under the given transport type.
+         * The optional index parameter specifies the "priority" at which the
+         * transport is registered (where 0 is the max priority).
+         * If a transport with the same type is already registered, this function
+         * does nothing and returns false.
+         * @param type the transport type
+         * @param transport the transport object
+         * @param index the index at which this transport is to be registered
+         * @return true if the transport has been registered, false otherwise
+         * @see #unregisterTransport(type)
+         */
+        this.registerTransport = function(type, transport, index) {
+            var result = _transports.add(type, transport, index);
+            if (result) {
+                this._debug('Registered transport', type);
+
+                if (_isFunction(transport.registered)) {
+                    transport.registered(type, this);
+                }
+            }
+            return result;
+        };
+
+        /**
+         * Unregisters the transport with the given transport type.
+         * @param type the transport type to unregister
+         * @return the transport that has been unregistered,
+         * or null if no transport was previously registered under the given transport type
+         */
+        this.unregisterTransport = function(type) {
+            var transport = _transports.remove(type);
+            if (transport !== null) {
+                this._debug('Unregistered transport', type);
+
+                if (_isFunction(transport.unregistered)) {
+                    transport.unregistered();
+                }
+            }
+            return transport;
+        };
+
+        this.unregisterTransports = function() {
+            _transports.clear();
+        };
+
+        /**
+         * @return an array of all registered transport types
+         */
+        this.getTransportTypes = function() {
+            return _transports.getTransportTypes();
+        };
+
+        this.findTransport = function(name) {
+            return _transports.find(name);
+        };
+
+        /**
+         * @returns the TransportRegistry object
+         */
+        this.getTransportRegistry = function() {
+            return _transports;
+        };
+
+        /**
+         * Configures the initial Bayeux communication with the Bayeux server.
+         * Configuration is passed via an object that must contain a mandatory field <code>url</code>
+         * of type string containing the URL of the Bayeux server.
+         * @param configuration the configuration object
+         */
+        this.configure = function(configuration) {
+            _configure.call(this, configuration);
+        };
+
+        /**
+         * Configures and establishes the Bayeux communication with the Bayeux server
+         * via a handshake and a subsequent connect.
+         * @param configuration the configuration object
+         * @param handshakeProps an object to be merged with the handshake message
+         * @see #configure(configuration)
+         * @see #handshake(handshakeProps)
+         */
+        this.init = function(configuration, handshakeProps) {
+            this.configure(configuration);
+            this.handshake(handshakeProps);
+        };
+
+        /**
+         * Establishes the Bayeux communication with the Bayeux server
+         * via a handshake and a subsequent connect.
+         * @param handshakeProps an object to be merged with the handshake message
+         * @param handshakeCallback a function to be invoked when the handshake is acknowledged
+         */
+        this.handshake = function(handshakeProps, handshakeCallback) {
+            if (_status !== 'disconnected') {
+                throw 'Illegal state: handshaken';
+            }
+            _handshake(handshakeProps, handshakeCallback);
+        };
+
+        /**
+         * Disconnects from the Bayeux server.
+         * @param disconnectProps an object to be merged with the disconnect message
+         * @param disconnectCallback a function to be invoked when the disconnect is acknowledged
+         */
+        this.disconnect = function(disconnectProps, disconnectCallback) {
+            if (_isDisconnected()) {
+                return;
+            }
+
+            if (_isFunction(disconnectProps)) {
+                disconnectCallback = disconnectProps;
+                disconnectProps = undefined;
+            }
+
+            var bayeuxMessage = {
+                id: _nextMessageId(),
+                channel: '/meta/disconnect'
+            };
+            // Do not allow the user to override important fields.
+            var message = this._mixin(false, {}, disconnectProps, bayeuxMessage);
+
+            // Save the callback.
+            _cometd._putCallback(message.id, disconnectCallback);
+
+            _setStatus('disconnecting');
+            _send([message], false, 'disconnect');
+        };
+
+        /**
+         * Marks the start of a batch of application messages to be sent to the server
+         * in a single request, obtaining a single response containing (possibly) many
+         * application reply messages.
+         * Messages are held in a queue and not sent until {@link #endBatch()} is called.
+         * If startBatch() is called multiple times, then an equal number of endBatch()
+         * calls must be made to close and send the batch of messages.
+         * @see #endBatch()
+         */
+        this.startBatch = function() {
+            _startBatch();
+        };
+
+        /**
+         * Marks the end of a batch of application messages to be sent to the server
+         * in a single request.
+         * @see #startBatch()
+         */
+        this.endBatch = function() {
+            _endBatch();
+        };
+
+        /**
+         * Executes the given callback in the given scope, surrounded by a {@link #startBatch()}
+         * and {@link #endBatch()} calls.
+         * @param scope the scope of the callback, may be omitted
+         * @param callback the callback to be executed within {@link #startBatch()} and {@link #endBatch()} calls
+         */
+        this.batch = function(scope, callback) {
+            var delegate = _resolveScopedCallback(scope, callback);
+            this.startBatch();
+            try {
+                delegate.method.call(delegate.scope);
+                this.endBatch();
+            } catch (x) {
+                this._info('Exception during execution of batch', x);
+                this.endBatch();
+                throw x;
+            }
+        };
+
+        /**
+         * Adds a listener for bayeux messages, performing the given callback in the given scope
+         * when a message for the given channel arrives.
+         * @param channel the channel the listener is interested to
+         * @param scope the scope of the callback, may be omitted
+         * @param callback the callback to call when a message is sent to the channel
+         * @returns the subscription handle to be passed to {@link #removeListener(object)}
+         * @see #removeListener(subscription)
+         */
+        this.addListener = function(channel, scope, callback) {
+            if (arguments.length < 2) {
+                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+            }
+            if (!_isString(channel)) {
+                throw 'Illegal argument type: channel must be a string';
+            }
+
+            return _addListener(channel, scope, callback, true);
+        };
+
+        /**
+         * Removes the subscription obtained with a call to {@link #addListener(string, object, function)}.
+         * @param subscription the subscription to unsubscribe.
+         * @see #addListener(channel, scope, callback)
+         */
+        this.removeListener = function(subscription) {
+            // Beware of subscription.id == 0, which is falsy => cannot use !subscription.id
+            if (!subscription || !subscription.channel || !("id" in subscription)) {
+                throw 'Invalid argument: expected subscription, not ' + subscription;
+            }
+
+            _removeListener(subscription);
+        };
+
+        /**
+         * Removes all listeners registered with {@link #addListener(channel, scope, callback)} or
+         * {@link #subscribe(channel, scope, callback)}.
+         */
+        this.clearListeners = function() {
+            _listeners = {};
+        };
+
+        /**
+         * Subscribes to the given channel, performing the given callback in the given scope
+         * when a message for the channel arrives.
+         * @param channel the channel to subscribe to
+         * @param scope the scope of the callback, may be omitted
+         * @param callback the callback to call when a message is sent to the channel
+         * @param subscribeProps an object to be merged with the subscribe message
+         * @param subscribeCallback a function to be invoked when the subscription is acknowledged
+         * @return the subscription handle to be passed to {@link #unsubscribe(object)}
+         */
+        this.subscribe = function(channel, scope, callback, subscribeProps, subscribeCallback) {
+            if (arguments.length < 2) {
+                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+            }
+            if (!_isString(channel)) {
+                throw 'Illegal argument type: channel must be a string';
+            }
+            if (_isDisconnected()) {
+                throw 'Illegal state: disconnected';
+            }
+
+            // Normalize arguments
+            if (_isFunction(scope)) {
+                subscribeCallback = subscribeProps;
+                subscribeProps = callback;
+                callback = scope;
+                scope = undefined;
+            }
+            if (_isFunction(subscribeProps)) {
+                subscribeCallback = subscribeProps;
+                subscribeProps = undefined;
+            }
+
+            // Only send the message to the server if this client has not yet subscribed to the channel
+            var send = !_hasSubscriptions(channel);
+
+            var subscription = _addListener(channel, scope, callback, false);
+
+            if (send) {
+                // Send the subscription message after the subscription registration to avoid
+                // races where the server would send a message to the subscribers, but here
+                // on the client the subscription has not been added yet to the data structures
+                var bayeuxMessage = {
+                    id: _nextMessageId(),
+                    channel: '/meta/subscribe',
+                    subscription: channel
+                };
+                // Do not allow the user to override important fields.
+                var message = this._mixin(false, {}, subscribeProps, bayeuxMessage);
+
+                // Save the callback.
+                _cometd._putCallback(message.id, subscribeCallback);
+
+                _queueSend(message);
+            }
+
+            return subscription;
+        };
+
+        /**
+         * Unsubscribes the subscription obtained with a call to {@link #subscribe(string, object, function)}.
+         * @param subscription the subscription to unsubscribe.
+         * @param unsubscribeProps an object to be merged with the unsubscribe message
+         * @param unsubscribeCallback a function to be invoked when the unsubscription is acknowledged
+         */
+        this.unsubscribe = function(subscription, unsubscribeProps, unsubscribeCallback) {
+            if (arguments.length < 1) {
+                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+            }
+            if (_isDisconnected()) {
+                throw 'Illegal state: disconnected';
+            }
+
+            if (_isFunction(unsubscribeProps)) {
+                unsubscribeCallback = unsubscribeProps;
+                unsubscribeProps = undefined;
+            }
+
+            // Remove the local listener before sending the message
+            // This ensures that if the server fails, this client does not get notifications
+            this.removeListener(subscription);
+
+            var channel = subscription.channel;
+            // Only send the message to the server if this client unsubscribes the last subscription
+            if (!_hasSubscriptions(channel)) {
+                var bayeuxMessage = {
+                    id: _nextMessageId(),
+                    channel: '/meta/unsubscribe',
+                    subscription: channel
+                };
+                // Do not allow the user to override important fields.
+                var message = this._mixin(false, {}, unsubscribeProps, bayeuxMessage);
+
+                // Save the callback.
+                _cometd._putCallback(message.id, unsubscribeCallback);
+
+                _queueSend(message);
+            }
+        };
+
+        this.resubscribe = function(subscription, subscribeProps) {
+            _removeSubscription(subscription);
+            if (subscription) {
+                return this.subscribe(subscription.channel, subscription.scope, subscription.callback, subscribeProps);
+            }
+            return undefined;
+        };
+
+        /**
+         * Removes all subscriptions added via {@link #subscribe(channel, scope, callback, subscribeProps)},
+         * but does not remove the listeners added via {@link addListener(channel, scope, callback)}.
+         */
+        this.clearSubscriptions = function() {
+            _clearSubscriptions();
+        };
+
+        /**
+         * Publishes a message on the given channel, containing the given content.
+         * @param channel the channel to publish the message to
+         * @param content the content of the message
+         * @param publishProps an object to be merged with the publish message
+         * @param publishCallback a function to be invoked when the publish is acknowledged by the server
+         */
+        this.publish = function(channel, content, publishProps, publishCallback) {
+            if (arguments.length < 1) {
+                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+            }
+            if (!_isString(channel)) {
+                throw 'Illegal argument type: channel must be a string';
+            }
+            if (/^\/meta\//.test(channel)) {
+                throw 'Illegal argument: cannot publish to meta channels';
+            }
+            if (_isDisconnected()) {
+                throw 'Illegal state: disconnected';
+            }
+
+            if (_isFunction(content)) {
+                publishCallback = content;
+                content = {};
+                publishProps = undefined;
+            } else if (_isFunction(publishProps)) {
+                publishCallback = publishProps;
+                publishProps = undefined;
+            }
+
+            var bayeuxMessage = {
+                id: _nextMessageId(),
+                channel: channel,
+                data: content
+            };
+            // Do not allow the user to override important fields.
+            var message = this._mixin(false, {}, publishProps, bayeuxMessage);
+
+            // Save the callback.
+            _cometd._putCallback(message.id, publishCallback);
+
+            _queueSend(message);
+        };
+
+        /**
+         * Publishes a message with binary data on the given channel.
+         * The binary data chunk may be an ArrayBuffer, a DataView, a TypedArray
+         * (such as Uint8Array) or a plain integer array.
+         * The meta data object may contain additional application data such as
+         * a file name, a mime type, etc.
+         * @param channel the channel to publish the message to
+         * @param data the binary data to publish
+         * @param last whether the binary data chunk is the last
+         * @param meta an object containing meta data associated to the binary chunk
+         * @param callback a function to be invoked when the publish is acknowledged by the server
+         */
+        this.publishBinary = function(channel, data, last, meta, callback) {
+            if (_isFunction(data)) {
+                callback = data;
+                data = new ArrayBuffer(0);
+                last = true;
+                meta = undefined;
+            } else if (_isFunction(last)) {
+                callback = last;
+                last = true;
+                meta = undefined;
+            } else if (_isFunction(meta)) {
+                callback = meta;
+                meta = undefined;
+            }
+            var content = {
+                meta: meta,
+                data: data,
+                last: last
+            };
+            var ext = {
+                ext: {
+                    binary: {}
+                }
+            };
+            this.publish(channel, content, ext, callback);
+        };
+
+        this.remoteCall = function(target, content, timeout, callProps, callback) {
+            if (arguments.length < 1) {
+                throw 'Illegal arguments number: required 1, got ' + arguments.length;
+            }
+            if (!_isString(target)) {
+                throw 'Illegal argument type: target must be a string';
+            }
+            if (_isDisconnected()) {
+                throw 'Illegal state: disconnected';
+            }
+
+            if (_isFunction(content)) {
+                callback = content;
+                content = {};
+                timeout = _config.maxNetworkDelay;
+                callProps = undefined;
+            } else if (_isFunction(timeout)) {
+                callback = timeout;
+                timeout = _config.maxNetworkDelay;
+                callProps = undefined;
+            } else if (_isFunction(callProps)) {
+                callback = callProps;
+                callProps = undefined;
+            }
+
+            if (typeof timeout !== 'number') {
+                throw 'Illegal argument type: timeout must be a number';
+            }
+
+            if (!target.match(/^\//)) {
+                target = '/' + target;
+            }
+            var channel = '/service' + target;
+
+            var bayeuxMessage = {
+                id: _nextMessageId(),
+                channel: channel,
+                data: content
+            };
+            var message = this._mixin(false, {}, callProps, bayeuxMessage);
+
+            var context = {
+                callback: callback
+            };
+            if (timeout > 0) {
+                context.timeout = _cometd.setTimeout(function() {
+                    _cometd._debug('Timing out remote call', message, 'after', timeout, 'ms');
+                    _failMessage({
+                        id: message.id,
+                        error: '406::timeout',
+                        successful: false,
+                        failure: {
+                            message: message,
+                            reason: 'Remote Call Timeout'
+                        }
+                    });
+                }, timeout);
+                _cometd._debug('Scheduled remote call timeout', message, 'in', timeout, 'ms');
+            }
+            _remoteCalls[message.id] = context;
+
+            _queueSend(message);
+        };
+
+        this.remoteCallBinary = function(target, data, last, meta, timeout, callback) {
+            if (_isFunction(data)) {
+                callback = data;
+                data = new ArrayBuffer(0);
+                last = true;
+                meta = undefined;
+                timeout = _config.maxNetworkDelay;
+            } else if (_isFunction(last)) {
+                callback = last;
+                last = true;
+                meta = undefined;
+                timeout = _config.maxNetworkDelay;
+            } else if (_isFunction(meta)) {
+                callback = meta;
+                meta = undefined;
+                timeout = _config.maxNetworkDelay;
+            } else if (_isFunction(timeout)) {
+                callback = timeout;
+                timeout = _config.maxNetworkDelay;
+            }
+
+            var content = {
+                meta: meta,
+                data: data,
+                last: last
+            };
+            var ext = {
+                ext: {
+                    binary: {}
+                }
+            };
+
+            this.remoteCall(target, content, timeout, ext, callback);
+        };
+
+        /**
+         * Returns a string representing the status of the bayeux communication with the Bayeux server.
+         */
+        this.getStatus = function() {
+            return _status;
+        };
+
+        /**
+         * Returns whether this instance has been disconnected.
+         */
+        this.isDisconnected = _isDisconnected;
+
+        /**
+         * Sets the backoff period used to increase the backoff time when retrying an unsuccessful or failed message.
+         * Default value is 1 second, which means if there is a persistent failure the retries will happen
+         * after 1 second, then after 2 seconds, then after 3 seconds, etc. So for example with 15 seconds of
+         * elapsed time, there will be 5 retries (at 1, 3, 6, 10 and 15 seconds elapsed).
+         * @param period the backoff period to set
+         * @see #getBackoffIncrement()
+         */
+        this.setBackoffIncrement = function(period) {
+            _config.backoffIncrement = period;
+        };
+
+        /**
+         * Returns the backoff period used to increase the backoff time when retrying an unsuccessful or failed message.
+         * @see #setBackoffIncrement(period)
+         */
+        this.getBackoffIncrement = function() {
+            return _config.backoffIncrement;
+        };
+
+        /**
+         * Returns the backoff period to wait before retrying an unsuccessful or failed message.
+         */
+        this.getBackoffPeriod = function() {
+            return _backoff;
+        };
+
+        /**
+         * Increases the backoff period up to the maximum value configured.
+         * @returns the backoff period after increment
+         * @see getBackoffIncrement
+         */
+        this.increaseBackoffPeriod = function() {
+            return _increaseBackoff();
+        };
+
+        /**
+         * Resets the backoff period to zero.
+         */
+        this.resetBackoffPeriod = function() {
+            _resetBackoff();
+        };
+
+        /**
+         * Sets the log level for console logging.
+         * Valid values are the strings 'error', 'warn', 'info' and 'debug', from
+         * less verbose to more verbose.
+         * @param level the log level string
+         */
+        this.setLogLevel = function(level) {
+            _config.logLevel = level;
+        };
+
+        /**
+         * Registers an extension whose callbacks are called for every incoming message
+         * (that comes from the server to this client implementation) and for every
+         * outgoing message (that originates from this client implementation for the
+         * server).
+         * The format of the extension object is the following:
+         * <pre>
+         * {
+         *     incoming: function(message) { ... },
+         *     outgoing: function(message) { ... }
+         * }
+         * </pre>
+         * Both properties are optional, but if they are present they will be called
+         * respectively for each incoming message and for each outgoing message.
+         * @param name the name of the extension
+         * @param extension the extension to register
+         * @return true if the extension was registered, false otherwise
+         * @see #unregisterExtension(name)
+         */
+        this.registerExtension = function(name, extension) {
+            if (arguments.length < 2) {
+                throw 'Illegal arguments number: required 2, got ' + arguments.length;
+            }
+            if (!_isString(name)) {
+                throw 'Illegal argument type: extension name must be a string';
+            }
+
+            var existing = false;
+            for (var i = 0; i < _extensions.length; ++i) {
+                var existingExtension = _extensions[i];
+                if (existingExtension.name === name) {
+                    existing = true;
+                    break;
+                }
+            }
+            if (!existing) {
+                _extensions.push({
+                    name: name,
+                    extension: extension
+                });
+                this._debug('Registered extension', name);
+
+                // Callback for extensions
+                if (_isFunction(extension.registered)) {
+                    extension.registered(name, this);
+                }
+
+                return true;
+            } else {
+                this._info('Could not register extension with name', name, 'since another extension with the same name already exists');
+                return false;
+            }
+        };
+
+        /**
+         * Unregister an extension previously registered with
+         * {@link #registerExtension(name, extension)}.
+         * @param name the name of the extension to unregister.
+         * @return true if the extension was unregistered, false otherwise
+         */
+        this.unregisterExtension = function(name) {
+            if (!_isString(name)) {
+                throw 'Illegal argument type: extension name must be a string';
+            }
+
+            var unregistered = false;
+            for (var i = 0; i < _extensions.length; ++i) {
+                var extension = _extensions[i];
+                if (extension.name === name) {
+                    _extensions.splice(i, 1);
+                    unregistered = true;
+                    this._debug('Unregistered extension', name);
+
+                    // Callback for extensions
+                    var ext = extension.extension;
+                    if (_isFunction(ext.unregistered)) {
+                        ext.unregistered();
+                    }
+
+                    break;
+                }
+            }
+            return unregistered;
+        };
+
+        /**
+         * Find the extension registered with the given name.
+         * @param name the name of the extension to find
+         * @return the extension found or null if no extension with the given name has been registered
+         */
+        this.getExtension = function(name) {
+            for (var i = 0; i < _extensions.length; ++i) {
+                var extension = _extensions[i];
+                if (extension.name === name) {
+                    return extension.extension;
+                }
+            }
+            return null;
+        };
+
+        /**
+         * Returns the name assigned to this CometD object, or the string 'default'
+         * if no name has been explicitly passed as parameter to the constructor.
+         */
+        this.getName = function() {
+            return _name;
+        };
+
+        /**
+         * Returns the clientId assigned by the Bayeux server during handshake.
+         */
+        this.getClientId = function() {
+            return _clientId;
+        };
+
+        /**
+         * Returns the URL of the Bayeux server.
+         */
+        this.getURL = function() {
+            if (_transport) {
+                var url = _transport.getURL();
+                if (url) {
+                    return url;
+                }
+                url = _config.urls[_transport.getType()];
+                if (url) {
+                    return url;
+                }
+            }
+            return _config.url;
+        };
+
+        this.getTransport = function() {
+            return _transport;
+        };
+
+        this.getConfiguration = function() {
+            return this._mixin(true, {}, _config);
+        };
+
+        this.getAdvice = function() {
+            return this._mixin(true, {}, _advice);
+        };
+
+        this.setTimeout = function(funktion, delay) {
+            return _scheduler.setTimeout(function() {
+                try {
+                    _cometd._debug('Invoking timed function', funktion);
+                    funktion();
+                } catch (x) {
+                    _cometd._debug('Exception invoking timed function', funktion, x);
+                }
+            }, delay);
+        };
+
+        this.clearTimeout = function(id) {
+            _scheduler.clearTimeout(id);
+        };
+
+        // Initialize transports.
+        if (window.WebSocket) {
+            this.registerTransport('websocket', new WebSocketTransport());
+        }
+        this.registerTransport('long-polling', new LongPollingTransport());
+        this.registerTransport('callback-polling', new CallbackPollingTransport());
+    };
+
+    var _z85EncodeTable = [
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+        'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+        'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D',
+        'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X',
+        'Y', 'Z', '.', '-', ':', '+', '=', '^', '!', '/',
+        '*', '?', '&', '<', '>', '(', ')', '[', ']', '{',
+        '}', '@', '%', '$', '#'
+    ];
+    var _z85DecodeTable = [
+        0x00, 0x44, 0x00, 0x54, 0x53, 0x52, 0x48, 0x00,
+        0x4B, 0x4C, 0x46, 0x41, 0x00, 0x3F, 0x3E, 0x45,
+        0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+        0x08, 0x09, 0x40, 0x00, 0x49, 0x42, 0x4A, 0x47,
+        0x51, 0x24, 0x25, 0x26, 0x27, 0x28, 0x29, 0x2A,
+        0x2B, 0x2C, 0x2D, 0x2E, 0x2F, 0x30, 0x31, 0x32,
+        0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x3A,
+        0x3B, 0x3C, 0x3D, 0x4D, 0x00, 0x4E, 0x43, 0x00,
+        0x00, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10,
+        0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
+        0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20,
+        0x21, 0x22, 0x23, 0x4F, 0x00, 0x50, 0x00, 0x00
+    ];
+    var Z85 = {
+        encode: function(bytes) {
+            var buffer = null;
+            if (bytes instanceof ArrayBuffer) {
+                buffer = bytes;
+            } else if (bytes.buffer instanceof ArrayBuffer) {
+                buffer = bytes.buffer;
+            } else if (Array.isArray(bytes)) {
+                buffer = new Uint8Array(bytes).buffer;
+            }
+            if (buffer == null) {
+                throw 'Cannot Z85 encode ' + bytes;
+            }
+
+            var length = buffer.byteLength;
+            var remainder = length % 4;
+            var padding = 4 - (remainder === 0 ? 4 : remainder);
+            var view = new DataView(buffer);
+            var result = '';
+            var value = 0;
+            for (var i = 0; i < length + padding; ++i) {
+                var isPadding = i >= length;
+                value = value * 256 + (isPadding ? 0 : view.getUint8(i));
+                if ((i + 1) % 4 === 0) {
+                    var divisor = 85 * 85 * 85 * 85;
+                    for (var j = 5; j > 0; --j) {
+                        if (!isPadding || j > padding) {
+                            var code = Math.floor(value / divisor) % 85;
+                            result += _z85EncodeTable[code];
+                        }
+                        divisor /= 85;
+                    }
+                    value = 0;
+                }
+            }
+
+            return result;
+        },
+        decode: function(string) {
+            var remainder = string.length % 5;
+            var padding = 5 - (remainder === 0 ? 5 : remainder);
+            for (var p = 0; p < padding; ++p) {
+                string += _z85EncodeTable[_z85EncodeTable.length - 1];
+            }
+            var length = string.length;
+
+            var buffer = new ArrayBuffer((length * 4 / 5) - padding);
+            var view = new DataView(buffer);
+            var value = 0;
+            var charIdx = 0;
+            var byteIdx = 0;
+            for (var i = 0; i < length; ++i) {
+                var code = string.charCodeAt(charIdx++) - 32;
+                value = value * 85 + _z85DecodeTable[code];
+                if (charIdx % 5 === 0) {
+                    var divisor = 256 * 256 * 256;
+                    while (divisor >= 1) {
+                        if (byteIdx < view.byteLength) {
+                            view.setUint8(byteIdx++, Math.floor(value / divisor) % 256);
+                        }
+                        divisor /= 256;
+                    }
+                    value = 0;
+                }
+            }
+
+            return buffer;
+        }
+    };
+
+    return {
+        CometD: CometD,
+        Transport: Transport,
+        RequestTransport: RequestTransport,
+        LongPollingTransport: LongPollingTransport,
+        CallbackPollingTransport: CallbackPollingTransport,
+        WebSocketTransport: WebSocketTransport,
+        Utils: Utils,
+        Z85: Z85
+    };
+}));
+
+
+/***/ }),
+
+/***/ "./node_modules/cross-fetch/dist/browser-ponyfill.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/cross-fetch/dist/browser-ponyfill.js ***!
+  \***********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+var __self__ = (function (root) {
+function F() {
+this.fetch = false;
+this.DOMException = root.DOMException
+}
+F.prototype = root;
+return new F();
+})(typeof self !== 'undefined' ? self : this);
+(function(self) {
+
+var irrelevant = (function (exports) {
+  var support = {
+    searchParams: 'URLSearchParams' in self,
+    iterable: 'Symbol' in self && 'iterator' in Symbol,
+    blob:
+      'FileReader' in self &&
+      'Blob' in self &&
+      (function() {
+        try {
+          new Blob();
+          return true
+        } catch (e) {
+          return false
+        }
+      })(),
+    formData: 'FormData' in self,
+    arrayBuffer: 'ArrayBuffer' in self
+  };
+
+  function isDataView(obj) {
+    return obj && DataView.prototype.isPrototypeOf(obj)
+  }
+
+  if (support.arrayBuffer) {
+    var viewClasses = [
+      '[object Int8Array]',
+      '[object Uint8Array]',
+      '[object Uint8ClampedArray]',
+      '[object Int16Array]',
+      '[object Uint16Array]',
+      '[object Int32Array]',
+      '[object Uint32Array]',
+      '[object Float32Array]',
+      '[object Float64Array]'
+    ];
+
+    var isArrayBufferView =
+      ArrayBuffer.isView ||
+      function(obj) {
+        return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
+      };
+  }
+
+  function normalizeName(name) {
+    if (typeof name !== 'string') {
+      name = String(name);
+    }
+    if (/[^a-z0-9\-#$%&'*+.^_`|~]/i.test(name)) {
+      throw new TypeError('Invalid character in header field name')
+    }
+    return name.toLowerCase()
+  }
+
+  function normalizeValue(value) {
+    if (typeof value !== 'string') {
+      value = String(value);
+    }
+    return value
+  }
+
+  // Build a destructive iterator for the value list
+  function iteratorFor(items) {
+    var iterator = {
+      next: function() {
+        var value = items.shift();
+        return {done: value === undefined, value: value}
+      }
+    };
+
+    if (support.iterable) {
+      iterator[Symbol.iterator] = function() {
+        return iterator
+      };
+    }
+
+    return iterator
+  }
+
+  function Headers(headers) {
+    this.map = {};
+
+    if (headers instanceof Headers) {
+      headers.forEach(function(value, name) {
+        this.append(name, value);
+      }, this);
+    } else if (Array.isArray(headers)) {
+      headers.forEach(function(header) {
+        this.append(header[0], header[1]);
+      }, this);
+    } else if (headers) {
+      Object.getOwnPropertyNames(headers).forEach(function(name) {
+        this.append(name, headers[name]);
+      }, this);
+    }
+  }
+
+  Headers.prototype.append = function(name, value) {
+    name = normalizeName(name);
+    value = normalizeValue(value);
+    var oldValue = this.map[name];
+    this.map[name] = oldValue ? oldValue + ', ' + value : value;
+  };
+
+  Headers.prototype['delete'] = function(name) {
+    delete this.map[normalizeName(name)];
+  };
+
+  Headers.prototype.get = function(name) {
+    name = normalizeName(name);
+    return this.has(name) ? this.map[name] : null
+  };
+
+  Headers.prototype.has = function(name) {
+    return this.map.hasOwnProperty(normalizeName(name))
+  };
+
+  Headers.prototype.set = function(name, value) {
+    this.map[normalizeName(name)] = normalizeValue(value);
+  };
+
+  Headers.prototype.forEach = function(callback, thisArg) {
+    for (var name in this.map) {
+      if (this.map.hasOwnProperty(name)) {
+        callback.call(thisArg, this.map[name], name, this);
+      }
+    }
+  };
+
+  Headers.prototype.keys = function() {
+    var items = [];
+    this.forEach(function(value, name) {
+      items.push(name);
+    });
+    return iteratorFor(items)
+  };
+
+  Headers.prototype.values = function() {
+    var items = [];
+    this.forEach(function(value) {
+      items.push(value);
+    });
+    return iteratorFor(items)
+  };
+
+  Headers.prototype.entries = function() {
+    var items = [];
+    this.forEach(function(value, name) {
+      items.push([name, value]);
+    });
+    return iteratorFor(items)
+  };
+
+  if (support.iterable) {
+    Headers.prototype[Symbol.iterator] = Headers.prototype.entries;
+  }
+
+  function consumed(body) {
+    if (body.bodyUsed) {
+      return Promise.reject(new TypeError('Already read'))
+    }
+    body.bodyUsed = true;
+  }
+
+  function fileReaderReady(reader) {
+    return new Promise(function(resolve, reject) {
+      reader.onload = function() {
+        resolve(reader.result);
+      };
+      reader.onerror = function() {
+        reject(reader.error);
+      };
+    })
+  }
+
+  function readBlobAsArrayBuffer(blob) {
+    var reader = new FileReader();
+    var promise = fileReaderReady(reader);
+    reader.readAsArrayBuffer(blob);
+    return promise
+  }
+
+  function readBlobAsText(blob) {
+    var reader = new FileReader();
+    var promise = fileReaderReady(reader);
+    reader.readAsText(blob);
+    return promise
+  }
+
+  function readArrayBufferAsText(buf) {
+    var view = new Uint8Array(buf);
+    var chars = new Array(view.length);
+
+    for (var i = 0; i < view.length; i++) {
+      chars[i] = String.fromCharCode(view[i]);
+    }
+    return chars.join('')
+  }
+
+  function bufferClone(buf) {
+    if (buf.slice) {
+      return buf.slice(0)
+    } else {
+      var view = new Uint8Array(buf.byteLength);
+      view.set(new Uint8Array(buf));
+      return view.buffer
+    }
+  }
+
+  function Body() {
+    this.bodyUsed = false;
+
+    this._initBody = function(body) {
+      this._bodyInit = body;
+      if (!body) {
+        this._bodyText = '';
+      } else if (typeof body === 'string') {
+        this._bodyText = body;
+      } else if (support.blob && Blob.prototype.isPrototypeOf(body)) {
+        this._bodyBlob = body;
+      } else if (support.formData && FormData.prototype.isPrototypeOf(body)) {
+        this._bodyFormData = body;
+      } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+        this._bodyText = body.toString();
+      } else if (support.arrayBuffer && support.blob && isDataView(body)) {
+        this._bodyArrayBuffer = bufferClone(body.buffer);
+        // IE 10-11 can't handle a DataView body.
+        this._bodyInit = new Blob([this._bodyArrayBuffer]);
+      } else if (support.arrayBuffer && (ArrayBuffer.prototype.isPrototypeOf(body) || isArrayBufferView(body))) {
+        this._bodyArrayBuffer = bufferClone(body);
+      } else {
+        this._bodyText = body = Object.prototype.toString.call(body);
+      }
+
+      if (!this.headers.get('content-type')) {
+        if (typeof body === 'string') {
+          this.headers.set('content-type', 'text/plain;charset=UTF-8');
+        } else if (this._bodyBlob && this._bodyBlob.type) {
+          this.headers.set('content-type', this._bodyBlob.type);
+        } else if (support.searchParams && URLSearchParams.prototype.isPrototypeOf(body)) {
+          this.headers.set('content-type', 'application/x-www-form-urlencoded;charset=UTF-8');
+        }
+      }
+    };
+
+    if (support.blob) {
+      this.blob = function() {
+        var rejected = consumed(this);
+        if (rejected) {
+          return rejected
+        }
+
+        if (this._bodyBlob) {
+          return Promise.resolve(this._bodyBlob)
+        } else if (this._bodyArrayBuffer) {
+          return Promise.resolve(new Blob([this._bodyArrayBuffer]))
+        } else if (this._bodyFormData) {
+          throw new Error('could not read FormData body as blob')
+        } else {
+          return Promise.resolve(new Blob([this._bodyText]))
+        }
+      };
+
+      this.arrayBuffer = function() {
+        if (this._bodyArrayBuffer) {
+          return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
+        } else {
+          return this.blob().then(readBlobAsArrayBuffer)
+        }
+      };
+    }
+
+    this.text = function() {
+      var rejected = consumed(this);
+      if (rejected) {
+        return rejected
+      }
+
+      if (this._bodyBlob) {
+        return readBlobAsText(this._bodyBlob)
+      } else if (this._bodyArrayBuffer) {
+        return Promise.resolve(readArrayBufferAsText(this._bodyArrayBuffer))
+      } else if (this._bodyFormData) {
+        throw new Error('could not read FormData body as text')
+      } else {
+        return Promise.resolve(this._bodyText)
+      }
+    };
+
+    if (support.formData) {
+      this.formData = function() {
+        return this.text().then(decode)
+      };
+    }
+
+    this.json = function() {
+      return this.text().then(JSON.parse)
+    };
+
+    return this
+  }
+
+  // HTTP methods whose capitalization should be normalized
+  var methods = ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'POST', 'PUT'];
+
+  function normalizeMethod(method) {
+    var upcased = method.toUpperCase();
+    return methods.indexOf(upcased) > -1 ? upcased : method
+  }
+
+  function Request(input, options) {
+    options = options || {};
+    var body = options.body;
+
+    if (input instanceof Request) {
+      if (input.bodyUsed) {
+        throw new TypeError('Already read')
+      }
+      this.url = input.url;
+      this.credentials = input.credentials;
+      if (!options.headers) {
+        this.headers = new Headers(input.headers);
+      }
+      this.method = input.method;
+      this.mode = input.mode;
+      this.signal = input.signal;
+      if (!body && input._bodyInit != null) {
+        body = input._bodyInit;
+        input.bodyUsed = true;
+      }
+    } else {
+      this.url = String(input);
+    }
+
+    this.credentials = options.credentials || this.credentials || 'same-origin';
+    if (options.headers || !this.headers) {
+      this.headers = new Headers(options.headers);
+    }
+    this.method = normalizeMethod(options.method || this.method || 'GET');
+    this.mode = options.mode || this.mode || null;
+    this.signal = options.signal || this.signal;
+    this.referrer = null;
+
+    if ((this.method === 'GET' || this.method === 'HEAD') && body) {
+      throw new TypeError('Body not allowed for GET or HEAD requests')
+    }
+    this._initBody(body);
+  }
+
+  Request.prototype.clone = function() {
+    return new Request(this, {body: this._bodyInit})
+  };
+
+  function decode(body) {
+    var form = new FormData();
+    body
+      .trim()
+      .split('&')
+      .forEach(function(bytes) {
+        if (bytes) {
+          var split = bytes.split('=');
+          var name = split.shift().replace(/\+/g, ' ');
+          var value = split.join('=').replace(/\+/g, ' ');
+          form.append(decodeURIComponent(name), decodeURIComponent(value));
+        }
+      });
+    return form
+  }
+
+  function parseHeaders(rawHeaders) {
+    var headers = new Headers();
+    // Replace instances of \r\n and \n followed by at least one space or horizontal tab with a space
+    // https://tools.ietf.org/html/rfc7230#section-3.2
+    var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ');
+    preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
+      var parts = line.split(':');
+      var key = parts.shift().trim();
+      if (key) {
+        var value = parts.join(':').trim();
+        headers.append(key, value);
+      }
+    });
+    return headers
+  }
+
+  Body.call(Request.prototype);
+
+  function Response(bodyInit, options) {
+    if (!options) {
+      options = {};
+    }
+
+    this.type = 'default';
+    this.status = options.status === undefined ? 200 : options.status;
+    this.ok = this.status >= 200 && this.status < 300;
+    this.statusText = 'statusText' in options ? options.statusText : 'OK';
+    this.headers = new Headers(options.headers);
+    this.url = options.url || '';
+    this._initBody(bodyInit);
+  }
+
+  Body.call(Response.prototype);
+
+  Response.prototype.clone = function() {
+    return new Response(this._bodyInit, {
+      status: this.status,
+      statusText: this.statusText,
+      headers: new Headers(this.headers),
+      url: this.url
+    })
+  };
+
+  Response.error = function() {
+    var response = new Response(null, {status: 0, statusText: ''});
+    response.type = 'error';
+    return response
+  };
+
+  var redirectStatuses = [301, 302, 303, 307, 308];
+
+  Response.redirect = function(url, status) {
+    if (redirectStatuses.indexOf(status) === -1) {
+      throw new RangeError('Invalid status code')
+    }
+
+    return new Response(null, {status: status, headers: {location: url}})
+  };
+
+  exports.DOMException = self.DOMException;
+  try {
+    new exports.DOMException();
+  } catch (err) {
+    exports.DOMException = function(message, name) {
+      this.message = message;
+      this.name = name;
+      var error = Error(message);
+      this.stack = error.stack;
+    };
+    exports.DOMException.prototype = Object.create(Error.prototype);
+    exports.DOMException.prototype.constructor = exports.DOMException;
+  }
+
+  function fetch(input, init) {
+    return new Promise(function(resolve, reject) {
+      var request = new Request(input, init);
+
+      if (request.signal && request.signal.aborted) {
+        return reject(new exports.DOMException('Aborted', 'AbortError'))
+      }
+
+      var xhr = new XMLHttpRequest();
+
+      function abortXhr() {
+        xhr.abort();
+      }
+
+      xhr.onload = function() {
+        var options = {
+          status: xhr.status,
+          statusText: xhr.statusText,
+          headers: parseHeaders(xhr.getAllResponseHeaders() || '')
+        };
+        options.url = 'responseURL' in xhr ? xhr.responseURL : options.headers.get('X-Request-URL');
+        var body = 'response' in xhr ? xhr.response : xhr.responseText;
+        resolve(new Response(body, options));
+      };
+
+      xhr.onerror = function() {
+        reject(new TypeError('Network request failed'));
+      };
+
+      xhr.ontimeout = function() {
+        reject(new TypeError('Network request failed'));
+      };
+
+      xhr.onabort = function() {
+        reject(new exports.DOMException('Aborted', 'AbortError'));
+      };
+
+      xhr.open(request.method, request.url, true);
+
+      if (request.credentials === 'include') {
+        xhr.withCredentials = true;
+      } else if (request.credentials === 'omit') {
+        xhr.withCredentials = false;
+      }
+
+      if ('responseType' in xhr && support.blob) {
+        xhr.responseType = 'blob';
+      }
+
+      request.headers.forEach(function(value, name) {
+        xhr.setRequestHeader(name, value);
+      });
+
+      if (request.signal) {
+        request.signal.addEventListener('abort', abortXhr);
+
+        xhr.onreadystatechange = function() {
+          // DONE (success or failure)
+          if (xhr.readyState === 4) {
+            request.signal.removeEventListener('abort', abortXhr);
+          }
+        };
+      }
+
+      xhr.send(typeof request._bodyInit === 'undefined' ? null : request._bodyInit);
+    })
+  }
+
+  fetch.polyfill = true;
+
+  if (!self.fetch) {
+    self.fetch = fetch;
+    self.Headers = Headers;
+    self.Request = Request;
+    self.Response = Response;
+  }
+
+  exports.Headers = Headers;
+  exports.Request = Request;
+  exports.Response = Response;
+  exports.fetch = fetch;
+
+  return exports;
+
+}({}));
+})(__self__);
+delete __self__.fetch.polyfill
+exports = __self__.fetch // To enable: import fetch from 'cross-fetch'
+exports.default = __self__.fetch // For TypeScript consumers without esModuleInterop.
+exports.fetch = __self__.fetch // To enable: import {fetch} from 'cross-fetch'
+exports.Headers = __self__.Headers
+exports.Request = __self__.Request
+exports.Response = __self__.Response
+module.exports = exports
+
+
+/***/ }),
+
+/***/ "./node_modules/regenerator-runtime/runtime.js":
+/*!*****************************************************!*\
+  !*** ./node_modules/regenerator-runtime/runtime.js ***!
+  \*****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var runtime = (function (exports) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  exports.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  IteratorPrototype[iteratorSymbol] = function () {
+    return this;
+  };
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
+  GeneratorFunctionPrototype.constructor = GeneratorFunction;
+  GeneratorFunctionPrototype[toStringTagSymbol] =
+    GeneratorFunction.displayName = "GeneratorFunction";
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      prototype[method] = function(arg) {
+        return this._invoke(method, arg);
+      };
+    });
+  }
+
+  exports.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  exports.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      if (!(toStringTagSymbol in genFun)) {
+        genFun[toStringTagSymbol] = "GeneratorFunction";
+      }
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  exports.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration.
+          result.value = unwrapped;
+          resolve(result);
+        }, function(error) {
+          // If a rejected Promise was yielded, throw the rejection back
+          // into the async generator function so it can be handled there.
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new PromiseImpl(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
+    return this;
+  };
+  exports.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
+    );
+
+    return exports.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        // Note: ["return"] must be used for ES3 parsing compatibility.
+        if (delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  Gp[toStringTagSymbol] = "Generator";
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  Gp[iteratorSymbol] = function() {
+    return this;
+  };
+
+  Gp.toString = function() {
+    return "[object Generator]";
+  };
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  exports.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  exports.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+
+  // Regardless of whether this script is executing as a CommonJS module
+  // or not, return the runtime object so that we can declare the variable
+  // regeneratorRuntime in the outer scope, which allows this module to be
+  // injected easily by `bin/regenerator --include-runtime script.js`.
+  return exports;
+
+}(
+  // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+   true ? module.exports : undefined
+));
+
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  // This module should not be running in strict mode, so the above
+  // assignment should always work unless something is misconfigured. Just
+  // in case runtime.js accidentally runs in strict mode, we can escape
+  // strict mode using a global Function call. This could conceivably fail
+  // if a Content Security Policy forbids using Function, but in that case
+  // the proper solution is to fix the accidental strict mode problem. If
+  // you've misconfigured your bundler to force strict mode and applied a
+  // CSP to forbid Function, and you're not willing to fix either of those
+  // problems, please detail your unique predicament in a GitHub issue.
+  Function("r", "regeneratorRuntime = r")(runtime);
+}
+
+
+/***/ }),
+
+/***/ "./src/adapters/account.js":
+/*!*********************************!*\
+  !*** ./src/adapters/account.js ***!
+  \*********************************/
+/*! exports provided: createAccount, updateAccount, removeAccount */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createAccount", function() { return createAccount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateAccount", function() { return updateAccount; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeAccount", function() { return removeAccount; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+function createAccount(_x) {
+  return _createAccount.apply(this, arguments);
+} // TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
+
+function _createAccount() {
+  _createAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(options) {
+    var _options$objectType, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _options$objectType = options.objectType, objectType = _options$objectType === void 0 ? 'personal' : _options$objectType, name = options.name, shortName = options.shortName, adminKey = options.adminKey, subscriptionPlan = options.subscriptionPlan, billingInterval = options.billingInterval;
+            _context.next = 3;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().post('/account', {
+              body: {
+                objectType: objectType,
+                name: name,
+                shortName: shortName,
+                adminKey: adminKey,
+                subscriptionPlan: subscriptionPlan,
+                billingInterval: billingInterval
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 3:
+            response = _context.sent;
+            return _context.abrupt("return", response);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _createAccount.apply(this, arguments);
+}
+
+function updateAccount(_x2) {
+  return _updateAccount.apply(this, arguments);
+}
+
+function _updateAccount() {
+  _updateAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(options) {
+    var _options$objectType2, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _options$objectType2 = options.objectType, objectType = _options$objectType2 === void 0 ? 'personal' : _options$objectType2, name = options.name, shortName = options.shortName, adminKey = options.adminKey, subscriptionPlan = options.subscriptionPlan, billingInterval = options.billingInterval;
+            _context2.next = 3;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().patch('/account', {
+              body: {
+                objectType: objectType,
+                name: name,
+                shortName: shortName,
+                adminKey: adminKey,
+                subscriptionPlan: subscriptionPlan,
+                billingInterval: billingInterval
+              }
+            }).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 3:
+            response = _context2.sent;
+            return _context2.abrupt("return", response);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _updateAccount.apply(this, arguments);
+}
+
+function removeAccount(_x3) {
+  return _removeAccount.apply(this, arguments);
+}
+
+function _removeAccount() {
+  _removeAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(accountShortName) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName)["delete"]('/account').then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 2:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 3:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _removeAccount.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/authentication.js":
+/*!****************************************!*\
+  !*** ./src/adapters/authentication.js ***!
+  \****************************************/
+/*! exports provided: logout, login, upgrade, sso, getSession, getLocalSession */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "logout", function() { return logout; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "login", function() { return login; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "upgrade", function() { return upgrade; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sso", function() { return sso; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSession", function() { return getSession; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLocalSession", function() { return getLocalSession; });
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/objectWithoutProperties.js");
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+
+
+
+
+
+function logout() {
+  return _logout.apply(this, arguments);
+}
+
+function _logout() {
+  _logout = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session = undefined;
+            _context.next = 3;
+            return adapters__WEBPACK_IMPORTED_MODULE_4__["cometdAdapter"].disconnect();
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _logout.apply(this, arguments);
+}
+
+function login(_x) {
+  return _login.apply(this, arguments);
+}
+
+function _login() {
+  _login = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2(options) {
+    var handle, password, groupKey, _options$objectType, objectType, others, accountShortName, projectShortName, session;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            handle = options.handle, password = options.password, groupKey = options.groupKey, _options$objectType = options.objectType, objectType = _options$objectType === void 0 ? 'user' : _options$objectType, others = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default()(options, ["handle", "password", "groupKey", "objectType"]);
+            accountShortName = others.accountShortName, projectShortName = others.projectShortName;
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/authentication', {
+              body: {
+                handle: handle,
+                password: password,
+                groupKey: groupKey,
+                objectType: objectType
+              },
+              includeAuthorization: false,
+              inert: true
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            session = _context2.sent;
+            _context2.next = 7;
+            return logout();
+
+          case 7:
+            utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session = session;
+            return _context2.abrupt("return", session);
+
+          case 9:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _login.apply(this, arguments);
+}
+
+function upgrade(_x2, _x3) {
+  return _upgrade.apply(this, arguments);
+}
+
+function _upgrade() {
+  _upgrade = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3(groupKey, options) {
+    var _options$objectType2, objectType, inert, others, accountShortName, projectShortName, session;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _options$objectType2 = options.objectType, objectType = _options$objectType2 === void 0 ? 'user' : _options$objectType2, inert = options.inert, others = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default()(options, ["objectType", "inert"]);
+            accountShortName = others.accountShortName, projectShortName = others.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch('/authentication', {
+              body: {
+                objectType: objectType,
+                groupKey: groupKey
+              },
+              inert: inert
+            }).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 4:
+            session = _context3.sent;
+            _context3.next = 7;
+            return logout();
+
+          case 7:
+            utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session = session;
+            return _context3.abrupt("return", session);
+
+          case 9:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _upgrade.apply(this, arguments);
+}
+
+function sso(_x4) {
+  return _sso.apply(this, arguments);
+}
+
+function _sso() {
+  _sso = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee4(options) {
+    var accountShortName, projectShortName, session;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            accountShortName = options.accountShortName, projectShortName = options.projectShortName;
+            _context4.next = 3;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get('/registration/sso').then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 3:
+            session = _context4.sent;
+            utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session = session;
+            return _context4.abrupt("return", session);
+
+          case 6:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _sso.apply(this, arguments);
+}
+
+function getSession() {
+  return _getSession.apply(this, arguments);
+}
+
+function _getSession() {
+  _getSession = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee5() {
+    var _yield$Router$get, body;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().get('/authentication');
+
+          case 2:
+            _yield$Router$get = _context5.sent;
+            body = _yield$Router$get.body;
+            utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session = body;
+            return _context5.abrupt("return", body);
+
+          case 6:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _getSession.apply(this, arguments);
+}
+
+function getLocalSession() {
+  return utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session;
+}
+
+/***/ }),
+
+/***/ "./src/adapters/channel.js":
+/*!*********************************!*\
+  !*** ./src/adapters/channel.js ***!
+  \*********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Channel; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+
+
+
+
+
+var validateScope = function validateScope(scope) {
+  if (!scope) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]('No scope found where one was required');
+  var scopeBoundary = scope.scopeBoundary,
+      scopeKey = scope.scopeKey,
+      pushCategory = scope.pushCategory;
+  if (!scopeBoundary) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]('Missing scope component: scopeBoundary');
+  if (!scopeKey) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]('Missing scope component: scopeKey');
+  if (!pushCategory) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]('Missing scope component: pushCategory');
+  if (!utils_constants__WEBPACK_IMPORTED_MODULE_7__["SCOPE_BOUNDARY"].hasOwnProperty(scopeBoundary)) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]("Invalid scope boundary: ".concat(scopeBoundary));
+  if (!utils_constants__WEBPACK_IMPORTED_MODULE_7__["PUSH_CATEGORY"].hasOwnProperty(pushCategory)) throw new utils__WEBPACK_IMPORTED_MODULE_5__["EpicenterError"]("Invalid push category: ".concat(pushCategory));
+};
+/** Channel thingy */
+
+
+var Channel = /*#__PURE__*/function () {
+  /**
+   * Make a new channel
+   * @param {*} scope wordsd here
+   */
+  function Channel(scope) {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Channel);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "path", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "update", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "subscription", void 0);
+
+    var scopeBoundary = scope.scopeBoundary,
+        scopeKey = scope.scopeKey,
+        pushCategory = scope.pushCategory;
+    validateScope(scope);
+    this.path = "/".concat(scopeBoundary.toLowerCase(), "/").concat(scopeKey, "/").concat(pushCategory.toLowerCase());
+
+    if (adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].subscriptions.has(this.path)) {
+      this.subscription = adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].subscriptions.get(this.path);
+    }
+  }
+  /** This is the publis cahh
+   * @param {*} content someom
+   * @returns {Promise} something here
+   */
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Channel, [{
+    key: "publish",
+    value: function publish(content) {
+      return adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].publish(this, content);
+    }
+  }, {
+    key: "subscribe",
+    value: function () {
+      var _subscribe = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(update, options) {
+        var _this = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                if (!this.subscription) {
+                  _context.next = 3;
+                  break;
+                }
+
+                _context.next = 3;
+                return this.unsubscribe();
+
+              case 3:
+                this.update = update;
+                return _context.abrupt("return", adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].add(this, update, options).then(function (subscription) {
+                  _this.subscription = subscription;
+                  return subscription;
+                }));
+
+              case 5:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function subscribe(_x, _x2) {
+        return _subscribe.apply(this, arguments);
+      }
+
+      return subscribe;
+    }()
+  }, {
+    key: "unsubscribe",
+    value: function () {
+      var _unsubscribe = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!this.subscription) {
+                  _context2.next = 4;
+                  break;
+                }
+
+                _context2.next = 3;
+                return adapters__WEBPACK_IMPORTED_MODULE_6__["cometdAdapter"].remove(this.subscription);
+
+              case 3:
+                this.subscription = null;
+
+              case 4:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function unsubscribe() {
+        return _unsubscribe.apply(this, arguments);
+      }
+
+      return unsubscribe;
+    }()
+  }]);
+
+  return Channel;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/adapters/cometd.js":
+/*!********************************!*\
+  !*** ./src/adapters/cometd.js ***!
+  \********************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js");
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! cometd/AckExtension */ "./node_modules/cometd/AckExtension.js");
+/* harmony import */ var cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10__);
+/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! cometd/ReloadExtension */ "./node_modules/cometd/ReloadExtension.js");
+/* harmony import */ var cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var adapters_project__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! adapters/project */ "./src/adapters/project.js");
+
+
+
+
+
+
+
+
+
+
+
+function _createSuper(Derived) { return function () { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_8___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_7___default()(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+
+
+
+
+var AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
+var DISCONNECTED = 'disconnected';
+var CONNECTED = 'connected';
+
+var CometdError = /*#__PURE__*/function (_Error) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6___default()(CometdError, _Error);
+
+  var _super = _createSuper(CometdError);
+
+  function CometdError(reply) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default()(this, CometdError);
+
+    _this = _super.call(this);
+    var error = reply.error,
+        successful = reply.successful;
+
+    if (error && error.includes('403') && !successful) {
+      _this.status = 401;
+    }
+
+    _this.information = reply;
+    _this.message = error;
+    return _this;
+  }
+
+  return CometdError;
+}( /*#__PURE__*/_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_9___default()(Error));
+
+var CometdAdapter = /*#__PURE__*/function () {
+  function CometdAdapter() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_5___default()(this, CometdAdapter);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "url", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "customCometd", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "defaultCometd", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "initialization", void 0);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "subscriptions", new Map());
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "state", DISCONNECTED);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "requireAcknowledgement", true);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(CometdAdapter, [{
+    key: "startup",
+    value: function () {
+      var _startup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee() {
+        var _this2 = this;
+
+        var options,
+            enabled,
+            cometd,
+            apiProtocol,
+            apiHost,
+            apiVersion,
+            _args = arguments;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                options = _args.length > 0 && _args[0] !== undefined ? _args[0] : {
+                  logLevel: 'error'
+                };
+                _context.next = 3;
+                return Object(adapters_project__WEBPACK_IMPORTED_MODULE_13__["channelsEnabled"])();
+
+              case 3:
+                enabled = _context.sent;
+
+                if (enabled) {
+                  _context.next = 6;
+                  break;
+                }
+
+                throw new utils__WEBPACK_IMPORTED_MODULE_12__["EpicenterError"]('Push Channels are not enabled on this project');
+
+              case 6:
+                if (!Object(utils__WEBPACK_IMPORTED_MODULE_12__["isBrowser"])()) {
+                  _context.next = 11;
+                  break;
+                }
+
+                _context.next = 9;
+                return Promise.resolve(/*! import() */).then(__webpack_require__.t.bind(null, /*! cometd */ "./node_modules/cometd/cometd.js", 7));
+
+              case 9:
+                cometd = _context.sent;
+                this.defaultCometd = new cometd.CometD();
+
+              case 11:
+                apiProtocol = utils__WEBPACK_IMPORTED_MODULE_12__["config"].apiProtocol, apiHost = utils__WEBPACK_IMPORTED_MODULE_12__["config"].apiHost, apiVersion = utils__WEBPACK_IMPORTED_MODULE_12__["config"].apiVersion;
+                this.url = "".concat(apiProtocol, "://").concat(apiHost, "/push/v").concat(apiVersion, "/cometd");
+                this.cometd.registerExtension('ack', new cometd_AckExtension__WEBPACK_IMPORTED_MODULE_10___default.a());
+                this.cometd.registerExtension('reload', new cometd_ReloadExtension__WEBPACK_IMPORTED_MODULE_11___default.a());
+                this.cometd.configure({
+                  url: this.url,
+                  logLevel: options.logLevel
+                });
+
+                if (Object(utils__WEBPACK_IMPORTED_MODULE_12__["isBrowser"])()) {
+                  window.onunload = function () {
+                    if (_this2.cometd.getStatus() === CONNECTED) {
+                      _this2.cometd.reload();
+
+                      _this2.cometd.getTransport().abort();
+                    }
+                  };
+                }
+
+              case 17:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function startup() {
+        return _startup.apply(this, arguments);
+      }
+
+      return startup;
+    }()
+  }, {
+    key: "reinit",
+    value: function () {
+      var _reinit = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2(customCometd, options) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return this.disconnect();
+
+              case 2:
+                this.initialization = undefined;
+                this.customCometd = customCometd;
+                return _context2.abrupt("return", this.init(options));
+
+              case 5:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function reinit(_x, _x2) {
+        return _reinit.apply(this, arguments);
+      }
+
+      return reinit;
+    }()
+  }, {
+    key: "init",
+    value: function () {
+      var _init = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3(options) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                if (!this.initialization) {
+                  this.initialization = this.startup(options);
+                }
+
+                return _context3.abrupt("return", this.initialization);
+
+              case 2:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function init(_x3) {
+        return _init.apply(this, arguments);
+      }
+
+      return init;
+    }() // Connects to CometD server
+
+  }, {
+    key: "handshake",
+    value: function () {
+      var _handshake = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee4() {
+        var _this3 = this;
+
+        var options,
+            handshakeProps,
+            session,
+            _handshakeProps$ext,
+            _args4 = arguments;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                options = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : {};
+                _context4.next = 3;
+                return this.init();
+
+              case 3:
+                if (!(this.cometd.getStatus() !== DISCONNECTED)) {
+                  _context4.next = 5;
+                  break;
+                }
+
+                return _context4.abrupt("return", Promise.resolve());
+
+              case 5:
+                handshakeProps = {};
+                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+
+                if (session) {
+                  handshakeProps.ext = (_handshakeProps$ext = {}, _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(_handshakeProps$ext, AUTH_TOKEN_KEY, session.token), _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(_handshakeProps$ext, "ack", this.requireAcknowledgement), _handshakeProps$ext);
+                }
+
+                this.cometd.ackEnabled = this.requireAcknowledgement;
+                this.cometd.websocketEnabled = true;
+                return _context4.abrupt("return", new Promise(function (resolve, reject) {
+                  return _this3.cometd.handshake(handshakeProps, function (handshakeReply) {
+                    if (handshakeReply.successful) {
+                      resolve(handshakeReply);
+                      return;
+                    }
+
+                    var error = new CometdError(handshakeReply);
+
+                    if (options.inert) {
+                      reject(error);
+                      return;
+                    }
+
+                    var retry = function retry() {
+                      return _this3.handshake({
+                        inert: true
+                      });
+                    };
+
+                    try {
+                      var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                      resolve(result);
+                    } catch (e) {
+                      reject(e);
+                    }
+                  });
+                }));
+
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function handshake() {
+        return _handshake.apply(this, arguments);
+      }
+
+      return handshake;
+    }()
+  }, {
+    key: "disconnect",
+    value: function () {
+      var _disconnect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee5() {
+        var _this4 = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                if (this.cometd) {
+                  _context5.next = 2;
+                  break;
+                }
+
+                return _context5.abrupt("return", Promise.resolve());
+
+              case 2:
+                _context5.next = 4;
+                return this.init();
+
+              case 4:
+                _context5.next = 6;
+                return this.empty();
+
+              case 6:
+                if (!(this.cometd.getStatus() !== CONNECTED)) {
+                  _context5.next = 8;
+                  break;
+                }
+
+                return _context5.abrupt("return", Promise.resolve());
+
+              case 8:
+                return _context5.abrupt("return", new Promise(function (resolve, reject) {
+                  return _this4.cometd.disconnect(function (disconnectReply) {
+                    if (!disconnectReply.successful) {
+                      reject(new utils__WEBPACK_IMPORTED_MODULE_12__["EpicenterError"]('Unable to disconnect from CometD server'));
+                    } else {
+                      resolve();
+                    }
+                  });
+                }));
+
+              case 9:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function disconnect() {
+        return _disconnect.apply(this, arguments);
+      }
+
+      return disconnect;
+    }()
+  }, {
+    key: "add",
+    value: function () {
+      var _add = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee6(channel, update) {
+        var _this5 = this;
+
+        var options,
+            channels,
+            subscriptionProps,
+            session,
+            handleCometdUpdate,
+            promises,
+            _args6 = arguments;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                options = _args6.length > 2 && _args6[2] !== undefined ? _args6[2] : {};
+                _context6.next = 3;
+                return this.init();
+
+              case 3:
+                channels = [].concat(channel);
+
+                if (!(this.cometd.getStatus() !== CONNECTED)) {
+                  _context6.next = 7;
+                  break;
+                }
+
+                _context6.next = 7;
+                return this.handshake();
+
+              case 7:
+                subscriptionProps = {};
+                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+
+                if (session) {
+                  subscriptionProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()({}, AUTH_TOKEN_KEY, session.token);
+                }
+
+                handleCometdUpdate = function handleCometdUpdate(_ref) {
+                  var channel = _ref.channel,
+                      data = _ref.data;
+                  data = typeof data === 'string' ? JSON.parse(data) : data;
+                  return update(data);
+                };
+
+                promises = [];
+                this.cometd.batch(function () {
+                  return channels.forEach(function (_ref2) {
+                    var path = _ref2.path;
+                    return promises.push(new Promise(function (resolve, reject) {
+                      var subscription = _this5.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, function (subscribeReply) {
+                        if (subscribeReply.successful) {
+                          _this5.subscriptions.set(subscription.channel, subscription);
+
+                          resolve(subscription);
+                          return;
+                        }
+
+                        var error = new CometdError(subscribeReply);
+
+                        if (options.inert) {
+                          reject(error);
+                          return;
+                        }
+
+                        var retry = function retry() {
+                          return _this5.add(channel, update, {
+                            inert: true
+                          });
+                        };
+
+                        try {
+                          var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                          resolve(result);
+                        } catch (e) {
+                          reject(e);
+                        }
+                      });
+                    }));
+                  });
+                });
+                return _context6.abrupt("return", promises.length === 1 ? Promise.all(promises).then(function (_ref3) {
+                  var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref3, 1),
+                      res = _ref4[0];
+
+                  return res;
+                }) : Promise.all(promises));
+
+              case 14:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function add(_x4, _x5) {
+        return _add.apply(this, arguments);
+      }
+
+      return add;
+    }()
+  }, {
+    key: "publish",
+    value: function () {
+      var _publish = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee7(channel, content) {
+        var _this6 = this;
+
+        var options,
+            channels,
+            publishProps,
+            session,
+            promises,
+            _args7 = arguments;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                options = _args7.length > 2 && _args7[2] !== undefined ? _args7[2] : {};
+                _context7.next = 3;
+                return this.init();
+
+              case 3:
+                channels = [].concat(channel);
+
+                if (!(this.cometd.getStatus() !== CONNECTED)) {
+                  _context7.next = 7;
+                  break;
+                }
+
+                _context7.next = 7;
+                return this.handshake();
+
+              case 7:
+                publishProps = {};
+                session = utils__WEBPACK_IMPORTED_MODULE_12__["identification"].session;
+
+                if (session) {
+                  publishProps.ext = _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()({}, AUTH_TOKEN_KEY, session.token);
+                }
+
+                promises = [];
+                this.cometd.batch(function () {
+                  return channels.forEach(function (_ref5) {
+                    var path = _ref5.path;
+                    return promises.push(new Promise(function (resolve, reject) {
+                      _this6.cometd.publish(path, content, publishProps, function (publishReply) {
+                        if (publishReply.successful) {
+                          resolve(publishReply);
+                          return;
+                        }
+
+                        var error = new CometdError(publishReply);
+
+                        if (options.inert) {
+                          reject(error);
+                          return;
+                        }
+
+                        var retry = function retry() {
+                          return _this6.publish(channel, content, {
+                            inert: true
+                          });
+                        };
+
+                        try {
+                          var result = utils__WEBPACK_IMPORTED_MODULE_12__["errorManager"].handle(error, retry);
+                          resolve(result);
+                        } catch (e) {
+                          reject(e);
+                        }
+                      });
+                    }));
+                  });
+                });
+                return _context7.abrupt("return", promises.length === 1 ? Promise.all(promises).then(function (_ref6) {
+                  var _ref7 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref6, 1),
+                      res = _ref7[0];
+
+                  return res;
+                }) : Promise.all(promises));
+
+              case 13:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+
+      function publish(_x6, _x7) {
+        return _publish.apply(this, arguments);
+      }
+
+      return publish;
+    }()
+  }, {
+    key: "remove",
+    value: function () {
+      var _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee8(subscription) {
+        var _this7 = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee8$(_context8) {
+          while (1) {
+            switch (_context8.prev = _context8.next) {
+              case 0:
+                _context8.next = 2;
+                return this.init();
+
+              case 2:
+                this.subscriptions["delete"](subscription.channel);
+                return _context8.abrupt("return", new Promise(function (resolve, reject) {
+                  return _this7.cometd.unsubscribe(subscription, function (unsubscribeReply) {
+                    if (unsubscribeReply.successful) {
+                      resolve(unsubscribeReply);
+                    }
+
+                    var error = new CometdError(unsubscribeReply);
+                    reject(error);
+                    /* Not using error handling here yet -- should we? */
+                  });
+                }));
+
+              case 4:
+              case "end":
+                return _context8.stop();
+            }
+          }
+        }, _callee8, this);
+      }));
+
+      function remove(_x8) {
+        return _remove.apply(this, arguments);
+      }
+
+      return remove;
+    }()
+  }, {
+    key: "empty",
+    value: function () {
+      var _empty = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee9() {
+        var _this8 = this;
+
+        var promises;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee9$(_context9) {
+          while (1) {
+            switch (_context9.prev = _context9.next) {
+              case 0:
+                _context9.next = 2;
+                return this.init();
+
+              case 2:
+                promises = [];
+                this.cometd.batch(function () {
+                  return _this8.subscriptions.forEach(function (subscription) {
+                    promises.push(_this8.remove(subscription));
+                  });
+                });
+                return _context9.abrupt("return", Promise.all(promises));
+
+              case 5:
+              case "end":
+                return _context9.stop();
+            }
+          }
+        }, _callee9, this);
+      }));
+
+      function empty() {
+        return _empty.apply(this, arguments);
+      }
+
+      return empty;
+    }()
+  }, {
+    key: "cometd",
+    get: function get() {
+      return this.customCometd || this.defaultCometd;
+    }
+  }]);
+
+  return CometdAdapter;
+}();
+
+var cometdAdapter = new CometdAdapter();
+/* harmony default export */ __webpack_exports__["default"] = (cometdAdapter);
+
+/***/ }),
+
+/***/ "./src/adapters/episode.js":
+/*!*********************************!*\
+  !*** ./src/adapters/episode.js ***!
+  \*********************************/
+/*! exports provided: create, get, query, withGroup, withName, remove */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "query", function() { return query; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withGroup", function() { return withGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withName", function() { return withName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+/**
+ * Episode API adapters -- use this to create, update, delete, and manage your episodes
+ * @namespace episodeAdapter
+ */
+
+/**
+ * Create an episode.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.create('myEpisode', 'myGroupName', {
+ *      runLimit: 20,
+ *      draft: true,
+ * });
+ * @param {string}  name                Episode name
+ * @param {Object}  groupName           Group to make the episode under
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function create(_x, _x2) {
+  return _create.apply(this, arguments);
+}
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.get('123124141241);
+ *
+ * @param {String}  episodeKey          The episode key
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(name, groupName) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        draft,
+        runLimit,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, draft = optionals.draft, runLimit = optionals.runLimit;
+            _context.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/episode/".concat(groupName), {
+              body: {
+                name: name,
+                draft: draft,
+                runLimit: runLimit
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            return _context.abrupt("return", _context.sent);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _create.apply(this, arguments);
+}
+
+function get(_x3) {
+  return _get.apply(this, arguments);
+}
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.get();
+ * episodeAdapter.get({ episodeKey: 12321 });
+ * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
+ *
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(episodeKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args2 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/episode/".concat(episodeKey)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 4:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function query() {
+  return _query.apply(this, arguments);
+}
+/**
+ * Gets episodes.
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.withGroup('1231241342345');
+ *
+ * @param {String}  groupKey            The group key
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _query() {
+  _query = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _optionals$filter,
+        filter,
+        _optionals$sort,
+        sort,
+        _optionals$first,
+        first,
+        _optionals$max,
+        max,
+        _args3 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? [] : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? [] : _optionals$sort, _optionals$first = optionals.first, first = _optionals$first === void 0 ? 0 : _optionals$first, _optionals$max = optionals.max, max = _optionals$max === void 0 ? 100 : _optionals$max;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              filter: filter.join(';'),
+              sort: sort.join(';'),
+              first: first,
+              max: max
+            }).get('/episode/search').then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _query.apply(this, arguments);
+}
+
+function withGroup(_x4) {
+  return _withGroup.apply(this, arguments);
+}
+/**
+ * Gets episode based on group name and episode name
+ * Unsure where this would see use...
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * episodeAdapter.withName('myGroupName', 'myEpisodeName');
+ *
+ * @param {String}  groupName           The group name
+ * @param {String}  episodeName         The episode name
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _withGroup() {
+  _withGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(groupKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context4.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/episode/in/".concat(groupKey)).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 4:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 5:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _withGroup.apply(this, arguments);
+}
+
+function withName(_x5, _x6) {
+  return _withName.apply(this, arguments);
+}
+/**
+ * Deletes an episode
+ *
+ * TODO -- add meaningful text here
+ * @memberof episodeAdapter
+ * @example
+ *
+ * const { episodeAdapter } = epicenter;
+ * const episodeKey = 1234;
+ * episodeAdapter.remove(episodeKey);
+ *
+ * @param {String}  episodeKey          Something meaningful about optionals
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _withName() {
+  _withName = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(groupName, episodeName) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            optionals = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context5.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/episode/with/".concat(groupName, "/").concat(episodeName)).then(function (_ref5) {
+              var body = _ref5.body;
+              return body;
+            });
+
+          case 4:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 5:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _withName.apply(this, arguments);
+}
+
+function remove(_x7) {
+  return _remove.apply(this, arguments);
+}
+
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(episodeKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args6 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            optionals = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context6.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/episode/".concat(episodeKey)).then(function (_ref6) {
+              var body = _ref6.body;
+              return body;
+            });
+
+          case 4:
+            return _context6.abrupt("return", _context6.sent);
+
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _remove.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/index.js":
+/*!*******************************!*\
+  !*** ./src/adapters/index.js ***!
+  \*******************************/
+/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, Channel */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _account__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./account */ "./src/adapters/account.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "accountAdapter", function() { return _account__WEBPACK_IMPORTED_MODULE_0__; });
+/* harmony import */ var _authentication__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./authentication */ "./src/adapters/authentication.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "authAdapter", function() { return _authentication__WEBPACK_IMPORTED_MODULE_1__; });
+/* harmony import */ var _episode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./episode */ "./src/adapters/episode.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return _episode__WEBPACK_IMPORTED_MODULE_2__; });
+/* harmony import */ var _presence__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./presence */ "./src/adapters/presence.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return _presence__WEBPACK_IMPORTED_MODULE_3__; });
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./project */ "./src/adapters/project.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return _project__WEBPACK_IMPORTED_MODULE_4__; });
+/* harmony import */ var _run__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./run */ "./src/adapters/run.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return _run__WEBPACK_IMPORTED_MODULE_5__; });
+/* harmony import */ var _vault__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./vault */ "./src/adapters/vault.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return _vault__WEBPACK_IMPORTED_MODULE_6__; });
+/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+
+/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+
+
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/adapters/presence.js":
+/*!**********************************!*\
+  !*** ./src/adapters/presence.js ***!
+  \**********************************/
+/*! exports provided: forGroup, forWorld, connect */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forGroup", function() { return forGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forWorld", function() { return forWorld; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return connect; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+
+
+
+
+function forGroup(_x) {
+  return _forGroup.apply(this, arguments);
+}
+
+function _forGroup() {
+  _forGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(groupKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/group/".concat(groupKey)).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            return _context.abrupt("return", _context.sent);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _forGroup.apply(this, arguments);
+}
+
+function forWorld(_x2) {
+  return _forWorld.apply(this, arguments);
+}
+
+function _forWorld() {
+  _forWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(worldKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args2 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/world/".concat(worldKey)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 4:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _forWorld.apply(this, arguments);
+}
+
+function connect() {
+  return _connect.apply(this, arguments);
+}
+
+function _connect() {
+  _connect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            return _context3.abrupt("return", adapters__WEBPACK_IMPORTED_MODULE_3__["cometdAdapter"].handshake());
+
+          case 1:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _connect.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/project.js":
+/*!*********************************!*\
+  !*** ./src/adapters/project.js ***!
+  \*********************************/
+/*! exports provided: channelsEnabled */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "channelsEnabled", function() { return channelsEnabled; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+function channelsEnabled() {
+  return _channelsEnabled.apply(this, arguments);
+}
+
+function _channelsEnabled() {
+  _channelsEnabled = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        response,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 0 && _args[0] !== undefined ? _args[0] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get('/project/channel/isEnabled').then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            response = _context.sent;
+            return _context.abrupt("return", response);
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _channelsEnabled.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/run.js":
+/*!*****************************!*\
+  !*** ./src/adapters/run.js ***!
+  \*****************************/
+/*! exports provided: create, clone, restore, rewind, update, remove, get, query, introspect, operation, getVariables, getVariable, updateVariables, getMetadata, updateMetadata, action, getWithStrategy */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "clone", function() { return clone; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "restore", function() { return restore; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "rewind", function() { return rewind; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "query", function() { return query; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "introspect", function() { return introspect; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "operation", function() { return operation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariables", function() { return getVariables; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getVariable", function() { return getVariable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateVariables", function() { return updateVariables; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMetadata", function() { return getMetadata; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMetadata", function() { return updateMetadata; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "action", function() { return action; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWithStrategy", function() { return getWithStrategy; });
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+
+
+/**
+ * Run API adapters -- use this to create, update, delete, and manage your runs
+ * @namespace runAdapter
+ */
+
+/**
+ * Create a run.
+ *
+ * By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
+ * @memberof runAdapter
+ * @example
+ *
+ * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
+ * runAdapter.create('model.py', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
+ * });
+ * @param {string}  model               Name of your model file
+ * @param {Object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function create(_x, _x2) {
+  return _create.apply(this, arguments);
+}
+/**
+ * Clone a run
+ * @memberof runAdapter
+ *
+ * @param {string}  runKey          Run's key
+ * @param {Object}  [optionals={}]  Object for all optional fields
+ * @returns {Object}                Response with the run in the "body"
+ */
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee(model, scope) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        readLock,
+        writeLock,
+        userKey,
+        ephemeral,
+        trackingKey,
+        modelContext,
+        executionContext,
+        WORLD,
+        PARTICIPANT,
+        USER,
+        defaultLock,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext;
+            WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_5__["SCOPE_BOUNDARY"].WORLD;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_5__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_5__["LOCK_TYPE"].USER;
+            defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
+            _context.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/run', {
+              body: {
+                scope: {
+                  scopeBoundary: scopeBoundary,
+                  scopeKey: scopeKey,
+                  userKey: scopeBoundary === WORLD ? undefined : userKey !== null && userKey !== void 0 ? userKey : utils__WEBPACK_IMPORTED_MODULE_4__["identification"].session.userKey
+                },
+                permit: {
+                  readLock: readLock || defaultLock,
+                  writeLock: writeLock || defaultLock
+                },
+                morphology: 'MANY',
+                trackingKey: trackingKey,
+                modelFile: model,
+                modelContext: modelContext || {
+                  /* Is not recorded for clone. Overrides model ctx2 file. */
+                },
+                executionContext: executionContext || {
+                  /* Affected by clone. Carries arguments for model file worker on model initialization */
+                },
+                ephemeral: ephemeral
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 8:
+            return _context.abrupt("return", _context.sent);
+
+          case 9:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _create.apply(this, arguments);
+}
+
+function clone(_x3) {
+  return _clone.apply(this, arguments);
+}
+
+function _clone() {
+  _clone = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee2(runKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        ephemeral,
+        trackingKey,
+        _optionals$modelConte,
+        modelContext,
+        _optionals$executionC,
+        executionContext,
+        _args2 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, _optionals$modelConte = optionals.modelContext, modelContext = _optionals$modelConte === void 0 ? {} : _optionals$modelConte, _optionals$executionC = optionals.executionContext, executionContext = _optionals$executionC === void 0 ? {} : _optionals$executionC;
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/clone/".concat(runKey), {
+              body: {
+                trackingKey: trackingKey,
+                modelContext: modelContext,
+                executionContext: executionContext,
+                ephemeral: ephemeral
+              }
+            }).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 4:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _clone.apply(this, arguments);
+}
+
+function restore(_x4) {
+  return _restore.apply(this, arguments);
+}
+
+function _restore() {
+  _restore = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee3(runKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        ephemeral,
+        _optionals$modelConte2,
+        modelContext,
+        _optionals$executionC2,
+        executionContext,
+        _args3 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, _optionals$modelConte2 = optionals.modelContext, modelContext = _optionals$modelConte2 === void 0 ? {} : _optionals$modelConte2, _optionals$executionC2 = optionals.executionContext, executionContext = _optionals$executionC2 === void 0 ? {} : _optionals$executionC2;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/restore/".concat(runKey), {
+              body: {
+                modelContext: modelContext,
+                executionContext: executionContext,
+                ephemeral: ephemeral
+              }
+            }).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _restore.apply(this, arguments);
+}
+
+function rewind(_x5, _x6) {
+  return _rewind.apply(this, arguments);
+}
+
+function _rewind() {
+  _rewind = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee4(runKey, steps) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        ephemeral,
+        _optionals$modelConte3,
+        modelContext,
+        _args4 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, _optionals$modelConte3 = optionals.modelContext, modelContext = _optionals$modelConte3 === void 0 ? {} : _optionals$modelConte3;
+            _context4.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/rewind/".concat(runKey), {
+              body: {
+                rewindCount: steps,
+                modelContext: modelContext,
+                ephemeral: ephemeral
+              }
+            }).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 4:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 5:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _rewind.apply(this, arguments);
+}
+
+function update(_x7, _x8) {
+  return _update.apply(this, arguments);
+}
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee5(runKey, update) {
+    var optionals,
+        readLock,
+        writeLock,
+        trackingKey,
+        marked,
+        hidden,
+        closed,
+        accountShortName,
+        projectShortName,
+        hasMultiple,
+        uriComponent,
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            optionals = _args5.length > 2 && _args5[2] !== undefined ? _args5[2] : {};
+            readLock = update.readLock, writeLock = update.writeLock, trackingKey = update.trackingKey, marked = update.marked, hidden = update.hidden, closed = update.closed;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            _context5.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(hasMultiple ? {
+              runKey: runKey
+            } : '').patch("/run".concat(uriComponent), {
+              body: {
+                readLock: readLock,
+                writeLock: writeLock,
+                trackingKey: trackingKey,
+                marked: marked,
+                hidden: hidden,
+                closed: closed
+              }
+            }).then(function (_ref5) {
+              var body = _ref5.body;
+              return body;
+            });
+
+          case 7:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 8:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _update.apply(this, arguments);
+}
+
+function remove(_x9) {
+  return _remove.apply(this, arguments);
+}
+
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee6(runKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args6 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            optionals = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context6.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/run/".concat(runKey)).then(function (_ref6) {
+              var body = _ref6.body;
+              return body;
+            });
+
+          case 4:
+            return _context6.abrupt("return", _context6.sent);
+
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _remove.apply(this, arguments);
+}
+
+function get(_x10) {
+  return _get.apply(this, arguments);
+}
+/**
+ * Queries for runs. Use this to look u
+ * @memberof runAdapter
+ *
+ * @param {string}  model               Name of your model file
+ * @param {Object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @param {Filter}  [optionals.filter]  Filter Object
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee7(runKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args7 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            optionals = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context7.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/".concat(runKey)).then(function (_ref7) {
+              var body = _ref7.body;
+              return body;
+            });
+
+          case 4:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 5:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function query(_x11, _x12) {
+  return _query.apply(this, arguments);
+}
+
+function _query() {
+  _query = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee8(model, scope) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        _optionals$filter,
+        filter,
+        _optionals$sort,
+        sort,
+        first,
+        max,
+        timeout,
+        _optionals$projection,
+        projections,
+        accountShortName,
+        projectShortName,
+        searchParams,
+        _args8 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            optionals = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? [] : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$projection = optionals.projections, projections = _optionals$projection === void 0 ? {} : _optionals$projection, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            searchParams = {
+              filter: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.variables || []).map(function (statement) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', statement);
+              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.metadata || []).map(function (statement) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('meta.', statement);
+              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.attributes || []).map(function (statement) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', statement);
+              }))).join(';'),
+              sort: sort.join(';'),
+              first: first,
+              max: max,
+              timeout: timeout,
+              projections: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.variables || []).map(function (name) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', name);
+              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.metadata || []).map(function (name) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('meta.', name);
+              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.attr || []).map(function (name) {
+                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', name);
+              }))).join(';')
+            };
+            _context8.next = 6;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
+              paginate: true
+            }).then(function (_ref8) {
+              var body = _ref8.body;
+              return body;
+            });
+
+          case 6:
+            return _context8.abrupt("return", _context8.sent);
+
+          case 7:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _query.apply(this, arguments);
+}
+
+function introspect(_x13) {
+  return _introspect.apply(this, arguments);
+}
+
+function _introspect() {
+  _introspect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee9(model) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args9 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            optionals = _args9.length > 1 && _args9[1] !== undefined ? _args9[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context9.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/introspect/".concat(model)).then(function (_ref9) {
+              var body = _ref9.body;
+              return body;
+            });
+
+          case 4:
+            return _context9.abrupt("return", _context9.sent);
+
+          case 5:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+  return _introspect.apply(this, arguments);
+}
+
+function operation(_x14, _x15) {
+  return _operation.apply(this, arguments);
+}
+
+function _operation() {
+  _operation = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee10(runKey, name) {
+    var args,
+        optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args10 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            args = _args10.length > 2 && _args10[2] !== undefined ? _args10[2] : [];
+            optionals = _args10.length > 3 && _args10[3] !== undefined ? _args10[3] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout
+            } : {
+              ritual: ritual,
+              timeout: timeout
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context10.next = 9;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/operation".concat(uriComponent), {
+              body: {
+                name: name,
+                arguments: args,
+                objectType: 'execute' // TODO: remove this when platform fixes this so that it's not manually required
+
+              }
+            }).then(function (_ref10) {
+              var body = _ref10.body;
+              return body;
+            });
+
+          case 9:
+            return _context10.abrupt("return", _context10.sent);
+
+          case 10:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _operation.apply(this, arguments);
+}
+
+function getVariables(_x16, _x17) {
+  return _getVariables.apply(this, arguments);
+}
+
+function _getVariables() {
+  _getVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee11(runKey, variables) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        include,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args11 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            optionals = _args11.length > 2 && _args11[2] !== undefined ? _args11[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            include = variables.join(';');
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout,
+              include: include
+            } : {
+              ritual: ritual,
+              timeout: timeout,
+              include: include
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context11.next = 9;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/variable".concat(uriComponent)).then(function (_ref11) {
+              var body = _ref11.body;
+              return body;
+            });
+
+          case 9:
+            return _context11.abrupt("return", _context11.sent);
+
+          case 10:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11);
+  }));
+  return _getVariables.apply(this, arguments);
+}
+
+function getVariable(_x18, _x19) {
+  return _getVariable.apply(this, arguments);
+}
+/**
+ * Updates model variables for the run
+ * @memberof runAdapter
+ *
+ * @param {string}  runKey      Identifier for your run
+ * @param {Object}  update      Object with the key-value pairs you would like to update in the model
+ * @param {Object}  optionals   Something meaningful about optionals
+ * @returns {Object}            Object with the variables & new values that were updated
+ */
+
+function _getVariable() {
+  _getVariable = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee12(runKey, variable) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        variables,
+        _args12 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            optionals = _args12.length > 2 && _args12[2] !== undefined ? _args12[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+
+            if (!(Array.isArray(runKey) || Array.isArray(variable))) {
+              _context12.next = 5;
+              break;
+            }
+
+            variables = Array.isArray(variable) ? variable : [variable];
+            return _context12.abrupt("return", getVariables(runKey, variables, optionals));
+
+          case 5:
+            _context12.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              timeout: timeout,
+              ritual: ritual
+            }).get("/run/variable/".concat(runKey, "/").concat(variable)).then(function (_ref12) {
+              var body = _ref12.body;
+              return body;
+            });
+
+          case 7:
+            return _context12.abrupt("return", _context12.sent);
+
+          case 8:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12);
+  }));
+  return _getVariable.apply(this, arguments);
+}
+
+function updateVariables(_x20, _x21) {
+  return _updateVariables.apply(this, arguments);
+}
+
+function _updateVariables() {
+  _updateVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee13(runKey, update) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args13 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee13$(_context13) {
+      while (1) {
+        switch (_context13.prev = _context13.next) {
+          case 0:
+            optionals = _args13.length > 2 && _args13[2] !== undefined ? _args13[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout
+            } : {
+              ritual: ritual,
+              timeout: timeout
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context13.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/variable".concat(uriComponent), {
+              body: update
+            }).then(function (_ref13) {
+              var body = _ref13.body;
+              return body;
+            });
+
+          case 8:
+            return _context13.abrupt("return", _context13.sent);
+
+          case 9:
+          case "end":
+            return _context13.stop();
+        }
+      }
+    }, _callee13);
+  }));
+  return _updateVariables.apply(this, arguments);
+}
+
+function getMetadata(_x22, _x23) {
+  return _getMetadata.apply(this, arguments);
+}
+
+function _getMetadata() {
+  _getMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee14(runKey, variables) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        include,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args14 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee14$(_context14) {
+      while (1) {
+        switch (_context14.prev = _context14.next) {
+          case 0:
+            optionals = _args14.length > 2 && _args14[2] !== undefined ? _args14[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            include = variables.join(';');
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout,
+              include: include
+            } : {
+              ritual: ritual,
+              timeout: timeout,
+              include: include
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context14.next = 9;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/meta".concat(uriComponent)).then(function (_ref14) {
+              var body = _ref14.body;
+              return body;
+            });
+
+          case 9:
+            return _context14.abrupt("return", _context14.sent);
+
+          case 10:
+          case "end":
+            return _context14.stop();
+        }
+      }
+    }, _callee14);
+  }));
+  return _getMetadata.apply(this, arguments);
+}
+
+function updateMetadata(_x24, _x25) {
+  return _updateMetadata.apply(this, arguments);
+}
+
+function _updateMetadata() {
+  _updateMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee15(runKey, update) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args15 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee15$(_context15) {
+      while (1) {
+        switch (_context15.prev = _context15.next) {
+          case 0:
+            optionals = _args15.length > 2 && _args15[2] !== undefined ? _args15[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout
+            } : {
+              ritual: ritual,
+              timeout: timeout
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context15.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/meta".concat(uriComponent), {
+              body: update
+            }).then(function (_ref15) {
+              var body = _ref15.body;
+              return body;
+            });
+
+          case 8:
+            return _context15.abrupt("return", _context15.sent);
+
+          case 9:
+          case "end":
+            return _context15.stop();
+        }
+      }
+    }, _callee15);
+  }));
+  return _updateMetadata.apply(this, arguments);
+}
+
+function action(_x26, _x27) {
+  return _action.apply(this, arguments);
+}
+
+function _action() {
+  _action = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee16(runKey, actionList) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        timeout,
+        ritual,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args16 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee16$(_context16) {
+      while (1) {
+        switch (_context16.prev = _context16.next) {
+          case 0:
+            optionals = _args16.length > 2 && _args16[2] !== undefined ? _args16[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, timeout = optionals.timeout, ritual = optionals.ritual;
+            hasMultiple = Array.isArray(runKey) && runKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
+            searchParams = hasMultiple ? {
+              runKey: runKey,
+              timeout: timeout
+            } : {
+              ritual: ritual,
+              timeout: timeout
+            };
+
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+              console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
+            }
+
+            _context16.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/action".concat(uriComponent), {
+              body: actionList
+            }).then(function (_ref16) {
+              var body = _ref16.body;
+              return body;
+            });
+
+          case 8:
+            return _context16.abrupt("return", _context16.sent);
+
+          case 9:
+          case "end":
+            return _context16.stop();
+        }
+      }
+    }, _callee16);
+  }));
+  return _action.apply(this, arguments);
+}
+
+function serial(_x28, _x29, _x30) {
+  return _serial.apply(this, arguments);
+}
+
+function _serial() {
+  _serial = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee17(runKey, operations, optionals) {
+    var normalizedOps;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee17$(_context17) {
+      while (1) {
+        switch (_context17.prev = _context17.next) {
+          case 0:
+            normalizedOps = operations.map(function (item) {
+              return {
+                name: typeof item === 'string' ? item : item.name,
+                params: item.params
+              };
+            }); //Perform all operations, sequentially
+
+            return _context17.abrupt("return", normalizedOps.reduce(function (promise, _ref17) {
+              var name = _ref17.name,
+                  params = _ref17.params;
+              return promise.then(function () {
+                return operation(runKey, name, params, optionals);
+              });
+            }, Promise.resolve()));
+
+          case 2:
+          case "end":
+            return _context17.stop();
+        }
+      }
+    }, _callee17);
+  }));
+  return _serial.apply(this, arguments);
+}
+
+function getWithStrategy(_x31, _x32, _x33) {
+  return _getWithStrategy.apply(this, arguments);
+}
+
+function _getWithStrategy() {
+  _getWithStrategy = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee18(strategy, model, scope) {
+    var optionals,
+        _optionals$initOperat,
+        initOperations,
+        runs,
+        newRun,
+        _newRun,
+        _args18 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee18$(_context18) {
+      while (1) {
+        switch (_context18.prev = _context18.next) {
+          case 0:
+            optionals = _args18.length > 3 && _args18[3] !== undefined ? _args18[3] : {};
+            _optionals$initOperat = optionals.initOperations, initOperations = _optionals$initOperat === void 0 ? [] : _optionals$initOperat;
+
+            if (!(strategy === 'reuse-across-sessions')) {
+              _context18.next = 16;
+              break;
+            }
+
+            _context18.next = 5;
+            return query(model, scope, _objectSpread({}, optionals, {
+              sort: ['-created']
+            }));
+
+          case 5:
+            runs = _context18.sent;
+
+            if (!runs.length) {
+              _context18.next = 8;
+              break;
+            }
+
+            return _context18.abrupt("return", runs[0]);
+
+          case 8:
+            _context18.next = 10;
+            return create(model, scope, optionals);
+
+          case 10:
+            newRun = _context18.sent;
+            _context18.next = 13;
+            return serial(newRun.runKey, initOperations, optionals);
+
+          case 13:
+            return _context18.abrupt("return", newRun);
+
+          case 16:
+            if (!(strategy === 'reuse-never')) {
+              _context18.next = 25;
+              break;
+            }
+
+            _context18.next = 19;
+            return create(model, scope, optionals);
+
+          case 19:
+            _newRun = _context18.sent;
+            _context18.next = 22;
+            return serial(_newRun.runKey, initOperations, optionals);
+
+          case 22:
+            return _context18.abrupt("return", _newRun);
+
+          case 25:
+            if (strategy === 'reuse-by-tracking-key') {//TBD write out if needed
+              //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+            } else if (strategy === 'multiplayer') {//TODO when multiplayer API is ready
+              //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+            }
+
+          case 26:
+            throw new utils__WEBPACK_IMPORTED_MODULE_4__["EpicenterError"]('Invalid run strategy.');
+
+          case 27:
+          case "end":
+            return _context18.stop();
+        }
+      }
+    }, _callee18);
+  }));
+  return _getWithStrategy.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/adapters/vault.js":
+/*!*******************************!*\
+  !*** ./src/adapters/vault.js ***!
+  \*******************************/
+/*! exports provided: update, get, remove, create */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+/**
+ * Episode API adapters -- use this to create, update, delete, and manage your episodes
+ * @namespace vaultAdapter
+ */
+
+/**
+ * Create an episode.
+ *
+ * TODO -- add meaningful text here
+ * @memberof vaultAdapter
+ * @example
+ *
+ * const { vaultAdapter } = epicenter;
+ * vaultAdapter.update
+ *
+ * @param {string}  vaultKey            Episode name
+ * @param {Array}   items               Group to make the episode under
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
+
+function update(_x, _x2) {
+  return _update.apply(this, arguments);
+}
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(vaultKey, items) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        mutationKey,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, mutationKey = optionals.mutationKey;
+            _context.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              MutationKey: mutationKey
+            }).patch("/vault/".concat(vaultKey), {
+              body: {
+                items: items
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 4:
+            return _context.abrupt("return", _context.sent);
+
+          case 5:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _update.apply(this, arguments);
+}
+
+function get(_x3, _x4) {
+  return _get.apply(this, arguments);
+}
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(collection, scope) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        userKey,
+        _args2 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            userKey = optionals.userKey ? "/".concat(optionals.userKey) : '';
+            _context2.next = 6;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/vault/".concat(scopeBoundary, "/").concat(scopeKey).concat(userKey, "/").concat(collection))["catch"](function (error) {
+              if (error.status === 404) return {
+                body: undefined
+              };
+              return Promise.reject(error);
+            }).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 6:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 7:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function remove(_x5) {
+  return _remove.apply(this, arguments);
+}
+
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(vaultKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        mutationKey,
+        _args3 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, mutationKey = optionals.mutationKey;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              MutationKey: mutationKey
+            })["delete"]("/vault/".concat(vaultKey)).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _remove.apply(this, arguments);
+}
+
+function create(_x6, _x7, _x8) {
+  return _create.apply(this, arguments);
+}
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(collection, scope, items) {
+    var optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        readLock,
+        writeLock,
+        userKey,
+        WORLD,
+        PARTICIPANT,
+        USER,
+        defaultLock,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey;
+            WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].WORLD;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].USER;
+            defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
+            _context4.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/vault/".concat(collection), {
+              body: {
+                scope: {
+                  scopeBoundary: scopeBoundary,
+                  scopeKey: scopeKey,
+                  userKey: scopeBoundary === WORLD ? undefined : userKey
+                },
+                permit: {
+                  readLock: readLock || defaultLock,
+                  writeLock: writeLock || defaultLock
+                },
+                items: items
+              }
+            }).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 8:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 9:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _create.apply(this, arguments);
+}
+
+/***/ }),
+
+/***/ "./src/epicenter.js":
+/*!**************************!*\
+  !*** ./src/epicenter.js ***!
+  \**************************/
+/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["SCOPE_BOUNDARY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["RITUAL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
+
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["config"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["errorManager"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["Router"]; });
+
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["Channel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "accountAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["accountAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "authAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["authAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["episodeAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["presenceAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["projectAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["runAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
+
+/* Main file; defines public interface & load order */
+var version = "3.1.0-alpha";
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/utils/config.js":
+/*!*****************************!*\
+  !*** ./src/utils/config.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+
+
+var API_VERSION = 3;
+
+var Config = /*#__PURE__*/function () {
+  function Config() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, Config);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_3___default()(this, "_apiVersion", API_VERSION);
+
+    if (Object(utils__WEBPACK_IMPORTED_MODULE_4__["isBrowser"])()) return this.loadBrowser();
+    if (Object(utils__WEBPACK_IMPORTED_MODULE_4__["isNode"])()) return this.loadNode();
+    throw new utils__WEBPACK_IMPORTED_MODULE_4__["EpicenterError"]('Could not identify environment; no configuration was setup');
+  }
+  /**
+   * Protocol used to make network requests (whether `http://` or `https://`). It is typically set on-load based on your browser's URL. For local development, this is defaulted to `https`, and can be overwritten if desired.
+   * @memberof config
+   * @type {string}
+   *  */
+
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2___default()(Config, [{
+    key: "isLocal",
+
+    /**
+     * Use to determines whether or not the environment is local.
+     * @memberof config
+     * @return {Boolean} whether or not environment is local.
+     */
+    value: function isLocal() {
+      if (!Object(utils__WEBPACK_IMPORTED_MODULE_4__["isBrowser"])()) return false;
+      var host = window.location.host;
+      return host === '127.0.0.1' || host.indexOf('local.') === 0 || host.indexOf('ngrok') !== -1 || host.indexOf('localhost') === 0;
+    }
+  }, {
+    key: "loadNode",
+    value: function loadNode() {
+      // TODO -- use process env variables instead here for Node server
+      this.apiProtocol = 'https';
+      this.apiHost = 'test.forio.com';
+      return;
+    }
+  }, {
+    key: "loadBrowser",
+    value: function loadBrowser() {
+      var isLocal = this.isLocal();
+      var _window$location = window.location,
+          protocol = _window$location.protocol,
+          pathname = _window$location.pathname,
+          host = _window$location.host;
+      this.apiProtocol = isLocal ? 'https' : protocol;
+      this.apiHost = isLocal ? 'forio.com' : host;
+      var match = pathname.match(/\/app\/([\w-]+)\/([\w-]+)/);
+
+      if (match) {
+        var _match$slice = match.slice(1),
+            _match$slice2 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_match$slice, 2),
+            account = _match$slice2[0],
+            project = _match$slice2[1];
+
+        this.accountShortName = account;
+        this.projectShortName = project;
+      }
+    }
+  }, {
+    key: "apiProtocol",
+    get: function get() {
+      return this._apiProtocol;
+    },
+    set: function set(apiProtocol) {
+      if (!apiProtocol.startsWith('http')) return;
+
+      if (apiProtocol.endsWith(':')) {
+        apiProtocol = apiProtocol.slice(0, -1);
+      }
+
+      this._apiProtocol = apiProtocol;
+    }
+    /**
+     * Hostname used to make network requests. It is typically set on-load based on your browser's URL. For local development, this is defaulted to `forio.com`, and can be overwritten if desired.
+     * @memberof config
+     * @type {string}
+     *  */
+
+  }, {
+    key: "apiHost",
+    get: function get() {
+      return this._apiHost;
+    },
+    set: function set(apiHost) {
+      this._apiHost = apiHost;
+    }
+    /**
+     * Version used to make network requests. This is read-only variable intended for internal use.
+     * @memberof config
+     * @type {number}
+     */
+
+  }, {
+    key: "apiVersion",
+    get: function get() {
+      return this._apiVersion;
+    },
+    set: function set(apiVersion) {
+      return;
+    }
+    /**
+     * Account name used for making network requests. This is the default value used by Epicenter API adapters when making network requests without explicitly defining an account to use. It is defined on-load based on your browser's URL, and can be overwritten for local development.
+     * @example
+     * // with browser URL: https://forio.com/app/acme-simulations/foobar-game
+     *
+     * console.log(epicenter.config.accountShortName);
+     * // should log 'acme-simulations'
+     *
+     * epicenter.runAdapter.get(123);
+     * // instantiates a GET call with the URL: https://forio.com/api/v3/acme-simulations/foobar-game/run/123
+     *
+     * epicenter.config.accountShortName = 'globex-simuations';
+     * epicenter.runAdapter.get(123);
+     * // now instantiates a GET with the URL: https://forio.com/api/v3/globex-simulations/foobar-game/run/123
+     *
+     * epicenter.runAdapter.get(123, { accountShortName: 'initech-simulations' });
+     * // now instantiates a GET with the URL: https://forio.com/api/v3/initech-simulations/foobar-game/run/123
+     *
+     * @memberof config
+     * @type {string}
+     */
+
+  }, {
+    key: "accountShortName",
+    get: function get() {
+      return this._accountShortName;
+    },
+    set: function set(accountShortName) {
+      this._accountShortName = accountShortName;
+    }
+    /**
+     * Project name used for making network requests. This is the default value used by Epicenter API adapters when making network requests without explicitly defining an account to use. It is defined on-load based on your browser's URL, and can be overwritten for local development.
+     * @example
+     * // with browser URL: https://forio.com/app/acme-simulations/foobar-game
+     *
+     * console.log(epicenter.config.projectShortName);
+     * // should log 'foobar-game'
+     *
+     * epicenter.runAdapter.get(123);
+     * // instantiates a GET call with the URL: https://forio.com/api/v3/acme-simulations/foobar-game/run/123
+     *
+     * epicenter.config.projectShortName = 'barfoo-game';
+     * epicenter.runAdapter.get(123);
+     * // now instantiates a GET with the URL: https://forio.com/api/v3/acme-simulations/barfoo-game/run/123
+     *
+     * epicenter.runAdapter.get(123, { projectShortName: 'barbaz-game' });
+     * // now instantiates a GET with the URL: https://forio.com/api/v3/acme-simulations/barbaz-game/run/123
+     *
+     * @memberof config
+     * @type {string}
+     */
+
+  }, {
+    key: "projectShortName",
+    get: function get() {
+      return this._projectShortName;
+    },
+    set: function set(projectShortName) {
+      this._projectShortName = projectShortName;
+    }
+  }]);
+
+  return Config;
+}();
+
+var config = new Config();
+/**
+ * Configuration -- used to set up and configure global settings for Epicenter JS libs.
+ * @namespace config
+ */
+
+/* harmony default export */ __webpack_exports__["default"] = (config);
+
+/***/ }),
+
+/***/ "./src/utils/constants.js":
+/*!********************************!*\
+  !*** ./src/utils/constants.js ***!
+  \********************************/
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BROWSER_STORAGE_TYPE", function() { return BROWSER_STORAGE_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return SCOPE_BOUNDARY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return RITUAL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return PUSH_CATEGORY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return LOCK_TYPE; });
+var BROWSER_STORAGE_TYPE = {
+  COOKIE: 'COOKIE',
+  SESSION: 'SESSION'
+};
+/**
+ * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #LOCK_TYPE lock types}. Scopes also provide an index that in which a run can be queried for.
+ *
+ * Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
+ * Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).
+ *
+ * psuedonymKey, goes in tandem w/ permit (lock types) --
+ * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
+ *
+ * @enum {string}
+ */
+
+var SCOPE_BOUNDARY = {
+  /**
+   * Runs scoped by project, users and facilitators are allowed access so long as they are a user in a group on the project.
+   * @constant
+   * @type {string}
+   */
+  PROJECT: 'PROJECT',
+
+  /**
+   * Runs scoped by group, users and facilitators are allowed access only if they are in the associated group
+   * Groups are scoped by projects
+   * @constant
+   * @type {string}
+   */
+  GROUP: 'GROUP',
+
+  /**
+   * Runs scoped by episode, not sure what this one is permission-wise
+   * Episodes are scoped by groups
+   * @constant
+   * @type {string}
+   */
+  EPISODE: 'EPISODE',
+
+  /**
+   * Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world
+   * Worlds can be scoped by group or episode
+   * @constant
+   * @type {string}
+   */
+  WORLD: 'WORLD'
+};
+/**
+ * Rituals are used to define the way in which the Epicenter stores a run while running actions like getting variables, saving meta data, and call model operations. Runs can exist in-memory for a certain amount of time before expiring, and requiring their revival again before use.
+ * @enum {string}
+ */
+
+var RITUAL = {
+  /**
+   * Allow GET action against archive, no revival of run
+   * @constant
+   * @type {string}
+   */
+  NONE: 'NONE',
+
+  /**
+   * A run with this ritual will be pulled into memory as needed, and will stay in memory until it's lifespan (defined in your project Settings) has expired.
+   * @constant
+   * @type {string}
+   */
+  REANIMATE: 'REANIMATE',
+
+  /**
+   * A run with this ritual will be pulled into memory as needed, and removed from memory afterwards.
+   * @constant
+   * @type {string}
+   */
+  EXORCISE: 'EXORCISE'
+};
+/**
+ * Push categories are pre-defined channels types in which one might use to receive push channel updates
+ * @enum {string}
+ */
+
+var PUSH_CATEGORY = {
+  /**
+   * intended for messaging users
+   * yes pub
+   * @constant
+   * @type {string}
+   */
+  CHAT: 'CHAT',
+
+  /**
+   * Used for the {@link https://github.com/forio Consensus API}
+   * no pub
+   * @constant
+   * @type {string}
+   */
+  CONSENSUS: 'CONSENSUS',
+
+  /**
+   * intended for general non-chat, sim-level communication
+   * yes pub
+   * @constant
+   * @type {string}
+   */
+  CONTROL: 'CONTROL',
+
+  /**
+   * Used for the {@link https://github.com/forio Presence API}
+   * no pub
+   * @constant
+   * @type {string}
+   */
+  PRESENCE: 'PRESENCE',
+
+  /**
+   * intended for awaiting entering games
+   * yes pub
+   * @constant
+   * @type {string}
+   */
+  LOBBY: 'LOBBY',
+
+  /**
+   * Used for the {@link https://github.com/forio Run API}
+   * no pub
+   * @constant
+   * @type {string}
+   */
+  RUN: 'RUN',
+
+  /**
+   * internal
+   * @constant
+   * @type {string}
+   */
+  SYSTEM: 'SYSTEM'
+};
+/**
+ * Lock types are used to define permissions in runs. They define which roles have which specific privileges associated with the run.
+ * @enum {string}
+ */
+
+var LOCK_TYPE = {
+  /**
+   * System -- Epicenter Manager
+   * @constant
+   * @type {string}
+   */
+  SYSTEM: 'SYSTEM',
+
+  /**
+   * System minus -- read-only system access, write for certain accounts; think Geromel
+   * @constant
+   * @type {string}
+   */
+  MONITER: 'MONITER',
+
+  /**
+   * Author -- Team Members (API keys)
+   * tied to one account (personal + current account)
+   * @constant
+   * @type {string}
+   */
+  AUTHOR: 'AUTHOR',
+
+  /**
+   * Author minus
+   * @constant
+   * @type {string}
+   */
+  SUPPORT: 'SUPPORT',
+
+  /**
+   * Facilitators
+   * @constant
+   * @type {string}
+   */
+  FACILITATOR: 'FACILITATOR',
+
+  /**
+   * Reviewers (weaker facilitator)
+   * Facilitator minus
+   * @constant
+   * @type {string}
+   */
+  REVIEWER: 'REVIEWER',
+
+  /**
+   * Users -- psuedonymKey (userKey) required in scope
+   * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
+   * @constant
+   * @type {string}
+   */
+  USER: 'USER',
+
+  /**
+   * Leader
+   * Participant plus
+   * @constant
+   * @type {string}
+   */
+  LEADER: 'LEADER',
+
+  /**
+   * Participant
+   * @constant
+   * @type {string}
+   */
+  PARTICIPANT: 'PARTICIPANT',
+
+  /**
+   * Anonymous
+   * @constant
+   * @type {string}
+   */
+  ANONYMOUS: 'ANONYMOUS'
+};
+
+/***/ }),
+
+/***/ "./src/utils/cookies.js":
+/*!******************************!*\
+  !*** ./src/utils/cookies.js ***!
+  \******************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// Modified version of https://github.com/madmurphy/cookies.js
+var getExpiration = function getExpiration(vEnd) {
+  if (!vEnd) return '';
+
+  switch (vEnd.constructor) {
+    case Number:
+      return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : "; max-age=".concat(vEnd);
+
+    /*
+        Note: Despite officially defined in RFC 6265, the use of `max-age` is not compatible with any
+        version of Internet Explorer, Edge and some mobile browsers. Therefore passing a number to
+        the end parameter might not work as expected. A possible solution might be to convert the the
+        relative time to an absolute time. For instance, replacing the previous line with:
+    */
+
+    /*
+        case Number: return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : `; expires=${(new Date(vEnd * 1e3 + Date.now())).toUTCString()}`;
+    */
+
+    case String:
+      return "; expires=".concat(vEnd);
+
+    case Date:
+      return "; expires=".concat(vEnd.toUTCString());
+
+    default:
+      return '';
+  }
+};
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  getItem: function getItem(key) {
+    if (!key) return null;
+    return decodeURIComponent(document.cookie.replace(new RegExp("(?:(?:^|.*;)\\s*".concat(encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&'), "\\s*\\=\\s*([^;]*).*$)|^.*$")), '$1')) || null;
+  },
+  setItem: function setItem(key, value) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+    if (!key || /^(?:expires|max\-age|path|domain|secure)$/i.test(key)) return false;
+    var path = options.path,
+        domain = options.domain,
+        end = options.end,
+        secure = options.secure,
+        samesite = options.samesite;
+    var expireStr = getExpiration(end);
+    var domainStr = domain ? "; domain=".concat(domain) : '';
+    var pathStr = path ? "; path=".concat(path) : '';
+    var secureStr = secure ? '; secure' : '';
+    var samesiteStr = samesite ? '; samesite' : '';
+    document.cookie = "".concat(encodeURIComponent(key), "=").concat(encodeURIComponent(value)).concat(expireStr).concat(domainStr).concat(pathStr).concat(secureStr).concat(samesiteStr);
+    return true;
+  },
+  removeItem: function removeItem(key) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    if (!this.hasItem(key)) return false;
+    var path = options.path,
+        domain = options.domain;
+    var domainStr = domain ? "; domain=".concat(domain) : '';
+    var pathStr = path ? "; path=".concat(path) : '';
+    document.cookie = "".concat(encodeURIComponent(key), "=; expires=Thu, 01 Jan 1970 00:00:00 GMT").concat(domainStr).concat(pathStr);
+    return true;
+  },
+  hasItem: function hasItem(key) {
+    if (!key || /^(?:expires|max\-age|path|domain|secure)$/i.test(key)) return false;
+    return new RegExp("(?:^|;\\s*)".concat(encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&'), "\\s*\\=")).test(document.cookie);
+  },
+  clear: function clear() {
+    var aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, '').split(/\s*(?:\=[^;]*)?;\s*/);
+
+    for (var nLen = aKeys.length, nIdx = 0; nIdx < nLen; nIdx++) {
+      aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
+      this.removeItem(aKeys[nIdx]);
+    }
+
+    return aKeys;
+  }
+});
+
+/***/ }),
+
+/***/ "./src/utils/error-manager.js":
+/*!************************************!*\
+  !*** ./src/utils/error-manager.js ***!
+  \************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+
+
+
+
+
+var handleByRelog = function handleByRelog(error) {
+  var query = '';
+
+  if (error.code) {
+    query = query.concat("?error=".concat(error.code));
+  }
+
+  return adapters__WEBPACK_IMPORTED_MODULE_5__["authAdapter"].logout().then(function () {
+    return window.location.href = "/login.html".concat(query);
+  });
+};
+
+var handleSSO = function handleSSO() {
+  return adapters__WEBPACK_IMPORTED_MODULE_5__["authAdapter"].logout();
+};
+
+var handleUnknown = function handleUnknown() {
+  return adapters__WEBPACK_IMPORTED_MODULE_5__["authAdapter"].logout().then(function () {
+    return window.location.href = '/unknown.html';
+  });
+};
+
+var handleByLoginMethod = function handleByLoginMethod(error) {
+  var _session$loginMethod;
+
+  var session = utils__WEBPACK_IMPORTED_MODULE_6__["identification"].session;
+  var loginType = session === null || session === void 0 ? void 0 : (_session$loginMethod = session.loginMethod) === null || _session$loginMethod === void 0 ? void 0 : _session$loginMethod.objectType;
+
+  switch (loginType) {
+    case 'sso':
+      return handleSSO(error);
+
+    case 'none':
+      return handleUnknown(error);
+
+    case 'native':
+    default:
+      return handleByRelog(error);
+  }
+};
+
+var UNAUTHORIZED = 401;
+
+var ErrorManager = /*#__PURE__*/function () {
+  function ErrorManager() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, ErrorManager);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_4___default()(this, "_handlers", [{
+      /* Default Unauthorized (401) Error Handler */
+      identifier: function identifier(error) {
+        return error.status === UNAUTHORIZED;
+      },
+      handle: function handle(error, retry) {
+        if (error.code === 'AUTHENTICATION_INVALIDATED') {
+          var groupKey = utils__WEBPACK_IMPORTED_MODULE_6__["identification"].session.groupKey;
+          return adapters__WEBPACK_IMPORTED_MODULE_5__["authAdapter"].upgrade(groupKey, {
+            objectType: 'user',
+            inert: true
+          }).then(function () {
+            return retry();
+          })["catch"](function () {
+            return handleByLoginMethod(error);
+          });
+        }
+
+        if (Object(utils__WEBPACK_IMPORTED_MODULE_6__["isNode"])()) return Promise.reject(error);
+        return handleByLoginMethod(error);
+      }
+    }]);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(ErrorManager, [{
+    key: "registerHandler",
+    value: function registerHandler(identifier, handleFn) {
+      this.handlers.unshift({
+        identifier: identifier,
+        handle: handleFn
+      });
+    }
+  }, {
+    key: "handle",
+    value: function () {
+      var _handle = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(error, retryFn, handlers
+      /* which is undefined unless recursing */
+      ) {
+        var index, handler, remainingHandlers, promise;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                handlers = handlers || this.handlers;
+                index = handlers.findIndex(function (_ref) {
+                  var identifier = _ref.identifier;
+                  return identifier(error);
+                });
+                handler = handlers[index];
+                remainingHandlers = index > 0 ? handlers.slice(index + 1) : [];
+
+                if (handler) {
+                  _context.next = 6;
+                  break;
+                }
+
+                throw error;
+
+              case 6:
+                _context.prev = 6;
+                _context.next = 9;
+                return handler.handle(error, retryFn)["catch"](function (err) {
+                  /* This catch call ensures that handle always returns a promise,
+                  otherwise it'd be caught in the catch block below */
+                  throw err;
+                });
+
+              case 9:
+                promise = _context.sent;
+                _context.next = 17;
+                break;
+
+              case 12:
+                _context.prev = 12;
+                _context.t0 = _context["catch"](6);
+                _context.next = 16;
+                return this.handle(error, retryFn, remainingHandlers);
+
+              case 16:
+                promise = _context.sent;
+
+              case 17:
+                return _context.abrupt("return", promise);
+
+              case 18:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[6, 12]]);
+      }));
+
+      function handle(_x, _x2, _x3) {
+        return _handle.apply(this, arguments);
+      }
+
+      return handle;
+    }()
+  }, {
+    key: "handlers",
+    get: function get() {
+      return this._handlers;
+    }
+  }]);
+
+  return ErrorManager;
+}();
+
+var errorManager = new ErrorManager();
+/* harmony default export */ __webpack_exports__["default"] = (errorManager);
+
+/***/ }),
+
+/***/ "./src/utils/error.js":
+/*!****************************!*\
+  !*** ./src/utils/error.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return EpicenterError; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js");
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+
+function _createSuper(Derived) { return function () { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+/* Generic throwable error */
+var EpicenterError = /*#__PURE__*/function (_Error) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1___default()(EpicenterError, _Error);
+
+  var _super = _createSuper(EpicenterError);
+
+  function EpicenterError(message) {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, EpicenterError);
+
+    return _super.call(this, message);
+  }
+
+  return EpicenterError;
+}( /*#__PURE__*/_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_4___default()(Error));
+
+
+
+/***/ }),
+
+/***/ "./src/utils/fault.js":
+/*!****************************!*\
+  !*** ./src/utils/fault.js ***!
+  \****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Fault; });
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/objectWithoutProperties */ "./node_modules/@babel/runtime/helpers/objectWithoutProperties.js");
+/* harmony import */ var _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/wrapNativeSuper */ "./node_modules/@babel/runtime/helpers/wrapNativeSuper.js");
+/* harmony import */ var _babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+
+function _createSuper(Derived) { return function () { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3___default()(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+/* For failed network calls */
+var Fault = /*#__PURE__*/function (_Error) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2___default()(Fault, _Error);
+
+  var _super = _createSuper(Fault);
+
+  function Fault(body, response) {
+    var _this;
+
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1___default()(this, Fault);
+
+    _this = _super.call(this);
+    var status = response.status;
+    var information = body.information,
+        message = body.message,
+        cause = body.cause;
+    _this.status = status;
+    _this.message = message;
+
+    if (information) {
+      var code = information.code,
+          rest = _babel_runtime_helpers_objectWithoutProperties__WEBPACK_IMPORTED_MODULE_0___default()(information, ["code"]);
+
+      _this.code = code;
+      _this.information = rest;
+    }
+
+    if (cause) {
+      _this.cause = new Fault(cause);
+    }
+
+    return _this;
+  }
+
+  return Fault;
+}( /*#__PURE__*/_babel_runtime_helpers_wrapNativeSuper__WEBPACK_IMPORTED_MODULE_5___default()(Error));
+
+
+
+/***/ }),
+
+/***/ "./src/utils/helpers.js":
+/*!******************************!*\
+  !*** ./src/utils/helpers.js ***!
+  \******************************/
+/*! exports provided: isBrowser, isNode, last, prefix, access */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isBrowser", function() { return isBrowser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNode", function() { return isNode; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "last", function() { return last; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "prefix", function() { return prefix; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "access", function() { return access; });
+/* eslint-disable no-new-func */
+var isBrowser = new Function('try {return this===window;}catch(e){ return false;}');
+var isNode = new Function('try {return this===global;}catch(e){return false;}');
+var last = function last(strOrArr) {
+  return strOrArr[strOrArr.length - 1];
+};
+var prefix = function prefix(pre, str) {
+  return str.startsWith(pre) ? str : "".concat(pre).concat(str);
+}; // Tries to return value at the end of a sequence of keys.
+// E.g. given an obj and keys = ['1', '2', '3'], it will try to
+// return obj['1']['2']['3']. Uses the defaultValue on error.
+
+var access = function access(obj, keys, defaultValue) {
+  var ref = obj;
+
+  try {
+    keys.forEach(function (key) {
+      return ref = ref[key];
+    });
+  } catch (err) {
+    if (err instanceof TypeError) {
+      return defaultValue;
+    }
+
+    throw err;
+  }
+
+  if (ref === undefined) return defaultValue;
+  return ref;
+};
+
+/***/ }),
+
+/***/ "./src/utils/identification.js":
+/*!*************************************!*\
+  !*** ./src/utils/identification.js ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+
+var COOKIE = utils_constants__WEBPACK_IMPORTED_MODULE_4__["BROWSER_STORAGE_TYPE"].COOKIE,
+    SESSION = utils_constants__WEBPACK_IMPORTED_MODULE_4__["BROWSER_STORAGE_TYPE"].SESSION;
+var SESSION_KEY = Symbol('com.forio.epicenter.session');
+var EPI_SSO_KEY = 'epicenter.v3.sso';
+
+var Identification = /*#__PURE__*/function () {
+  function Identification(storeType) {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Identification);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(this, "type", void 0);
+
+    if (storeType !== COOKIE && storeType !== SESSION) {
+      throw new utils__WEBPACK_IMPORTED_MODULE_3__["EpicenterError"]("Invalid Storage Type: \"".concat(storeType, "\", please use \"").concat(COOKIE, "\" or \"").concat(SESSION, "\"."));
+    }
+
+    this.type = storeType;
+    this.consumeSSO();
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Identification, [{
+    key: "getStore",
+    value: function getStore() {
+      if (Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return utils__WEBPACK_IMPORTED_MODULE_3__["NodeStore"];
+
+      switch (this.type) {
+        case SESSION:
+          return utils__WEBPACK_IMPORTED_MODULE_3__["SessionStore"];
+
+        case COOKIE:
+        default:
+          return utils__WEBPACK_IMPORTED_MODULE_3__["CookieStore"];
+      }
+    }
+    /* Generates the appropriate path for storing your session (applicable only to cookies) */
+
+  }, {
+    key: "getSessionPath",
+    value: function getSessionPath(session) {
+      var mySession = session || this.session;
+      if (!mySession || Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return '';
+      var accountShortName = mySession.accountShortName,
+          projectShortName = mySession.projectShortName,
+          objectType = mySession.objectType;
+      var isLocal = utils__WEBPACK_IMPORTED_MODULE_3__["config"].isLocal();
+      var isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
+      var isEpicenterDomain = !isLocal && !isCustomDomain;
+
+      if (objectType === 'user' && accountShortName && projectShortName && isEpicenterDomain) {
+        return "/app/".concat(accountShortName, "/").concat(projectShortName);
+      }
+      /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
+
+
+      return '/';
+    }
+  }, {
+    key: "consumeSSO",
+    value: function consumeSSO() {
+      if (Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return;
+      /* Double parse here b/c the backend serializes it as a string; the first parse
+       * converts it into a json string, the second parse converts the json string into
+       * json. Yes, it's weird, no, we can't change it (unless we want to rewrite
+       * Interface Builder code to accommodate) */
+
+      var session = JSON.parse(JSON.parse("\"".concat(utils__WEBPACK_IMPORTED_MODULE_3__["cookies"].getItem(EPI_SSO_KEY), "\"")));
+
+      if (session) {
+        var accountShortName = session.accountShortName,
+            projectShortName = session.projectShortName;
+        this.session = session;
+        utils__WEBPACK_IMPORTED_MODULE_3__["cookies"].removeItem(EPI_SSO_KEY, {
+          domain: ".".concat(window.location.hostname),
+          path: "/app/".concat(accountShortName, "/").concat(projectShortName)
+        });
+      }
+    }
+  }, {
+    key: "session",
+    get: function get() {
+      var Store = this.getStore();
+      return new Store().getItem(SESSION_KEY.description);
+    },
+    set: function set(session) {
+      var Store = this.getStore();
+      var path = this.getSessionPath(session);
+
+      if (session) {
+        new Store({
+          path: path
+        }).setItem(SESSION_KEY.description, session);
+      } else if (this.session) {
+        new Store({
+          path: path
+        }).removeItem(SESSION_KEY.description);
+      }
+    }
+  }]);
+
+  return Identification;
+}();
+
+var identification = new Identification(COOKIE);
+/* harmony default export */ __webpack_exports__["default"] = (identification);
+
+/***/ }),
+
+/***/ "./src/utils/index.js":
+/*!****************************!*\
+  !*** ./src/utils/index.js ***!
+  \****************************/
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, isBrowser, isNode, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, config, identification, errorManager, Router */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./constants */ "./src/utils/constants.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "BROWSER_STORAGE_TYPE", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["BROWSER_STORAGE_TYPE"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["SCOPE_BOUNDARY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["RITUAL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
+
+/* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/utils/helpers.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isBrowser", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["isBrowser"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isNode", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["isNode"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "last", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["last"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "prefix", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["prefix"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "access", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["access"]; });
+
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./store */ "./src/utils/store.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "NodeStore", function() { return _store__WEBPACK_IMPORTED_MODULE_2__["NodeStore"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SessionStore", function() { return _store__WEBPACK_IMPORTED_MODULE_2__["SessionStore"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "CookieStore", function() { return _store__WEBPACK_IMPORTED_MODULE_2__["CookieStore"]; });
+
+/* harmony import */ var _cookies__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cookies */ "./src/utils/cookies.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cookies", function() { return _cookies__WEBPACK_IMPORTED_MODULE_3__["default"]; });
+
+/* harmony import */ var _error__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./error */ "./src/utils/error.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "EpicenterError", function() { return _error__WEBPACK_IMPORTED_MODULE_4__["default"]; });
+
+/* harmony import */ var _fault__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./fault */ "./src/utils/fault.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Fault", function() { return _fault__WEBPACK_IMPORTED_MODULE_5__["default"]; });
+
+/* harmony import */ var _result__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./result */ "./src/utils/result.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Result", function() { return _result__WEBPACK_IMPORTED_MODULE_6__["default"]; });
+
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config */ "./src/utils/config.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return _config__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+
+/* harmony import */ var _identification__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./identification */ "./src/utils/identification.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "identification", function() { return _identification__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+
+/* harmony import */ var _error_manager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./error-manager */ "./src/utils/error-manager.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return _error_manager__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./router */ "./src/utils/router.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return _router__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+
+
+
+
+
+
+
+
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/utils/result.js":
+/*!*****************************!*\
+  !*** ./src/utils/result.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Result; });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/* For network call responses */
+var Result = function Result(body, response) {
+  _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0___default()(this, Result);
+
+  var status = response.status,
+      headers = response.headers;
+  this.status = status;
+  this.headers = headers;
+  this.body = body;
+};
+
+
+
+/***/ }),
+
+/***/ "./src/utils/router.js":
+/*!*****************************!*\
+  !*** ./src/utils/router.js ***!
+  \*****************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Router; });
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/typeof */ "./node_modules/@babel/runtime/helpers/typeof.js");
+/* harmony import */ var _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var cross_fetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! cross-fetch */ "./node_modules/cross-fetch/dist/browser-ponyfill.js");
+/* harmony import */ var cross_fetch__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(cross_fetch__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+
+
+var DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
+var DEFAULT_PROJECT_SHORT_NAME = 'manager';
+var MAX_URL_LENGTH = 2048;
+
+function paginate(json, url, options) {
+  var page = _objectSpread({}, json, {
+    allValues: _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(json.values)
+  });
+
+  var next = /*#__PURE__*/function () {
+    var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee() {
+      var searchParams, first, nextPage;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              searchParams = new URLSearchParams(url.search);
+              first = page.firstResult + page.maxResults;
+
+              if (!(page.allValues.length >= json.totalResults)) {
+                _context.next = 5;
+                break;
+              }
+
+              page.done = true;
+              return _context.abrupt("return", page);
+
+            case 5:
+              searchParams.set('first', first);
+              url.search = searchParams; // eslint-disable-next-line no-use-before-define
+
+              _context.next = 9;
+              return request(url, _objectSpread({}, options, {
+                paginated: false
+              }));
+
+            case 9:
+              nextPage = _context.sent;
+              page.allValues = page.allValues.concat(nextPage.values);
+              Object.assign(page, nextPage);
+              return _context.abrupt("return", page);
+
+            case 13:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function next() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  var withAll = /*#__PURE__*/function () {
+    var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee2() {
+      var _yield$next, done, allValues;
+
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.next = 2;
+              return next();
+
+            case 2:
+              _yield$next = _context2.sent;
+              done = _yield$next.done;
+              allValues = _yield$next.allValues;
+
+              if (!done) {
+                _context2.next = 7;
+                break;
+              }
+
+              return _context2.abrupt("return", allValues);
+
+            case 7:
+              _context2.next = 9;
+              return withAll();
+
+            case 9:
+              return _context2.abrupt("return", _context2.sent);
+
+            case 10:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function withAll() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  page.next = next;
+  page.withAll = withAll;
+  return page;
+}
+
+function request(_x, _x2) {
+  return _request.apply(this, arguments);
+}
+
+function _request() {
+  _request = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee8(url, options) {
+    var method, body, includeAuthorization, inert, paginated, headers, session, response, contentType, json, error, retry;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            method = options.method, body = options.body, includeAuthorization = options.includeAuthorization, inert = options.inert, paginated = options.paginated;
+            headers = {
+              'Content-type': 'application/json; charset=UTF-8'
+            };
+            session = utils__WEBPACK_IMPORTED_MODULE_9__["identification"].session;
+
+            if (includeAuthorization && session) {
+              headers.Authorization = "Bearer ".concat(session.token);
+            }
+
+            _context8.next = 6;
+            return cross_fetch__WEBPACK_IMPORTED_MODULE_8___default()(url, {
+              method: method,
+              cache: 'no-cache',
+              headers: headers,
+              redirect: 'follow',
+              body: body ? JSON.stringify(body) : null
+            });
+
+          case 6:
+            response = _context8.sent;
+            contentType = response.headers.get('content-type');
+
+            if (!(!contentType || !contentType.includes('application/json'))) {
+              _context8.next = 10;
+              break;
+            }
+
+            throw new utils__WEBPACK_IMPORTED_MODULE_9__["EpicenterError"]("Response content-type '".concat(contentType, "' does not include 'application/json'"));
+
+          case 10:
+            _context8.next = 12;
+            return response.json();
+
+          case 12:
+            json = _context8.sent;
+
+            if (!(response.status >= 200 && response.status < 400)) {
+              _context8.next = 15;
+              break;
+            }
+
+            return _context8.abrupt("return", new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](paginated ? paginate(json, url, options) : json, response));
+
+          case 15:
+            error = new utils__WEBPACK_IMPORTED_MODULE_9__["Fault"](json, response);
+
+            if (!inert) {
+              _context8.next = 18;
+              break;
+            }
+
+            throw error;
+
+          case 18:
+            retry = function retry() {
+              return request(url, {
+                method: method,
+                body: body,
+                includeAuthorization: includeAuthorization,
+                inert: true
+              });
+            };
+
+            return _context8.abrupt("return", utils__WEBPACK_IMPORTED_MODULE_9__["errorManager"].handle(error, retry));
+
+          case 20:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _request.apply(this, arguments);
+}
+
+var Router = /*#__PURE__*/function () {
+  function Router() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default()(this, Router);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Router, [{
+    key: "withServer",
+    value: function withServer(server) {
+      if (server) this.server = server;
+      return this;
+    }
+  }, {
+    key: "withVersion",
+    value: function withVersion(version) {
+      if (version) this.version = version;
+      return this;
+    }
+  }, {
+    key: "withAccountShortName",
+    value: function withAccountShortName(accountShortName) {
+      if (accountShortName) this.accountShortName = accountShortName;
+      return this;
+    }
+  }, {
+    key: "withProjectShortName",
+    value: function withProjectShortName(projectShortName) {
+      if (projectShortName) this.projectShortName = projectShortName;
+      return this;
+    }
+  }, {
+    key: "withSearchParams",
+    value: function withSearchParams(searchParams) {
+      if (!searchParams) return this;
+      var isEmpty = _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(searchParams) === 'object' && Object.entries(searchParams).length === 0;
+      if (!isEmpty) this.searchParams = searchParams;
+      return this;
+    }
+  }, {
+    key: "configure",
+    value: function configure() {
+      if (!this.server) this.withServer("".concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiProtocol, "://").concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiHost));
+      if (!this.accountShortName) this.withAccountShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].accountShortName);
+      if (!this.projectShortName) this.withProjectShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].projectShortName);
+      if (!this.version) this.withVersion(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiVersion);
+    }
+  }, {
+    key: "getURL",
+    value: function getURL(uriComponent) {
+      this.configure();
+      var url = new URL("".concat(this.server));
+      url.pathname = "api/v".concat(this.version, "/").concat(this.accountShortName, "/").concat(this.projectShortName).concat(Object(utils__WEBPACK_IMPORTED_MODULE_9__["prefix"])('/', uriComponent));
+      url.search = new URLSearchParams(this.searchParams);
+      return url;
+    } //Network Requests
+
+  }, {
+    key: "get",
+    value: function () {
+      var _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee3(uriComponent, options) {
+        var url, newURL;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                url = this.getURL(uriComponent);
+                /* Handle sufficiently large GET requests with POST calls instead */
+
+                if (!(url.href.length > MAX_URL_LENGTH)) {
+                  _context3.next = 4;
+                  break;
+                }
+
+                newURL = new URL(url.href.split('?')[0]);
+                return _context3.abrupt("return", this.post(newURL, {
+                  body: url.search
+                }));
+
+              case 4:
+                return _context3.abrupt("return", request(url, _objectSpread({
+                  includeAuthorization: true
+                }, options, {
+                  method: 'GET'
+                })));
+
+              case 5:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3, this);
+      }));
+
+      function get(_x3, _x4) {
+        return _get.apply(this, arguments);
+      }
+
+      return get;
+    }()
+  }, {
+    key: "delete",
+    value: function () {
+      var _delete2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee4(uriComponent, options) {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                url = this.getURL(uriComponent);
+                return _context4.abrupt("return", request(url, _objectSpread({
+                  includeAuthorization: true
+                }, options, {
+                  method: 'DELETE'
+                })));
+
+              case 2:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
+
+      function _delete(_x5, _x6) {
+        return _delete2.apply(this, arguments);
+      }
+
+      return _delete;
+    }()
+  }, {
+    key: "patch",
+    value: function () {
+      var _patch = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee5(uriComponent, options) {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                url = this.getURL(uriComponent);
+                return _context5.abrupt("return", request(url, _objectSpread({
+                  includeAuthorization: true
+                }, options, {
+                  method: 'PATCH'
+                })));
+
+              case 2:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5, this);
+      }));
+
+      function patch(_x7, _x8) {
+        return _patch.apply(this, arguments);
+      }
+
+      return patch;
+    }()
+  }, {
+    key: "post",
+    value: function () {
+      var _post = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee6(uriComponent, options) {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                url = this.getURL(uriComponent);
+                return _context6.abrupt("return", request(url, _objectSpread({
+                  includeAuthorization: true
+                }, options, {
+                  method: 'POST'
+                })));
+
+              case 2:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function post(_x9, _x10) {
+        return _post.apply(this, arguments);
+      }
+
+      return post;
+    }()
+  }, {
+    key: "put",
+    value: function () {
+      var _put = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee7(uriComponent, options) {
+        var url;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee7$(_context7) {
+          while (1) {
+            switch (_context7.prev = _context7.next) {
+              case 0:
+                url = this.getURL(uriComponent);
+                return _context7.abrupt("return", request(url, _objectSpread({
+                  includeAuthorization: true
+                }, options, {
+                  method: 'PUT'
+                })));
+
+              case 2:
+              case "end":
+                return _context7.stop();
+            }
+          }
+        }, _callee7, this);
+      }));
+
+      function put(_x11, _x12) {
+        return _put.apply(this, arguments);
+      }
+
+      return put;
+    }()
+  }, {
+    key: "server",
+    get: function get() {
+      return this._server;
+    },
+    set: function set(value) {
+      this._server = value;
+    }
+  }, {
+    key: "version",
+    get: function get() {
+      return this._version;
+    },
+    set: function set(value) {
+      this._version = value;
+    }
+  }, {
+    key: "accountShortName",
+    get: function get() {
+      return this._accountShortName;
+    },
+    set: function set(value) {
+      this._accountShortName = value;
+    }
+  }, {
+    key: "projectShortName",
+    get: function get() {
+      return this._projectShortName;
+    },
+    set: function set(value) {
+      this._projectShortName = value;
+    }
+  }, {
+    key: "searchParams",
+    get: function get() {
+      return this._searchParams;
+    },
+    set: function set(query) {
+      /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
+      if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(query) === 'object' && query.constructor === Object) {
+        query = Object.entries(query).reduce(function (arr, _ref3) {
+          var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref3, 2),
+              key = _ref4[0],
+              value = _ref4[1];
+
+          if (Array.isArray(value)) {
+            /* Special case for arrayed param values: use duplicated params here */
+            return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(arr), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(value.map(function (v) {
+              return [key, v];
+            })));
+          }
+
+          if (value === undefined || value === null) {
+            /* Skip nullish values */
+            return arr;
+          }
+
+          arr.push([key, value]);
+          return arr;
+        }, []);
+      }
+
+      this._searchParams = query;
+    }
+  }]);
+
+  return Router;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/utils/store.js":
+/*!****************************!*\
+  !*** ./src/utils/store.js ***!
+  \****************************/
+/*! exports provided: NodeStore, SessionStore, CookieStore */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NodeStore", function() { return NodeStore; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SessionStore", function() { return SessionStore; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "CookieStore", function() { return CookieStore; });
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/get */ "./node_modules/@babel/runtime/helpers/get.js");
+/* harmony import */ var _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+
+
+
+
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _createSuper(Derived) { return function () { var Super = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(Derived), result; if (_isNativeReflectConstruct()) { var NewTarget = _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2___default()(this, result); }; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+
+
+var Store = /*#__PURE__*/function () {
+  function Store(store) {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, Store);
+
+    _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6___default()(this, "_store", void 0);
+
+    this._store = store;
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default()(Store, [{
+    key: "clear",
+    value: function clear() {
+      this._store.clear();
+    }
+  }, {
+    key: "store",
+    get: function get() {
+      return this._store;
+    },
+    set: function set(store) {
+      this._store = store;
+    }
+  }]);
+
+  return Store;
+}();
+
+var nodeMap = new Map();
+var NodeStore = /*#__PURE__*/function (_Store) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1___default()(NodeStore, _Store);
+
+  var _super = _createSuper(NodeStore);
+
+  function NodeStore() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, NodeStore);
+
+    return _super.call(this, nodeMap);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default()(NodeStore, [{
+    key: "getItem",
+    value: function getItem(key) {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(NodeStore.prototype), "store", this).get(key);
+    }
+  }, {
+    key: "setItem",
+    value: function setItem(key, value) {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(NodeStore.prototype), "store", this).set(key, value);
+    }
+  }, {
+    key: "removeItem",
+    value: function removeItem(key) {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(NodeStore.prototype), "store", this)["delete"](key);
+    }
+  }]);
+
+  return NodeStore;
+}(Store);
+var SessionStore = /*#__PURE__*/function (_Store2) {
+  _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_1___default()(SessionStore, _Store2);
+
+  var _super2 = _createSuper(SessionStore);
+
+  function SessionStore() {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, SessionStore);
+
+    return _super2.call(this, window.sessionStorage);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default()(SessionStore, [{
+    key: "getItem",
+    value: function getItem(key) {
+      return JSON.parse(_babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(SessionStore.prototype), "store", this).getItem(key.toString()));
+    }
+  }, {
+    key: "setItem",
+    value: function setItem(key, value) {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(SessionStore.prototype), "store", this).setItem(key.toString(), JSON.stringify(value));
+    }
+  }, {
+    key: "removeItem",
+    value: function removeItem(key) {
+      return _babel_runtime_helpers_get__WEBPACK_IMPORTED_MODULE_0___default()(_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3___default()(SessionStore.prototype), "store", this).removeItem(key.toString());
+    }
+  }]);
+
+  return SessionStore;
+}(Store);
+var CookieStore = /*#__PURE__*/function () {
+  function CookieStore(options) {
+    _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_4___default()(this, CookieStore);
+
+    var defaults = {
+      domain: ".".concat(window.location.hostname),
+      path: '/'
+    };
+    this.options = _objectSpread({}, defaults, {}, options);
+  }
+
+  _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_5___default()(CookieStore, [{
+    key: "getItem",
+    value: function getItem(key) {
+      return JSON.parse(utils__WEBPACK_IMPORTED_MODULE_7__["cookies"].getItem(key.toString()));
+    }
+  }, {
+    key: "setItem",
+    value: function setItem(key, value) {
+      return utils__WEBPACK_IMPORTED_MODULE_7__["cookies"].setItem(key.toString(), JSON.stringify(value), this.options);
+    }
+  }, {
+    key: "removeItem",
+    value: function removeItem(key) {
+      return utils__WEBPACK_IMPORTED_MODULE_7__["cookies"].removeItem(key.toString(), this.options);
+    }
+  }, {
+    key: "clear",
+    value: function clear() {
+      return utils__WEBPACK_IMPORTED_MODULE_7__["cookies"].clear();
+    }
+  }]);
+
+  return CookieStore;
+}();
+
+/***/ }),
+
+/***/ 0:
+/*!********************************!*\
+  !*** multi ./src/epicenter.js ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(/*! ./src/epicenter.js */"./src/epicenter.js");
+
+
+/***/ })
+
+/******/ });
+});
 //# sourceMappingURL=epicenter.js.map
