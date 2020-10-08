@@ -8115,7 +8115,7 @@ function _query() {
             };
             _context8.next = 6;
             return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
-              paginate: true
+              paginated: true
             }).then(function (_ref8) {
               var body = _ref8.body;
               return body;
@@ -10410,9 +10410,9 @@ var Router = /*#__PURE__*/function () {
                 }
 
                 newURL = new URL(url.href.split('?')[0]);
-                return _context3.abrupt("return", this.post(newURL, {
+                return _context3.abrupt("return", this.post(newURL, _objectSpread({}, options, {
                   body: url.search
-                }));
+                })));
 
               case 4:
                 return _context3.abrupt("return", request(url, _objectSpread({

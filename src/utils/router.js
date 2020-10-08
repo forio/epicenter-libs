@@ -182,6 +182,7 @@ export default class Router {
         if (url.href.length > MAX_URL_LENGTH) {
             const newURL = new URL(url.href.split('?')[0]);
             return this.post(newURL, {
+                ...options,
                 body: url.search,
             });
         }
