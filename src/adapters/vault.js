@@ -29,7 +29,10 @@ export async function update(vaultKey, items, optionals = {}) {
         .withProjectShortName(projectShortName)
         .withSearchParams({ MutationKey: mutationKey })
         .patch(`/vault/${vaultKey}`, {
-            body: { items },
+            body: {
+                set: items.set ?? {},
+                push: items.push ?? {},
+            },
         }).then(({ body }) => body);
 }
 

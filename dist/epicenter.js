@@ -8754,6 +8754,8 @@ function update(_x, _x2) {
 
 function _update() {
   _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(vaultKey, items) {
+    var _items$set, _items$push;
+
     var optionals,
         accountShortName,
         projectShortName,
@@ -8770,7 +8772,8 @@ function _update() {
               MutationKey: mutationKey
             }).patch("/vault/".concat(vaultKey), {
               body: {
-                items: items
+                set: (_items$set = items.set) !== null && _items$set !== void 0 ? _items$set : {},
+                push: (_items$push = items.push) !== null && _items$push !== void 0 ? _items$push : {}
               }
             }).then(function (_ref) {
               var body = _ref.body;

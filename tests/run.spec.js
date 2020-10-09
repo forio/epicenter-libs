@@ -27,7 +27,9 @@ describe('Run API Service', () => {
             xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
         });
         server.respondWith('GET', /(.*)\/run/, function(xhr, id) {
+            // Some mutant response
             const RESPONSE = {
+                // getting a run
                 id: '065dfe50-d29d-4b55-a0fd-30868d7dd26c',
                 model: 'model.vmf',
                 account: 'mit',
@@ -35,6 +37,8 @@ describe('Run API Service', () => {
                 saved: false,
                 lastModified: '2014-06-20T04:09:45.738Z',
                 created: '2014-06-20T04:09:45.738Z',
+                // getting many runs
+                values: [],
             };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
@@ -269,7 +273,7 @@ describe('Run API Service', () => {
             },
             sort: [
                 '-created',
-                //'+trackingKey', //Using the plus sign is incompatible with URLSearchParams.prototype.get, it will convert the plus sign to a space
+                '+trackingKey',
             ],
             first: '20',
             max: '15',
@@ -293,7 +297,7 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
             searchParams.get('projections').split(';').forEach((p) => expect(p).to.satisfy((p) => p.startsWith('var.') || p.startsWith('meta.')));
-            expect(searchParams.get('sort').split(';')).to.deep.equal(OPTIONALS.sort);
+            expect(searchParams.get('sort').split(';').map((s) => decodeURIComponent(s))).to.deep.equal(OPTIONALS.sort);
             expect(searchParams.get('first')).to.equal(OPTIONALS.first);
             expect(searchParams.get('max')).to.equal(OPTIONALS.max);
             expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
