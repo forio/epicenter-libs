@@ -271,10 +271,9 @@ describe('Run API Service', () => {
             filter: {
                 variables: ['vartest=23', 'trackingKey=1234', 'something#else@here'],
             },
-            sort: [
-                '-created',
-                '+trackingKey',
-            ],
+            sort: {
+                attributes: ['-created', '+trackingKey'],
+            },
             first: '20',
             max: '15',
             timeout: '20',
@@ -297,7 +296,8 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
             searchParams.get('projections').split(';').forEach((p) => expect(p).to.satisfy((p) => p.startsWith('var.') || p.startsWith('meta.')));
-            expect(searchParams.get('sort').split(';').map((s) => decodeURIComponent(s))).to.deep.equal(OPTIONALS.sort);
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satfisfy((s) => s.startsWith('-') || s.startsWith('+')));
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satfisfy((s) => s.includes('run.')));
             expect(searchParams.get('first')).to.equal(OPTIONALS.first);
             expect(searchParams.get('max')).to.equal(OPTIONALS.max);
             expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
