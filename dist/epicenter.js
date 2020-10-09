@@ -8092,7 +8092,7 @@ function _query() {
           case 0:
             optionals = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
-            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? [] : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$projection = optionals.projections, projections = _optionals$projection === void 0 ? {} : _optionals$projection, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? {} : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$projection = optionals.projections, projections = _optionals$projection === void 0 ? {} : _optionals$projection, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             searchParams = {
               filter: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.variables || []).map(function (statement) {
                 return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', statement);
@@ -8101,16 +8101,18 @@ function _query() {
               })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.attributes || []).map(function (statement) {
                 return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', statement);
               }))).join(';'),
-              sort: sort.join(';'),
+              sort: _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((sort.attributes || []).map(function (sorting) {
+                return "".concat(sorting.charAt(0)).concat(Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', sorting.slice(1)));
+              })),
               first: first,
               max: max,
               timeout: timeout,
+              // varProjections
+              // metaProjections
               projections: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.variables || []).map(function (name) {
                 return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', name);
               })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.metadata || []).map(function (name) {
                 return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('meta.', name);
-              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.attr || []).map(function (name) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', name);
               }))).join(';')
             };
             _context8.next = 6;
@@ -10184,7 +10186,10 @@ function paginate(json, url, options) {
               _context.next = 9;
               return request(url, _objectSpread({}, options, {
                 paginated: false
-              }));
+              })).then(function (_ref2) {
+                var body = _ref2.body;
+                return body;
+              });
 
             case 9:
               nextPage = _context.sent;
@@ -10206,7 +10211,7 @@ function paginate(json, url, options) {
   }();
 
   var withAll = /*#__PURE__*/function () {
-    var _ref2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee2() {
+    var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee2() {
       var _yield$next, done, allValues;
 
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee2$(_context2) {
@@ -10244,7 +10249,7 @@ function paginate(json, url, options) {
     }));
 
     return function withAll() {
-      return _ref2.apply(this, arguments);
+      return _ref3.apply(this, arguments);
     };
   }();
 
@@ -10598,10 +10603,10 @@ var Router = /*#__PURE__*/function () {
     set: function set(query) {
       /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
       if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(query) === 'object' && query.constructor === Object) {
-        query = Object.entries(query).reduce(function (arr, _ref3) {
-          var _ref4 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref3, 2),
-              key = _ref4[0],
-              value = _ref4[1];
+        query = Object.entries(query).reduce(function (arr, _ref4) {
+          var _ref5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref4, 2),
+              key = _ref5[0],
+              value = _ref5[1];
 
           if (Array.isArray(value)) {
             /* Special case for arrayed param values: use duplicated params here */
