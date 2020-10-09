@@ -180,7 +180,7 @@ export async function get(runKey, optionals = {}) {
 export async function query(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        filter = {}, sort = [], first, max, timeout, projections = {},
+        filter = {}, sort = {}, first, max, timeout, projections = {},
         accountShortName, projectShortName,
     } = optionals;
 
@@ -190,12 +190,15 @@ export async function query(model, scope, optionals = {}) {
             ...(filter.metadata || []).map((statement) => prefix('meta.', statement)),
             ...(filter.attributes || []).map((statement) => prefix('run.', statement)),
         ].join(';'),
-        sort: sort.join(';'),
+        sort: [
+            ...(sort.attributes || []).map((sorting) => `${sorting.charAt(0)}${prefix('run.', sorting.slice(1))}`),
+        ],
         first, max, timeout,
+        // varProjections
+        // metaProjections
         projections: [
             ...(projections.variables || []).map((name) => prefix('var.', name)),
             ...(projections.metadata || []).map((name) => prefix('meta.', name)),
-            ...(projections.attr || []).map((name) => prefix('run.', name)),
         ].join(';'),
     };
 
