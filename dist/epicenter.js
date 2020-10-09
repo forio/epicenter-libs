@@ -8079,8 +8079,10 @@ function _query() {
         first,
         max,
         timeout,
-        _optionals$projection,
-        projections,
+        _optionals$variables,
+        variables,
+        _optionals$metadata,
+        metadata,
         accountShortName,
         projectShortName,
         searchParams,
@@ -8092,7 +8094,7 @@ function _query() {
           case 0:
             optionals = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
-            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? {} : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$projection = optionals.projections, projections = _optionals$projection === void 0 ? {} : _optionals$projection, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? {} : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$variables = optionals.variables, variables = _optionals$variables === void 0 ? [] : _optionals$variables, _optionals$metadata = optionals.metadata, metadata = _optionals$metadata === void 0 ? [] : _optionals$metadata, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             searchParams = {
               filter: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.variables || []).map(function (statement) {
                 return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', statement);
@@ -8107,13 +8109,8 @@ function _query() {
               first: first,
               max: max,
               timeout: timeout,
-              // varProjections
-              // metaProjections
-              projections: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.variables || []).map(function (name) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', name);
-              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((projections.metadata || []).map(function (name) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('meta.', name);
-              }))).join(';')
+              "var": variables.join(';'),
+              meta: metadata.join(';')
             };
             _context8.next = 6;
             return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {

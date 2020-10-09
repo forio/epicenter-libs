@@ -277,9 +277,7 @@ describe('Run API Service', () => {
             first: '20',
             max: '15',
             timeout: '20',
-            projections: {
-                metadata: ['includedvar1', 'inludedvar2'],
-            },
+            metadata: ['includedvar1', 'inludedvar2'],
         };
         it('Should do a GET', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
             const req = server.requests.pop();
@@ -295,9 +293,9 @@ describe('Run API Service', () => {
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${MODEL}`);
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
-            searchParams.get('projections').split(';').forEach((p) => expect(p).to.satisfy((p) => p.startsWith('var.') || p.startsWith('meta.')));
-            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satfisfy((s) => s.startsWith('-') || s.startsWith('+')));
-            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satfisfy((s) => s.includes('run.')));
+            searchParams.get('meta').split(';').forEach((p, i) => expect(p).to.equal(OPTIONALS.metadata[i]));
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.startsWith('-') || s.startsWith('+')));
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.includes('run.')));
             expect(searchParams.get('first')).to.equal(OPTIONALS.first);
             expect(searchParams.get('max')).to.equal(OPTIONALS.max);
             expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
