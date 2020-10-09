@@ -20,7 +20,7 @@ function paginate(json, url, options) {
         searchParams.set('first', first);
         url.search = searchParams;
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, { ...options, paginated: false });
+        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         page.allValues = page.allValues.concat(nextPage.values);
         Object.assign(page, nextPage);
         return page;
