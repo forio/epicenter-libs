@@ -103,7 +103,7 @@ export async function query(optionals = {}) {
  * @param {Object}  [optionals={}]      Something meaningful about optionals
  * @returns {Object}                    Something meaningful about returns
  */
-export async function withGroup(groupKey, optionals = {}) {
+export async function forGroup(groupKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -128,7 +128,7 @@ export async function withGroup(groupKey, optionals = {}) {
  * @param {Object}  [optionals={}]      Something meaningful about optionals
  * @returns {Object}                    Something meaningful about returns
  */
-export async function withName(groupName, episodeName, optionals = {}) {
+export async function byName(groupName, episodeName, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
