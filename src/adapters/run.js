@@ -194,8 +194,8 @@ export async function query(model, scope, optionals = {}) {
             ...(sort.attributes || []).map((sorting) => `${sorting.charAt(0)}${prefix('run.', sorting.slice(1))}`),
         ],
         first, max, timeout,
-        var: variables.join(';'),
-        meta: metadata.join(';'),
+        var: variables.length ? variables.join(';') : undefined,
+        meta: metadata.length ? metadata.join(';') : undefined,
     };
 
     return await new Router()
