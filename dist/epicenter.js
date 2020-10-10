@@ -7064,7 +7064,7 @@ var cometdAdapter = new CometdAdapter();
 /*!*********************************!*\
   !*** ./src/adapters/episode.js ***!
   \*********************************/
-/*! exports provided: create, get, query, withGroup, withName, remove */
+/*! exports provided: create, get, query, forGroup, byName, remove */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7072,8 +7072,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "query", function() { return query; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withGroup", function() { return withGroup; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withName", function() { return withName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forGroup", function() { return forGroup; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "byName", function() { return byName; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
@@ -7276,8 +7276,8 @@ function _query() {
   return _query.apply(this, arguments);
 }
 
-function withGroup(_x4) {
-  return _withGroup.apply(this, arguments);
+function forGroup(_x4) {
+  return _forGroup.apply(this, arguments);
 }
 /**
  * Gets episode based on group name and episode name
@@ -7296,8 +7296,8 @@ function withGroup(_x4) {
  * @returns {Object}                    Something meaningful about returns
  */
 
-function _withGroup() {
-  _withGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(groupKey) {
+function _forGroup() {
+  _forGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(groupKey) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7324,11 +7324,11 @@ function _withGroup() {
       }
     }, _callee4);
   }));
-  return _withGroup.apply(this, arguments);
+  return _forGroup.apply(this, arguments);
 }
 
-function withName(_x5, _x6) {
-  return _withName.apply(this, arguments);
+function byName(_x5, _x6) {
+  return _byName.apply(this, arguments);
 }
 /**
  * Deletes an episode
@@ -7346,8 +7346,8 @@ function withName(_x5, _x6) {
  * @returns {Object}                    Something meaningful about returns
  */
 
-function _withName() {
-  _withName = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(groupName, episodeName) {
+function _byName() {
+  _byName = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(groupName, episodeName) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7374,7 +7374,7 @@ function _withName() {
       }
     }, _callee5);
   }));
-  return _withName.apply(this, arguments);
+  return _byName.apply(this, arguments);
 }
 
 function remove(_x7) {
@@ -8109,8 +8109,8 @@ function _query() {
               first: first,
               max: max,
               timeout: timeout,
-              "var": variables.join(';'),
-              meta: metadata.join(';')
+              "var": variables.length ? variables.join(';') : undefined,
+              meta: metadata.length ? metadata.join(';') : undefined
             };
             _context8.next = 6;
             return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
