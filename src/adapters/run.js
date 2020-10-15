@@ -202,7 +202,18 @@ export async function query(model, scope, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, { paginated: true })
+        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
+            paginated: true,
+            // callback: (response) => {
+            //     response.body.values = response.body.values.map((run) => {
+            //         run.variables = variables.reduce((variableMap, key, index) => {
+            //             variableMap[key] = variables[index];
+            //             return variableMap;
+            //         }, {});
+            //         return run;
+            //     });
+            // },
+        })
         .then(({ body }) => body);
 }
 

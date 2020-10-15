@@ -5901,14 +5901,14 @@ function createAccount(_x) {
 } // TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
 
 function _createAccount() {
-  _createAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(options) {
-    var _options$objectType, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+  _createAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(optionals) {
+    var _optionals$objectType, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
 
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            _options$objectType = options.objectType, objectType = _options$objectType === void 0 ? 'personal' : _options$objectType, name = options.name, shortName = options.shortName, adminKey = options.adminKey, subscriptionPlan = options.subscriptionPlan, billingInterval = options.billingInterval;
+            _optionals$objectType = optionals.objectType, objectType = _optionals$objectType === void 0 ? 'personal' : _optionals$objectType, name = optionals.name, shortName = optionals.shortName, adminKey = optionals.adminKey, subscriptionPlan = optionals.subscriptionPlan, billingInterval = optionals.billingInterval;
             _context.next = 3;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().post('/account', {
               body: {
@@ -5943,14 +5943,14 @@ function updateAccount(_x2) {
 }
 
 function _updateAccount() {
-  _updateAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(options) {
-    var _options$objectType2, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+  _updateAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(optionals) {
+    var _optionals$objectType2, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
 
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _options$objectType2 = options.objectType, objectType = _options$objectType2 === void 0 ? 'personal' : _options$objectType2, name = options.name, shortName = options.shortName, adminKey = options.adminKey, subscriptionPlan = options.subscriptionPlan, billingInterval = options.billingInterval;
+            _optionals$objectType2 = optionals.objectType, objectType = _optionals$objectType2 === void 0 ? 'personal' : _optionals$objectType2, name = optionals.name, shortName = optionals.shortName, adminKey = optionals.adminKey, subscriptionPlan = optionals.subscriptionPlan, billingInterval = optionals.billingInterval;
             _context2.next = 3;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().patch('/account', {
               body: {
@@ -7414,11 +7414,133 @@ function _remove() {
 
 /***/ }),
 
+/***/ "./src/adapters/group.js":
+/*!*******************************!*\
+  !*** ./src/adapters/group.js ***!
+  \*******************************/
+/*! exports provided: members, get, update */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "members", function() { return members; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+
+
+
+function members(_x, _x2) {
+  return _members.apply(this, arguments);
+}
+
+function _members() {
+  _members = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(groupKey, optionals) {
+    var accountShortName, projectShortName;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context.next = 3;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/group/member/".concat(groupKey)).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 3:
+            return _context.abrupt("return", _context.sent);
+
+          case 4:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _members.apply(this, arguments);
+}
+
+function get(_x3, _x4) {
+  return _get.apply(this, arguments);
+}
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(groupKey, optionals) {
+    var accountShortName, projectShortName, expired;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, expired = optionals.expired;
+            _context2.next = 3;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              expired: expired
+            }).get("/group/".concat(groupKey)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 3:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 4:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function update(_x5, _x6, _x7) {
+  return _update.apply(this, arguments);
+}
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(groupKey, update, optionals) {
+    var runLimit, accountShortName, projectShortName;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            runLimit = update.runLimit;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch("/group/".concat(groupKey), {
+              body: {
+                runLimit: runLimit
+              }
+            }).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _update.apply(this, arguments);
+}
+
+/***/ }),
+
 /***/ "./src/adapters/index.js":
 /*!*******************************!*\
   !*** ./src/adapters/index.js ***!
   \*******************************/
-/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, Channel */
+/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, Channel */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7429,19 +7551,22 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "authAdapter", function() { return _authentication__WEBPACK_IMPORTED_MODULE_1__; });
 /* harmony import */ var _episode__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./episode */ "./src/adapters/episode.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return _episode__WEBPACK_IMPORTED_MODULE_2__; });
-/* harmony import */ var _presence__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./presence */ "./src/adapters/presence.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return _presence__WEBPACK_IMPORTED_MODULE_3__; });
-/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./project */ "./src/adapters/project.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return _project__WEBPACK_IMPORTED_MODULE_4__; });
-/* harmony import */ var _run__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./run */ "./src/adapters/run.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return _run__WEBPACK_IMPORTED_MODULE_5__; });
-/* harmony import */ var _vault__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./vault */ "./src/adapters/vault.js");
-/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return _vault__WEBPACK_IMPORTED_MODULE_6__; });
-/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _group__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./group */ "./src/adapters/group.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "groupAdapter", function() { return _group__WEBPACK_IMPORTED_MODULE_3__; });
+/* harmony import */ var _presence__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./presence */ "./src/adapters/presence.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return _presence__WEBPACK_IMPORTED_MODULE_4__; });
+/* harmony import */ var _project__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./project */ "./src/adapters/project.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return _project__WEBPACK_IMPORTED_MODULE_5__; });
+/* harmony import */ var _run__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./run */ "./src/adapters/run.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return _run__WEBPACK_IMPORTED_MODULE_6__; });
+/* harmony import */ var _vault__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./vault */ "./src/adapters/vault.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return _vault__WEBPACK_IMPORTED_MODULE_7__; });
+/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+
 
 
 
@@ -8114,7 +8239,16 @@ function _query() {
             };
             _context8.next = 6;
             return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
-              paginated: true
+              paginated: true // callback: (response) => {
+              //     response.body.values = response.body.values.map((run) => {
+              //         run.variables = variables.reduce((variableMap, key, index) => {
+              //             variableMap[key] = variables[index];
+              //             return variableMap;
+              //         }, {});
+              //         return run;
+              //     });
+              // },
+
             }).then(function (_ref8) {
               var body = _ref8.body;
               return body;
@@ -8942,7 +9076,7 @@ function _create() {
 /*!**************************!*\
   !*** ./src/epicenter.js ***!
   \**************************/
-/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
+/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -8973,6 +9107,8 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["episodeAdapter"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "groupAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["groupAdapter"]; });
+
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["presenceAdapter"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["projectAdapter"]; });
@@ -8981,7 +9117,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
 
-/* Main file; defines public interface & load order */
+/* Main file; defines public APIs & load order */
 var version = "3.1.0-alpha";
 
 

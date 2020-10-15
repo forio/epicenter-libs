@@ -1,4 +1,4 @@
-/* Main file; defines public interface & load order */
+/* Main file; defines public APIs & load order */
 const version = VERSION;
 export { version };
 export {
@@ -17,6 +17,7 @@ export {
     accountAdapter,
     authAdapter,
     episodeAdapter,
+    groupAdapter,
     presenceAdapter,
     projectAdapter,
     runAdapter,

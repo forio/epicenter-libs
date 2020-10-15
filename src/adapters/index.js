@@ -1,6 +1,7 @@
 import * as accountAdapter from './account';
 import * as authAdapter from './authentication';
 import * as episodeAdapter from './episode';
+import * as groupAdapter from './group';
 import * as presenceAdapter from './presence';
 import * as projectAdapter from './project';
 import * as runAdapter from './run';
@@ -13,6 +14,7 @@ export {
     authAdapter,
     cometdAdapter,
     episodeAdapter,
+    groupAdapter,
     presenceAdapter,
     projectAdapter,
     runAdapter,

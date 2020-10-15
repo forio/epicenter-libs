@@ -23,6 +23,7 @@ const episodeLoadEl = document.getElementById('episode-load');
 const runQueryEl = document.getElementById('run-query');
 
 const session = authAdapter.getLocalSession();
+window.authAdapter = authAdapter;
 
 /* Configuration */
 if (config.isLocal()) {
