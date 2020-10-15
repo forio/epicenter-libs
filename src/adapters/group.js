@@ -1,6 +1,6 @@
 import { Router } from 'utils';
 
-export async function members(groupKey, optionals) {
+export async function members(groupKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -10,7 +10,7 @@ export async function members(groupKey, optionals) {
         .then(({ body }) => body);
 }
 
-export async function get(groupKey, optionals) {
+export async function get(groupKey, optionals = {}) {
     const { accountShortName, projectShortName, expired } = optionals;
 
     return await new Router()
@@ -22,7 +22,7 @@ export async function get(groupKey, optionals) {
 }
 
 
-export async function update(groupKey, update, optionals) {
+export async function update(groupKey, update, optionals = {}) {
     const { runLimit /* TODO: figure out what else goes here*/} = update;
     const { accountShortName, projectShortName } = optionals;
 
