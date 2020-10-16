@@ -1,6 +1,7 @@
 # Epicenter JavaScript Libs (v3)
 
 Prequisite Node version: 12
+JIRA: https://issues.forio.com/projects/EPILIBS/issues
 
 ## Transition Guide (v2 &rarr; v3)
 * All resources now have a scopeBoundary: Project, Group, Episode, World, Run,
@@ -11,10 +12,7 @@ Prequisite Node version: 12
 
 ## Somes Tenets for Development
 * Code should function in both Browser and Node environments
-* Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API call (**this includes the one that might show up before a `?` in a query**)
-
-## Todos
-* See JIRA: https://issues.forio.com/projects/EPILIBS/issues
+* Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API call (**this includes the one that might show up before a search query**)
 
 ## How to Contribute
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
