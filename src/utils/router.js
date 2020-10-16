@@ -1,12 +1,45 @@
 import fetch from 'cross-fetch';
-import config from '~/config';
-import { EpicenterError, Fault, Result, identification, toQueryString, prefix, errorManager } from 'utils';
+import { EpicenterError, Fault, Result, identification, prefix, errorManager, config } from 'utils';
 
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
+const MAX_URL_LENGTH = 2048;
 
-async function request(url, { method, body, includeAuthorization, inert }) {
+function paginate(json, url, options) {
+    const page = { ...json, allValues: [...json.values] };
+
+    const next = async function() {
+        const searchParams = new URLSearchParams(url.search);
+        const first = page.firstResult + page.maxResults;
+        if (page.allValues.length >= json.totalResults) {
+            page.done = true;
+            return page;
+        }
+
+        searchParams.set('first', first);
+        url.search = searchParams;
+        // eslint-disable-next-line no-use-before-define
+        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        page.allValues = page.allValues.concat(nextPage.values);
+        Object.assign(page, nextPage);
+        return page;
+    };
+
+    const withAll = async function() {
+        // eslint-disable-next-line callback-return
+        const { done, allValues } = await next();
+        if (done) return allValues;
+        return await withAll();
+    };
+
+    page.next = next;
+    page.withAll = withAll;
+    return page;
+}
+
+async function request(url, options) {
+    const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = {
         'Content-type': 'application/json; charset=UTF-8',
     };
@@ -28,11 +61,15 @@ async function request(url, { method, body, includeAuthorization, inert }) {
         throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json'`);
     }
 
+    const json = await response.json();
     if ((response.status >= 200) && (response.status < 400)) {
-        return new Result(response.status, response.headers, await response.json());
+        return new Result(
+            paginated ? paginate(json, url, options) : json,
+            response
+        );
     }
 
-    const error = new Fault(response.status, await response.json());
+    const error = new Fault(json, response);
     if (inert) throw error;
 
     const retry = () => request(url, { method, body, includeAuthorization, inert: true });
@@ -73,11 +110,26 @@ export default class Router {
     }
 
     get searchParams() {
-        return this._searchParams || '';
+        return this._searchParams;
     }
 
-    set searchParams(value) {
-        this._searchParams = toQueryString(value);
+    set searchParams(query) {
+        /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
+        if (typeof query === 'object' && query.constructor === Object) {
+            query = Object.entries(query).reduce((arr, [key, value]) => {
+                if (Array.isArray(value)) {
+                    /* Special case for arrayed param values: use duplicated params here */
+                    return [...arr, ...value.map((v) => [key, v])];
+                }
+                if (value === undefined || value === null) {
+                    /* Skip nullish values */
+                    return arr;
+                }
+                arr.push([key, value]);
+                return arr;
+            }, []);
+        }
+        this._searchParams = query;
     }
 
     withServer(server) {
@@ -118,13 +170,23 @@ export default class Router {
         this.configure();
         const url = new URL(`${this.server}`);
         url.pathname = `api/v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
-        url.search = this.searchParams;
+        url.search = new URLSearchParams(this.searchParams);
         return url;
     }
 
     //Network Requests
     async get(uriComponent, options) {
         const url = this.getURL(uriComponent);
+
+        /* Handle sufficiently large GET requests with POST calls instead */
+        if (url.href.length > MAX_URL_LENGTH) {
+            const newURL = new URL(url.href.split('?')[0]);
+            return this.post(newURL, {
+                ...options,
+                body: url.search,
+            });
+        }
+
         return request(url, {
             includeAuthorization: true,
             ...options,

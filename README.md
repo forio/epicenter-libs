@@ -1,10 +1,6 @@
 # Epicenter JavaScript Libs (v3)
 
-Intended for use w/ Node v12
-
-⚠️ **ATTENTION** -- for newer platform features, you'll need to use the test server: `test.forio.com`; See Jenkins job: https://build.forio.com/view/Ops/job/test-server-start-stop--client-staging--ops--/
-
-UPDATEME: (ideally before a major knowledge transfer to avoid frequent update responsibilities); what follows below is just a few makeshift notes; any formatting, clarification, or additional details you want to tack on are greatly appreciated
+Prequisite Node version: 12
 
 ## Transition Guide (v2 &rarr; v3)
 * All resources now have a scopeBoundary: Project, Group, Episode, World, Run,
@@ -19,6 +15,48 @@ UPDATEME: (ideally before a major knowledge transfer to avoid frequent update re
 
 ## Todos
 * See JIRA: https://issues.forio.com/projects/EPILIBS/issues
+
+## How to Contribute
+1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
+2. Make your changes
+3. Push up your branch and make sure it passes the tests in the pre-push hook
+4. Merge your branch into `master`
+
+## How to Prepare a Release
+1. Test to make sure there are no breaking changes: `npm run single-test`
+1. Update the `package.json` with the to your new version*
+2. Update the change log: `npm run changelog`
+3. Build to the `dist/` folder: `npm run prod`
+4. Commit `package.json` and `CHANGELOG.md` files to `master`
+5. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
+6. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
+
+\*We do not follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we have our own means of versioning:
+```
+Given a version number MAJOR.MINOR.PATCH, increment the:
+
+MAJOR version never -- we'd likely recreate the libs from the ground up before updating this,
+MINOR version when you add incompatible API changes, and
+PATCH version when you make backwards compatible feature additions or bug fixes.
+
+Additional labels for pre-release and build metadata are fine (e.g., `v3.1.0-alpha`)
+```
+
+## How to Build Documentation
+We should figure out a better build process for this one, but for the time being:
+```
+cd documentation
+node index.js
+```
+Will compile an HTML file called `documentation.html` in the same directory.
+
+## How to Test
+```
+npm install             # Installs dependencies for libs
+npm run build           # Builds libs to dist/ folder
+npm run test
+```
+Logs during testing are sent to `browser.log`
 
 ## How to Use Examples (Locally)
 By default, all examples currently go to the `forio-dev/epi-v3` account/project on Epicenter. Examples files are intended to provide a sandbox environment for development, feel free to edit as you wish.
@@ -47,22 +85,3 @@ cd examples/node
 npm install             # Install dependencies for example
 npm start
 ```
-
-## How to Test
-```
-npm install             # Installs dependencies for libs
-npm run build           # Builds libs to dist/ folder
-npm run test
-```
-Logs during testing are sent to `browser.log`
-
-## How to Create a Production-Ready Build
-When you feel you are ready to release new version of the the libs:
-1. On the `develop` branch
-2. Update the `package.json` with the to your new version (following [semver](https://semver.org/) specifications*)
-3. Build to the `dist/` folder: `npm run prod`
-4. Make sure tests pass: `npm run test`
-5. Merge `develop` in to `master`
-6. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
-
-\* ⚠️ We don't truly follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we've lost the semantics for defining a release that *does* introduce a breaking change. **For this reason, for any and all releases that will contain potential breaking changes, we can only default to explicitly stating so in the release notes.** Obviously, try not to introduce any breaking changes.

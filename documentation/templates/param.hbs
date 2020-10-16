@@ -1,0 +1,14 @@
+{{> paramHeader }}
+{{{ descriptionHTML }}}
+{{#if properties}}
+    <dl className="sub-parameters">
+        {{#each properties}}
+            <dt>
+                {{> paramHeader }}
+            </dt>
+            <dd>
+                {{{ descriptionHTML }}}
+            </dd>
+        {{/each}}
+    </dl>
+{{/if}}

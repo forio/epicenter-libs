@@ -4,7 +4,7 @@ import { ENDPOINTS, SESSION_KEY, SESSION, OK_CODE, CREATED_CODE } from './common
 chai.use(require('sinon-chai'));
 
 describe('Run API Service', () => {
-    const { config, runAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
+    const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
     let server;
 
     config.accountShortName = ENDPOINTS.accountShortName;
@@ -27,7 +27,9 @@ describe('Run API Service', () => {
             xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
         });
         server.respondWith('GET', /(.*)\/run/, function(xhr, id) {
+            // Some mutant response
             const RESPONSE = {
+                // getting a run
                 id: '065dfe50-d29d-4b55-a0fd-30868d7dd26c',
                 model: 'model.vmf',
                 account: 'mit',
@@ -35,6 +37,8 @@ describe('Run API Service', () => {
                 saved: false,
                 lastModified: '2014-06-20T04:09:45.738Z',
                 created: '2014-06-20T04:09:45.738Z',
+                // getting many runs
+                values: [],
             };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
@@ -109,7 +113,7 @@ describe('Run API Service', () => {
             expect(reqBody.permit.writeLock).to.equal(OPTIONALS.writeLock);
             expect(reqBody.trackingKey).to.equal(OPTIONALS.trackingKey);
             expect(reqBody.modelFile).to.equal(MODEL);
-            expect(reqBody.morphology).to.equal(OPTIONALS.morphology);
+            expect(reqBody.morphology).to.equal('MANY');
             expect(reqBody.ephemeral).to.equal(OPTIONALS.ephemeral);
             expect(reqBody.modelContext).to.be.an('object').that.is.empty;
             expect(reqBody.executionContext).to.be.an('object').that.is.empty;
@@ -121,10 +125,20 @@ describe('Run API Service', () => {
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.PARTICIPANT);
         }));
-        it('Should use USER when a lock is undefined with other scopes', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
+        it('Should not provide a userKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
+            const req = server.requests.pop();
+            const reqBody = JSON.parse(req.requestBody);
+            expect(reqBody.scope.userKey).to.not.exist;
+        }));
+        it('Should use USER when a lock is undefined with GROUP scope', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
             expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.USER);
+        }));
+        it('Should use the session\'s userKey as an userKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
+            const req = server.requests.pop();
+            const reqBody = JSON.parse(req.requestBody);
+            expect(reqBody.scope.userKey).to.equal(authAdapter.getLocalSession().userKey);
         }));
     });
     describe('Clone', () => {
@@ -257,16 +271,13 @@ describe('Run API Service', () => {
             filter: {
                 variables: ['vartest=23', 'trackingKey=1234', 'something#else@here'],
             },
-            sort: [
-                '-created',
-                //'+trackingKey', //Using the plus sign is incompatible with URLSearchParams.prototype.get, it will convert the plus sign to a space
-            ],
+            sort: {
+                attributes: ['-created', '+trackingKey'],
+            },
             first: '20',
             max: '15',
             timeout: '20',
-            projections: {
-                metadata: ['includedvar1', 'inludedvar2'],
-            },
+            metadata: ['includedvar1', 'inludedvar2'],
         };
         it('Should do a GET', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
             const req = server.requests.pop();
@@ -282,8 +293,9 @@ describe('Run API Service', () => {
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${MODEL}`);
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
-            searchParams.get('projections').split(';').forEach((p) => expect(p).to.satisfy((p) => p.startsWith('var.') || p.startsWith('meta.')));
-            expect(searchParams.get('sort').split(';')).to.deep.equal(OPTIONALS.sort);
+            searchParams.get('meta').split(';').forEach((p, i) => expect(p).to.equal(OPTIONALS.metadata[i]));
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.startsWith('-') || s.startsWith('+')));
+            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.includes('run.')));
             expect(searchParams.get('first')).to.equal(OPTIONALS.first);
             expect(searchParams.get('max')).to.equal(OPTIONALS.max);
             expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);

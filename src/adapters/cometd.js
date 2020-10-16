@@ -1,7 +1,6 @@
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import config from '~/config';
-import { EpicenterError, identification, isNode, isBrowser, errorManager } from 'utils';
+import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils';
 import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
@@ -28,28 +27,19 @@ class CometdAdapter {
     url;
     customCometd;
     defaultCometd;
+    initialization;
     subscriptions = new Map();
     state = DISCONNECTED;
     requireAcknowledgement = true;
-    initialized = false;
 
     get cometd() {
         return this.customCometd || this.defaultCometd;
     }
 
-    async reinit(customCometd, options) {
-        await this.disconnect();
-        this.initialized = false;
-        this.customCometd = customCometd;
-        return this.init(options);
-    }
-
-    async init(options = { logLevel: 'error' }) {
-        if (this.initialized) {
-            return;
-        }
-
-        if (!isNode() && isBrowser()) {
+    async startup(options = { logLevel: 'error' }) {
+        const enabled = await channelsEnabled();
+        if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
+        if (isBrowser()) {
             const cometd = await import('cometd');
             this.defaultCometd = new cometd.CometD();
         }
@@ -63,7 +53,7 @@ class CometdAdapter {
             logLevel: options.logLevel,
         });
 
-        if (!isNode() && isBrowser()) {
+        if (isBrowser()) {
             window.onunload = () => {
                 if (this.cometd.getStatus() === CONNECTED) {
                     this.cometd.reload();
@@ -71,18 +61,24 @@ class CometdAdapter {
                 }
             };
         }
-        this.initialized = true;
     }
 
-    async checkEnabled() {
-        const res = await channelsEnabled();
-        const enabled = res.body;
-        if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
+    async reinit(customCometd, options) {
+        await this.disconnect();
+        this.initialization = undefined;
+        this.customCometd = customCometd;
+        return this.init(options);
+    }
+
+    async init(options) {
+        if (!this.initialization) {
+            this.initialization = this.startup(options);
+        }
+        return this.initialization;
     }
 
     // Connects to CometD server
     async handshake(options = {}) {
-        await this.checkEnabled();
         await this.init();
 
         if (this.cometd.getStatus() !== DISCONNECTED) {

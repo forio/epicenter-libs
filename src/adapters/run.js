@@ -1,17 +1,41 @@
-import { EpicenterError, Router, prefix } from 'utils';
+import { EpicenterError, Router, prefix, identification } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
+/**
+ * Run API adapters -- use this to create, update, delete, and manage your runs
+ * @namespace runAdapter
+ */
 
+
+/**
+ * Create a run.
+ *
+ * By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
+ * @memberof runAdapter
+ * @example
+ *
+ * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
+ * runAdapter.create('model.py', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
+ * });
+ * @param {string}  model               Name of your model file
+ * @param {Object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @returns {Object}                    Something meaningful about returns
+ */
 export async function create(model, scope, optionals = {}) {
-    const { scopeBoundary, scopeKey, pseudonymKey } = scope;
+    const { scopeBoundary, scopeKey } = scope;
     const {
-        accountShortName, projectShortName, readLock, writeLock,
-        morphology, ephemeral, trackingKey, modelContext, executionContext,
+        accountShortName, projectShortName, readLock, writeLock, userKey,
+        ephemeral, trackingKey, modelContext, executionContext,
     } = optionals;
 
-    const defaultLock = scopeBoundary === SCOPE_BOUNDARY.WORLD ?
-        LOCK_TYPE.PARTICIPANT :
-        LOCK_TYPE.USER;
+    const { WORLD } = SCOPE_BOUNDARY;
+    const { PARTICIPANT, USER } = LOCK_TYPE;
+    const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -21,22 +45,32 @@ export async function create(model, scope, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    pseudonymKey,
+                    userKey: scopeBoundary === WORLD ?
+                        undefined :
+                        userKey ?? identification.session.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
                     writeLock: writeLock || defaultLock,
                 },
-                morphology,
+                morphology: 'MANY',
                 trackingKey,
                 modelFile: model,
                 modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
                 executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
                 ephemeral,
             },
-        });
+        }).then(({ body }) => body);
 }
 
+/**
+ * Clone a run
+ * @memberof runAdapter
+ *
+ * @param {string}  runKey          Run's key
+ * @param {Object}  [optionals={}]  Object for all optional fields
+ * @returns {Object}                Response with the run in the "body"
+ */
 export async function clone(runKey, optionals = {}) {
     const {
         accountShortName, projectShortName, ephemeral,
@@ -52,7 +86,7 @@ export async function clone(runKey, optionals = {}) {
                 executionContext,
                 ephemeral,
             },
-        });
+        }).then(({ body }) => body);
 }
 
 export async function restore(runKey, optionals = {}) {
@@ -69,7 +103,7 @@ export async function restore(runKey, optionals = {}) {
                 executionContext,
                 ephemeral,
             },
-        });
+        }).then(({ body }) => body);
 }
 
 export async function rewind(runKey, steps, optionals = {}) {
@@ -86,7 +120,7 @@ export async function rewind(runKey, steps, optionals = {}) {
                 modelContext,
                 ephemeral,
             },
-        });
+        }).then(({ body }) => body);
 }
 
 export async function update(runKey, update, optionals = {}) {
@@ -108,7 +142,7 @@ export async function update(runKey, update, optionals = {}) {
                 hidden,
                 closed,
             },
-        });
+        }).then(({ body }) => body);
 }
 
 export async function remove(runKey, optionals = {}) {
@@ -116,7 +150,9 @@ export async function remove(runKey, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .delete(`/run/${runKey}`);
+        .delete(`/run/${runKey}`)
+        .then(({ body }) => body);
+
 }
 
 export async function get(runKey, optionals = {}) {
@@ -124,48 +160,61 @@ export async function get(runKey, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/${runKey}`);
+        .get(`/run/${runKey}`)
+        .then(({ body }) => body);
 }
 
-const MAX_URL_LENGTH = 2048;
+
+/**
+ * Queries for runs. Use this to look u
+ * @memberof runAdapter
+ *
+ * @param {string}  model               Name of your model file
+ * @param {Object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {Object}  [optionals={}]      Something meaningful about optionals
+ * @param {Filter}  [optionals.filter]  Filter Object
+ * @returns {Object}                    Something meaningful about returns
+ */
 export async function query(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        filter = {}, sort = [], first, max, timeout, projections = {},
+        filter = {}, sort = {}, first, max, timeout, variables = [], metadata = [],
         accountShortName, projectShortName,
     } = optionals;
 
-    const query = {
+    const searchParams = {
         filter: [
             ...(filter.variables || []).map((statement) => prefix('var.', statement)),
             ...(filter.metadata || []).map((statement) => prefix('meta.', statement)),
-            ...(filter.attr || []).map((statement) => prefix('run.', statement)),
+            ...(filter.attributes || []).map((statement) => prefix('run.', statement)),
         ].join(';'),
-        sort: sort.join(';'),
-        first,
-        max,
-        timeout,
-        projections: [
-            ...(projections.variables || []).map((name) => prefix('var.', name)),
-            ...(projections.metadata || []).map((name) => prefix('meta.', name)),
-            ...(projections.attr || []).map((name) => prefix('run.', name)),
-        ].join(';'),
+        sort: [
+            ...(sort.attributes || []).map((sorting) => `${sorting.charAt(0)}${prefix('run.', sorting.slice(1))}`),
+        ],
+        first, max, timeout,
+        var: variables.length ? variables.join(';') : undefined,
+        meta: metadata.length ? metadata.join(';') : undefined,
     };
-    const uriComponent = `/run/${scopeBoundary}/${scopeKey}/${model}`;
-    const router = new Router()
+
+    return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withSearchParams(query);
-
-    const url = await router.getURL(uriComponent);
-    return encodeURI(url.toString()).length < MAX_URL_LENGTH ?
-        router.get(uriComponent) :
-        new Router()
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .post(uriComponent, {
-                body: {/* TODO: put post body here */},
-            });
+        .withSearchParams(searchParams)
+        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
+            paginated: true,
+            // callback: (response) => {
+            //     response.body.values = response.body.values.map((run) => {
+            //         run.variables = variables.reduce((variableMap, key, index) => {
+            //             variableMap[key] = variables[index];
+            //             return variableMap;
+            //         }, {});
+            //         return run;
+            //     });
+            // },
+        })
+        .then(({ body }) => body);
 }
 
 export async function introspect(model, optionals = {}) {
@@ -173,7 +222,9 @@ export async function introspect(model, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/run/introspect/${model}`);
+        .get(`/run/introspect/${model}`)
+        .then(({ body }) => body);
+
 }
 
 export async function operation(runKey, name, args = [], optionals = {}) {
@@ -191,11 +242,15 @@ export async function operation(runKey, name, args = [], optionals = {}) {
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
         .post(`/run/operation${uriComponent}`, {
-            body: { name, arguments: args },
-        });
+            body: {
+                name,
+                arguments: args,
+                objectType: 'execute', // TODO: remove this when platform fixes this so that it's not manually required
+            },
+        }).then(({ body }) => body);
 }
 
-export async function getVariables(runKey, variables, optionals) {
+export async function getVariables(runKey, variables, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -210,7 +265,9 @@ export async function getVariables(runKey, variables, optionals) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/variable${uriComponent}`);
+        .get(`/run/variable${uriComponent}`)
+        .then(({ body }) => body);
+
 }
 
 export async function getVariable(runKey, variable, optionals = {}) {
@@ -225,9 +282,19 @@ export async function getVariable(runKey, variable, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams({ timeout, ritual })
-        .get(`/run/variable/${runKey}/${variable}`);
-}
+        .get(`/run/variable/${runKey}/${variable}`)
+        .then(({ body }) => body);
 
+}
+/**
+ * Updates model variables for the run
+ * @memberof runAdapter
+ *
+ * @param {string}  runKey      Identifier for your run
+ * @param {Object}  update      Object with the key-value pairs you would like to update in the model
+ * @param {Object}  optionals   Something meaningful about optionals
+ * @returns {Object}            Object with the variables & new values that were updated
+ */
 export async function updateVariables(runKey, update, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -242,7 +309,9 @@ export async function updateVariables(runKey, update, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .patch(`/run/variable${uriComponent}`, { body: update });
+        .patch(`/run/variable${uriComponent}`, { body: update })
+        .then(({ body }) => body);
+
 }
 
 export async function getMetadata(runKey, variables, optionals = {}) {
@@ -260,7 +329,9 @@ export async function getMetadata(runKey, variables, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/meta${uriComponent}`);
+        .get(`/run/meta${uriComponent}`)
+        .then(({ body }) => body);
+
 }
 
 export async function updateMetadata(runKey, update, optionals = {}) {
@@ -277,7 +348,9 @@ export async function updateMetadata(runKey, update, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .patch(`/run/meta${uriComponent}`, { body: update });
+        .patch(`/run/meta${uriComponent}`, { body: update })
+        .then(({ body }) => body);
+
 }
 
 export async function action(runKey, actionList, optionals = {}) {
@@ -294,7 +367,9 @@ export async function action(runKey, actionList, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .post(`/run/action${uriComponent}`, { body: actionList });
+        .post(`/run/action${uriComponent}`, { body: actionList })
+        .then(({ body }) => body);
+
 }
 
 async function serial(runKey, operations, optionals) {
@@ -304,8 +379,8 @@ async function serial(runKey, operations, optionals) {
     }));
 
     //Perform all operations, sequentially
-    return normalizedOps.reduce((promiseChain, { name, params }) => {
-        return promiseChain.then(() => operation(runKey, name, params, optionals));
+    return normalizedOps.reduce((promise, { name, params }) => {
+        return promise.then(() => operation(runKey, name, params, optionals));
     }, Promise.resolve());
 }
 
