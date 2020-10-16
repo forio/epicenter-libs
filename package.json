@@ -14,7 +14,7 @@
     "build-node:prod": "webpack --config webpack.node.prod.js",
     "test": "karma start --browsers ChromeHeadless karma.conf.js",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.js --single-run",
-    "gen-changelog": "echo 'HAH'"
+    "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s"
   },
   "pre-push": {
     "run": [
@@ -24,10 +24,10 @@
   "dependencies": {
     "@babel/runtime": "^7.9.2",
     "cometd": "^4.0.7",
-    "cross-fetch": "^3.0.4"
+    "cross-fetch": "^3.0.6"
   },
   "devDependencies": {
-    "@babel/cli": "^7.5.5",
+    "@babel/cli": "^7.12.1",
     "@babel/core": "^7.9.0",
     "@babel/plugin-proposal-class-properties": "^7.5.5",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",
@@ -40,6 +40,7 @@
     "babel-loader": "^8.1.0",
     "chai": "^4.2.0",
     "clean-webpack-plugin": "^3.0.0",
+    "conventional-changelog-cli": "^2.1.0",
     "eslint": "^6.1.0",
     "karma": "^3.1.4",
     "karma-chai": "^0.1.0",
