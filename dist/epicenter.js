@@ -9052,10 +9052,64 @@ function _create() {
 
 /***/ }),
 
-/***/ "./src/config.js":
-/*!***********************!*\
-  !*** ./src/config.js ***!
-  \***********************/
+/***/ "./src/epicenter.js":
+/*!**************************!*\
+  !*** ./src/epicenter.js ***!
+  \**************************/
+/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["SCOPE_BOUNDARY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["RITUAL"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
+
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["config"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["errorManager"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["Router"]; });
+
+/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["Channel"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "accountAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["accountAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "authAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["authAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["episodeAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "groupAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["groupAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["presenceAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["projectAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["runAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
+
+/* Main file; defines public APIs & load order */
+var version = "3.1.0-alpha";
+
+
+
+
+
+/***/ }),
+
+/***/ "./src/utils/config.js":
+/*!*****************************!*\
+  !*** ./src/utils/config.js ***!
+  \*****************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -9251,60 +9305,6 @@ var config = new Config();
  */
 
 /* harmony default export */ __webpack_exports__["default"] = (config);
-
-/***/ }),
-
-/***/ "./src/epicenter.js":
-/*!**************************!*\
-  !*** ./src/epicenter.js ***!
-  \**************************/
-/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "version", function() { return version; });
-/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["SCOPE_BOUNDARY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["RITUAL"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
-
-/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["config"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["errorManager"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["Router"]; });
-
-/* harmony import */ var adapters__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! adapters */ "./src/adapters/index.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["Channel"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "accountAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["accountAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "authAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["authAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "episodeAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["episodeAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "groupAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["groupAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "presenceAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["presenceAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "projectAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["projectAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["runAdapter"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
-
-/* Main file; defines public APIs & load order */
-var version = "3.1.0-alpha";
-
-
-
-
 
 /***/ }),
 
@@ -10003,17 +10003,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ~/config */ "./src/config.js");
-/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
-/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
 
 
 
 
 
-
-var COOKIE = utils_constants__WEBPACK_IMPORTED_MODULE_5__["BROWSER_STORAGE_TYPE"].COOKIE,
-    SESSION = utils_constants__WEBPACK_IMPORTED_MODULE_5__["BROWSER_STORAGE_TYPE"].SESSION;
+var COOKIE = utils_constants__WEBPACK_IMPORTED_MODULE_4__["BROWSER_STORAGE_TYPE"].COOKIE,
+    SESSION = utils_constants__WEBPACK_IMPORTED_MODULE_4__["BROWSER_STORAGE_TYPE"].SESSION;
 var SESSION_KEY = Symbol('com.forio.epicenter.session');
 var EPI_SSO_KEY = 'epicenter.v3.sso';
 
@@ -10024,7 +10022,7 @@ var Identification = /*#__PURE__*/function () {
     _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_2___default()(this, "type", void 0);
 
     if (storeType !== COOKIE && storeType !== SESSION) {
-      throw new utils__WEBPACK_IMPORTED_MODULE_4__["EpicenterError"]("Invalid Storage Type: \"".concat(storeType, "\", please use \"").concat(COOKIE, "\" or \"").concat(SESSION, "\"."));
+      throw new utils__WEBPACK_IMPORTED_MODULE_3__["EpicenterError"]("Invalid Storage Type: \"".concat(storeType, "\", please use \"").concat(COOKIE, "\" or \"").concat(SESSION, "\"."));
     }
 
     this.type = storeType;
@@ -10034,15 +10032,15 @@ var Identification = /*#__PURE__*/function () {
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1___default()(Identification, [{
     key: "getStore",
     value: function getStore() {
-      if (Object(utils__WEBPACK_IMPORTED_MODULE_4__["isNode"])()) return utils__WEBPACK_IMPORTED_MODULE_4__["NodeStore"];
+      if (Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return utils__WEBPACK_IMPORTED_MODULE_3__["NodeStore"];
 
       switch (this.type) {
         case SESSION:
-          return utils__WEBPACK_IMPORTED_MODULE_4__["SessionStore"];
+          return utils__WEBPACK_IMPORTED_MODULE_3__["SessionStore"];
 
         case COOKIE:
         default:
-          return utils__WEBPACK_IMPORTED_MODULE_4__["CookieStore"];
+          return utils__WEBPACK_IMPORTED_MODULE_3__["CookieStore"];
       }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
@@ -10051,11 +10049,11 @@ var Identification = /*#__PURE__*/function () {
     key: "getSessionPath",
     value: function getSessionPath(session) {
       var mySession = session || this.session;
-      if (!mySession || Object(utils__WEBPACK_IMPORTED_MODULE_4__["isNode"])()) return '';
+      if (!mySession || Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return '';
       var accountShortName = mySession.accountShortName,
           projectShortName = mySession.projectShortName,
           objectType = mySession.objectType;
-      var isLocal = _config__WEBPACK_IMPORTED_MODULE_3__["default"].isLocal();
+      var isLocal = utils__WEBPACK_IMPORTED_MODULE_3__["config"].isLocal();
       var isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
       var isEpicenterDomain = !isLocal && !isCustomDomain;
 
@@ -10070,19 +10068,19 @@ var Identification = /*#__PURE__*/function () {
   }, {
     key: "consumeSSO",
     value: function consumeSSO() {
-      if (Object(utils__WEBPACK_IMPORTED_MODULE_4__["isNode"])()) return;
+      if (Object(utils__WEBPACK_IMPORTED_MODULE_3__["isNode"])()) return;
       /* Double parse here b/c the backend serializes it as a string; the first parse
        * converts it into a json string, the second parse converts the json string into
        * json. Yes, it's weird, no, we can't change it (unless we want to rewrite
        * Interface Builder code to accommodate) */
 
-      var session = JSON.parse(JSON.parse("\"".concat(utils__WEBPACK_IMPORTED_MODULE_4__["cookies"].getItem(EPI_SSO_KEY), "\"")));
+      var session = JSON.parse(JSON.parse("\"".concat(utils__WEBPACK_IMPORTED_MODULE_3__["cookies"].getItem(EPI_SSO_KEY), "\"")));
 
       if (session) {
         var accountShortName = session.accountShortName,
             projectShortName = session.projectShortName;
         this.session = session;
-        utils__WEBPACK_IMPORTED_MODULE_4__["cookies"].removeItem(EPI_SSO_KEY, {
+        utils__WEBPACK_IMPORTED_MODULE_3__["cookies"].removeItem(EPI_SSO_KEY, {
           domain: ".".concat(window.location.hostname),
           path: "/app/".concat(accountShortName, "/").concat(projectShortName)
         });
@@ -10122,7 +10120,7 @@ var identification = new Identification(COOKIE);
 /*!****************************!*\
   !*** ./src/utils/index.js ***!
   \****************************/
-/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, isBrowser, isNode, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, errorManager, identification, Router */
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, isBrowser, isNode, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, config, identification, errorManager, Router */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10168,14 +10166,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _result__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./result */ "./src/utils/result.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Result", function() { return _result__WEBPACK_IMPORTED_MODULE_6__["default"]; });
 
-/* harmony import */ var _error_manager__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./error-manager */ "./src/utils/error-manager.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return _error_manager__WEBPACK_IMPORTED_MODULE_7__["default"]; });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./config */ "./src/utils/config.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return _config__WEBPACK_IMPORTED_MODULE_7__["default"]; });
 
 /* harmony import */ var _identification__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./identification */ "./src/utils/identification.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "identification", function() { return _identification__WEBPACK_IMPORTED_MODULE_8__["default"]; });
 
-/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./router */ "./src/utils/router.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return _router__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+/* harmony import */ var _error_manager__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./error-manager */ "./src/utils/error-manager.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "errorManager", function() { return _error_manager__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+
+/* harmony import */ var _router__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./router */ "./src/utils/router.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Router", function() { return _router__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+
 
 
 
