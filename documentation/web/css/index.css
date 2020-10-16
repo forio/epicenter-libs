@@ -10,4 +10,7 @@ dl {
     align-items: center;
     column-gap: 1rem;
 }
+body {
+    padding: 2rem 3rem;
+}
 

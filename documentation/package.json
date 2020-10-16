@@ -11,10 +11,12 @@
   "author": "Forio",
   "dependencies": {
     "documentation": "^12.1.4",
-    "handlebars": "^4.7.3",
+    "handlebars": "^4.7.6",
     "html-minifier": "^4.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "live-server": "^1.2.1",
+    "nodemon": "^2.0.2",
+    "watch": "^1.0.2"
   }
 }
