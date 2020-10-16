@@ -1,5 +1,5 @@
 import { authAdapter } from 'adapters';
-import { identification, isNode, access } from 'utils';
+import { identification, isNode } from 'utils';
 
 
 const handleByRelog = (error) => {
@@ -20,7 +20,7 @@ const handleUnknown = () => {
 
 const handleByLoginMethod = (error) => {
     const { session } = identification;
-    const loginType = access(session, ['loginMethod', 'objectType']);
+    const loginType = session?.loginMethod?.objectType;
     switch (loginType) {
         case 'sso': return handleSSO(error);
         case 'none':return handleUnknown(error);
@@ -36,7 +36,8 @@ class ErrorManager {
             identifier: (error) => error.status === UNAUTHORIZED,
             handle: (error, retry) => {
                 if (error.code === 'AUTHENTICATION_INVALIDATED') {
-                    return authAdapter.upgrade({ objectType: 'user', inert: true })
+                    const groupKey = identification.session.groupKey;
+                    return authAdapter.upgrade(groupKey, { objectType: 'user', inert: true })
                         .then(() => retry())
                         .catch(() => handleByLoginMethod(error));
                 }

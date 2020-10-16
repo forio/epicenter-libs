@@ -1,4 +1,8 @@
-import { config, authAdapter, presenceAdapter, Channel, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
+import {
+    config,
+    authAdapter, episodeAdapter, presenceAdapter, runAdapter,
+    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,
+} from 'epicenter';
 import '../css/common.css';
 
 
@@ -9,11 +13,17 @@ const logoutEl = document.getElementById('logout');
 const usersEl = document.getElementById('users');
 const mainEl = document.getElementById('main');
 const formEl = document.getElementById('form');
-const inputEl = document.getElementById('text-box');
+const chatInputEl = document.getElementById('text-box');
 const submitEl = document.getElementById('submit');
 const chatBoxEl = document.getElementById('chat-box');
+const episodeNameEl = document.getElementById('episode-name');
+const episodeListEl = document.getElementById('episode-list');
+const episodeSaveEl = document.getElementById('episode-save');
+const episodeLoadEl = document.getElementById('episode-load');
+const runQueryEl = document.getElementById('run-query');
 
 const session = authAdapter.getLocalSession();
+window.authAdapter = authAdapter;
 
 /* Configuration */
 if (config.isLocal()) {
@@ -23,6 +33,7 @@ if (config.isLocal()) {
 
 const initFacilitator = () => {
     mainEl.classList.add('is-facilitator');
+    /* Subscribe to Chat */
     new Channel({
         scopeBoundary: SCOPE_BOUNDARY.GROUP,
         scopeKey: session.groupKey,
@@ -33,6 +44,7 @@ const initFacilitator = () => {
         messageEl.innerText = `${user}: ${text}`;
         chatBoxEl.append(messageEl);
     });
+    /* Subscribe to Presence */
     new Channel({
         scopeBoundary: SCOPE_BOUNDARY.GROUP,
         scopeKey: session.groupKey,
@@ -40,7 +52,7 @@ const initFacilitator = () => {
     }).subscribe((data) => {
         const { content, type } = data;
         const messageEl = document.createElement('div');
-        let text = 'done something entirely novel and unknown';
+        let text = `done something entirely novel and unknown (${type})`;
         if (type === 'login') text = 'joined the room';
         if (type === 'logout') text = 'left the room';
         const user = content.user.displayName;
@@ -48,6 +60,33 @@ const initFacilitator = () => {
         messageEl.classList.add('system');
         chatBoxEl.append(messageEl);
     });
+    /* Facilitator Episode Management */
+    episodeSaveEl.onclick = (e) => {
+        const name = episodeNameEl.value;
+        episodeAdapter.create(name, session.groupName);
+    };
+    episodeLoadEl.onclick = (e) => {
+        episodeAdapter.get().then((episodes) => {
+            episodeListEl.innerHTML = '';
+            episodes.forEach((episode) => {
+                const item = document.createElement('li');
+                item.innerText = `${episode.name}${episode.draft ? ' (Draft)' : ''}`;
+                episodeListEl.append(item);
+            });
+        });
+    };
+    runQueryEl.onclick = (e) => {
+        runAdapter.query('model.xlsx', {
+            scopeBoundary: SCOPE_BOUNDARY.GROUP,
+            scopeKey: session.groupKey,
+        }, {
+            filter: { attributes: ['hidden!=true'] },
+            sort: ['-run.created'],
+            projections: { variables: ['Step', 'unit_sales', 'prices', 'profits', 'include_price_protection'] },
+        }).then((page) => {
+            console.log('%c some page', 'font-size: 20px; color: #FB15B9FF;', page);
+        });
+    };
 };
 
 const initStudent = () => {
@@ -57,7 +96,7 @@ const initStudent = () => {
     formEl.onsubmit = (e) => {
         e.preventDefault();
         if (waiting) return;
-        const value = inputEl.value;
+        const value = chatInputEl.value;
         new Channel({
             scopeBoundary: SCOPE_BOUNDARY.GROUP,
             scopeKey: session.groupKey,
@@ -67,7 +106,7 @@ const initStudent = () => {
             text: value,
         });
         waiting = true;
-        inputEl.value = '';
+        chatInputEl.value = '';
         submitEl.disabled = true;
         submitEl.innerText = 'Sent';
         setTimeout(() => {
@@ -88,7 +127,7 @@ const load = () => {
     }
     displayNameEl.innerText = session.displayName;
 
-    /* Handle onclicks */
+    /* Handle generic onclicks */
     logoutEl.onclick = (e) => {
         authAdapter.logout().then(() => {
             window.location.href = '/login.html';
@@ -98,8 +137,7 @@ const load = () => {
         if (presenceEl.innerText !== 'Presence') return;
 
         presenceEl.innerText = 'Fetching';
-        presenceAdapter.forGroup(session.groupKey).then((res) => {
-            const membersOnline = res.body;
+        presenceAdapter.forGroup(session.groupKey).then((membersOnline) => {
             usersEl.innerHTML = '';
             membersOnline.forEach((member) => {
                 const item = document.createElement('li');

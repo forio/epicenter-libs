@@ -5,6 +5,8 @@ export async function channelsEnabled(optionals = {}) {
     const response = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get('/project/channel/isEnabled');
+        .get('/project/channel/isEnabled')
+        .then(({ body }) => body);
+
     return response;
 }
