@@ -63,14 +63,20 @@ npm run test
 ```
 Logs during testing are sent to `browser.log`
 
-## How to Create a Production-Ready Build
-When you feel you are ready to release new version of the the libs:
-1. On the `develop` branch
-2. Update the `package.json` with the to your new version*
+## How to Contribute
+1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
+2. Make your changes
+3. Push up your branch and make sure it passes the tests in the pre-push hook
+4. Merge your branch into `master`
+
+## How to Prepare a Release
+1. Test to make sure there are no breaking changes: `npm run single-test`
+1. Update the `package.json` with the to your new version*
+2. Update the change log: `npm run changelog`
 3. Build to the `dist/` folder: `npm run prod`
-4. Make sure tests pass: `npm run test`
-5. Merge `develop` in to `master`
-6. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
+4. Commit `package.json` and `CHANGELOG.md` files to `master`
+5. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
+6. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
 
 \*We do not follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we have our own means of versioning:
 ```
@@ -78,7 +84,7 @@ Given a version number MAJOR.MINOR.PATCH, increment the:
 
 MAJOR version never -- we'd likely recreate the libs from the ground up before updating this,
 MINOR version when you add incompatible API changes, and
-PATCH version when you make backwards compatible feature additions and bug fixes.
+PATCH version when you make backwards compatible feature additions or bug fixes.
 
 Additional labels for pre-release and build metadata are fine (e.g., `v3.1.0-alpha`)
 ```
@@ -90,3 +96,4 @@ cd documentation
 node index.js
 ```
 Will compile an HTML file called `documentation.html` in the same directory.
+
