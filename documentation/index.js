@@ -3,9 +3,8 @@ const watch = require('watch');
 const liveServer = require('live-server');
 const document = require('./document');
 
-console.log('%c ehehehe', 'font-size: 20px; color: #FB15B9FF;', document);
-watch.watchTree('../src', document);
-watch.watchTree('templates/', document);
+watch.watchTree('../src', () => document(true));
+watch.watchTree('templates/', () => document(true));
 
 liveServer.start({
     port: 8000, // Set the server port. Defaults to 8080.

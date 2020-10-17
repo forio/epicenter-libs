@@ -16,6 +16,7 @@ const minify = require('html-minifier').minify;
 const templates = {};
 const getTemplate = (name, useCache) => {
     if (!useCache) return fs.readFileSync(path.join(__dirname, `templates/${name}.hbs`), { encoding: 'UTF-8' });
+
     if (!templates[name]) {
         templates[name] = fs.readFileSync(path.join(__dirname, `templates/${name}.hbs`), { encoding: 'UTF-8' });
     }
