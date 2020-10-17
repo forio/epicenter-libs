@@ -22,12 +22,13 @@ JIRA: https://issues.forio.com/projects/EPILIBS/issues
 
 ## How to Prepare a Release
 1. Test to make sure there are no breaking changes: `npm run single-test`
-1. Update the `package.json` with the to your new version*
-2. Update the change log: `npm run changelog`
-3. Build to the `dist/` folder: `npm run prod`
-4. Commit `package.json` and `CHANGELOG.md` files to `master`
-5. Tag `master` with the same version you used in step 2 (prefix w/ a 'v')
-6. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
+2. Make sure you have the latest tags from master: `git fetch origin`
+3. Update the `package.json` with the to your new version*
+4. Update the change log: `npm run changelog`
+5. Build to the `dist/` folder: `npm run prod`
+6. Commit `package.json` and `CHANGELOG.md` files to `master`
+7. Tag `master` with the same version you used in step 3 (prefix with 'v')
+8. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
 
 \*We do not follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we have our own means of versioning:
 ```
