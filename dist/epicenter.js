@@ -1,4 +1,4 @@
-/*! Epicenter v3.1.0-alpha */
+/*! Epicenter v3.1.0 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -9098,7 +9098,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
 
 /* Main file; defines public APIs & load order */
-var version = "3.1.0-alpha";
+var version = "3.1.0";
 
 
 
