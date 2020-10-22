@@ -2,9 +2,9 @@
 // Document relevant files to JSON form
 // Parse JSON format to Handlerbars ready objects
 // Generate HTML with Handlerbars
-// Use these libs:
-// https://github.com/markedjs/marked
-// https://highlightjs.org/download/
+// Consider using these libs:
+// https://github.com/markedjs/marked -- converts markdown to HTML so that we can put markdown into our comments if we want
+// https://highlightjs.org/download/  -- does syntax highlighting for our code examples
 
 
 const fs = require('fs');
@@ -16,7 +16,6 @@ const minify = require('html-minifier').minify;
 const templates = {};
 const getTemplate = (name, useCache) => {
     if (!useCache) return fs.readFileSync(path.join(__dirname, `templates/${name}.hbs`), { encoding: 'UTF-8' });
-
     if (!templates[name]) {
         templates[name] = fs.readFileSync(path.join(__dirname, `templates/${name}.hbs`), { encoding: 'UTF-8' });
     }
@@ -112,12 +111,10 @@ Handlebars.registerPartial('paramHeader', getTemplate('param-header'));
 console.log('Starting documentation...');
 
 const document = (isLocal) => documentation.build('../src/**', { config: path.join(__dirname, 'documentation.yml') }).then((json) => {
-    const index = getTemplate('index', isLocal);
+    const index = getTemplate('index', !isLocal);
     const apis = json.map(parseJSON);
-    const docs = Handlebars.compile(index)({ apis });
-    // const docs = minify(Handlebars.compile(index)({ apis }));
-    // fs.writeFileSync(path.join(__dirname, 'documentation.raw.json'), JSON.stringify(json));
-    // fs.writeFileSync(path.join(__dirname, 'documentation.json'), JSON.stringify(apis));
+    const html = Handlebars.compile(index)({ apis });
+    const docs = isLocal ? minify(html, { collapseWhitespace: true }) : html;
     fs.writeFileSync(path.join(__dirname, 'web/index.html'), docs);
 });
 

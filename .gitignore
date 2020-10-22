@@ -3,6 +3,3 @@ node_modules/
 .DS_Store
 *.log
 
-documentation.raw.json
-documentation.json
-documentation.html

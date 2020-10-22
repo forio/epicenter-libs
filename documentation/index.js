@@ -4,7 +4,7 @@ const liveServer = require('live-server');
 const document = require('./document');
 
 watch.watchTree('../src', () => document(true));
-watch.watchTree('templates/', () => document(true));
+watch.watchTree('./templates', () => document(true));
 
 liveServer.start({
     port: 8000, // Set the server port. Defaults to 8080.
