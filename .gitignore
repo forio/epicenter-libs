@@ -3,3 +3,9 @@ node_modules/
 .DS_Store
 *.log
 
+# Parcel
+.cache/
+examples/**/dist/
+
+# Debugging file for documentation generation
+documentation.json
