@@ -157,21 +157,24 @@
 //     load();
 // }
 
-
-import { authAdapter, config } from 'epicenter';
-
-/* Configuration */
-if (config.isLocal()) {
-    config.accountShortName = 'forio-dev';
-    config.projectShortName = 'epi-v3';
-}
+require('./common');
+import { authAdapter } from 'epicenter';
 
 const session = authAdapter.getLocalSession();
-console.log('%c asda', 'font-size: 20px; color: #FB15B9FF;', session);
 
 /* Define DOM elements */
 const displayNameEl = document.getElementById('display-name');
 const groupRoleEl = document.getElementById('group-role');
+const logoutEl = document.getElementById('logout');
+
+logoutEl.onclick = (e) => {
+    e.target.disabled = true;
+    authAdapter.logout().then(() => {
+        displayNameEl.textContent = 'stranger';
+        groupRoleEl.textContent = 'not currently signed in on Epicenter';
+        e.target.disabled = false;
+    });
+};
 
 if (session) {
     displayNameEl.textContent = session.displayName;

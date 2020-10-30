@@ -27,7 +27,9 @@ if (query.error) {
 
 document.getElementById('submit').onclick = (e) => {
     e.preventDefault();
+    if (e.target.innerText !== 'Submit') return;
 
+    e.target.innerHTML = 'Logging in';
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
     const groupEl = document.getElementById('group');
@@ -36,13 +38,20 @@ document.getElementById('submit').onclick = (e) => {
     authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
+        groupKey: groupEl.value,
     }).then((session) => {
-        console.log('%c asdwasd', 'font-size: 20px; color: #FB15B9FF;', session);
         if (!session.groupKey) {
-            // groupAdapter.forUser(session.userKey)
-
-            groupEl.classList.add('visible');
-            groupLabelEl.classList.add('visible');
+            groupAdapter.getSessionGroups().then((groups) => {
+                groups.forEach(({ name, groupKey }) => {
+                    const optionEl = document.createElement('option');
+                    optionEl.value = groupKey;
+                    optionEl.innerHTML = name;
+                    groupEl.append(optionEl);
+                });
+                groupEl.classList.add('visible');
+                groupLabelEl.classList.add('visible');
+                e.target.innerHTML = 'Submit';
+            });
         } else {
             window.location.href = '/index.html';
         }
