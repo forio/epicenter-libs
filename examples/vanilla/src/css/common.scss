@@ -18,12 +18,13 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100%;
+    min-height: 100vh;
     margin: 0;
 }
 
 main {
     width: 30rem;
+    margin: 1rem 0;
 }
 
 fieldset {
