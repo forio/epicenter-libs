@@ -268,12 +268,8 @@ describe('Run API Service', () => {
             scopeKey: '123456789',
         };
         const OPTIONALS = {
-            filter: {
-                variables: ['vartest=23', 'trackingKey=1234', 'something#else@here'],
-            },
-            sort: {
-                attributes: ['-created', '+trackingKey'],
-            },
+            filter: ['var.vartest=23', 'var.trackingKey=1234', 'var.something#else@here'],
+            sort: ['-run.created', '+run.trackingKey'],
             first: '20',
             max: '15',
             timeout: '20',

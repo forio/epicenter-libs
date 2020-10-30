@@ -53,11 +53,11 @@ describe('Authentication', () => {
             })
                 .then((res) => {
                     const req = server.requests.pop();
-                    req.requestBody.should.equal(JSON.stringify({
+                    expect(JSON.parse(req.requestBody)).to.deep.equal({
                         handle: 'joe',
                         password: 'pass',
                         objectType: 'user',
-                    }));
+                    });
                 });
         });
         it('Should not do a DELETE', async() => {
