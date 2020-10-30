@@ -47,12 +47,23 @@ const toDescriptionHTML = (description) => {
     return description.children.reduce((desc, child) => `${desc}${toHTML(child)}`, '');
 };
 
+const parseType = (type) => {
+    if (type.type === 'OptionalType') {
+        return type.expression.name;
+    }
+    if (type.type === 'TypeApplication' && type.expression.name === 'Array') {
+        return `${type.applications[0].name}[]`;
+    }
+    if (type.type === 'UnionType') {
+        return type.elements.map(parseType).join('|');
+    }
+    return type.name;
+};
+
 const parseParam = (param) => {
     const { name, type, description, properties } = param;
-    const typeName = type.type === 'OptionalType' ?
-        type.expression.name :
-        type.name;
-    const isOptional = type.type === 'OptionalType' || type.type === 'AllLiteral' || param.default;
+    const typeName = parseType(type);
+    const isOptional = Boolean(type.type === 'OptionalType' || type.type === 'AllLiteral' || param.default);
     return {
         name,
         properties: (properties || []).map(parseParam),
@@ -115,6 +126,10 @@ const document = (isLocal) => documentation.build('../src/**', { config: path.jo
     const apis = json.map(parseJSON);
     const html = Handlebars.compile(index)({ apis });
     const docs = isLocal ? minify(html, { collapseWhitespace: true }) : html;
+    if (isLocal) {
+        fs.writeFileSync(path.join(__dirname, 'documentation.raw.json'), JSON.stringify(json));
+        fs.writeFileSync(path.join(__dirname, 'documentation.json'), JSON.stringify(apis));
+    }
     fs.writeFileSync(path.join(__dirname, 'web/index.html'), docs);
 });
 

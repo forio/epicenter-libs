@@ -10,3 +10,6 @@ examples/**/dist/
 # Debugging file for documentation generation
 documentation.json
 documentation.raw.json
+
+# Distributable for documentation
+documentation/web/index.html
