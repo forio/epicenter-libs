@@ -1,0 +1,9 @@
+
+#group,
+#group-label {
+    display: none;
+
+    &.visible {
+        display: block;
+    }
+}

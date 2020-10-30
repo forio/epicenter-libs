@@ -1,10 +1,5 @@
-import { authAdapter, config } from 'epicenter';
-import '../css/common.css';
-
-if (config.isLocal()) {
-    config.accountShortName = 'forio-dev';
-    config.projectShortName = 'epi-v3';
-}
+require('./common');
+import { authAdapter, groupAdapter } from 'epicenter';
 
 const identifyError = (code) => {
     switch (code) {
@@ -35,12 +30,21 @@ document.getElementById('submit').onclick = (e) => {
 
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
+    const groupEl = document.getElementById('group');
+    const groupLabelEl = document.getElementById('group-label');
 
     authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
     }).then((session) => {
-        console.log('%c Logged in with this session', 'font-size: 20px; color: #FB15B9FF;', session);
-        window.location.href = '/index.html';
+        console.log('%c asdwasd', 'font-size: 20px; color: #FB15B9FF;', session);
+        if (!session.groupKey) {
+            // groupAdapter.forUser(session.userKey)
+
+            groupEl.classList.add('visible');
+            groupLabelEl.classList.add('visible');
+        } else {
+            window.location.href = '/index.html';
+        }
     });
 };
