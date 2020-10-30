@@ -237,7 +237,7 @@ export default class Router {
 
         const url = new URL(`${this.server}`);
         url.pathname = `api/v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
-        url.search = this.searchParams;
+        url.search = this.searchParams ?? new URLSearchParams();
         return url;
     }
 
