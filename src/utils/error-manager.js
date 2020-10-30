@@ -79,4 +79,8 @@ class ErrorManager {
 }
 
 const errorManager = new ErrorManager();
+/**
+ * Configuration -- used to set up and configure global settings for Epicenter JS libs.
+ * @namespace errorManager
+ */
 export default errorManager;

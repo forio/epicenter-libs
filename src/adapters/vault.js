@@ -1,4 +1,4 @@
-import { Router, identification } from 'utils';
+import { Router } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY } from 'utils/constants';
 
 /**
@@ -18,9 +18,9 @@ import { LOCK_TYPE, SCOPE_BOUNDARY } from 'utils/constants';
  * vaultAdapter.update
  *
  * @param {string}  vaultKey            Episode name
- * @param {Array}   items               Group to make the episode under
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  items               Group to make the episode under
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function update(vaultKey, items, optionals = {}) {
     const { accountShortName, projectShortName, mutationKey } = optionals;

@@ -1,6 +1,23 @@
 import { Router, identification } from 'utils';
 import { cometdAdapter } from 'adapters';
 
+
+/**
+ * Authentication API adapters -- for authentication
+ * @namespace authAdapter
+ */
+
+
+/**
+ * Logs out of current Epicenter session.
+ *
+ * @memberof authAdapter
+ * @example
+ *
+ * epicenter.authAdapter.logout()
+ *
+ * @returns {Promise}   Promise resolving to successful logout
+ */
 export async function logout() {
     identification.session = undefined;
     await cometdAdapter.disconnect();
