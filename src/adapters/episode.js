@@ -19,9 +19,9 @@ import { Router } from 'utils';
  *      draft: true,
  * });
  * @param {string}  name                Episode name
- * @param {Object}  groupName           Group to make the episode under
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  groupName           Group to make the episode under
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function create(name, groupName, optionals = {}) {
     const { accountShortName, projectShortName, draft, runLimit } = optionals;
@@ -43,9 +43,9 @@ export async function create(name, groupName, optionals = {}) {
  * const { episodeAdapter } = epicenter;
  * episodeAdapter.get('123124141241);
  *
- * @param {String}  episodeKey          The episode key
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  episodeKey          The episode key
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function get(episodeKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
@@ -68,8 +68,8 @@ export async function get(episodeKey, optionals = {}) {
  * episodeAdapter.get({ episodeKey: 12321 });
  * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
  *
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function query(optionals = {}) {
     const {
@@ -99,9 +99,9 @@ export async function query(optionals = {}) {
  * const { episodeAdapter } = epicenter;
  * episodeAdapter.withGroup('1231241342345');
  *
- * @param {String}  groupKey            The group key
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  groupKey            The group key
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function forGroup(groupKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
@@ -123,10 +123,10 @@ export async function forGroup(groupKey, optionals = {}) {
  * const { episodeAdapter } = epicenter;
  * episodeAdapter.withName('myGroupName', 'myEpisodeName');
  *
- * @param {String}  groupName           The group name
- * @param {String}  episodeName         The episode name
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  groupName           The group name
+ * @param {string}  episodeName         The episode name
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function byName(groupName, episodeName, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
@@ -148,9 +148,9 @@ export async function byName(groupName, episodeName, optionals = {}) {
  * const episodeKey = 1234;
  * episodeAdapter.remove(episodeKey);
  *
- * @param {String}  episodeKey          Something meaningful about optionals
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  episodeKey          Something meaningful about optionals
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function remove(episodeKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;

@@ -12,7 +12,6 @@ export const BROWSER_STORAGE_TYPE = {
  *
  * psuedonymKey, goes in tandem w/ permit (lock types) --
  * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
- *
  * @enum {string}
  */
 export const SCOPE_BOUNDARY = {
@@ -143,7 +142,7 @@ export const LOCK_TYPE = {
      */
     MONITER: 'MONITER',
     /**
-     * Author -- Team Members (API keys)
+     * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
      * @type {string}

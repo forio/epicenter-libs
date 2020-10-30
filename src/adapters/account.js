@@ -1,5 +1,10 @@
 import { Router } from 'utils';
 
+/**
+ * Account API adapters -- account stuff TODO
+ * @namespace accountAdapter
+ */
+
 export async function createAccount(optionals) {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = optionals;
     const response = await new Router()
