@@ -20,11 +20,11 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
  * @param {string}  model               Name of your model file
- * @param {Object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
@@ -68,8 +68,8 @@ export async function create(model, scope, optionals = {}) {
  * @memberof runAdapter
  *
  * @param {string}  runKey          Run's key
- * @param {Object}  [optionals={}]  Object for all optional fields
- * @returns {Object}                Response with the run in the "body"
+ * @param {object}  [optionals={}]  Object for all optional fields
+ * @returns {object}                Response with the run in the "body"
  */
 export async function clone(runKey, optionals = {}) {
     const {
@@ -145,6 +145,23 @@ export async function update(runKey, update, optionals = {}) {
         }).then(({ body }) => body);
 }
 
+
+/**
+ * *Does not actually delete the run*. The run is instead removed from memory. This can be used as a means of preserving server CPUs, and should be used when you do not expect to perform any addtional actions that would bring the run back into memory. (TODO: see David for details; is it just operations that bring the run into memory? what about clone... etc.)
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * epicenter.runAdapter.remove(run.runKey);
+ *
+ * @param {string}  runKey                          Key associated with the run
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                TODO
+ */
 export async function remove(runKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
     return await new Router()
@@ -152,7 +169,6 @@ export async function remove(runKey, optionals = {}) {
         .withProjectShortName(projectShortName)
         .delete(`/run/${runKey}`)
         .then(({ body }) => body);
-
 }
 
 export async function get(runKey, optionals = {}) {
@@ -166,36 +182,54 @@ export async function get(runKey, optionals = {}) {
 
 
 /**
- * Queries for runs. Use this to look u
- * @memberof runAdapter
+ * Queries for runs.
  *
- * @param {string}  model               Name of your model file
- * @param {Object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @param {Filter}  [optionals.filter]  Filter Object
- * @returns {Object}                    Something meaningful about returns
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * const { runAdapter } = epicenter;
+ * runAdapter.query({
+ *      filter: [
+ *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *          'run.hidden=false',             // where the run's 'hidden' attribute is false
+ *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-'
+ *      ],
+ *      sort: ['+run.created']              // sort all findings by the 'created' field
+ *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
+ *      metadata: ['classification']        // include the run metadata for 'classification' in the response
+ * });
+ *
+ * @param {string}      model                           Name of your model file
+ * @param {object}      scope                           Scope associated with your run
+ * @param {string}      scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string[]}    [optionals.filter]              List of conditionals to filter for
+ * @param {string[]}    [optionals.sort]                List of values to sort by
+ * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
+ * @param {string[]}    [optionals.metadata]            List of metadata to include with the runs found
+ * @param {number}      [optionals.first]               The index from which we collect our runs from
+ * @param {number}      [optionals.max]                 The maximum number of runs to return (upper limit: 200)
+ * @param {number}      [optionals.timeout]             Number of seconds we're willing to wait for the response from the server
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                    TODO
  */
 export async function query(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        filter = {}, sort = {}, first, max, timeout, variables = [], metadata = [],
+        filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
         accountShortName, projectShortName,
     } = optionals;
 
     const searchParams = {
-        filter: [
-            ...(filter.variables || []).map((statement) => prefix('var.', statement)),
-            ...(filter.metadata || []).map((statement) => prefix('meta.', statement)),
-            ...(filter.attributes || []).map((statement) => prefix('run.', statement)),
-        ].join(';'),
-        sort: [
-            ...(sort.attributes || []).map((sorting) => `${sorting.charAt(0)}${prefix('run.', sorting.slice(1))}`),
-        ],
+        filter: filter.join(';') || undefined,
+        sort: sort.join(';') || undefined,
+        var: variables.join(';') || undefined,
+        meta: metadata.join(';') || undefined,
         first, max, timeout,
-        var: variables.length ? variables.join(';') : undefined,
-        meta: metadata.length ? metadata.join(';') : undefined,
     };
 
     return await new Router()
@@ -291,9 +325,9 @@ export async function getVariable(runKey, variable, optionals = {}) {
  * @memberof runAdapter
  *
  * @param {string}  runKey      Identifier for your run
- * @param {Object}  update      Object with the key-value pairs you would like to update in the model
- * @param {Object}  optionals   Something meaningful about optionals
- * @returns {Object}            Object with the variables & new values that were updated
+ * @param {object}  update      Object with the key-value pairs you would like to update in the model
+ * @param {object}  optionals   Something meaningful about optionals
+ * @returns {object}            Object with the variables & new values that were updated
  */
 export async function updateVariables(runKey, update, optionals = {}) {
     const { accountShortName, projectShortName, timeout, ritual } = optionals;
