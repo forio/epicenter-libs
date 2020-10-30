@@ -8,6 +8,7 @@ const session = authAdapter.getLocalSession();
 
 /* Define DOM elements */
 const unauthedEl = document.getElementById('unauthed');
+const isntFacEl = document.getElementById('isnt-fac');
 const presenceEl = document.getElementById('presence');
 const usersEl = document.getElementById('users');
 const chatBoxEl = document.getElementById('chat-box');
@@ -96,6 +97,8 @@ const initialize = () => {
 
 if (!session) {
     unauthedEl.classList.remove('hidden');
+} else if (session.groupRole !== 'FACILITATOR') {
+    isntFacEl.classList.remove('hidden');
 } else {
     initialize();
 }
