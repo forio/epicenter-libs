@@ -76,44 +76,91 @@ async function request(url, options) {
     return errorManager.handle(error, retry);
 }
 
+/**
+ * Used to make the network calls in all API adapters
+ */
 export default class Router {
+    /**
+     * The root path used for the call, essentially protocol + hostname
+     * @type {string}
+     */
     get server() {
         return this._server;
     }
-
     set server(value) {
         this._server = value;
     }
 
+    /**
+     * The version of the Epicenter APIs being invoked; expected to stay at `3`
+     * @type {number}
+     */
     get version() {
         return this._version;
     }
-
     set version(value) {
         this._version = value;
     }
 
+    /**
+     * Name of the account; for administrative use, this value should be set to 'epicenter'
+     * @type {string}
+     */
     get accountShortName() {
         return this._accountShortName;
     }
-
     set accountShortName(value) {
         this._accountShortName = value;
     }
 
+    /**
+     * Name of the project; for administrative use, this value should be set to 'manager'
+     * @type {string}
+     */
     get projectShortName() {
         return this._projectShortName;
     }
-
     set projectShortName(value) {
         this._projectShortName = value;
     }
 
+    /**
+     * The search parameters for to use when making a network request. This property has should always return an instance of URLSearchParams or undefined. It has unique properties when used with the assignment operator (`=`); see the examples below for more details.
+     * @type {URLSearchParams}
+     *
+     * @example
+     * const router = new Router();
+     * router.searchParams = '?foo=123';
+     * console.log(router.searchParams);                            // always returns an instance object: URLSearchParams {}
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * router.searchParams = 'foo=123';                             // can omit the question mark
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * router.searchParams = [['foo', '123'], ['bar', '456']];      // can accept arrays
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=456'
+     *
+     * router.searchParams = { foo: '123', bar: '456' };            // can accept objects
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=456'
+     *
+     * router.searchParams = { foo: '123', bar: ['4', '5', '6'] };  // can accept objects with arrayed values
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=4&bar=5&bar=6'
+     *
+     * router.searchParams = new URLSearchParams('foo=123');        // can accept instances of URLSearchParams
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * @param {object|array|string|URLSearchParams} query   Value used to set the search parameters
+     */
     get searchParams() {
         return this._searchParams;
     }
-
     set searchParams(query) {
+        if (query.constructor === URLSearchParams) {
+
+            this._searchParams = query;
+            return;
+        }
+
         /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
         if (typeof query === 'object' && query.constructor === Object) {
             query = Object.entries(query).reduce((arr, [key, value]) => {
@@ -129,48 +176,68 @@ export default class Router {
                 return arr;
             }, []);
         }
-        this._searchParams = query;
+        this._searchParams = new URLSearchParams(query);
     }
 
+    /**
+     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [server] Root path to use
+     * @returns {Router}        The Router instance
+     */
     withServer(server) {
-        if (server) this.server = server;
+        if (typeof server !== 'undefined') this.server = server;
         return this;
     }
 
+    /**
+     * Sets the version. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [version]    Version to use
+     * @returns {Router}            The Router instance
+     */
     withVersion(version) {
-        if (version) this.version = version;
+        if (typeof version !== 'undefined') this.version = version;
         return this;
     }
 
+    /**
+     * Sets the account. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [accountShortName]   Account name to use
+     * @returns {Router}                    The Router instance
+     */
     withAccountShortName(accountShortName) {
-        if (accountShortName) this.accountShortName = accountShortName;
+        if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
 
+    /**
+     * Sets the project. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [projectShortName]   Project name to use
+     * @returns {Router}                    The Router instance
+     */
     withProjectShortName(projectShortName) {
-        if (projectShortName) this.projectShortName = projectShortName;
+        if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
         return this;
     }
 
+    /**
+     * Sets the search parameters. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
+     * @returns {Router}                                            The Router instance
+     */
     withSearchParams(searchParams) {
-        if (!searchParams) return this;
-        const isEmpty = typeof searchParams === 'object' && Object.entries(searchParams).length === 0;
-        if (!isEmpty) this.searchParams = searchParams;
+        if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
         return this;
     }
 
-    configure() {
+    getURL(uriComponent) {
         if (!this.server) this.withServer(`${config.apiProtocol}://${config.apiHost}`);
         if (!this.accountShortName) this.withAccountShortName(config.accountShortName);
         if (!this.projectShortName) this.withProjectShortName(config.projectShortName);
         if (!this.version) this.withVersion(config.apiVersion);
-    }
 
-    getURL(uriComponent) {
-        this.configure();
         const url = new URL(`${this.server}`);
         url.pathname = `api/v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
-        url.search = new URLSearchParams(this.searchParams);
+        url.search = this.searchParams;
         return url;
     }
 
