@@ -26,12 +26,11 @@ export async function logout() {
 export async function login(options) {
     const { handle, password, groupKey, objectType = 'user', ...others } = options;
     const { accountShortName, projectShortName } = others;
-
     const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/authentication', {
-            body: { handle, password, groupKey, objectType },
+            body: { objectType, handle, password, groupKey: groupKey || undefined },
             includeAuthorization: false,
             inert: true,
         }).then(({ body }) => body);

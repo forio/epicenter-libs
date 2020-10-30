@@ -331,7 +331,7 @@ export async function forUserKey(userKey, optionals = {}) {
  * @memberof groupAdapter
  * @example
  *
- * epicenter.groupAdapter.getSessionGroups();
+ * const groups = await epicenter.groupAdapter.getSessionGroups();
  *
  * @param {object}          [optionals={}]                  Optional parameters
  * @param {boolean}         [optionals.expired]             Indicates whether to include expired groups in the query (defaults to false)
