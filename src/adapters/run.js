@@ -1,4 +1,4 @@
-import { EpicenterError, Router, prefix, identification } from 'utils';
+import { EpicenterError, Router, identification } from 'utils';
 import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
@@ -14,7 +14,7 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  * @memberof runAdapter
  * @example
  *
- * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
  * runAdapter.create('model.py', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
@@ -189,7 +189,7 @@ export async function get(runKey, optionals = {}) {
  * @memberof runAdapter
  * @example
  *
- * const { runAdapter } = epicenter;
+ * import { runAdapter } from 'epicenter';
  * runAdapter.query({
  *      filter: [
  *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3

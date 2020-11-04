@@ -13,7 +13,7 @@ import { Router } from 'utils';
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.create('myEpisode', 'myGroupName', {
  *      runLimit: 20,
  *      draft: true,
@@ -40,7 +40,7 @@ export async function create(name, groupName, optionals = {}) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.get('123124141241);
  *
  * @param {string}  episodeKey          The episode key
@@ -63,7 +63,7 @@ export async function get(episodeKey, optionals = {}) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.get();
  * episodeAdapter.get({ episodeKey: 12321 });
  * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
@@ -96,7 +96,7 @@ export async function query(optionals = {}) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.withGroup('1231241342345');
  *
  * @param {string}  groupKey            The group key
@@ -120,7 +120,7 @@ export async function forGroup(groupKey, optionals = {}) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.withName('myGroupName', 'myEpisodeName');
  *
  * @param {string}  groupName           The group name
@@ -144,7 +144,7 @@ export async function byName(groupName, episodeName, optionals = {}) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * const episodeKey = 1234;
  * episodeAdapter.remove(episodeKey);
  *
