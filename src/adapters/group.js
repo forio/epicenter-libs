@@ -15,29 +15,29 @@ import { LOCK_TYPE } from 'utils/constants';
  * @memberof groupAdapter
  * @example
  *
- * const { authAdapter, groupAdapter } = epicenter;
+ * import { authAdapter, groupAdapter } from 'epicenter';
  * const session = authAdapter.getLocalSession();
- * const group = await groupAdapter.get(session.groupKey);
+ * const group = await groupAdapter.get(session.groupKey, {
+ *      augment: 'MEMBERS'      // include members of the group in return
+ * });
  *
  * @param {string}  groupKey                        Key associated with group
  * @param {object}  [optionals={}]                  Optional parameters
- * @param {boolean} [optionals.withMembers]         Indicates whether to include member information (cannot be used with `quantized: true`)
- * @param {boolean} [optionals.quantized]           Indicates whether to include run and user count information (cannot be used with `withMembers: true`)
+ * @param {string}  [optionals.augment]             Augments the GET request to return additional information, one of [MEMBERS, QUANTIZED]
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Group object
  */
 export async function get(groupKey, optionals = {}) {
-    const { accountShortName, projectShortName, withMembers, quantized } = optionals;
-
-    if (withMembers && quantized) {
-        console.warn('Requests for both members and quantized group information are not supported');
-    }
+    const { accountShortName, projectShortName, augment } = optionals;
+    let uriComponent = '';
+    if (augment === 'MEMBERS') uriComponent = '/member';
+    if (augment === 'QUANTIZED') uriComponent = '/quantized';
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/group${!quantized && withMembers ? '/member' : ''}${quantized && !withMembers ? '/quantized' : ''}/${groupKey}`)
+        .get(`/group${uriComponent}/${groupKey}`)
         .then(({ body }) => body);
 }
 
@@ -105,8 +105,7 @@ export async function gather(optionals = {}) {
  * @memberof groupAdapter
  * @example
  *
- * const newEventName = 'My new event name';
- * epicenter.groupAdapter.update(groupKey, { event: newEventName });
+ * epicenter.groupAdapter.update(groupKey, { event: 'Orientation Day' });
  *
  * @param {string}  groupKey                        Key associated with group
  * @param {object}  update                          Attributes you wish to update
@@ -213,7 +212,7 @@ export async function create(group, optionals = {}) {
  * @memberof groupAdapter
  * @example
  *
- * const { groupAdapter } = epicenter;
+ * import { groupAdapter } from 'epicenter';
  * groupAdapter.search({
  *      filter: [
  *          'group.name|=group1|group2',    // look for groups whose name is 'group1' or 'group2'
@@ -228,7 +227,7 @@ export async function create(group, optionals = {}) {
  * @param {string[]}    [optionals.sort]                List of values to sort by
  * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Group object
+ * @returns {object}                                    Group object
  */
 export async function search(optionals = {}) {
     const {
@@ -299,7 +298,7 @@ export async function withGroupName(name, optionals = {}) {
  * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                        List of groups
+ * @returns {object[]}                                      List of groups
  */
 export async function forUserKey(userKey, optionals = {}) {
     const {
@@ -338,7 +337,7 @@ export async function forUserKey(userKey, optionals = {}) {
  * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                        List of groups
+ * @returns {object[]}                                      List of groups
  */
 export async function getSessionGroups(optionals = {}) {
     const {
@@ -375,7 +374,7 @@ export async function getSessionGroups(optionals = {}) {
  * @param {object}          [optionals={}]                  Optional parameters
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                        List of groups
+ * @returns {object[]}                                      List of groups
  */
 export async function register(groupKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
