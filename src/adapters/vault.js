@@ -14,7 +14,7 @@ import { LOCK_TYPE, SCOPE_BOUNDARY } from 'utils/constants';
  * @memberof vaultAdapter
  * @example
  *
- * const { vaultAdapter } = epicenter;
+ * import { vaultAdapter } from 'epicenter';
  * vaultAdapter.update
  *
  * @param {string}  vaultKey            Episode name
