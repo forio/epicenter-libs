@@ -29,8 +29,9 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        accountShortName, projectShortName, readLock, writeLock, userKey,
-        ephemeral, trackingKey, modelContext, executionContext,
+        readLock, writeLock, userKey, ephemeral,
+        trackingKey, modelContext, executionContext,
+        accountShortName, projectShortName,
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
@@ -309,7 +310,7 @@ export async function getVariable(runKey, variable, optionals = {}) {
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
         const variables = Array.isArray(variable) ? variable : [variable];
-        return getVariables(runKey, variables, optionals);
+        return getVariables(runKey, variables, optionals = {});
     }
 
     return await new Router()
@@ -365,7 +366,6 @@ export async function getMetadata(runKey, variables, optionals = {}) {
         .withSearchParams(searchParams)
         .get(`/run/meta${uriComponent}`)
         .then(({ body }) => body);
-
 }
 
 export async function updateMetadata(runKey, update, optionals = {}) {
@@ -406,7 +406,7 @@ export async function action(runKey, actionList, optionals = {}) {
 
 }
 
-async function serial(runKey, operations, optionals) {
+async function serial(runKey, operations, optionals = {}) {
     const normalizedOps = operations.map((item) => ({
         name: typeof item === 'string' ? item : item.name,
         params: item.params,
@@ -414,7 +414,7 @@ async function serial(runKey, operations, optionals) {
 
     //Perform all operations, sequentially
     return normalizedOps.reduce((promise, { name, params }) => {
-        return promise.then(() => operation(runKey, name, params, optionals));
+        return promise.then(() => operation(runKey, name, params, optionals = {}));
     }, Promise.resolve());
 }
 
@@ -425,12 +425,12 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
         if (runs.length) {
             return runs[0];
         }
-        const newRun = await create(model, scope, optionals);
-        await serial(newRun.runKey, initOperations, optionals);
+        const newRun = await create(model, scope, optionals = {});
+        await serial(newRun.runKey, initOperations, optionals = {});
         return newRun;
     } else if (strategy === 'reuse-never') {
-        const newRun = await create(model, scope, optionals);
-        await serial(newRun.runKey, initOperations, optionals);
+        const newRun = await create(model, scope, optionals = {});
+        await serial(newRun.runKey, initOperations, optionals = {});
         return newRun;
     } else if (strategy === 'reuse-by-tracking-key') {
         //TBD write out if needed
@@ -440,4 +440,88 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
         //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
     }
     throw new EpicenterError('Invalid run strategy.');
+}
+
+
+/**
+ * Returns the run associated with the given world key; if the run does not exist, it will create it.
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter, authAdapter } from 'epicenter';
+ * const worldKey = authAdapter.getLocalSession().worldKey
+ * const run = await runAdapter.retrieveWithWorld('model.py', worldKey);
+ *
+ *
+ * @param {string}  model                           Name of your model file
+ * @param {object}  worldKey                        Key associated with the world you'd like a run from
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.readLock]            Role (character type)
+ * @param {string}  [optionals.writeLock]           Role (chracter type)
+ * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param {string}  [optionals.trackingKey]         Tracking key
+ * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
+ * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Run retrieved from the world
+ */
+export async function retrieveFromWorld(model, worldKey, optionals = {}) {
+    const {
+        readLock, writeLock, ephemeral, trackingKey,
+        modelContext, executionContext,
+        accountShortName, projectShortName,
+    } = optionals;
+    const { PARTICIPANT } = LOCK_TYPE;
+
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .post(`/run/world/${worldKey}`, {
+            body: {
+                permit: {
+                    readLock: readLock || PARTICIPANT,
+                    writeLock: writeLock || PARTICIPANT,
+                },
+                morphology: 'MANY',
+                trackingKey,
+                modelFile: model,
+                modelContext: modelContext || {},
+                executionContext: executionContext || {},
+                ephemeral,
+            },
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Deletes the run associated with the given world key
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter, authAdapter } from 'epicenter';
+ * const worldKey = authAdapter.getLocalSession().worldKey
+ * const run = await runAdapter.removeFromWorld(worldKey);
+ *
+ *
+ * @param {object}  worldKey                        Key associated with the world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Run retrieved from the world
+ */
+export async function removeFromWorld(worldKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
+
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .delete(`/run/world/${worldKey}`)
+        .then(({ body }) => body);
 }
