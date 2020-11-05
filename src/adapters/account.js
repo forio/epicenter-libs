@@ -5,7 +5,7 @@ import { Router } from 'utils';
  * @namespace accountAdapter
  */
 
-export async function createAccount(optionals) {
+export async function createAccount(optionals = {}) {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = optionals;
     const response = await new Router()
         .post('/account', {
@@ -15,7 +15,7 @@ export async function createAccount(optionals) {
 }
 
 // TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
-export async function updateAccount(optionals) {
+export async function updateAccount(optionals = {}) {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = optionals;
     const response = await new Router()
         .patch('/account', {
