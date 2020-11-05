@@ -58,7 +58,7 @@ export async function get(groupKey, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function destroy(groupKey, optionals) {
+export async function destroy(groupKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()

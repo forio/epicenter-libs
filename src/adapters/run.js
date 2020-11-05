@@ -310,7 +310,7 @@ export async function getVariable(runKey, variable, optionals = {}) {
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
         const variables = Array.isArray(variable) ? variable : [variable];
-        return getVariables(runKey, variables, optionals = {});
+        return getVariables(runKey, variables, optionals);
     }
 
     return await new Router()
