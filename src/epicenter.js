@@ -22,4 +22,5 @@ export {
     projectAdapter,
     runAdapter,
     vaultAdapter,
+    worldAdapter,
 } from 'adapters';
