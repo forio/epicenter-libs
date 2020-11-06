@@ -1,4 +1,4 @@
-/*! Epicenter v3.1.0 */
+/*! Epicenter v3.2.0-alpha */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -5897,20 +5897,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function createAccount(_x) {
+/**
+ * Account API adapters -- account stuff TODO
+ * @namespace accountAdapter
+ */
+
+function createAccount() {
   return _createAccount.apply(this, arguments);
 } // TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
 
 function _createAccount() {
-  _createAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(optionals) {
-    var _optionals$objectType, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+  _createAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    var optionals,
+        _optionals$objectType,
+        objectType,
+        name,
+        shortName,
+        adminKey,
+        subscriptionPlan,
+        billingInterval,
+        response,
+        _args = arguments;
 
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
+            optionals = _args.length > 0 && _args[0] !== undefined ? _args[0] : {};
             _optionals$objectType = optionals.objectType, objectType = _optionals$objectType === void 0 ? 'personal' : _optionals$objectType, name = optionals.name, shortName = optionals.shortName, adminKey = optionals.adminKey, subscriptionPlan = optionals.subscriptionPlan, billingInterval = optionals.billingInterval;
-            _context.next = 3;
+            _context.next = 4;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().post('/account', {
               body: {
                 objectType: objectType,
@@ -5925,11 +5940,11 @@ function _createAccount() {
               return body;
             });
 
-          case 3:
+          case 4:
             response = _context.sent;
             return _context.abrupt("return", response);
 
-          case 5:
+          case 6:
           case "end":
             return _context.stop();
         }
@@ -5939,20 +5954,30 @@ function _createAccount() {
   return _createAccount.apply(this, arguments);
 }
 
-function updateAccount(_x2) {
+function updateAccount() {
   return _updateAccount.apply(this, arguments);
 }
 
 function _updateAccount() {
-  _updateAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(optionals) {
-    var _optionals$objectType2, objectType, name, shortName, adminKey, subscriptionPlan, billingInterval, response;
+  _updateAccount = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    var optionals,
+        _optionals$objectType2,
+        objectType,
+        name,
+        shortName,
+        adminKey,
+        subscriptionPlan,
+        billingInterval,
+        response,
+        _args2 = arguments;
 
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
+            optionals = _args2.length > 0 && _args2[0] !== undefined ? _args2[0] : {};
             _optionals$objectType2 = optionals.objectType, objectType = _optionals$objectType2 === void 0 ? 'personal' : _optionals$objectType2, name = optionals.name, shortName = optionals.shortName, adminKey = optionals.adminKey, subscriptionPlan = optionals.subscriptionPlan, billingInterval = optionals.billingInterval;
-            _context2.next = 3;
+            _context2.next = 4;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().patch('/account', {
               body: {
                 objectType: objectType,
@@ -5967,11 +5992,11 @@ function _updateAccount() {
               return body;
             });
 
-          case 3:
+          case 4:
             response = _context2.sent;
             return _context2.abrupt("return", response);
 
-          case 5:
+          case 6:
           case "end":
             return _context2.stop();
         }
@@ -5981,7 +6006,7 @@ function _updateAccount() {
   return _updateAccount.apply(this, arguments);
 }
 
-function removeAccount(_x3) {
+function removeAccount(_x) {
   return _removeAccount.apply(this, arguments);
 }
 
@@ -6040,6 +6065,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+/**
+ * Authentication API adapters -- for authentication
+ * @namespace authAdapter
+ */
+
+/**
+ * Logs out of current Epicenter session.
+ *
+ * @memberof authAdapter
+ * @example
+ *
+ * epicenter.authAdapter.logout()
+ *
+ * @returns {Promise}   Promise resolving to successful logout
+ */
+
 function logout() {
   return _logout.apply(this, arguments);
 }
@@ -6081,10 +6122,10 @@ function _login() {
             _context2.next = 4;
             return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/authentication', {
               body: {
+                objectType: objectType,
                 handle: handle,
                 password: password,
-                groupKey: groupKey,
-                objectType: objectType
+                groupKey: groupKey || undefined
               },
               includeAuthorization: false,
               inert: true
@@ -7096,15 +7137,15 @@ __webpack_require__.r(__webpack_exports__);
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.create('myEpisode', 'myGroupName', {
  *      runLimit: 20,
  *      draft: true,
  * });
  * @param {string}  name                Episode name
- * @param {Object}  groupName           Group to make the episode under
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  groupName           Group to make the episode under
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function create(_x, _x2) {
@@ -7117,12 +7158,12 @@ function create(_x, _x2) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.get('123124141241);
  *
- * @param {String}  episodeKey          The episode key
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  episodeKey          The episode key
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function _create() {
@@ -7174,13 +7215,13 @@ function get(_x3) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.get();
  * episodeAdapter.get({ episodeKey: 12321 });
  * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
  *
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function _get() {
@@ -7224,12 +7265,12 @@ function query() {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.withGroup('1231241342345');
  *
- * @param {String}  groupKey            The group key
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  groupKey            The group key
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function _query() {
@@ -7288,13 +7329,13 @@ function forGroup(_x4) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * episodeAdapter.withName('myGroupName', 'myEpisodeName');
  *
- * @param {String}  groupName           The group name
- * @param {String}  episodeName         The episode name
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  groupName           The group name
+ * @param {string}  episodeName         The episode name
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function _forGroup() {
@@ -7338,13 +7379,13 @@ function byName(_x5, _x6) {
  * @memberof episodeAdapter
  * @example
  *
- * const { episodeAdapter } = epicenter;
+ * import { episodeAdapter } from 'epicenter';
  * const episodeKey = 1234;
  * episodeAdapter.remove(episodeKey);
  *
- * @param {String}  episodeKey          Something meaningful about optionals
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {string}  episodeKey          Something meaningful about optionals
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function _byName() {
@@ -7419,51 +7460,108 @@ function _remove() {
 /*!*******************************!*\
   !*** ./src/adapters/group.js ***!
   \*******************************/
-/*! exports provided: get, update */
+/*! exports provided: get, destroy, gather, update, create, search, withGroupName, forUserKey, getSessionGroups, register, addUser, updateUser, removeUser */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroy", function() { return destroy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "gather", function() { return gather; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "search", function() { return search; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "withGroupName", function() { return withGroupName; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forUserKey", function() { return forUserKey; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSessionGroups", function() { return getSessionGroups; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "register", function() { return register; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addUser", function() { return addUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUser", function() { return updateUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeUser", function() { return removeUser; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
 
 
+
+
+/**
+ * Group API adapters -- handles groups and group memberships
+ * @namespace groupAdapter
+ */
+
+/**
+ * Provides information on a particular Epicenter group.
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group[/:member]/{GROUP_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * import { authAdapter, groupAdapter } from 'epicenter';
+ * const session = authAdapter.getLocalSession();
+ * const group = await groupAdapter.get(session.groupKey, {
+ *      augment: 'MEMBERS'      // include members of the group in return
+ * });
+ *
+ * @param {string}  groupKey                        Key associated with group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.augment]             Augments the GET request to return additional information, one of [MEMBERS, QUANTIZED]
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Group object
+ */
 
 function get(_x) {
   return _get.apply(this, arguments);
 }
+/**
+ * Deletes the group; available only to Epicenter admins
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.destroy(group.groupKey);
+ *
+ * @param {string}  groupKey                        Key associated with group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
 
 function _get() {
   _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(groupKey) {
     var optionals,
         accountShortName,
         projectShortName,
-        expired,
-        withMembers,
+        augment,
+        uriComponent,
         _args = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             optionals = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, expired = optionals.expired, withMembers = optionals.withMembers;
-            _context.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
-              expired: expired
-            }).get("/group/".concat(withMembers ? 'member/' : '').concat(groupKey)).then(function (_ref) {
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, augment = optionals.augment;
+            uriComponent = '';
+            if (augment === 'MEMBERS') uriComponent = '/member';
+            if (augment === 'QUANTIZED') uriComponent = '/quantized';
+            _context.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/group".concat(uriComponent, "/").concat(groupKey)).then(function (_ref) {
               var body = _ref.body;
               return body;
             });
 
-          case 4:
+          case 7:
             return _context.abrupt("return", _context.sent);
 
-          case 5:
+          case 8:
           case "end":
             return _context.stop();
         }
@@ -7473,14 +7571,29 @@ function _get() {
   return _get.apply(this, arguments);
 }
 
-function update(_x2, _x3) {
-  return _update.apply(this, arguments);
+function destroy(_x2) {
+  return _destroy.apply(this, arguments);
 }
+/**
+ * Provides information on for all groups in the project
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group?expired={BOOLEAN}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * const groups = await epicenter.groupAdapter.gather();
+ *
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {boolean} [optionals.expired]             Indicates whether to include expired groups in the query
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                              List of groups
+ */
 
-function _update() {
-  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(groupKey, update) {
+function _destroy() {
+  _destroy = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(groupKey) {
     var optionals,
-        runLimit,
         accountShortName,
         projectShortName,
         _args2 = arguments;
@@ -7488,30 +7601,755 @@ function _update() {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            optionals = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
-            runLimit = update.runLimit;
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
-            _context2.next = 5;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch("/group/".concat(groupKey), {
-              body: {
-                runLimit: runLimit
-              }
-            }).then(function (_ref2) {
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/group/".concat(groupKey)).then(function (_ref2) {
               var body = _ref2.body;
               return body;
             });
 
-          case 5:
+          case 4:
             return _context2.abrupt("return", _context2.sent);
 
-          case 6:
+          case 5:
           case "end":
             return _context2.stop();
         }
       }
     }, _callee2);
   }));
+  return _destroy.apply(this, arguments);
+}
+
+function gather() {
+  return _gather.apply(this, arguments);
+}
+/**
+ * Updates fields for a particular group; available only to Epicenter admins.
+ *
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.update(groupKey, { event: 'Orientation Day' });
+ *
+ * @param {string}  groupKey                        Key associated with group
+ * @param {object}  update                          Attributes you wish to update
+ * @param {number}  update.runLimit                 Defines the upper limit of runs allowed in the group
+ * @param {string}  update.organization             Name of the organization owning the group
+ * @param {boolean} update.allowSelfRegistration    TODO
+ * @param {object}  update.flightRecorder           TODO
+ * @param {number}  update.flightRecorder.start     TODO
+ * @param {number}  update.flightRecorder.stop      TODO
+ * @param {boolean} update.flightRecorder.enabled   TODO
+ * @param {string}  update.event                    Name of the event the group is playing for
+ * @param {boolean} update.allowMembershipChanges   TODO
+ * @param {object}  update.pricing                  TODO
+ * @param {object}  update.startDate                TODO
+ * @param {object}  update.expirationDate           TODO
+ * @param {object}  update.capacity                 Defines the upper limit on the number of users allowed in the group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Group with updated attributes
+ */
+
+function _gather() {
+  _gather = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        expired,
+        _args3 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, expired = optionals.expired;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              expired: expired
+            }).get('/group').then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _gather.apply(this, arguments);
+}
+
+function update(_x3, _x4) {
   return _update.apply(this, arguments);
+}
+/**
+ * Creates a new group; available only to Epicenter admins
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.create({
+ *      runLimit: 10,
+ *      name: 'my-group-name',
+ * });
+ *
+ * @param {object}  group                           Group object
+ * @param {string}  group.name                      Group name (required)
+ * @param {number}  group.runLimit                  Defines the upper limit on the number of runs allowed in the group
+ * @param {string}  group.organization              Name of the organization owning the group
+ * @param {string}  group.allowSelfRegistration     TODO
+ * @param {object}  group.flightRecorder            TODO
+ * @param {number}  group.flightRecorder.start      TODO
+ * @param {number}  group.flightRecorder.stop       TODO
+ * @param {boolean} group.flightRecorder.enabled    TODO
+ * @param {string}  group.event                     Name of the event the group is playing for
+ * @param {boolean} group.allowMembershipChanges    TODO
+ * @param {object}  group.pricing                   TODO
+ * @param {object}  group.startDate                 TODO
+ * @param {object}  group.expirationDate            TODO
+ * @param {object}  group.capacity                  Defines the upper limit on the number of users allowed in the group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Newly created group
+ */
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(groupKey, update) {
+    var optionals,
+        runLimit,
+        organization,
+        allowSelfRegistration,
+        flightRecorder,
+        event,
+        allowMembershipChanges,
+        pricing,
+        startDate,
+        expirationDate,
+        capacity,
+        accountShortName,
+        projectShortName,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
+            runLimit = update.runLimit, organization = update.organization, allowSelfRegistration = update.allowSelfRegistration, flightRecorder = update.flightRecorder, event = update.event, allowMembershipChanges = update.allowMembershipChanges, pricing = update.pricing, startDate = update.startDate, expirationDate = update.expirationDate, capacity = update.capacity;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context4.next = 5;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch("/group/".concat(groupKey), {
+              body: {
+                runLimit: runLimit,
+                organization: organization,
+                allowSelfRegistration: allowSelfRegistration,
+                flightRecorder: flightRecorder,
+                event: event,
+                allowMembershipChanges: allowMembershipChanges,
+                pricing: pricing,
+                startDate: startDate,
+                expirationDate: expirationDate,
+                capacity: capacity
+              }
+            }).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 5:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 6:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _update.apply(this, arguments);
+}
+
+function create(_x5) {
+  return _create.apply(this, arguments);
+}
+/**
+ * Queries for groups
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/search?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * import { groupAdapter } from 'epicenter';
+ * groupAdapter.search({
+ *      filter: [
+ *          'group.name|=group1|group2',    // look for groups whose name is 'group1' or 'group2'
+ *          'permission.role=FACILITATOR',  // where there exists at least one facilitator user
+ *          'user.userKey=0123',            // whose userKey is '0123'
+ *      },
+ *      sort: ['+group.name']               // sort all findings by group name ascending (lexigraphically)
+ * });
+ *
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string[]}    [optionals.filter]              List of conditionals to filter for
+ * @param {string[]}    [optionals.sort]                List of values to sort by
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                    Group object
+ */
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(group) {
+    var optionals,
+        name,
+        runLimit,
+        organization,
+        allowSelfRegistration,
+        flightRecorder,
+        event,
+        allowMembershipChanges,
+        pricing,
+        startDate,
+        expirationDate,
+        capacity,
+        accountShortName,
+        projectShortName,
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            optionals = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : {};
+            name = group.name, runLimit = group.runLimit, organization = group.organization, allowSelfRegistration = group.allowSelfRegistration, flightRecorder = group.flightRecorder, event = group.event, allowMembershipChanges = group.allowMembershipChanges, pricing = group.pricing, startDate = group.startDate, expirationDate = group.expirationDate, capacity = group.capacity;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+
+            if (name) {
+              _context5.next = 5;
+              break;
+            }
+
+            throw new utils__WEBPACK_IMPORTED_MODULE_2__["EpicenterError"]('Cannot create a group with no name');
+
+          case 5:
+            _context5.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/group', {
+              body: {
+                name: name,
+                runLimit: runLimit,
+                organization: organization,
+                allowSelfRegistration: allowSelfRegistration,
+                flightRecorder: flightRecorder,
+                event: event,
+                allowMembershipChanges: allowMembershipChanges,
+                pricing: pricing,
+                startDate: startDate,
+                expirationDate: expirationDate,
+                capacity: capacity
+              }
+            }).then(function (_ref5) {
+              var body = _ref5.body;
+              return body;
+            });
+
+          case 7:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 8:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _create.apply(this, arguments);
+}
+
+function search() {
+  return _search.apply(this, arguments);
+}
+/**
+ * Retrieves a group with given group name
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/with/{GROUP_NAME}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * const userKeys = members.map(({ userKey }) => userKey);
+ * epicenter.groupAdapter.withGroupName(group.groupKey, userKeys)
+ *
+ * @param {string}  name                            Name associated with the group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Group Object
+ */
+
+function _search() {
+  _search = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6() {
+    var optionals,
+        _optionals$filter,
+        filter,
+        _optionals$sort,
+        sort,
+        first,
+        max,
+        quantized,
+        accountShortName,
+        projectShortName,
+        searchParams,
+        _args6 = arguments;
+
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            optionals = _args6.length > 0 && _args6[0] !== undefined ? _args6[0] : {};
+            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? [] : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? [] : _optionals$sort, first = optionals.first, max = optionals.max, quantized = optionals.quantized, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            searchParams = {
+              filter: filter.join(';') || undefined,
+              sort: sort.join(';') || undefined,
+              first: first,
+              max: max
+            };
+            _context6.next = 5;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/group".concat(quantized ? '/quantized' : '', "/search"), {
+              paginated: true
+            }).then(function (_ref6) {
+              var body = _ref6.body;
+              return body;
+            });
+
+          case 5:
+            return _context6.abrupt("return", _context6.sent);
+
+          case 6:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _search.apply(this, arguments);
+}
+
+function withGroupName(_x6) {
+  return _withGroupName.apply(this, arguments);
+}
+/**
+ * Retrieves the list of groups a particular user is in; intended for admin use
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/for/{USER_KEY}[?expired={BOOLEAN}&all={BOOLEAN}&role={ROLE}&role={ROLE}...]`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.forUserKey(
+ *      user.userKey,               // get groups where this user is a member of
+ *      { role: ['FACILITATOR'] }   // where this user is a facilitator in the group
+ * );
+ *
+ * @param {string}          userKey                         Name associated with the group
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {boolean}         [optionals.expired]             Indicates whether to include expired groups in the query
+ * @param {boolean}         [optionals.all]                 Indicates whether to include the other members in the group (by default, only the requested user appears)
+ * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                                      List of groups
+ */
+
+function _withGroupName() {
+  _withGroupName = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7(name) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args7 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            optionals = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context7.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/group/with/".concat(name)).then(function (_ref7) {
+              var body = _ref7.body;
+              return body;
+            });
+
+          case 4:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 5:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+  return _withGroupName.apply(this, arguments);
+}
+
+function forUserKey(_x7) {
+  return _forUserKey.apply(this, arguments);
+}
+/**
+ * Retrieves the list of groups particular to the current session
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member[?expired={BOOLEAN}&role={ROLE}&role={ROLE}...]`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * const groups = await epicenter.groupAdapter.getSessionGroups();
+ *
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {boolean}         [optionals.expired]             Indicates whether to include expired groups in the query (defaults to false)
+ * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                                      List of groups
+ */
+
+function _forUserKey() {
+  _forUserKey = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8(userKey) {
+    var optionals,
+        expired,
+        all,
+        role,
+        accountShortName,
+        projectShortName,
+        isMultiple,
+        roleList,
+        searchParams,
+        _args8 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            optionals = _args8.length > 1 && _args8[1] !== undefined ? _args8[1] : {};
+            expired = optionals.expired, all = optionals.all, role = optionals.role, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            isMultiple = Array.isArray(role) && role.length > 0;
+            roleList = isMultiple ? role : [role];
+            searchParams = {
+              expired: expired,
+              all: all,
+              role: role ? roleList : undefined
+            };
+            _context8.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/group/member/for/".concat(userKey)).then(function (_ref8) {
+              var body = _ref8.body;
+              return body;
+            });
+
+          case 7:
+            return _context8.abrupt("return", _context8.sent);
+
+          case 8:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _forUserKey.apply(this, arguments);
+}
+
+function getSessionGroups() {
+  return _getSessionGroups.apply(this, arguments);
+}
+/**
+ * Self-application for membership in a group; will only work if the group has the self-registration setting turned on.
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/selfRegistration/{GROUP_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.register(group.groupKey);
+ *
+ * @param {string}          groupKey                        Key associated with group
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                                      List of groups
+ */
+
+function _getSessionGroups() {
+  _getSessionGroups = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9() {
+    var optionals,
+        expired,
+        role,
+        accountShortName,
+        projectShortName,
+        isMultiple,
+        roleList,
+        searchParams,
+        _args9 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            optionals = _args9.length > 0 && _args9[0] !== undefined ? _args9[0] : {};
+            expired = optionals.expired, role = optionals.role, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            isMultiple = Array.isArray(role) && role.length > 0;
+            roleList = isMultiple ? role : [role];
+            searchParams = {
+              expired: expired,
+              role: role ? roleList : undefined
+            };
+            _context9.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get('/group/member').then(function (_ref9) {
+              var body = _ref9.body;
+              return body;
+            });
+
+          case 7:
+            return _context9.abrupt("return", _context9.sent);
+
+          case 8:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+  return _getSessionGroups.apply(this, arguments);
+}
+
+function register(_x8) {
+  return _register.apply(this, arguments);
+}
+/**
+ * Adds a user to a group
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.addUser(group.groupKey);
+ *
+ * @param {string}          groupKey                        Key associated with group
+ * @param {string}          userKey                         Key associated with group
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                        Group the user was added to
+ */
+
+function _register() {
+  _register = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10(groupKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args10 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            optionals = _args10.length > 1 && _args10[1] !== undefined ? _args10[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName; // TODO figure stufffffffff
+
+            _context10.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/group/selfRegistration/".concat(groupKey)).then(function (_ref10) {
+              var body = _ref10.body;
+              return body;
+            });
+
+          case 4:
+            return _context10.abrupt("return", _context10.sent);
+
+          case 5:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _register.apply(this, arguments);
+}
+
+function addUser(_x9, _x10) {
+  return _addUser.apply(this, arguments);
+}
+/**
+ * Updates a user's group membership information
+ *
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}/{USER_KEY}`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * epicenter.groupAdapter.updateUser(group.groupKey);
+ *
+ * @param {string}          groupKey                        Key associated with group
+ * @param {string}          userKey                         Key associated with group
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {string}          [optionals.role]                User's role; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling)
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                        Group the user was added to
+ */
+
+function _addUser() {
+  _addUser = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee11(groupKey, userKey) {
+    var optionals,
+        role,
+        available,
+        accountShortName,
+        projectShortName,
+        _args11 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee11$(_context11) {
+      while (1) {
+        switch (_context11.prev = _context11.next) {
+          case 0:
+            optionals = _args11.length > 2 && _args11[2] !== undefined ? _args11[2] : {};
+            role = optionals.role, available = optionals.available, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context11.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/group/member/".concat(groupKey), {
+              body: {
+                objectType: 'group',
+                userKey: userKey,
+                role: role !== null && role !== void 0 ? role : utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT,
+                available: available !== null && available !== void 0 ? available : true
+              }
+            }).then(function (_ref11) {
+              var body = _ref11.body;
+              return body;
+            });
+
+          case 4:
+            return _context11.abrupt("return", _context11.sent);
+
+          case 5:
+          case "end":
+            return _context11.stop();
+        }
+      }
+    }, _callee11);
+  }));
+  return _addUser.apply(this, arguments);
+}
+
+function updateUser(_x11, _x12) {
+  return _updateUser.apply(this, arguments);
+}
+/**
+ * Removes user(s) from the group
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}[/{USER_KEY}][?userKey={USER_KEY}&userKey=...]`
+ *
+ * @memberof groupAdapter
+ * @example
+ *
+ * const userKeys = members.map(({ userKey }) => userKey);
+ * epicenter.groupAdapter.removeUsers(group.groupKey, userKeys)
+ *
+ * @param {string}          groupKey                        Key associated with the group
+ * @param {string|string[]} userKey                         Key associated with the user or an array of user keys to remove from group
+ * @param {object}          [optionals={}]                  Optional parameters
+ * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
+
+function _updateUser() {
+  _updateUser = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee12(groupKey, userKey) {
+    var optionals,
+        role,
+        available,
+        accountShortName,
+        projectShortName,
+        _args12 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee12$(_context12) {
+      while (1) {
+        switch (_context12.prev = _context12.next) {
+          case 0:
+            optionals = _args12.length > 2 && _args12[2] !== undefined ? _args12[2] : {};
+            role = optionals.role, available = optionals.available, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context12.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch("/group/member/".concat(groupKey, "/").concat(userKey), {
+              body: {
+                objectType: 'group',
+                role: role,
+                available: available
+              }
+            }).then(function (_ref12) {
+              var body = _ref12.body;
+              return body;
+            });
+
+          case 4:
+            return _context12.abrupt("return", _context12.sent);
+
+          case 5:
+          case "end":
+            return _context12.stop();
+        }
+      }
+    }, _callee12);
+  }));
+  return _updateUser.apply(this, arguments);
+}
+
+function removeUser(_x13, _x14) {
+  return _removeUser.apply(this, arguments);
+}
+
+function _removeUser() {
+  _removeUser = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee13(groupKey, userKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        hasMultiple,
+        uriComponent,
+        searchParams,
+        _args13 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee13$(_context13) {
+      while (1) {
+        switch (_context13.prev = _context13.next) {
+          case 0:
+            optionals = _args13.length > 2 && _args13[2] !== undefined ? _args13[2] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            hasMultiple = Array.isArray(userKey) && userKey.length > 1;
+            uriComponent = hasMultiple ? '' : "/".concat(userKey.length === 1 ? userKey[0] : userKey);
+            searchParams = hasMultiple ? {
+              userKey: userKey
+            } : undefined;
+            _context13.next = 7;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams)["delete"]("/group/member/".concat(groupKey).concat(uriComponent)).then(function (_ref13) {
+              var body = _ref13.body;
+              return body;
+            });
+
+          case 7:
+            return _context13.abrupt("return", _context13.sent);
+
+          case 8:
+          case "end":
+            return _context13.stop();
+        }
+      }
+    }, _callee13);
+  }));
+  return _removeUser.apply(this, arguments);
 }
 
 /***/ }),
@@ -7520,7 +8358,7 @@ function _update() {
 /*!*******************************!*\
   !*** ./src/adapters/index.js ***!
   \*******************************/
-/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, Channel */
+/*! exports provided: accountAdapter, authAdapter, cometdAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, worldAdapter, Channel */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7541,11 +8379,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return _run__WEBPACK_IMPORTED_MODULE_6__; });
 /* harmony import */ var _vault__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./vault */ "./src/adapters/vault.js");
 /* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return _vault__WEBPACK_IMPORTED_MODULE_7__; });
-/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_8__["default"]; });
+/* harmony import */ var _world__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./world */ "./src/adapters/world.js");
+/* harmony reexport (module object) */ __webpack_require__.d(__webpack_exports__, "worldAdapter", function() { return _world__WEBPACK_IMPORTED_MODULE_8__; });
+/* harmony import */ var _cometd__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./cometd */ "./src/adapters/cometd.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "cometdAdapter", function() { return _cometd__WEBPACK_IMPORTED_MODULE_9__["default"]; });
 
-/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_9__["default"]; });
+/* harmony import */ var _channel__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./channel */ "./src/adapters/channel.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "Channel", function() { return _channel__WEBPACK_IMPORTED_MODULE_10__["default"]; });
+
 
 
 
@@ -7565,14 +8406,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!**********************************!*\
   !*** ./src/adapters/presence.js ***!
   \**********************************/
-/*! exports provided: forGroup, forWorld, connect */
+/*! exports provided: connect, forGroup, forWorld */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return connect; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forGroup", function() { return forGroup; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forWorld", function() { return forWorld; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connect", function() { return connect; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
@@ -7583,47 +8424,82 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-function forGroup(_x) {
-  return _forGroup.apply(this, arguments);
-}
+/**
+ * Presence API adapters -- use this to track online/offline users
+ * @namespace presenceAdapter
+ */
 
-function _forGroup() {
-  _forGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(groupKey) {
-    var optionals,
-        accountShortName,
-        projectShortName,
-        _args = arguments;
+/**
+ * Makes a connection request to the cometd server; effectively marking the user as online; using [logout](#authAdapter-logout) will automatically disconnect for you.
+ *
+ * @memberof presenceAdapter
+ * @example
+ *
+ * epicenter.presenceAdapter.forWorld(world.worldKey)
+ *
+ * @returns {Promise}   Promise indicating whether or not the connection was successful
+ */
+
+function connect() {
+  return _connect.apply(this, arguments);
+}
+/**
+ * Retrieves the presence information for a particular group
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/presence/group/{GROUP_KEY}`
+ *
+ * @memberof presenceAdapter
+ * @example
+ *
+ * epicenter.presenceAdapter.forGroup(group.groupKey)
+ *
+ * @param {string}  groupKey                        Key associated with group
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                List of users online
+ */
+
+function _connect() {
+  _connect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
-            optionals = _args.length > 1 && _args[1] !== undefined ? _args[1] : {};
-            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
-            _context.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/group/".concat(groupKey)).then(function (_ref) {
-              var body = _ref.body;
-              return body;
-            });
+            return _context.abrupt("return", adapters__WEBPACK_IMPORTED_MODULE_3__["cometdAdapter"].handshake());
 
-          case 4:
-            return _context.abrupt("return", _context.sent);
-
-          case 5:
+          case 1:
           case "end":
             return _context.stop();
         }
       }
     }, _callee);
   }));
+  return _connect.apply(this, arguments);
+}
+
+function forGroup(_x) {
   return _forGroup.apply(this, arguments);
 }
+/**
+ * Retrieves the presence information for a particular world
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/presence/world/{WORLD_KEY}`
+ *
+ * @memberof presenceAdapter
+ * @example
+ *
+ * epicenter.presenceAdapter.forWorld(world.worldKey)
+ *
+ * @param {string}  worldKey                        Key associated with world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                List of users online
+ */
 
-function forWorld(_x2) {
-  return _forWorld.apply(this, arguments);
-}
-
-function _forWorld() {
-  _forWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(worldKey) {
+function _forGroup() {
+  _forGroup = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(groupKey) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7635,8 +8511,8 @@ function _forWorld() {
             optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             _context2.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/world/".concat(worldKey)).then(function (_ref2) {
-              var body = _ref2.body;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/group/".concat(groupKey)).then(function (_ref) {
+              var body = _ref.body;
               return body;
             });
 
@@ -7650,29 +8526,42 @@ function _forWorld() {
       }
     }, _callee2);
   }));
+  return _forGroup.apply(this, arguments);
+}
+
+function forWorld(_x2) {
   return _forWorld.apply(this, arguments);
 }
 
-function connect() {
-  return _connect.apply(this, arguments);
-}
-
-function _connect() {
-  _connect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+function _forWorld() {
+  _forWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(worldKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args3 = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            return _context3.abrupt("return", adapters__WEBPACK_IMPORTED_MODULE_3__["cometdAdapter"].handshake());
+            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/presence/world/".concat(worldKey)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
 
-          case 1:
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
           case "end":
             return _context3.stop();
         }
       }
     }, _callee3);
   }));
-  return _connect.apply(this, arguments);
+  return _forWorld.apply(this, arguments);
 }
 
 /***/ }),
@@ -7694,6 +8583,27 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
 
 
+
+/**
+ * Project API adapters -- project stuff TODO
+ * @namespace projectAdapter
+ */
+
+/**
+ * Makes a connection request to the cometd server; effectively marking the user as online; using [logout](#authAdapter-logout) will automatically disconnect for you.
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/project/channel/isEnabled`
+ *
+ * @memberof projectAdapter
+ * @example
+ *
+ * epicenter.projectAdapter.channelsEnabled()
+ *
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {Promise}                               Promise resolving true/false whether or not the project supports the use of push channels
+ */
 
 function channelsEnabled() {
   return _channelsEnabled.apply(this, arguments);
@@ -7738,7 +8648,7 @@ function _channelsEnabled() {
 /*!*****************************!*\
   !*** ./src/adapters/run.js ***!
   \*****************************/
-/*! exports provided: create, clone, restore, rewind, update, remove, get, query, introspect, operation, getVariables, getVariable, updateVariables, getMetadata, updateMetadata, action, getWithStrategy */
+/*! exports provided: create, clone, restore, rewind, update, remove, get, query, introspect, operation, getVariables, getVariable, updateVariables, getMetadata, updateMetadata, action, getWithStrategy, retrieveFromWorld, removeFromWorld */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7760,17 +8670,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateMetadata", function() { return updateMetadata; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "action", function() { return action; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWithStrategy", function() { return getWithStrategy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "retrieveFromWorld", function() { return retrieveFromWorld; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeFromWorld", function() { return removeFromWorld; });
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
-/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
-
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
 
 
 
@@ -7793,17 +8702,17 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  * @memberof runAdapter
  * @example
  *
- * const { runAdapter, SCOPE_BOUNDARY } = epicenter;
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
  * runAdapter.create('model.py', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
  * @param {string}  model               Name of your model file
- * @param {Object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
+ * @param {object}  scope               Scope associated with your run
+ * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function create(_x, _x2) {
@@ -7814,17 +8723,15 @@ function create(_x, _x2) {
  * @memberof runAdapter
  *
  * @param {string}  runKey          Run's key
- * @param {Object}  [optionals={}]  Object for all optional fields
- * @returns {Object}                Response with the run in the "body"
+ * @param {object}  [optionals={}]  Object for all optional fields
+ * @returns {object}                Response with the run in the "body"
  */
 
 function _create() {
-  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee(model, scope) {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee(model, scope) {
     var optionals,
         scopeBoundary,
         scopeKey,
-        accountShortName,
-        projectShortName,
         readLock,
         writeLock,
         userKey,
@@ -7832,28 +8739,30 @@ function _create() {
         trackingKey,
         modelContext,
         executionContext,
+        accountShortName,
+        projectShortName,
         WORLD,
         PARTICIPANT,
         USER,
         defaultLock,
         _args = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee$(_context) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             optionals = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
-            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext;
-            WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_5__["SCOPE_BOUNDARY"].WORLD;
-            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_5__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_5__["LOCK_TYPE"].USER;
+            readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_4__["SCOPE_BOUNDARY"].WORLD;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].USER;
             defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
             _context.next = 8;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/run', {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/run', {
               body: {
                 scope: {
                   scopeBoundary: scopeBoundary,
                   scopeKey: scopeKey,
-                  userKey: scopeBoundary === WORLD ? undefined : userKey !== null && userKey !== void 0 ? userKey : utils__WEBPACK_IMPORTED_MODULE_4__["identification"].session.userKey
+                  userKey: scopeBoundary === WORLD ? undefined : userKey !== null && userKey !== void 0 ? userKey : utils__WEBPACK_IMPORTED_MODULE_3__["identification"].session.userKey
                 },
                 permit: {
                   readLock: readLock || defaultLock,
@@ -7893,7 +8802,7 @@ function clone(_x3) {
 }
 
 function _clone() {
-  _clone = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee2(runKey) {
+  _clone = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee2(runKey) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7905,14 +8814,14 @@ function _clone() {
         executionContext,
         _args2 = arguments;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee2$(_context2) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, _optionals$modelConte = optionals.modelContext, modelContext = _optionals$modelConte === void 0 ? {} : _optionals$modelConte, _optionals$executionC = optionals.executionContext, executionContext = _optionals$executionC === void 0 ? {} : _optionals$executionC;
             _context2.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/clone/".concat(runKey), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/clone/".concat(runKey), {
               body: {
                 trackingKey: trackingKey,
                 modelContext: modelContext,
@@ -7942,7 +8851,7 @@ function restore(_x4) {
 }
 
 function _restore() {
-  _restore = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee3(runKey) {
+  _restore = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee3(runKey) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7953,14 +8862,14 @@ function _restore() {
         executionContext,
         _args3 = arguments;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee3$(_context3) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
             optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, _optionals$modelConte2 = optionals.modelContext, modelContext = _optionals$modelConte2 === void 0 ? {} : _optionals$modelConte2, _optionals$executionC2 = optionals.executionContext, executionContext = _optionals$executionC2 === void 0 ? {} : _optionals$executionC2;
             _context3.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/restore/".concat(runKey), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/restore/".concat(runKey), {
               body: {
                 modelContext: modelContext,
                 executionContext: executionContext,
@@ -7989,7 +8898,7 @@ function rewind(_x5, _x6) {
 }
 
 function _rewind() {
-  _rewind = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee4(runKey, steps) {
+  _rewind = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee4(runKey, steps) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -7998,14 +8907,14 @@ function _rewind() {
         modelContext,
         _args4 = arguments;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee4$(_context4) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             optionals = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, ephemeral = optionals.ephemeral, _optionals$modelConte3 = optionals.modelContext, modelContext = _optionals$modelConte3 === void 0 ? {} : _optionals$modelConte3;
             _context4.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/rewind/".concat(runKey), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/rewind/".concat(runKey), {
               body: {
                 rewindCount: steps,
                 modelContext: modelContext,
@@ -8032,9 +8941,25 @@ function _rewind() {
 function update(_x7, _x8) {
   return _update.apply(this, arguments);
 }
+/**
+ * *Does not actually delete the run*. The run is instead removed from memory. This can be used as a means of preserving server CPUs, and should be used when you do not expect to perform any addtional actions that would bring the run back into memory. (TODO: see David for details; is it just operations that bring the run into memory? what about clone... etc.)
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * epicenter.runAdapter.remove(run.runKey);
+ *
+ * @param {string}  runKey                          Key associated with the run
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                TODO
+ */
 
 function _update() {
-  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee5(runKey, update) {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee5(runKey, update) {
     var optionals,
         readLock,
         writeLock,
@@ -8047,7 +8972,7 @@ function _update() {
         hasMultiple,
         uriComponent,
         _args5 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee5$(_context5) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
@@ -8057,7 +8982,7 @@ function _update() {
             hasMultiple = Array.isArray(runKey) && runKey.length > 1;
             uriComponent = hasMultiple ? '' : "/".concat(runKey.length === 1 ? runKey[0] : runKey);
             _context5.next = 7;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(hasMultiple ? {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(hasMultiple ? {
               runKey: runKey
             } : '').patch("/run".concat(uriComponent), {
               body: {
@@ -8091,19 +9016,19 @@ function remove(_x9) {
 }
 
 function _remove() {
-  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee6(runKey) {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee6(runKey) {
     var optionals,
         accountShortName,
         projectShortName,
         _args6 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee6$(_context6) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee6$(_context6) {
       while (1) {
         switch (_context6.prev = _context6.next) {
           case 0:
             optionals = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             _context6.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/run/".concat(runKey)).then(function (_ref6) {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/run/".concat(runKey)).then(function (_ref6) {
               var body = _ref6.body;
               return body;
             });
@@ -8125,32 +9050,56 @@ function get(_x10) {
   return _get.apply(this, arguments);
 }
 /**
- * Queries for runs. Use this to look u
- * @memberof runAdapter
+ * Queries for runs.
  *
- * @param {string}  model               Name of your model file
- * @param {Object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [SCOPE_BOUNDARY](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @param {Filter}  [optionals.filter]  Filter Object
- * @returns {Object}                    Something meaningful about returns
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter } from 'epicenter';
+ * runAdapter.query({
+ *      filter: [
+ *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *          'run.hidden=false',             // where the run's 'hidden' attribute is false
+ *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-'
+ *      ],
+ *      sort: ['+run.created']              // sort all findings by the 'created' field
+ *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
+ *      metadata: ['classification']        // include the run metadata for 'classification' in the response
+ * });
+ *
+ * @param {string}      model                           Name of your model file
+ * @param {object}      scope                           Scope associated with your run
+ * @param {string}      scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string[]}    [optionals.filter]              List of conditionals to filter for
+ * @param {string[]}    [optionals.sort]                List of values to sort by
+ * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
+ * @param {string[]}    [optionals.metadata]            List of metadata to include with the runs found
+ * @param {number}      [optionals.first]               The index from which we collect our runs from
+ * @param {number}      [optionals.max]                 The maximum number of runs to return (upper limit: 200)
+ * @param {number}      [optionals.timeout]             Number of seconds we're willing to wait for the response from the server
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                    TODO
  */
 
 function _get() {
-  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee7(runKey) {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee7(runKey) {
     var optionals,
         accountShortName,
         projectShortName,
         _args7 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee7$(_context7) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee7$(_context7) {
       while (1) {
         switch (_context7.prev = _context7.next) {
           case 0:
             optionals = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             _context7.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/".concat(runKey)).then(function (_ref7) {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/".concat(runKey)).then(function (_ref7) {
               var body = _ref7.body;
               return body;
             });
@@ -8173,7 +9122,7 @@ function query(_x11, _x12) {
 }
 
 function _query() {
-  _query = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee8(model, scope) {
+  _query = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee8(model, scope) {
     var optionals,
         scopeBoundary,
         scopeKey,
@@ -8193,32 +9142,24 @@ function _query() {
         searchParams,
         _args8 = arguments;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee8$(_context8) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee8$(_context8) {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
             optionals = _args8.length > 2 && _args8[2] !== undefined ? _args8[2] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
-            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? {} : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? {} : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$variables = optionals.variables, variables = _optionals$variables === void 0 ? [] : _optionals$variables, _optionals$metadata = optionals.metadata, metadata = _optionals$metadata === void 0 ? [] : _optionals$metadata, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _optionals$filter = optionals.filter, filter = _optionals$filter === void 0 ? [] : _optionals$filter, _optionals$sort = optionals.sort, sort = _optionals$sort === void 0 ? [] : _optionals$sort, first = optionals.first, max = optionals.max, timeout = optionals.timeout, _optionals$variables = optionals.variables, variables = _optionals$variables === void 0 ? [] : _optionals$variables, _optionals$metadata = optionals.metadata, metadata = _optionals$metadata === void 0 ? [] : _optionals$metadata, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             searchParams = {
-              filter: [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.variables || []).map(function (statement) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('var.', statement);
-              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.metadata || []).map(function (statement) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('meta.', statement);
-              })), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((filter.attributes || []).map(function (statement) {
-                return Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', statement);
-              }))).join(';'),
-              sort: _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_1___default()((sort.attributes || []).map(function (sorting) {
-                return "".concat(sorting.charAt(0)).concat(Object(utils__WEBPACK_IMPORTED_MODULE_4__["prefix"])('run.', sorting.slice(1)));
-              })),
+              filter: filter.join(';') || undefined,
+              sort: sort.join(';') || undefined,
+              "var": variables.join(';') || undefined,
+              meta: metadata.join(';') || undefined,
               first: first,
               max: max,
-              timeout: timeout,
-              "var": variables.length ? variables.join(';') : undefined,
-              meta: metadata.length ? metadata.join(';') : undefined
+              timeout: timeout
             };
             _context8.next = 6;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
               paginated: true // callback: (response) => {
               //     response.body.values = response.body.values.map((run) => {
               //         run.variables = variables.reduce((variableMap, key, index) => {
@@ -8252,19 +9193,19 @@ function introspect(_x13) {
 }
 
 function _introspect() {
-  _introspect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee9(model) {
+  _introspect = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee9(model) {
     var optionals,
         accountShortName,
         projectShortName,
         _args9 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee9$(_context9) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee9$(_context9) {
       while (1) {
         switch (_context9.prev = _context9.next) {
           case 0:
             optionals = _args9.length > 1 && _args9[1] !== undefined ? _args9[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             _context9.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/introspect/".concat(model)).then(function (_ref9) {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/run/introspect/".concat(model)).then(function (_ref9) {
               var body = _ref9.body;
               return body;
             });
@@ -8287,7 +9228,7 @@ function operation(_x14, _x15) {
 }
 
 function _operation() {
-  _operation = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee10(runKey, name) {
+  _operation = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee10(runKey, name) {
     var args,
         optionals,
         accountShortName,
@@ -8298,7 +9239,7 @@ function _operation() {
         uriComponent,
         searchParams,
         _args10 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee10$(_context10) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee10$(_context10) {
       while (1) {
         switch (_context10.prev = _context10.next) {
           case 0:
@@ -8315,12 +9256,12 @@ function _operation() {
               timeout: timeout
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context10.next = 9;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/operation".concat(uriComponent), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/operation".concat(uriComponent), {
               body: {
                 name: name,
                 arguments: args,
@@ -8350,7 +9291,7 @@ function getVariables(_x16, _x17) {
 }
 
 function _getVariables() {
-  _getVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee11(runKey, variables) {
+  _getVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee11(runKey, variables) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8361,7 +9302,7 @@ function _getVariables() {
         uriComponent,
         searchParams,
         _args11 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee11$(_context11) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee11$(_context11) {
       while (1) {
         switch (_context11.prev = _context11.next) {
           case 0:
@@ -8380,12 +9321,12 @@ function _getVariables() {
               include: include
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context11.next = 9;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/variable".concat(uriComponent)).then(function (_ref11) {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/variable".concat(uriComponent)).then(function (_ref11) {
               var body = _ref11.body;
               return body;
             });
@@ -8411,13 +9352,13 @@ function getVariable(_x18, _x19) {
  * @memberof runAdapter
  *
  * @param {string}  runKey      Identifier for your run
- * @param {Object}  update      Object with the key-value pairs you would like to update in the model
- * @param {Object}  optionals   Something meaningful about optionals
- * @returns {Object}            Object with the variables & new values that were updated
+ * @param {object}  update      Object with the key-value pairs you would like to update in the model
+ * @param {object}  optionals   Something meaningful about optionals
+ * @returns {object}            Object with the variables & new values that were updated
  */
 
 function _getVariable() {
-  _getVariable = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee12(runKey, variable) {
+  _getVariable = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee12(runKey, variable) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8425,7 +9366,7 @@ function _getVariable() {
         ritual,
         variables,
         _args12 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee12$(_context12) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee12$(_context12) {
       while (1) {
         switch (_context12.prev = _context12.next) {
           case 0:
@@ -8442,7 +9383,7 @@ function _getVariable() {
 
           case 5:
             _context12.next = 7;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
               timeout: timeout,
               ritual: ritual
             }).get("/run/variable/".concat(runKey, "/").concat(variable)).then(function (_ref12) {
@@ -8468,7 +9409,7 @@ function updateVariables(_x20, _x21) {
 }
 
 function _updateVariables() {
-  _updateVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee13(runKey, update) {
+  _updateVariables = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee13(runKey, update) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8478,7 +9419,7 @@ function _updateVariables() {
         uriComponent,
         searchParams,
         _args13 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee13$(_context13) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee13$(_context13) {
       while (1) {
         switch (_context13.prev = _context13.next) {
           case 0:
@@ -8494,12 +9435,12 @@ function _updateVariables() {
               timeout: timeout
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context13.next = 8;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/variable".concat(uriComponent), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/variable".concat(uriComponent), {
               body: update
             }).then(function (_ref13) {
               var body = _ref13.body;
@@ -8524,7 +9465,7 @@ function getMetadata(_x22, _x23) {
 }
 
 function _getMetadata() {
-  _getMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee14(runKey, variables) {
+  _getMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee14(runKey, variables) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8535,7 +9476,7 @@ function _getMetadata() {
         uriComponent,
         searchParams,
         _args14 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee14$(_context14) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee14$(_context14) {
       while (1) {
         switch (_context14.prev = _context14.next) {
           case 0:
@@ -8554,12 +9495,12 @@ function _getMetadata() {
               include: include
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context14.next = 9;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/meta".concat(uriComponent)).then(function (_ref14) {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/meta".concat(uriComponent)).then(function (_ref14) {
               var body = _ref14.body;
               return body;
             });
@@ -8582,7 +9523,7 @@ function updateMetadata(_x24, _x25) {
 }
 
 function _updateMetadata() {
-  _updateMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee15(runKey, update) {
+  _updateMetadata = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee15(runKey, update) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8592,7 +9533,7 @@ function _updateMetadata() {
         uriComponent,
         searchParams,
         _args15 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee15$(_context15) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee15$(_context15) {
       while (1) {
         switch (_context15.prev = _context15.next) {
           case 0:
@@ -8608,12 +9549,12 @@ function _updateMetadata() {
               timeout: timeout
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context15.next = 8;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/meta".concat(uriComponent), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).patch("/run/meta".concat(uriComponent), {
               body: update
             }).then(function (_ref15) {
               var body = _ref15.body;
@@ -8638,7 +9579,7 @@ function action(_x26, _x27) {
 }
 
 function _action() {
-  _action = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee16(runKey, actionList) {
+  _action = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee16(runKey, actionList) {
     var optionals,
         accountShortName,
         projectShortName,
@@ -8648,7 +9589,7 @@ function _action() {
         uriComponent,
         searchParams,
         _args16 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee16$(_context16) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee16$(_context16) {
       while (1) {
         switch (_context16.prev = _context16.next) {
           case 0:
@@ -8664,12 +9605,12 @@ function _action() {
               timeout: timeout
             };
 
-            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_5__["RITUAL"].EXORCISE && hasMultiple) {
+            if (ritual !== utils_constants__WEBPACK_IMPORTED_MODULE_4__["RITUAL"].EXORCISE && hasMultiple) {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
             _context16.next = 8;
-            return new utils__WEBPACK_IMPORTED_MODULE_4__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/action".concat(uriComponent), {
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).post("/run/action".concat(uriComponent), {
               body: actionList
             }).then(function (_ref16) {
               var body = _ref16.body;
@@ -8689,17 +9630,20 @@ function _action() {
   return _action.apply(this, arguments);
 }
 
-function serial(_x28, _x29, _x30) {
+function serial(_x28, _x29) {
   return _serial.apply(this, arguments);
 }
 
 function _serial() {
-  _serial = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee17(runKey, operations, optionals) {
-    var normalizedOps;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee17$(_context17) {
+  _serial = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee17(runKey, operations) {
+    var optionals,
+        normalizedOps,
+        _args17 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee17$(_context17) {
       while (1) {
         switch (_context17.prev = _context17.next) {
           case 0:
+            optionals = _args17.length > 2 && _args17[2] !== undefined ? _args17[2] : {};
             normalizedOps = operations.map(function (item) {
               return {
                 name: typeof item === 'string' ? item : item.name,
@@ -8711,11 +9655,11 @@ function _serial() {
               var name = _ref17.name,
                   params = _ref17.params;
               return promise.then(function () {
-                return operation(runKey, name, params, optionals);
+                return operation(runKey, name, params, optionals = {});
               });
             }, Promise.resolve()));
 
-          case 2:
+          case 3:
           case "end":
             return _context17.stop();
         }
@@ -8725,13 +9669,40 @@ function _serial() {
   return _serial.apply(this, arguments);
 }
 
-function getWithStrategy(_x31, _x32, _x33) {
+function getWithStrategy(_x30, _x31, _x32) {
   return _getWithStrategy.apply(this, arguments);
 }
+/**
+ * Returns the run associated with the given world key; if the run does not exist, it will create it.
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter, authAdapter } from 'epicenter';
+ * const worldKey = authAdapter.getLocalSession().worldKey
+ * const run = await runAdapter.retrieveWithWorld('model.py', worldKey);
+ *
+ *
+ * @param {string}  model                           Name of your model file
+ * @param {object}  worldKey                        Key associated with the world you'd like a run from
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.readLock]            Role (character type)
+ * @param {string}  [optionals.writeLock]           Role (chracter type)
+ * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param {string}  [optionals.trackingKey]         Tracking key
+ * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
+ * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Run retrieved from the world
+ */
 
 function _getWithStrategy() {
-  _getWithStrategy = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_3___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.mark(function _callee18(strategy, model, scope) {
+  _getWithStrategy = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee18(strategy, model, scope) {
     var optionals,
+        _optionals,
         _optionals$initOperat,
         initOperations,
         runs,
@@ -8739,12 +9710,12 @@ function _getWithStrategy() {
         _newRun,
         _args18 = arguments;
 
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_2___default.a.wrap(function _callee18$(_context18) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee18$(_context18) {
       while (1) {
         switch (_context18.prev = _context18.next) {
           case 0:
             optionals = _args18.length > 3 && _args18[3] !== undefined ? _args18[3] : {};
-            _optionals$initOperat = optionals.initOperations, initOperations = _optionals$initOperat === void 0 ? [] : _optionals$initOperat;
+            _optionals = optionals, _optionals$initOperat = _optionals.initOperations, initOperations = _optionals$initOperat === void 0 ? [] : _optionals$initOperat;
 
             if (!(strategy === 'reuse-across-sessions')) {
               _context18.next = 16;
@@ -8768,12 +9739,12 @@ function _getWithStrategy() {
 
           case 8:
             _context18.next = 10;
-            return create(model, scope, optionals);
+            return create(model, scope, optionals = {});
 
           case 10:
             newRun = _context18.sent;
             _context18.next = 13;
-            return serial(newRun.runKey, initOperations, optionals);
+            return serial(newRun.runKey, initOperations, optionals = {});
 
           case 13:
             return _context18.abrupt("return", newRun);
@@ -8785,12 +9756,12 @@ function _getWithStrategy() {
             }
 
             _context18.next = 19;
-            return create(model, scope, optionals);
+            return create(model, scope, optionals = {});
 
           case 19:
             _newRun = _context18.sent;
             _context18.next = 22;
-            return serial(_newRun.runKey, initOperations, optionals);
+            return serial(_newRun.runKey, initOperations, optionals = {});
 
           case 22:
             return _context18.abrupt("return", _newRun);
@@ -8803,7 +9774,7 @@ function _getWithStrategy() {
             }
 
           case 26:
-            throw new utils__WEBPACK_IMPORTED_MODULE_4__["EpicenterError"]('Invalid run strategy.');
+            throw new utils__WEBPACK_IMPORTED_MODULE_3__["EpicenterError"]('Invalid run strategy.');
 
           case 27:
           case "end":
@@ -8813,6 +9784,116 @@ function _getWithStrategy() {
     }, _callee18);
   }));
   return _getWithStrategy.apply(this, arguments);
+}
+
+function retrieveFromWorld(_x33, _x34) {
+  return _retrieveFromWorld.apply(this, arguments);
+}
+/**
+ * Deletes the run associated with the given world key
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter, authAdapter } from 'epicenter';
+ * const worldKey = authAdapter.getLocalSession().worldKey
+ * const run = await runAdapter.removeFromWorld(worldKey);
+ *
+ *
+ * @param {object}  worldKey                        Key associated with the world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Run retrieved from the world
+ */
+
+function _retrieveFromWorld() {
+  _retrieveFromWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee19(model, worldKey) {
+    var optionals,
+        readLock,
+        writeLock,
+        ephemeral,
+        trackingKey,
+        modelContext,
+        executionContext,
+        accountShortName,
+        projectShortName,
+        PARTICIPANT,
+        _args19 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee19$(_context19) {
+      while (1) {
+        switch (_context19.prev = _context19.next) {
+          case 0:
+            optionals = _args19.length > 2 && _args19[2] !== undefined ? _args19[2] : {};
+            readLock = optionals.readLock, writeLock = optionals.writeLock, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].PARTICIPANT;
+            _context19.next = 5;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/world/".concat(worldKey), {
+              body: {
+                permit: {
+                  readLock: readLock || PARTICIPANT,
+                  writeLock: writeLock || PARTICIPANT
+                },
+                morphology: 'MANY',
+                trackingKey: trackingKey,
+                modelFile: model,
+                modelContext: modelContext || {},
+                executionContext: executionContext || {},
+                ephemeral: ephemeral
+              }
+            }).then(function (_ref18) {
+              var body = _ref18.body;
+              return body;
+            });
+
+          case 5:
+            return _context19.abrupt("return", _context19.sent);
+
+          case 6:
+          case "end":
+            return _context19.stop();
+        }
+      }
+    }, _callee19);
+  }));
+  return _retrieveFromWorld.apply(this, arguments);
+}
+
+function removeFromWorld(_x35) {
+  return _removeFromWorld.apply(this, arguments);
+}
+
+function _removeFromWorld() {
+  _removeFromWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee20(worldKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args20 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee20$(_context20) {
+      while (1) {
+        switch (_context20.prev = _context20.next) {
+          case 0:
+            optionals = _args20.length > 1 && _args20[1] !== undefined ? _args20[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context20.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/run/world/".concat(worldKey)).then(function (_ref19) {
+              var body = _ref19.body;
+              return body;
+            });
+
+          case 4:
+            return _context20.abrupt("return", _context20.sent);
+
+          case 5:
+          case "end":
+            return _context20.stop();
+        }
+      }
+    }, _callee20);
+  }));
+  return _removeFromWorld.apply(this, arguments);
 }
 
 /***/ }),
@@ -8852,13 +9933,13 @@ __webpack_require__.r(__webpack_exports__);
  * @memberof vaultAdapter
  * @example
  *
- * const { vaultAdapter } = epicenter;
+ * import { vaultAdapter } from 'epicenter';
  * vaultAdapter.update
  *
  * @param {string}  vaultKey            Episode name
- * @param {Array}   items               Group to make the episode under
- * @param {Object}  [optionals={}]      Something meaningful about optionals
- * @returns {Object}                    Something meaningful about returns
+ * @param {object}  items               Group to make the episode under
+ * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @returns {object}                    Something meaningful about returns
  */
 
 function update(_x, _x2) {
@@ -9052,6 +10133,658 @@ function _create() {
 
 /***/ }),
 
+/***/ "./src/adapters/world.js":
+/*!*******************************!*\
+  !*** ./src/adapters/world.js ***!
+  \*******************************/
+/*! exports provided: update, destroy, create, get, selfAssign, assignUsers, updateUsers, getAssignments, removeUsers, editPersonas */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroy", function() { return destroy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "selfAssign", function() { return selfAssign; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assignUsers", function() { return assignUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "updateUsers", function() { return updateUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAssignments", function() { return getAssignments; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeUsers", function() { return removeUsers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "editPersonas", function() { return editPersonas; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
+/* harmony import */ var utils_constants__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! utils/constants */ "./src/utils/constants.js");
+
+
+
+
+/**
+ * World API adapters -- handles worlds and user role/assignments
+ * @namespace worldAdapter
+ */
+
+/**
+ * Updates fields for a particular world.
+ *
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * epicenter.worldAdapter.update(world.worldKey, { name: 'World A1' });
+ *
+ * @param {string}  worldKey                        Key associated with world
+ * @param {object}  update                          Attributes you wish to update
+ * @param {string}  [update.name]                   Name of the world
+ * @param {string}  [update.runKey]                 Key of the run associated with the world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Group with updated attributes
+ */
+
+function update(_x, _x2) {
+  return _update.apply(this, arguments);
+}
+/**
+ * Deletes a world
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * epicenter.worldAdapter.destroy(world.worldKey);
+ *
+ * @param {string}  worldKey                        Key associated with world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
+
+function _update() {
+  _update = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(worldKey, update) {
+    var optionals,
+        name,
+        runKey,
+        accountShortName,
+        projectShortName,
+        _args = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            optionals = _args.length > 2 && _args[2] !== undefined ? _args[2] : {};
+            name = update.name, runKey = update.runKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context.next = 5;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).patch("/world/".concat(worldKey), {
+              body: {
+                name: name,
+                runKey: runKey
+              }
+            }).then(function (_ref) {
+              var body = _ref.body;
+              return body;
+            });
+
+          case 5:
+            return _context.abrupt("return", _context.sent);
+
+          case 6:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+  return _update.apply(this, arguments);
+}
+
+function destroy(_x3) {
+  return _destroy.apply(this, arguments);
+}
+/**
+ * Creates a world
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * worldAdapter.create({ name: 'Whole New World' }, '');
+ *
+ * @param {object}  world                           New world object
+ * @param {string}  world.name                      Name of the world
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}  [optionals.episodeName]         Name of the episode
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
+
+function _destroy() {
+  _destroy = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(worldKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args2 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)["delete"]("/world/".concat(worldKey)).then(function (_ref2) {
+              var body = _ref2.body;
+              return body;
+            });
+
+          case 4:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 5:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+  return _destroy.apply(this, arguments);
+}
+
+function create(_x4) {
+  return _create.apply(this, arguments);
+}
+/**
+ * Fetches the worlds in a group
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * const worlds = await worldAdapter.get();
+ *
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}  [optionals.episodeName]         Name of the episode
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                              List of worlds
+ */
+
+function _create() {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(world) {
+    var _identification$sessi;
+
+    var optionals,
+        groupName,
+        episodeName,
+        accountShortName,
+        projectShortName,
+        _args3 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
+            groupName = optionals.groupName, episodeName = optionals.episodeName, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context3.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/world/".concat(groupName !== null && groupName !== void 0 ? groupName : (_identification$sessi = utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session) === null || _identification$sessi === void 0 ? void 0 : _identification$sessi.groupName).concat(episodeName ? "/".concat(episodeName) : ''), {
+              body: world
+            }).then(function (_ref3) {
+              var body = _ref3.body;
+              return body;
+            });
+
+          case 4:
+            return _context3.abrupt("return", _context3.sent);
+
+          case 5:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+  return _create.apply(this, arguments);
+}
+
+function get() {
+  return _get.apply(this, arguments);
+}
+/**
+ * Automatically assigns the current session's user to a world
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/selfassign/{GROUP_NAME}[/{EPISODE_NAME}]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * const myWorld = await worldAdapter.selfAssign('cartographer');
+ *
+ * @param {string}  role                            Role to assign for, can be undefined
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}  [optionals.episodeName]         Name of the episode
+ * @param {boolean} [optionals.exceedMinimums]      Indicates something... TODO
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                World users were assigned to
+ */
+
+function _get() {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+    var _identification$sessi2;
+
+    var optionals,
+        groupName,
+        episodeName,
+        accountShortName,
+        projectShortName,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 0 && _args4[0] !== undefined ? _args4[0] : {};
+            groupName = optionals.groupName, episodeName = optionals.episodeName, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context4.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/world/".concat(groupName !== null && groupName !== void 0 ? groupName : (_identification$sessi2 = utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session) === null || _identification$sessi2 === void 0 ? void 0 : _identification$sessi2.groupName).concat(episodeName ? "/".concat(episodeName) : '')).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 4:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 5:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _get.apply(this, arguments);
+}
+
+function selfAssign(_x5) {
+  return _selfAssign.apply(this, arguments);
+}
+/**
+ * Assigns a list of users to a world.
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{GROUP_NAME}[/{EPISODE_NAME}]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * const worlds = await worldAdapter.assignUsers([
+ *      { userKey: '123', role: 'locksmith' },
+ *      { userKey: '456', role: 'cartographer' },
+ * ]);
+ *
+ * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
+ * @param {object}      [optionals={}]                      Optional parameters
+ * @param {string}      [optionals.groupName]               Name of the group (defaults to name of group associated with session)
+ * @param {string}      [optionals.episodeName]             Name of the episode
+ * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
+ * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
+ * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                                      List of worlds assigned to
+ */
+
+function _selfAssign() {
+  _selfAssign = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(role) {
+    var _identification$sessi3;
+
+    var optionals,
+        groupName,
+        episodeName,
+        exceedMinimums,
+        accountShortName,
+        projectShortName,
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            optionals = _args5.length > 1 && _args5[1] !== undefined ? _args5[1] : {};
+            groupName = optionals.groupName, episodeName = optionals.episodeName, exceedMinimums = optionals.exceedMinimums, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context5.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/world/selfassign/".concat(groupName !== null && groupName !== void 0 ? groupName : (_identification$sessi3 = utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session) === null || _identification$sessi3 === void 0 ? void 0 : _identification$sessi3.groupName).concat(episodeName ? "/".concat(episodeName) : ''), {
+              body: {
+                role: role,
+                exceedMinimums: exceedMinimums
+              }
+            }).then(function (_ref5) {
+              var body = _ref5.body;
+              return body;
+            });
+
+          case 4:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 5:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+  return _selfAssign.apply(this, arguments);
+}
+
+function assignUsers(_x6) {
+  return _assignUsers.apply(this, arguments);
+}
+/**
+ * Updates a world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
+ *
+ * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * const worlds = await worldAdapter.updateUsers(world.worldKey, [
+ *      { userKey: '123', role: 'locksmith' },
+ *      { userKey: '456', role: 'cartographer' },
+ * ]);
+ *
+ * @param {string}      worldKey                            Key associated with the world
+ * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
+ * @param {object}      [optionals={}]                      Optional parameters
+ * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
+ * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
+ * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
+ * @returns {object}                                        Updated world object
+ */
+
+function _assignUsers() {
+  _assignUsers = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(assignments) {
+    var _identification$sessi4;
+
+    var optionals,
+        groupName,
+        episodeName,
+        exceedMinimums,
+        requireAllAssignments,
+        accountShortName,
+        projectShortName,
+        _args6 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      while (1) {
+        switch (_context6.prev = _context6.next) {
+          case 0:
+            optionals = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : {};
+            groupName = optionals.groupName, episodeName = optionals.episodeName, exceedMinimums = optionals.exceedMinimums, requireAllAssignments = optionals.requireAllAssignments, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context6.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/world/assignment/".concat(groupName !== null && groupName !== void 0 ? groupName : (_identification$sessi4 = utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session) === null || _identification$sessi4 === void 0 ? void 0 : _identification$sessi4.groupName).concat(episodeName ? "/".concat(episodeName) : ''), {
+              body: {
+                assignments: assignments,
+                exceedMinimums: exceedMinimums,
+                requireAllAssignments: requireAllAssignments
+              }
+            }).then(function (_ref6) {
+              var body = _ref6.body;
+              return body;
+            });
+
+          case 4:
+            return _context6.abrupt("return", _context6.sent);
+
+          case 5:
+          case "end":
+            return _context6.stop();
+        }
+      }
+    }, _callee6);
+  }));
+  return _assignUsers.apply(this, arguments);
+}
+
+function updateUsers(_x7, _x8) {
+  return _updateUsers.apply(this, arguments);
+}
+/**
+ * Retrieves the current assignment information for a given world
+ *
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * const assignments = await worldAdapter.getAssignments(world.worldKey);
+ *
+ * @param {string}      worldKey                            Key associated with the world
+ * @param {object}      [optionals={}]                      Optional parameters
+ * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
+ * @returns {object[]}                                      List of assignment objects containing user and role information
+ */
+
+function _updateUsers() {
+  _updateUsers = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7(worldKey, assignments) {
+    var optionals,
+        exceedMinimums,
+        requireAllAssignments,
+        accountShortName,
+        projectShortName,
+        _args7 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            optionals = _args7.length > 2 && _args7[2] !== undefined ? _args7[2] : {};
+            exceedMinimums = optionals.exceedMinimums, requireAllAssignments = optionals.requireAllAssignments, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context7.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).put("/world/assignment/".concat(worldKey), {
+              body: {
+                assignments: assignments,
+                exceedMinimums: exceedMinimums,
+                requireAllAssignments: requireAllAssignments
+              }
+            }).then(function (_ref7) {
+              var body = _ref7.body;
+              return body;
+            });
+
+          case 4:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 5:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+  return _updateUsers.apply(this, arguments);
+}
+
+function getAssignments(_x9) {
+  return _getAssignments.apply(this, arguments);
+}
+/**
+ * Removes a user or list of users the all worlds in a given group or episode. Any worlds that do not contain users within them will be automatically deleted in the process.
+ *
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment?userKey={USER_KEY}[&userKey={USER_KEY}&userKey=...]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * await worldAdapter.removeUser(user.userKey);
+ *
+ * @param {string[]}    userKeys                        List of keys associated with users to remove from worlds
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}      [optionals.episodeName]         Name of the episode
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
+
+function _getAssignments() {
+  _getAssignments = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8(worldKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        _args8 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+      while (1) {
+        switch (_context8.prev = _context8.next) {
+          case 0:
+            optionals = _args8.length > 1 && _args8[1] !== undefined ? _args8[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context8.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/world/assignment/".concat(worldKey)).then(function (_ref8) {
+              var body = _ref8.body;
+              return body;
+            });
+
+          case 4:
+            return _context8.abrupt("return", _context8.sent);
+
+          case 5:
+          case "end":
+            return _context8.stop();
+        }
+      }
+    }, _callee8);
+  }));
+  return _getAssignments.apply(this, arguments);
+}
+
+function removeUsers(_x10) {
+  return _removeUsers.apply(this, arguments);
+}
+/**
+ * Edits the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
+ *
+ * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/persona/{SCOPE_BOUNDARY}[/{SCOPE_KEY}]`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * await worldAdapter.editPersonas([
+ *
+ * ]);
+ *
+ * @param {object[]}    personas                        List of persona objects containing `role`, `minimum`, and `maximum`
+ * @param {object}      [scope={}]                      Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
+ * @param {string}      [scope.scopeBoundary]           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      [scope.scopeKey]                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}
+ */
+
+function _removeUsers() {
+  _removeUsers = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee9(userKeys) {
+    var _identification$sessi5;
+
+    var optionals,
+        groupName,
+        episodeName,
+        accountShortName,
+        projectShortName,
+        _args9 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee9$(_context9) {
+      while (1) {
+        switch (_context9.prev = _context9.next) {
+          case 0:
+            optionals = _args9.length > 1 && _args9[1] !== undefined ? _args9[1] : {};
+            groupName = optionals.groupName, episodeName = optionals.episodeName, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            _context9.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              userKey: userKeys
+            }).get("/world/assignment/".concat(groupName !== null && groupName !== void 0 ? groupName : (_identification$sessi5 = utils__WEBPACK_IMPORTED_MODULE_2__["identification"].session) === null || _identification$sessi5 === void 0 ? void 0 : _identification$sessi5.groupName).concat(episodeName ? "/".concat(episodeName) : '')).then(function (_ref9) {
+              var body = _ref9.body;
+              return body;
+            });
+
+          case 4:
+            return _context9.abrupt("return", _context9.sent);
+
+          case 5:
+          case "end":
+            return _context9.stop();
+        }
+      }
+    }, _callee9);
+  }));
+  return _removeUsers.apply(this, arguments);
+}
+
+function editPersonas(_x11) {
+  return _editPersonas.apply(this, arguments);
+}
+
+function _editPersonas() {
+  _editPersonas = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee10(personas) {
+    var scope,
+        optionals,
+        scopeBoundary,
+        scopeKey,
+        accountShortName,
+        projectShortName,
+        boundary,
+        uriComponent,
+        _args10 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee10$(_context10) {
+      while (1) {
+        switch (_context10.prev = _context10.next) {
+          case 0:
+            scope = _args10.length > 1 && _args10[1] !== undefined ? _args10[1] : {};
+            optionals = _args10.length > 2 && _args10[2] !== undefined ? _args10[2] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            boundary = scopeBoundary || utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].PROJECT;
+            uriComponent = boundary === utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].PROJECT ? '' : "/".concat(scopeKey);
+            _context10.next = 8;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName)
+            /* We will at some point remove the need to explicitly lower case this */
+            .put("/world/persona/".concat(boundary.toLowerCase()).concat(uriComponent), {
+              body: personas
+            }).then(function (_ref10) {
+              var body = _ref10.body;
+              return body;
+            });
+
+          case 8:
+            return _context10.abrupt("return", _context10.sent);
+
+          case 9:
+          case "end":
+            return _context10.stop();
+        }
+      }
+    }, _callee10);
+  }));
+  return _editPersonas.apply(this, arguments);
+}
+
+/***/ }),
+
 /***/ "./src/epicenter.js":
 /*!**************************!*\
   !*** ./src/epicenter.js ***!
@@ -9098,7 +10831,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
 
 /* Main file; defines public APIs & load order */
-var version = "3.1.0";
+var version = "3.2.0-alpha";
 
 
 
@@ -9334,7 +11067,6 @@ var BROWSER_STORAGE_TYPE = {
  *
  * psuedonymKey, goes in tandem w/ permit (lock types) --
  * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
- *
  * @enum {string}
  */
 
@@ -9479,7 +11211,7 @@ var LOCK_TYPE = {
   MONITER: 'MONITER',
 
   /**
-   * Author -- Team Members (API keys)
+   * Author -- Team Members (and node server API keys)
    * tied to one account (personal + current account)
    * @constant
    * @type {string}
@@ -9814,6 +11546,11 @@ var ErrorManager = /*#__PURE__*/function () {
 }();
 
 var errorManager = new ErrorManager();
+/**
+ * Configuration -- used to set up and configure global settings for Epicenter JS libs.
+ * @namespace errorManager
+ */
+
 /* harmony default export */ __webpack_exports__["default"] = (errorManager);
 
 /***/ }),
@@ -10374,6 +12111,10 @@ function paginate(json, url, options) {
 function request(_x, _x2) {
   return _request.apply(this, arguments);
 }
+/**
+ * Used to make the network calls in all API adapters
+ */
+
 
 function _request() {
   _request = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee8(url, options) {
@@ -10465,51 +12206,76 @@ var Router = /*#__PURE__*/function () {
 
   _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default()(Router, [{
     key: "withServer",
+
+    /**
+     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [server] Root path to use
+     * @returns {Router}        The Router instance
+     */
     value: function withServer(server) {
-      if (server) this.server = server;
+      if (typeof server !== 'undefined') this.server = server;
       return this;
     }
+    /**
+     * Sets the version. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [version]    Version to use
+     * @returns {Router}            The Router instance
+     */
+
   }, {
     key: "withVersion",
     value: function withVersion(version) {
-      if (version) this.version = version;
+      if (typeof version !== 'undefined') this.version = version;
       return this;
     }
+    /**
+     * Sets the account. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [accountShortName]   Account name to use
+     * @returns {Router}                    The Router instance
+     */
+
   }, {
     key: "withAccountShortName",
     value: function withAccountShortName(accountShortName) {
-      if (accountShortName) this.accountShortName = accountShortName;
+      if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
       return this;
     }
+    /**
+     * Sets the project. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [projectShortName]   Project name to use
+     * @returns {Router}                    The Router instance
+     */
+
   }, {
     key: "withProjectShortName",
     value: function withProjectShortName(projectShortName) {
-      if (projectShortName) this.projectShortName = projectShortName;
+      if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
       return this;
     }
+    /**
+     * Sets the search parameters. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
+     * @returns {Router}                                            The Router instance
+     */
+
   }, {
     key: "withSearchParams",
     value: function withSearchParams(searchParams) {
-      if (!searchParams) return this;
-      var isEmpty = _babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(searchParams) === 'object' && Object.entries(searchParams).length === 0;
-      if (!isEmpty) this.searchParams = searchParams;
+      if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
       return this;
-    }
-  }, {
-    key: "configure",
-    value: function configure() {
-      if (!this.server) this.withServer("".concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiProtocol, "://").concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiHost));
-      if (!this.accountShortName) this.withAccountShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].accountShortName);
-      if (!this.projectShortName) this.withProjectShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].projectShortName);
-      if (!this.version) this.withVersion(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiVersion);
     }
   }, {
     key: "getURL",
     value: function getURL(uriComponent) {
-      this.configure();
+      var _this$searchParams;
+
+      if (!this.server) this.withServer("".concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiProtocol, "://").concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiHost));
+      if (!this.accountShortName) this.withAccountShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].accountShortName);
+      if (!this.projectShortName) this.withProjectShortName(utils__WEBPACK_IMPORTED_MODULE_9__["config"].projectShortName);
+      if (!this.version) this.withVersion(utils__WEBPACK_IMPORTED_MODULE_9__["config"].apiVersion);
       var url = new URL("".concat(this.server));
       url.pathname = "api/v".concat(this.version, "/").concat(this.accountShortName, "/").concat(this.projectShortName).concat(Object(utils__WEBPACK_IMPORTED_MODULE_9__["prefix"])('/', uriComponent));
-      url.search = new URLSearchParams(this.searchParams);
+      url.search = (_this$searchParams = this.searchParams) !== null && _this$searchParams !== void 0 ? _this$searchParams : new URLSearchParams();
       return url;
     } //Network Requests
 
@@ -10678,12 +12444,22 @@ var Router = /*#__PURE__*/function () {
     }()
   }, {
     key: "server",
+
+    /**
+     * The root path used for the call, essentially protocol + hostname
+     * @type {string}
+     */
     get: function get() {
       return this._server;
     },
     set: function set(value) {
       this._server = value;
     }
+    /**
+     * The version of the Epicenter APIs being invoked; expected to stay at `3`
+     * @type {number}
+     */
+
   }, {
     key: "version",
     get: function get() {
@@ -10692,6 +12468,11 @@ var Router = /*#__PURE__*/function () {
     set: function set(value) {
       this._version = value;
     }
+    /**
+     * Name of the account; for administrative use, this value should be set to 'epicenter'
+     * @type {string}
+     */
+
   }, {
     key: "accountShortName",
     get: function get() {
@@ -10700,6 +12481,11 @@ var Router = /*#__PURE__*/function () {
     set: function set(value) {
       this._accountShortName = value;
     }
+    /**
+     * Name of the project; for administrative use, this value should be set to 'manager'
+     * @type {string}
+     */
+
   }, {
     key: "projectShortName",
     get: function get() {
@@ -10708,13 +12494,47 @@ var Router = /*#__PURE__*/function () {
     set: function set(value) {
       this._projectShortName = value;
     }
+    /**
+     * The search parameters for to use when making a network request. This property has should always return an instance of URLSearchParams or undefined. It has unique properties when used with the assignment operator (`=`); see the examples below for more details.
+     * @type {URLSearchParams}
+     *
+     * @example
+     * const router = new Router();
+     * router.searchParams = '?foo=123';
+     * console.log(router.searchParams);                            // always returns an instance object: URLSearchParams {}
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * router.searchParams = 'foo=123';                             // can omit the question mark
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * router.searchParams = [['foo', '123'], ['bar', '456']];      // can accept arrays
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=456'
+     *
+     * router.searchParams = { foo: '123', bar: '456' };            // can accept objects
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=456'
+     *
+     * router.searchParams = { foo: '123', bar: ['4', '5', '6'] };  // can accept objects with arrayed values
+     * console.log(router.searchParams.toString());                 // logs 'foo=123&bar=4&bar=5&bar=6'
+     *
+     * router.searchParams = new URLSearchParams('foo=123');        // can accept instances of URLSearchParams
+     * console.log(router.searchParams.toString());                 // logs 'foo=123'
+     *
+     * @param {object|array|string|URLSearchParams} query   Value used to set the search parameters
+     */
+
   }, {
     key: "searchParams",
     get: function get() {
       return this._searchParams;
     },
     set: function set(query) {
+      if (query.constructor === URLSearchParams) {
+        this._searchParams = query;
+        return;
+      }
       /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
+
+
       if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(query) === 'object' && query.constructor === Object) {
         query = Object.entries(query).reduce(function (arr, _ref4) {
           var _ref5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref4, 2),
@@ -10738,7 +12558,7 @@ var Router = /*#__PURE__*/function () {
         }, []);
       }
 
-      this._searchParams = query;
+      this._searchParams = new URLSearchParams(query);
     }
   }]);
 
