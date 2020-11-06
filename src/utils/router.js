@@ -38,16 +38,21 @@ function paginate(json, url, options) {
     return page;
 }
 
-async function request(url, options) {
-    const { method, body, includeAuthorization, inert, paginated } = options;
-    const headers = {
-        'Content-type': 'application/json; charset=UTF-8',
-    };
+const createHeaders = (includeAuthorization) => {
+    const headers = { 'Content-type': 'application/json; charset=UTF-8' };
     const { session } = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
     }
+    if (includeAuthorization && config.tokenOverride) {
+        headers.Authorization = `Bearer ${config.tokenOverride}`;
+    }
+    return headers;
+};
 
+async function request(url, options) {
+    const { method, body, includeAuthorization, inert, paginated } = options;
+    const headers = createHeaders(includeAuthorization);
     const response = await fetch(url, {
         method: method,
         cache: 'no-cache',

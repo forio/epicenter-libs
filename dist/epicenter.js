@@ -7888,8 +7888,7 @@ function search() {
  * @memberof groupAdapter
  * @example
  *
- * const userKeys = members.map(({ userKey }) => userKey);
- * epicenter.groupAdapter.withGroupName(group.groupKey, userKeys)
+ * epicenter.groupAdapter.withGroupName(group.groupKey)
  *
  * @param {string}  name                            Name associated with the group
  * @param {object}  [optionals={}]                  Optional parameters
@@ -8696,9 +8695,10 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  */
 
 /**
- * Create a run.
+ * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
  *
- * By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
+ *
  * @memberof runAdapter
  * @example
  *
@@ -8707,12 +8707,21 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
- * @param {string}  model               Name of your model file
- * @param {object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * @param {string}  model                           Name of your model file
+ * @param {object}  scope                           Scope associated with your run
+ * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.readLock]            Role (character type)
+ * @param {string}  [optionals.writeLock]           Role (chracter type)
+ * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
+ * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param {string}  [optionals.trackingKey]         Tracking key
+ * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
+ * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Newly created run
  */
 
 function create(_x, _x2) {
@@ -10076,6 +10085,34 @@ function _getWithScope() {
 function remove(_x6) {
   return _remove.apply(this, arguments);
 }
+/**
+ * Creates a vault.
+ *
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
+ * runAdapter.create('model.py', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
+ * });
+ * @param {string}  collection                      Name of the vault
+ * @param {object}  scope                           Scope associated with your run
+ * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}  items                           Defines the contents in the
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.readLock]            Role (character type)
+ * @param {string}  [optionals.writeLock]           Role (chracter type)
+ * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
+ * @param {number}  [optionals.ttlSeconds]          Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
+ * @param {string}  [optionals.mutationKey]         Initial mutation key
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Newly created run
+ */
 
 function _remove() {
   _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(vaultKey) {
@@ -10120,11 +10157,13 @@ function _create() {
     var optionals,
         scopeBoundary,
         scopeKey,
-        accountShortName,
-        projectShortName,
         readLock,
         writeLock,
         userKey,
+        ttlSeconds,
+        mutationKey,
+        accountShortName,
+        projectShortName,
         WORLD,
         PARTICIPANT,
         USER,
@@ -10136,7 +10175,7 @@ function _create() {
           case 0:
             optionals = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
-            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey;
+            readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ttlSeconds = optionals.ttlSeconds, mutationKey = optionals.mutationKey, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].WORLD;
             PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].USER;
             defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
@@ -10152,6 +10191,8 @@ function _create() {
                   readLock: readLock || defaultLock,
                   writeLock: writeLock || defaultLock
                 },
+                ttlSeconds: ttlSeconds,
+                mutationKey: mutationKey,
                 items: items
               }
             }).then(function (_ref5) {
@@ -10299,7 +10340,7 @@ function destroy(_x3) {
  * @example
  *
  * import { worldAdapter } from 'epicenter';
- * worldAdapter.create({ name: 'Whole New World' }, '');
+ * worldAdapter.create({ name: 'Whole New World' });
  *
  * @param {object}  world                           New world object
  * @param {string}  world.name                      Name of the world
@@ -12151,6 +12192,23 @@ function paginate(json, url, options) {
   return page;
 }
 
+var createHeaders = function createHeaders(includeAuthorization) {
+  var headers = {
+    'Content-type': 'application/json; charset=UTF-8'
+  };
+  var session = utils__WEBPACK_IMPORTED_MODULE_9__["identification"].session;
+
+  if (includeAuthorization && session) {
+    headers.Authorization = "Bearer ".concat(session.token);
+  }
+
+  if (includeAuthorization && utils__WEBPACK_IMPORTED_MODULE_9__["config"].tokenOverride) {
+    headers.Authorization = "Bearer ".concat(utils__WEBPACK_IMPORTED_MODULE_9__["config"].tokenOverride);
+  }
+
+  return headers;
+};
+
 function request(_x, _x2) {
   return _request.apply(this, arguments);
 }
@@ -12161,22 +12219,14 @@ function request(_x, _x2) {
 
 function _request() {
   _request = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee8(url, options) {
-    var method, body, includeAuthorization, inert, paginated, headers, session, response, contentType, json, error, retry;
+    var method, body, includeAuthorization, inert, paginated, headers, response, contentType, json, error, retry;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee8$(_context8) {
       while (1) {
         switch (_context8.prev = _context8.next) {
           case 0:
             method = options.method, body = options.body, includeAuthorization = options.includeAuthorization, inert = options.inert, paginated = options.paginated;
-            headers = {
-              'Content-type': 'application/json; charset=UTF-8'
-            };
-            session = utils__WEBPACK_IMPORTED_MODULE_9__["identification"].session;
-
-            if (includeAuthorization && session) {
-              headers.Authorization = "Bearer ".concat(session.token);
-            }
-
-            _context8.next = 6;
+            headers = createHeaders(includeAuthorization);
+            _context8.next = 4;
             return cross_fetch__WEBPACK_IMPORTED_MODULE_8___default()(url, {
               method: method,
               cache: 'no-cache',
@@ -12185,42 +12235,42 @@ function _request() {
               body: body ? JSON.stringify(body) : null
             });
 
-          case 6:
+          case 4:
             response = _context8.sent;
             contentType = response.headers.get('content-type');
 
             if (!(!contentType || !contentType.includes('application/json'))) {
-              _context8.next = 10;
+              _context8.next = 8;
               break;
             }
 
             throw new utils__WEBPACK_IMPORTED_MODULE_9__["EpicenterError"]("Response content-type '".concat(contentType, "' does not include 'application/json'"));
 
-          case 10:
-            _context8.next = 12;
+          case 8:
+            _context8.next = 10;
             return response.json();
 
-          case 12:
+          case 10:
             json = _context8.sent;
 
             if (!(response.status >= 200 && response.status < 400)) {
-              _context8.next = 15;
+              _context8.next = 13;
               break;
             }
 
             return _context8.abrupt("return", new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](paginated ? paginate(json, url, options) : json, response));
 
-          case 15:
+          case 13:
             error = new utils__WEBPACK_IMPORTED_MODULE_9__["Fault"](json, response);
 
             if (!inert) {
-              _context8.next = 18;
+              _context8.next = 16;
               break;
             }
 
             throw error;
 
-          case 18:
+          case 16:
             retry = function retry() {
               return request(url, {
                 method: method,
@@ -12232,7 +12282,7 @@ function _request() {
 
             return _context8.abrupt("return", utils__WEBPACK_IMPORTED_MODULE_9__["errorManager"].handle(error, retry));
 
-          case 20:
+          case 18:
           case "end":
             return _context8.stop();
         }
