@@ -36,14 +36,26 @@ export async function update(vaultKey, items, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function get(collection, scope, optionals = {}) {
+export async function get(vaultKey, optionals = {}) {
+    const { accountShortName, projectShortName } = optionals;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/vault/${vaultKey}`)
+        .catch((error) => {
+            if (error.status === 404) return { body: undefined };
+            return Promise.reject(error);
+        }).then(({ body }) => body);
+}
+
+export async function getWithScope(collection, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName } = optionals;
     const userKey = optionals.userKey ? `/${optionals.userKey}` : '';
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/vault/${scopeBoundary}/${scopeKey}${userKey}/${collection}`)
+        .get(`/vault/with/${scopeBoundary}/${scopeKey}${userKey}/${collection}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
             return Promise.reject(error);
