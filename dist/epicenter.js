@@ -10830,7 +10830,7 @@ function _editPersonas() {
 /*!**************************!*\
   !*** ./src/epicenter.js ***!
   \**************************/
-/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter */
+/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, worldAdapter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10870,6 +10870,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "runAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["runAdapter"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "vaultAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["vaultAdapter"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "worldAdapter", function() { return adapters__WEBPACK_IMPORTED_MODULE_2__["worldAdapter"]; });
 
 /* Main file; defines public APIs & load order */
 var version = "3.2.0-alpha";
