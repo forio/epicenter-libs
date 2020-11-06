@@ -9902,13 +9902,14 @@ function _removeFromWorld() {
 /*!*******************************!*\
   !*** ./src/adapters/vault.js ***!
   \*******************************/
-/*! exports provided: update, get, remove, create */
+/*! exports provided: update, get, getWithScope, remove, create */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "get", function() { return get; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getWithScope", function() { return getWithScope; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "remove", function() { return remove; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "create", function() { return create; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
@@ -9987,29 +9988,24 @@ function _update() {
   return _update.apply(this, arguments);
 }
 
-function get(_x3, _x4) {
+function get(_x3) {
   return _get.apply(this, arguments);
 }
 
 function _get() {
-  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(collection, scope) {
+  _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(vaultKey) {
     var optionals,
-        scopeBoundary,
-        scopeKey,
         accountShortName,
         projectShortName,
-        userKey,
         _args2 = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            optionals = _args2.length > 2 && _args2[2] !== undefined ? _args2[2] : {};
-            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            optionals = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : {};
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
-            userKey = optionals.userKey ? "/".concat(optionals.userKey) : '';
-            _context2.next = 6;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/vault/".concat(scopeBoundary, "/").concat(scopeKey).concat(userKey, "/").concat(collection))["catch"](function (error) {
+            _context2.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/vault/".concat(vaultKey))["catch"](function (error) {
               if (error.status === 404) return {
                 body: undefined
               };
@@ -10019,10 +10015,10 @@ function _get() {
               return body;
             });
 
-          case 6:
+          case 4:
             return _context2.abrupt("return", _context2.sent);
 
-          case 7:
+          case 5:
           case "end":
             return _context2.stop();
         }
@@ -10032,50 +10028,95 @@ function _get() {
   return _get.apply(this, arguments);
 }
 
-function remove(_x5) {
-  return _remove.apply(this, arguments);
+function getWithScope(_x4, _x5) {
+  return _getWithScope.apply(this, arguments);
 }
 
-function _remove() {
-  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(vaultKey) {
+function _getWithScope() {
+  _getWithScope = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(collection, scope) {
     var optionals,
+        scopeBoundary,
+        scopeKey,
         accountShortName,
         projectShortName,
-        mutationKey,
+        userKey,
         _args3 = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
         switch (_context3.prev = _context3.next) {
           case 0:
-            optionals = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : {};
-            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, mutationKey = optionals.mutationKey;
-            _context3.next = 4;
-            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
-              MutationKey: mutationKey
-            })["delete"]("/vault/".concat(vaultKey)).then(function (_ref3) {
+            optionals = _args3.length > 2 && _args3[2] !== undefined ? _args3[2] : {};
+            scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
+            userKey = optionals.userKey ? "/".concat(optionals.userKey) : '';
+            _context3.next = 6;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).get("/vault/with/".concat(scopeBoundary, "/").concat(scopeKey).concat(userKey, "/").concat(collection))["catch"](function (error) {
+              if (error.status === 404) return {
+                body: undefined
+              };
+              return Promise.reject(error);
+            }).then(function (_ref3) {
               var body = _ref3.body;
               return body;
             });
 
-          case 4:
+          case 6:
             return _context3.abrupt("return", _context3.sent);
 
-          case 5:
+          case 7:
           case "end":
             return _context3.stop();
         }
       }
     }, _callee3);
   }));
+  return _getWithScope.apply(this, arguments);
+}
+
+function remove(_x6) {
   return _remove.apply(this, arguments);
 }
 
-function create(_x6, _x7, _x8) {
+function _remove() {
+  _remove = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(vaultKey) {
+    var optionals,
+        accountShortName,
+        projectShortName,
+        mutationKey,
+        _args4 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            optionals = _args4.length > 1 && _args4[1] !== undefined ? _args4[1] : {};
+            accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, mutationKey = optionals.mutationKey;
+            _context4.next = 4;
+            return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams({
+              MutationKey: mutationKey
+            })["delete"]("/vault/".concat(vaultKey)).then(function (_ref4) {
+              var body = _ref4.body;
+              return body;
+            });
+
+          case 4:
+            return _context4.abrupt("return", _context4.sent);
+
+          case 5:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+  return _remove.apply(this, arguments);
+}
+
+function create(_x7, _x8, _x9) {
   return _create.apply(this, arguments);
 }
 
 function _create() {
-  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(collection, scope, items) {
+  _create = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(collection, scope, items) {
     var optionals,
         scopeBoundary,
         scopeKey,
@@ -10088,18 +10129,18 @@ function _create() {
         PARTICIPANT,
         USER,
         defaultLock,
-        _args4 = arguments;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        _args5 = arguments;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
-            optionals = _args4.length > 3 && _args4[3] !== undefined ? _args4[3] : {};
+            optionals = _args5.length > 3 && _args5[3] !== undefined ? _args5[3] : {};
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
             accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName, readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey;
             WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].WORLD;
             PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].USER;
             defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
-            _context4.next = 8;
+            _context5.next = 8;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/vault/".concat(collection), {
               body: {
                 scope: {
@@ -10113,20 +10154,20 @@ function _create() {
                 },
                 items: items
               }
-            }).then(function (_ref4) {
-              var body = _ref4.body;
+            }).then(function (_ref5) {
+              var body = _ref5.body;
               return body;
             });
 
           case 8:
-            return _context4.abrupt("return", _context4.sent);
+            return _context5.abrupt("return", _context5.sent);
 
           case 9:
           case "end":
-            return _context4.stop();
+            return _context5.stop();
         }
       }
-    }, _callee4);
+    }, _callee5);
   }));
   return _create.apply(this, arguments);
 }
