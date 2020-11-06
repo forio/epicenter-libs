@@ -76,7 +76,7 @@ export async function destroy(worldKey, optionals = {}) {
  * @example
  *
  * import { worldAdapter } from 'epicenter';
- * worldAdapter.create({ name: 'Whole New World' }, '');
+ * worldAdapter.create({ name: 'Whole New World' });
  *
  * @param {object}  world                           New world object
  * @param {string}  world.name                      Name of the world
