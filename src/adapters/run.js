@@ -8,9 +8,10 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 
 /**
- * Create a run.
+ * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
  *
- * By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
+ *
  * @memberof runAdapter
  * @example
  *
@@ -19,12 +20,21 @@ import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
- * @param {string}  model               Name of your model file
- * @param {object}  scope               Scope associated with your run
- * @param {string}  scope.scopeBoundary Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * @param {string}  model                           Name of your model file
+ * @param {object}  scope                           Scope associated with your run
+ * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.readLock]            Role (character type)
+ * @param {string}  [optionals.writeLock]           Role (chracter type)
+ * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
+ * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param {string}  [optionals.trackingKey]         Tracking key
+ * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
+ * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {object}                                Newly created run
  */
 export async function create(model, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;

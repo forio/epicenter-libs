@@ -258,8 +258,7 @@ export async function search(optionals = {}) {
  * @memberof groupAdapter
  * @example
  *
- * const userKeys = members.map(({ userKey }) => userKey);
- * epicenter.groupAdapter.withGroupName(group.groupKey, userKeys)
+ * epicenter.groupAdapter.withGroupName(group.groupKey)
  *
  * @param {string}  name                            Name associated with the group
  * @param {object}  [optionals={}]                  Optional parameters
