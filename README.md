@@ -1,6 +1,8 @@
 # Epicenter JavaScript Libs (v3)
 
-Prequisite Node version: 12
+Prequisite Node version: 12.13
+⚠️ Do not use versions above Node 12.13, there are currently issues building with webpack.
+
 JIRA: https://issues.forio.com/projects/EPILIBS/issues
 
 ## Transition Guide (v2 &rarr; v3)
