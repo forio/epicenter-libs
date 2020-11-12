@@ -140,7 +140,7 @@ export const LOCK_TYPE = {
      * @constant
      * @type {string}
      */
-    MONITER: 'MONITER',
+    MONITOR: 'MONITOR',
     /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
