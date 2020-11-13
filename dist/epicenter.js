@@ -9169,16 +9169,16 @@ function _query() {
             };
             _context8.next = 6;
             return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/".concat(scopeBoundary, "/").concat(scopeKey, "/").concat(model), {
-              paginated: true // callback: (response) => {
-              //     response.body.values = response.body.values.map((run) => {
-              //         run.variables = variables.reduce((variableMap, key, index) => {
-              //             variableMap[key] = variables[index];
-              //             return variableMap;
-              //         }, {});
-              //         return run;
-              //     });
-              // },
-
+              paginated: true,
+              parsePage: function parsePage(values) {
+                return values.map(function (run) {
+                  run.variables = variables.reduce(function (variableMap, key, index) {
+                    variableMap[key] = variables[index];
+                    return variableMap;
+                  }, {});
+                  return run;
+                });
+              }
             }).then(function (_ref8) {
               var body = _ref8.body;
               return body;
@@ -9310,6 +9310,7 @@ function _getVariables() {
         hasMultiple,
         uriComponent,
         searchParams,
+        mappify,
         _args11 = arguments;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.wrap(function _callee11$(_context11) {
       while (1) {
@@ -9334,16 +9335,28 @@ function _getVariables() {
               console.warn("Detected ritual: ".concat(ritual, " usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE"));
             }
 
-            _context11.next = 9;
+            mappify = function mappify(values) {
+              return variables.reduce(function (variableMap, key, index) {
+                variableMap[key] = values[index];
+                return variableMap;
+              }, {});
+            };
+
+            _context11.next = 10;
             return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).withSearchParams(searchParams).get("/run/variable".concat(uriComponent)).then(function (_ref11) {
               var body = _ref11.body;
-              return body;
+              return !hasMultiple ? mappify(body) : Object.keys(body).map(function (runKey) {
+                return {
+                  runKey: runKey,
+                  variables: mappify(body[runKey])
+                };
+              });
             });
 
-          case 9:
+          case 10:
             return _context11.abrupt("return", _context11.sent);
 
-          case 10:
+          case 11:
           case "end":
             return _context11.stop();
         }
@@ -9682,7 +9695,7 @@ function getWithStrategy(_x30, _x31, _x32) {
   return _getWithStrategy.apply(this, arguments);
 }
 /**
- * Returns the run associated with the given world key; if the run does not exist, it will create it.
+ * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
  *
@@ -11292,7 +11305,7 @@ var LOCK_TYPE = {
    * @constant
    * @type {string}
    */
-  MONITER: 'MONITER',
+  MONITOR: 'MONITOR',
 
   /**
    * Author -- Team Members (and node server API keys)
@@ -12060,12 +12073,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/createClass.js");
 /* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
-/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/toConsumableArray.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/defineProperty.js");
 /* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var cross_fetch__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! cross-fetch */ "./node_modules/cross-fetch/dist/browser-ponyfill.js");
@@ -12091,33 +12104,41 @@ var DEFAULT_PROJECT_SHORT_NAME = 'manager';
 var MAX_URL_LENGTH = 2048;
 
 function paginate(json, url, options) {
+  var _options$parsePage;
+
+  var parsePage = (_options$parsePage = options.parsePage) !== null && _options$parsePage !== void 0 ? _options$parsePage : function (i) {
+    return i;
+  };
+
   var page = _objectSpread({}, json, {
-    allValues: _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(json.values)
+    values: parsePage(json.values)
   });
 
-  var next = /*#__PURE__*/function () {
-    var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee() {
-      var searchParams, first, nextPage;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee$(_context) {
+  var prev = /*#__PURE__*/function () {
+    var _ref = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee() {
+      var searchParams, first, max, prevPage;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               searchParams = new URLSearchParams(url.search);
-              first = page.firstResult + page.maxResults;
 
-              if (!(page.allValues.length >= json.totalResults)) {
-                _context.next = 5;
+              if (!(page.firstResult === 0)) {
+                _context.next = 4;
                 break;
               }
 
-              page.done = true;
-              return _context.abrupt("return", page);
+              console.warn('Pagination: cannot call "prev" on first page');
+              return _context.abrupt("return", []);
 
-            case 5:
-              searchParams.set('first', first);
+            case 4:
+              first = page.firstResult - page.maxResults;
+              max = page.maxResults + (first < 0 ? first : 0);
+              searchParams.set('first', Math.max(first, 0));
+              searchParams.set('max', max);
               url.search = searchParams; // eslint-disable-next-line no-use-before-define
 
-              _context.next = 9;
+              _context.next = 11;
               return request(url, _objectSpread({}, options, {
                 paginated: false
               })).then(function (_ref2) {
@@ -12125,13 +12146,13 @@ function paginate(json, url, options) {
                 return body;
               });
 
-            case 9:
-              nextPage = _context.sent;
-              page.allValues = page.allValues.concat(nextPage.values);
-              Object.assign(page, nextPage);
-              return _context.abrupt("return", page);
+            case 11:
+              prevPage = _context.sent;
+              prevPage.values = parsePage(prevPage.values);
+              Object.assign(page, prevPage);
+              return _context.abrupt("return", page.values);
 
-            case 13:
+            case 15:
             case "end":
               return _context.stop();
           }
@@ -12139,42 +12160,48 @@ function paginate(json, url, options) {
       }, _callee);
     }));
 
-    return function next() {
+    return function prev() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  var withAll = /*#__PURE__*/function () {
-    var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee2() {
-      var _yield$next, done, allValues;
-
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee2$(_context2) {
+  var next = /*#__PURE__*/function () {
+    var _ref3 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee2() {
+      var searchParams, first, nextPage;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
-              _context2.next = 2;
-              return next();
+              searchParams = new URLSearchParams(url.search);
+              first = page.firstResult + page.maxResults;
 
-            case 2:
-              _yield$next = _context2.sent;
-              done = _yield$next.done;
-              allValues = _yield$next.allValues;
-
-              if (!done) {
-                _context2.next = 7;
+              if (!(first >= page.totalResults)) {
+                _context2.next = 5;
                 break;
               }
 
-              return _context2.abrupt("return", allValues);
+              console.warn('Pagination: cannot call "next" on final page');
+              return _context2.abrupt("return", []);
 
-            case 7:
+            case 5:
+              searchParams.set('first', first);
+              url.search = searchParams; // eslint-disable-next-line no-use-before-define
+
               _context2.next = 9;
-              return withAll();
+              return request(url, _objectSpread({}, options, {
+                paginated: false
+              })).then(function (_ref4) {
+                var body = _ref4.body;
+                return body;
+              });
 
             case 9:
-              return _context2.abrupt("return", _context2.sent);
+              nextPage = _context2.sent;
+              nextPage.values = parsePage(nextPage.values);
+              Object.assign(page, nextPage);
+              return _context2.abrupt("return", page.values);
 
-            case 10:
+            case 13:
             case "end":
               return _context2.stop();
           }
@@ -12182,13 +12209,69 @@ function paginate(json, url, options) {
       }, _callee2);
     }));
 
-    return function withAll() {
+    return function next() {
       return _ref3.apply(this, arguments);
     };
   }();
 
+  var initialTotal = json.totalResults;
+
+  var all = /*#__PURE__*/function () {
+    var _ref5 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee3() {
+      var first,
+          allValues,
+          searchParams,
+          nextPage,
+          _args3 = arguments;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              first = _args3.length > 0 && _args3[0] !== undefined ? _args3[0] : 0;
+              allValues = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : [];
+
+              if (!(first >= initialTotal)) {
+                _context3.next = 4;
+                break;
+              }
+
+              return _context3.abrupt("return", allValues);
+
+            case 4:
+              searchParams = new URLSearchParams(url.search);
+              searchParams.set('first', first);
+              searchParams["delete"]('max');
+              url.search = searchParams; // eslint-disable-next-line no-use-before-define
+
+              _context3.next = 10;
+              return request(url, _objectSpread({}, options, {
+                paginated: false
+              })).then(function (_ref6) {
+                var body = _ref6.body;
+                return body;
+              });
+
+            case 10:
+              nextPage = _context3.sent;
+              allValues.push.apply(allValues, _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(parsePage(nextPage.values)));
+              return _context3.abrupt("return", all(first + nextPage.maxResults, allValues));
+
+            case 13:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }));
+
+    return function all() {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+
+  page.prev = prev;
   page.next = next;
-  page.withAll = withAll;
+  page.all = all;
   return page;
 }
 
@@ -12218,15 +12301,15 @@ function request(_x, _x2) {
 
 
 function _request() {
-  _request = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee8(url, options) {
-    var method, body, includeAuthorization, inert, paginated, headers, response, contentType, json, error, retry;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee8$(_context8) {
+  _request = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee9(url, options) {
+    var method, body, includeAuthorization, inert, paginated, headers, response, contentType, json, result, fault, retry;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee9$(_context9) {
       while (1) {
-        switch (_context8.prev = _context8.next) {
+        switch (_context9.prev = _context9.next) {
           case 0:
             method = options.method, body = options.body, includeAuthorization = options.includeAuthorization, inert = options.inert, paginated = options.paginated;
             headers = createHeaders(includeAuthorization);
-            _context8.next = 4;
+            _context9.next = 4;
             return cross_fetch__WEBPACK_IMPORTED_MODULE_8___default()(url, {
               method: method,
               cache: 'no-cache',
@@ -12236,58 +12319,56 @@ function _request() {
             });
 
           case 4:
-            response = _context8.sent;
+            response = _context9.sent;
             contentType = response.headers.get('content-type');
 
             if (!(!contentType || !contentType.includes('application/json'))) {
-              _context8.next = 8;
+              _context9.next = 8;
               break;
             }
 
             throw new utils__WEBPACK_IMPORTED_MODULE_9__["EpicenterError"]("Response content-type '".concat(contentType, "' does not include 'application/json'"));
 
           case 8:
-            _context8.next = 10;
+            _context9.next = 10;
             return response.json();
 
           case 10:
-            json = _context8.sent;
+            json = _context9.sent;
 
             if (!(response.status >= 200 && response.status < 400)) {
-              _context8.next = 13;
+              _context9.next = 14;
               break;
             }
 
-            return _context8.abrupt("return", new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](paginated ? paginate(json, url, options) : json, response));
+            result = new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](paginated ? paginate(json, url, options) : json, response);
+            return _context9.abrupt("return", result);
 
-          case 13:
-            error = new utils__WEBPACK_IMPORTED_MODULE_9__["Fault"](json, response);
+          case 14:
+            fault = new utils__WEBPACK_IMPORTED_MODULE_9__["Fault"](json, response);
 
             if (!inert) {
-              _context8.next = 16;
+              _context9.next = 17;
               break;
             }
 
-            throw error;
+            throw fault;
 
-          case 16:
+          case 17:
             retry = function retry() {
-              return request(url, {
-                method: method,
-                body: body,
-                includeAuthorization: includeAuthorization,
+              return request(url, _objectSpread({}, options, {
                 inert: true
-              });
+              }));
             };
 
-            return _context8.abrupt("return", utils__WEBPACK_IMPORTED_MODULE_9__["errorManager"].handle(error, retry));
+            return _context9.abrupt("return", utils__WEBPACK_IMPORTED_MODULE_9__["errorManager"].handle(fault, retry));
 
-          case 18:
+          case 19:
           case "end":
-            return _context8.stop();
+            return _context9.stop();
         }
       }
-    }, _callee8);
+    }, _callee9);
   }));
   return _request.apply(this, arguments);
 }
@@ -12375,27 +12456,27 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "get",
     value: function () {
-      var _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee3(uriComponent, options) {
+      var _get = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee4(uriComponent, options) {
         var url, newURL;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee3$(_context3) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee4$(_context4) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context4.prev = _context4.next) {
               case 0:
                 url = this.getURL(uriComponent);
                 /* Handle sufficiently large GET requests with POST calls instead */
 
                 if (!(url.href.length > MAX_URL_LENGTH)) {
-                  _context3.next = 4;
+                  _context4.next = 4;
                   break;
                 }
 
                 newURL = new URL(url.href.split('?')[0]);
-                return _context3.abrupt("return", this.post(newURL, _objectSpread({}, options, {
+                return _context4.abrupt("return", this.post(newURL, _objectSpread({}, options, {
                   body: url.search
                 })));
 
               case 4:
-                return _context3.abrupt("return", request(url, _objectSpread({
+                return _context4.abrupt("return", request(url, _objectSpread({
                   includeAuthorization: true
                 }, options, {
                   method: 'GET'
@@ -12403,10 +12484,10 @@ var Router = /*#__PURE__*/function () {
 
               case 5:
               case "end":
-                return _context3.stop();
+                return _context4.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee4, this);
       }));
 
       function get(_x3, _x4) {
@@ -12418,14 +12499,14 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "delete",
     value: function () {
-      var _delete2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee4(uriComponent, options) {
+      var _delete2 = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee5(uriComponent, options) {
         var url;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee4$(_context4) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee5$(_context5) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context5.prev = _context5.next) {
               case 0:
                 url = this.getURL(uriComponent);
-                return _context4.abrupt("return", request(url, _objectSpread({
+                return _context5.abrupt("return", request(url, _objectSpread({
                   includeAuthorization: true
                 }, options, {
                   method: 'DELETE'
@@ -12433,10 +12514,10 @@ var Router = /*#__PURE__*/function () {
 
               case 2:
               case "end":
-                return _context4.stop();
+                return _context5.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee5, this);
       }));
 
       function _delete(_x5, _x6) {
@@ -12448,14 +12529,14 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "patch",
     value: function () {
-      var _patch = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee5(uriComponent, options) {
+      var _patch = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee6(uriComponent, options) {
         var url;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee5$(_context5) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee6$(_context6) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context6.prev = _context6.next) {
               case 0:
                 url = this.getURL(uriComponent);
-                return _context5.abrupt("return", request(url, _objectSpread({
+                return _context6.abrupt("return", request(url, _objectSpread({
                   includeAuthorization: true
                 }, options, {
                   method: 'PATCH'
@@ -12463,10 +12544,10 @@ var Router = /*#__PURE__*/function () {
 
               case 2:
               case "end":
-                return _context5.stop();
+                return _context6.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee6, this);
       }));
 
       function patch(_x7, _x8) {
@@ -12478,14 +12559,14 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "post",
     value: function () {
-      var _post = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee6(uriComponent, options) {
+      var _post = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee7(uriComponent, options) {
         var url;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee6$(_context6) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
                 url = this.getURL(uriComponent);
-                return _context6.abrupt("return", request(url, _objectSpread({
+                return _context7.abrupt("return", request(url, _objectSpread({
                   includeAuthorization: true
                 }, options, {
                   method: 'POST'
@@ -12493,10 +12574,10 @@ var Router = /*#__PURE__*/function () {
 
               case 2:
               case "end":
-                return _context6.stop();
+                return _context7.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee7, this);
       }));
 
       function post(_x9, _x10) {
@@ -12508,14 +12589,14 @@ var Router = /*#__PURE__*/function () {
   }, {
     key: "put",
     value: function () {
-      var _put = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_5___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.mark(function _callee7(uriComponent, options) {
+      var _put = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_6___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.mark(function _callee8(uriComponent, options) {
         var url;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_4___default.a.wrap(function _callee7$(_context7) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_5___default.a.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context7.prev = _context7.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
                 url = this.getURL(uriComponent);
-                return _context7.abrupt("return", request(url, _objectSpread({
+                return _context8.abrupt("return", request(url, _objectSpread({
                   includeAuthorization: true
                 }, options, {
                   method: 'PUT'
@@ -12523,10 +12604,10 @@ var Router = /*#__PURE__*/function () {
 
               case 2:
               case "end":
-                return _context7.stop();
+                return _context8.stop();
             }
           }
-        }, _callee7, this);
+        }, _callee8, this);
       }));
 
       function put(_x11, _x12) {
@@ -12629,14 +12710,14 @@ var Router = /*#__PURE__*/function () {
 
 
       if (_babel_runtime_helpers_typeof__WEBPACK_IMPORTED_MODULE_1___default()(query) === 'object' && query.constructor === Object) {
-        query = Object.entries(query).reduce(function (arr, _ref4) {
-          var _ref5 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref4, 2),
-              key = _ref5[0],
-              value = _ref5[1];
+        query = Object.entries(query).reduce(function (arr, _ref7) {
+          var _ref8 = _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0___default()(_ref7, 2),
+              key = _ref8[0],
+              value = _ref8[1];
 
           if (Array.isArray(value)) {
             /* Special case for arrayed param values: use duplicated params here */
-            return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(arr), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_6___default()(value.map(function (v) {
+            return [].concat(_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(arr), _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_4___default()(value.map(function (v) {
               return [key, v];
             })));
           }
