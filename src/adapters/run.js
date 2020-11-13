@@ -474,11 +474,11 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
  *
  * import { runAdapter, authAdapter } from 'epicenter';
  * const worldKey = authAdapter.getLocalSession().worldKey
- * const run = await runAdapter.retrieveWithWorld('model.py', worldKey);
+ * const run = await runAdapter.retrieveFromWorld('model.py', worldKey);
  *
  *
- * @param {string}  model                           Name of your model file
  * @param {object}  worldKey                        Key associated with the world you'd like a run from
+ * @param {string}  model                           Name of model file you'd use to create the run if needed
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.readLock]            Role (character type)
  * @param {string}  [optionals.writeLock]           Role (chracter type)
@@ -490,7 +490,7 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Run retrieved from the world
  */
-export async function retrieveFromWorld(model, worldKey, optionals = {}) {
+export async function retrieveFromWorld(worldKey, model, optionals = {}) {
     const {
         readLock, writeLock, ephemeral, trackingKey,
         modelContext, executionContext,

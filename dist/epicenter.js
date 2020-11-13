@@ -9704,11 +9704,11 @@ function getWithStrategy(_x30, _x31, _x32) {
  *
  * import { runAdapter, authAdapter } from 'epicenter';
  * const worldKey = authAdapter.getLocalSession().worldKey
- * const run = await runAdapter.retrieveWithWorld('model.py', worldKey);
+ * const run = await runAdapter.retrieveFromWorld('model.py', worldKey);
  *
  *
- * @param {string}  model                           Name of your model file
  * @param {object}  worldKey                        Key associated with the world you'd like a run from
+ * @param {string}  model                           Name of model file you'd use to create the run if needed
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.readLock]            Role (character type)
  * @param {string}  [optionals.writeLock]           Role (chracter type)
@@ -9832,7 +9832,7 @@ function retrieveFromWorld(_x33, _x34) {
  */
 
 function _retrieveFromWorld() {
-  _retrieveFromWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee19(model, worldKey) {
+  _retrieveFromWorld = _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_2___default()( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_1___default.a.mark(function _callee19(worldKey, model) {
     var optionals,
         readLock,
         writeLock,
