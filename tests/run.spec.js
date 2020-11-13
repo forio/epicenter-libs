@@ -4,7 +4,7 @@ import { ENDPOINTS, SESSION_KEY, SESSION, OK_CODE, CREATED_CODE } from './common
 chai.use(require('sinon-chai'));
 
 describe('Run API Service', () => {
-    const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, LOCK_TYPE, RITUAL } = epicenter;
+    const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
     let server;
 
     config.accountShortName = ENDPOINTS.accountShortName;
@@ -81,8 +81,8 @@ describe('Run API Service', () => {
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         const OPTIONALS = {
             trackingKey: 'tracking-key-123456',
-            readLock: LOCK_TYPE.AUTHOR,
-            writeLock: LOCK_TYPE.AUTHOR,
+            readLock: ROLE.AUTHOR,
+            writeLock: ROLE.AUTHOR,
             accountShortName: 'some-account',
             projectShortName: 'some-project',
         };
@@ -123,7 +123,7 @@ describe('Run API Service', () => {
         it('Should use PARTICIPANT when a lock is undefined with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.PARTICIPANT);
+            expect(reqBody.permit.readLock).to.equal(ROLE.PARTICIPANT);
         }));
         it('Should not provide a userKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
             const req = server.requests.pop();
@@ -133,7 +133,7 @@ describe('Run API Service', () => {
         it('Should use USER when a lock is undefined with GROUP scope', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
             const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.permit.readLock).to.equal(LOCK_TYPE.USER);
+            expect(reqBody.permit.readLock).to.equal(ROLE.USER);
         }));
         it('Should use the session\'s userKey as an userKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
             const req = server.requests.pop();
