@@ -1,5 +1,5 @@
 import { Router } from 'utils';
-import { LOCK_TYPE, SCOPE_BOUNDARY } from 'utils/constants';
+import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
 
 /**
  * Episode API adapters -- use this to create, update, delete, and manage your episodes
@@ -109,7 +109,7 @@ export async function create(collection, scope, items, optionals = {}) {
         accountShortName, projectShortName,
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
-    const { PARTICIPANT, USER } = LOCK_TYPE;
+    const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()

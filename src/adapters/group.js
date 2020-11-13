@@ -1,5 +1,5 @@
 import { Router, EpicenterError } from 'utils';
-import { LOCK_TYPE } from 'utils/constants';
+import { ROLE } from 'utils/constants';
 
 /**
  * Group API adapters -- handles groups and group memberships
@@ -399,7 +399,7 @@ export async function register(groupKey, optionals = {}) {
  * @param {string}          groupKey                        Key associated with group
  * @param {string}          userKey                         Key associated with group
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
  * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -418,7 +418,7 @@ export async function addUser(groupKey, userKey, optionals = {}) {
             body: {
                 objectType: 'group',
                 userKey,
-                role: role ?? LOCK_TYPE.PARTICIPANT,
+                role: role ?? ROLE.PARTICIPANT,
                 available: available ?? true,
             },
         })
@@ -439,7 +439,7 @@ export async function addUser(groupKey, userKey, optionals = {}) {
  * @param {string}          groupKey                        Key associated with group
  * @param {string}          userKey                         Key associated with group
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.role]                User's role; See [ROLE](#ROLE) for all types
  * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling)
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)

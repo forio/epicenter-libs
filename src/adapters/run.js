@@ -1,5 +1,5 @@
 import { EpicenterError, Router, identification } from 'utils';
-import { LOCK_TYPE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
+import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
  * Run API adapters -- use this to create, update, delete, and manage your runs
@@ -45,7 +45,7 @@ export async function create(model, scope, optionals = {}) {
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
-    const { PARTICIPANT, USER } = LOCK_TYPE;
+    const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
@@ -496,7 +496,7 @@ export async function retrieveFromWorld(model, worldKey, optionals = {}) {
         modelContext, executionContext,
         accountShortName, projectShortName,
     } = optionals;
-    const { PARTICIPANT } = LOCK_TYPE;
+    const { PARTICIPANT } = ROLE;
 
     return await new Router()
         .withAccountShortName(accountShortName)

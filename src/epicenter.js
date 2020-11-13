@@ -5,7 +5,7 @@ export {
     SCOPE_BOUNDARY,
     RITUAL,
     PUSH_CATEGORY,
-    LOCK_TYPE,
+    ROLE,
 } from 'utils/constants';
 export {
     config,

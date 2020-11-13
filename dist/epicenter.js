@@ -8145,7 +8145,7 @@ function register(_x8) {
  * @param {string}          groupKey                        Key associated with group
  * @param {string}          userKey                         Key associated with group
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
  * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -8200,7 +8200,7 @@ function addUser(_x9, _x10) {
  * @param {string}          groupKey                        Key associated with group
  * @param {string}          userKey                         Key associated with group
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role; See [LOCK_TYPE](#LOCK_TYPE) for all types
+ * @param {string}          [optionals.role]                User's role; See [ROLE](#ROLE) for all types
  * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling)
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -8226,7 +8226,7 @@ function _addUser() {
               body: {
                 objectType: 'group',
                 userKey: userKey,
-                role: role !== null && role !== void 0 ? role : utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT,
+                role: role !== null && role !== void 0 ? role : utils_constants__WEBPACK_IMPORTED_MODULE_3__["ROLE"].PARTICIPANT,
                 available: available !== null && available !== void 0 ? available : true
               }
             }).then(function (_ref11) {
@@ -8763,7 +8763,7 @@ function _create() {
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
             readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_4__["SCOPE_BOUNDARY"].WORLD;
-            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].USER;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["ROLE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_4__["ROLE"].USER;
             defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
             _context.next = 8;
             return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post('/run', {
@@ -9850,7 +9850,7 @@ function _retrieveFromWorld() {
           case 0:
             optionals = _args19.length > 2 && _args19[2] !== undefined ? _args19[2] : {};
             readLock = optionals.readLock, writeLock = optionals.writeLock, ephemeral = optionals.ephemeral, trackingKey = optionals.trackingKey, modelContext = optionals.modelContext, executionContext = optionals.executionContext, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
-            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["LOCK_TYPE"].PARTICIPANT;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_4__["ROLE"].PARTICIPANT;
             _context19.next = 5;
             return new utils__WEBPACK_IMPORTED_MODULE_3__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/run/world/".concat(worldKey), {
               body: {
@@ -10190,7 +10190,7 @@ function _create() {
             scopeBoundary = scope.scopeBoundary, scopeKey = scope.scopeKey;
             readLock = optionals.readLock, writeLock = optionals.writeLock, userKey = optionals.userKey, ttlSeconds = optionals.ttlSeconds, mutationKey = optionals.mutationKey, accountShortName = optionals.accountShortName, projectShortName = optionals.projectShortName;
             WORLD = utils_constants__WEBPACK_IMPORTED_MODULE_3__["SCOPE_BOUNDARY"].WORLD;
-            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["LOCK_TYPE"].USER;
+            PARTICIPANT = utils_constants__WEBPACK_IMPORTED_MODULE_3__["ROLE"].PARTICIPANT, USER = utils_constants__WEBPACK_IMPORTED_MODULE_3__["ROLE"].USER;
             defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
             _context5.next = 8;
             return new utils__WEBPACK_IMPORTED_MODULE_2__["Router"]().withAccountShortName(accountShortName).withProjectShortName(projectShortName).post("/vault/".concat(collection), {
@@ -10884,7 +10884,7 @@ function _editPersonas() {
 /*!**************************!*\
   !*** ./src/epicenter.js ***!
   \**************************/
-/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, worldAdapter */
+/*! exports provided: version, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, ROLE, config, errorManager, Router, Channel, accountAdapter, authAdapter, episodeAdapter, groupAdapter, presenceAdapter, projectAdapter, runAdapter, vaultAdapter, worldAdapter */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10897,7 +10897,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ROLE", function() { return utils_constants__WEBPACK_IMPORTED_MODULE_0__["ROLE"]; });
 
 /* harmony import */ var utils__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! utils */ "./src/utils/index.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "config", function() { return utils__WEBPACK_IMPORTED_MODULE_1__["config"]; });
@@ -11142,7 +11142,7 @@ var config = new Config();
 /*!********************************!*\
   !*** ./src/utils/constants.js ***!
   \********************************/
-/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE */
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, ROLE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11151,13 +11151,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SCOPE_BOUNDARY", function() { return SCOPE_BOUNDARY; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RITUAL", function() { return RITUAL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return PUSH_CATEGORY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return LOCK_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ROLE", function() { return ROLE; });
 var BROWSER_STORAGE_TYPE = {
   COOKIE: 'COOKIE',
   SESSION: 'SESSION'
 };
 /**
- * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #LOCK_TYPE lock types}. Scopes also provide an index that in which a run can be queried for.
+ * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #ROLE lock types}. Scopes also provide an index that in which a run can be queried for.
  *
  * Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
  * Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).
@@ -11288,24 +11288,24 @@ var PUSH_CATEGORY = {
   SYSTEM: 'SYSTEM'
 };
 /**
- * Lock types are used to define permissions in runs. They define which roles have which specific privileges associated with the run.
+ * Roles are used to define permissions on resources in Epicenter.
  * @enum {string}
  */
 
-var LOCK_TYPE = {
+var ROLE = {
   /**
    * System -- Epicenter Manager
    * @constant
    * @type {string}
    */
-  SYSTEM: 'SYSTEM',
+  SYSTEM: 'system',
 
   /**
    * System minus -- read-only system access, write for certain accounts; think Geromel
    * @constant
    * @type {string}
    */
-  MONITOR: 'MONITOR',
+  MONITOR: 'monitor',
 
   /**
    * Author -- Team Members (and node server API keys)
@@ -11313,21 +11313,21 @@ var LOCK_TYPE = {
    * @constant
    * @type {string}
    */
-  AUTHOR: 'AUTHOR',
+  AUTHOR: 'author',
 
   /**
    * Author minus
    * @constant
    * @type {string}
    */
-  SUPPORT: 'SUPPORT',
+  SUPPORT: 'support',
 
   /**
    * Facilitators
    * @constant
    * @type {string}
    */
-  FACILITATOR: 'FACILITATOR',
+  FACILITATOR: 'facilitator',
 
   /**
    * Reviewers (weaker facilitator)
@@ -11335,7 +11335,7 @@ var LOCK_TYPE = {
    * @constant
    * @type {string}
    */
-  REVIEWER: 'REVIEWER',
+  REVIEWER: 'reviewer',
 
   /**
    * Users -- psuedonymKey (userKey) required in scope
@@ -11343,7 +11343,7 @@ var LOCK_TYPE = {
    * @constant
    * @type {string}
    */
-  USER: 'USER',
+  USER: 'user',
 
   /**
    * Leader
@@ -11351,21 +11351,21 @@ var LOCK_TYPE = {
    * @constant
    * @type {string}
    */
-  LEADER: 'LEADER',
+  LEADER: 'leader',
 
   /**
    * Participant
    * @constant
    * @type {string}
    */
-  PARTICIPANT: 'PARTICIPANT',
+  PARTICIPANT: 'participant',
 
   /**
    * Anonymous
    * @constant
    * @type {string}
    */
-  ANONYMOUS: 'ANONYMOUS'
+  ANONYMOUS: 'anonymous'
 };
 
 /***/ }),
@@ -11954,7 +11954,7 @@ var identification = new Identification(COOKIE);
 /*!****************************!*\
   !*** ./src/utils/index.js ***!
   \****************************/
-/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, LOCK_TYPE, isBrowser, isNode, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, config, identification, errorManager, Router */
+/*! exports provided: BROWSER_STORAGE_TYPE, SCOPE_BOUNDARY, RITUAL, PUSH_CATEGORY, ROLE, isBrowser, isNode, last, prefix, access, NodeStore, SessionStore, CookieStore, cookies, EpicenterError, Fault, Result, config, identification, errorManager, Router */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11968,7 +11968,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "PUSH_CATEGORY", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["PUSH_CATEGORY"]; });
 
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "LOCK_TYPE", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["LOCK_TYPE"]; });
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ROLE", function() { return _constants__WEBPACK_IMPORTED_MODULE_0__["ROLE"]; });
 
 /* harmony import */ var _helpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpers */ "./src/utils/helpers.js");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "isBrowser", function() { return _helpers__WEBPACK_IMPORTED_MODULE_1__["isBrowser"]; });

@@ -21,7 +21,7 @@ toc:
     description: |
       Here are some constants that we use; we use them everywhere
   - SCOPE_BOUNDARY
-  - LOCK_TYPE
+  - ROLE
   - PUSH_CATEGORY
   - RITUAL
   - name: Push Channels

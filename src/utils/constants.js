@@ -5,7 +5,7 @@ export const BROWSER_STORAGE_TYPE = {
 
 
 /**
- * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #LOCK_TYPE lock types}. Scopes also provide an index that in which a run can be queried for.
+ * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #ROLE lock types}. Scopes also provide an index that in which a run can be queried for.
  *
  * Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
  * Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).
@@ -125,72 +125,72 @@ export const PUSH_CATEGORY = {
 };
 
 /**
- * Lock types are used to define permissions in runs. They define which roles have which specific privileges associated with the run.
+ * Roles are used to define permissions on resources in Epicenter.
  * @enum {string}
  */
-export const LOCK_TYPE = {
+export const ROLE = {
     /**
      * System -- Epicenter Manager
      * @constant
      * @type {string}
      */
-    SYSTEM: 'SYSTEM',
+    SYSTEM: 'system',
     /**
      * System minus -- read-only system access, write for certain accounts; think Geromel
      * @constant
      * @type {string}
      */
-    MONITOR: 'MONITOR',
+    MONITOR: 'monitor',
     /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
      * @type {string}
      */
-    AUTHOR: 'AUTHOR',
+    AUTHOR: 'author',
     /**
      * Author minus
      * @constant
      * @type {string}
      */
-    SUPPORT: 'SUPPORT',
+    SUPPORT: 'support',
     /**
      * Facilitators
      * @constant
      * @type {string}
      */
-    FACILITATOR: 'FACILITATOR',
+    FACILITATOR: 'facilitator',
     /**
      * Reviewers (weaker facilitator)
      * Facilitator minus
      * @constant
      * @type {string}
      */
-    REVIEWER: 'REVIEWER',
+    REVIEWER: 'reviewer',
     /**
      * Users -- psuedonymKey (userKey) required in scope
      * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}
      */
-    USER: 'USER',
+    USER: 'user',
     /**
      * Leader
      * Participant plus
      * @constant
      * @type {string}
      */
-    LEADER: 'LEADER',
+    LEADER: 'leader',
     /**
      * Participant
      * @constant
      * @type {string}
      */
-    PARTICIPANT: 'PARTICIPANT',
+    PARTICIPANT: 'participant',
     /**
      * Anonymous
      * @constant
      * @type {string}
      */
-    ANONYMOUS: 'ANONYMOUS',
+    ANONYMOUS: 'anonymous',
 };
