@@ -249,15 +249,15 @@ export async function query(model, scope, optionals = {}) {
         .withSearchParams(searchParams)
         .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
             paginated: true,
-            // callback: (response) => {
-            //     response.body.values = response.body.values.map((run) => {
-            //         run.variables = variables.reduce((variableMap, key, index) => {
-            //             variableMap[key] = variables[index];
-            //             return variableMap;
-            //         }, {});
-            //         return run;
-            //     });
-            // },
+            parsePage: (values) => {
+                return values.map((run) => {
+                    run.variables = variables.reduce((variableMap, key, index) => {
+                        variableMap[key] = variables[index];
+                        return variableMap;
+                    }, {});
+                    return run;
+                });
+            },
         })
         .then(({ body }) => body);
 }
@@ -306,13 +306,25 @@ export async function getVariables(runKey, variables, optionals = {}) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
+    const mappify = (values) => variables.reduce((variableMap, key, index) => {
+        variableMap[key] = values[index];
+        return variableMap;
+    }, {});
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
         .get(`/run/variable${uriComponent}`)
-        .then(({ body }) => body);
-
+        .then(({ body }) => {
+            return (!hasMultiple ?
+                mappify(body) :
+                Object.keys(body).map((runKey) => ({
+                    runKey,
+                    variables: mappify(body[runKey]),
+                }))
+            );
+        });
 }
 
 export async function getVariable(runKey, variable, optionals = {}) {
@@ -394,7 +406,6 @@ export async function updateMetadata(runKey, update, optionals = {}) {
         .withSearchParams(searchParams)
         .patch(`/run/meta${uriComponent}`, { body: update })
         .then(({ body }) => body);
-
 }
 
 export async function action(runKey, actionList, optionals = {}) {
@@ -454,7 +465,7 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
 
 
 /**
- * Returns the run associated with the given world key; if the run does not exist, it will create it.
+ * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
  *

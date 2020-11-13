@@ -7,34 +7,63 @@ const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
 function paginate(json, url, options) {
-    const page = { ...json, allValues: [...json.values] };
+    const parsePage = options.parsePage ?? ((i) => i);
+    const page = { ...json, values: parsePage(json.values) };
+
+    const prev = async function() {
+        const searchParams = new URLSearchParams(url.search);
+        if (page.firstResult === 0) {
+            console.warn('Pagination: cannot call "prev" on first page');
+            return [];
+        }
+
+        const first = page.firstResult - page.maxResults;
+        const max = page.maxResults + (first < 0 ? first : 0);
+
+        searchParams.set('first', Math.max(first, 0));
+        searchParams.set('max', max);
+        url.search = searchParams;
+        // eslint-disable-next-line no-use-before-define
+        const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        prevPage.values = parsePage(prevPage.values);
+        Object.assign(page, prevPage);
+        return page.values;
+    };
 
     const next = async function() {
         const searchParams = new URLSearchParams(url.search);
         const first = page.firstResult + page.maxResults;
-        if (page.allValues.length >= json.totalResults) {
-            page.done = true;
-            return page;
+        if (first >= page.totalResults) {
+            console.warn('Pagination: cannot call "next" on final page');
+            return [];
         }
 
         searchParams.set('first', first);
         url.search = searchParams;
         // eslint-disable-next-line no-use-before-define
         const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
-        page.allValues = page.allValues.concat(nextPage.values);
+        nextPage.values = parsePage(nextPage.values);
         Object.assign(page, nextPage);
-        return page;
+        return page.values;
     };
 
-    const withAll = async function() {
-        // eslint-disable-next-line callback-return
-        const { done, allValues } = await next();
-        if (done) return allValues;
-        return await withAll();
+    const initialTotal = json.totalResults;
+    const all = async function(first = 0, allValues = []) {
+        if (first >= initialTotal) return allValues;
+
+        const searchParams = new URLSearchParams(url.search);
+        searchParams.set('first', first);
+        searchParams.delete('max');
+        url.search = searchParams;
+        // eslint-disable-next-line no-use-before-define
+        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        allValues.push(...parsePage(nextPage.values));
+        return all(first + nextPage.maxResults, allValues);
     };
 
+    page.prev = prev;
     page.next = next;
-    page.withAll = withAll;
+    page.all = all;
     return page;
 }
 
@@ -68,17 +97,18 @@ async function request(url, options) {
 
     const json = await response.json();
     if ((response.status >= 200) && (response.status < 400)) {
-        return new Result(
+        const result = new Result(
             paginated ? paginate(json, url, options) : json,
             response
         );
+        return result;
     }
 
-    const error = new Fault(json, response);
-    if (inert) throw error;
+    const fault = new Fault(json, response);
+    if (inert) throw fault;
 
-    const retry = () => request(url, { method, body, includeAuthorization, inert: true });
-    return errorManager.handle(error, retry);
+    const retry = () => request(url, { ...options, inert: true });
+    return errorManager.handle(fault, retry);
 }
 
 /**
