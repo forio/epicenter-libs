@@ -78,7 +78,7 @@ const createHeaders = (includeAuthorization) => {
     }
     return headers;
 };
-
+const NO_CONTENT = 204;
 async function request(url, options) {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
@@ -89,6 +89,10 @@ async function request(url, options) {
         redirect: 'follow',
         body: body ? JSON.stringify(body) : null,
     });
+
+    if (response.status === NO_CONTENT) {
+        return new Result(undefined, response);
+    }
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
