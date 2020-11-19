@@ -12292,6 +12292,8 @@ var createHeaders = function createHeaders(includeAuthorization) {
   return headers;
 };
 
+var NO_CONTENT = 204;
+
 function request(_x, _x2) {
   return _request.apply(this, arguments);
 }
@@ -12320,41 +12322,50 @@ function _request() {
 
           case 4:
             response = _context9.sent;
+
+            if (!(response.status === NO_CONTENT)) {
+              _context9.next = 7;
+              break;
+            }
+
+            return _context9.abrupt("return", new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](undefined, response));
+
+          case 7:
             contentType = response.headers.get('content-type');
 
             if (!(!contentType || !contentType.includes('application/json'))) {
-              _context9.next = 8;
+              _context9.next = 10;
               break;
             }
 
             throw new utils__WEBPACK_IMPORTED_MODULE_9__["EpicenterError"]("Response content-type '".concat(contentType, "' does not include 'application/json'"));
 
-          case 8:
-            _context9.next = 10;
+          case 10:
+            _context9.next = 12;
             return response.json();
 
-          case 10:
+          case 12:
             json = _context9.sent;
 
             if (!(response.status >= 200 && response.status < 400)) {
-              _context9.next = 14;
+              _context9.next = 16;
               break;
             }
 
             result = new utils__WEBPACK_IMPORTED_MODULE_9__["Result"](paginated ? paginate(json, url, options) : json, response);
             return _context9.abrupt("return", result);
 
-          case 14:
+          case 16:
             fault = new utils__WEBPACK_IMPORTED_MODULE_9__["Fault"](json, response);
 
             if (!inert) {
-              _context9.next = 17;
+              _context9.next = 19;
               break;
             }
 
             throw fault;
 
-          case 17:
+          case 19:
             retry = function retry() {
               return request(url, _objectSpread({}, options, {
                 inert: true
@@ -12363,7 +12374,7 @@ function _request() {
 
             return _context9.abrupt("return", utils__WEBPACK_IMPORTED_MODULE_9__["errorManager"].handle(fault, retry));
 
-          case 19:
+          case 21:
           case "end":
             return _context9.stop();
         }
