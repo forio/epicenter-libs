@@ -17,7 +17,9 @@
     "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s"
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "pre-push": {
     "run": [
@@ -61,6 +63,7 @@
     "karma-webpack": "^3.0.5",
     "mocha": "^5.2.0",
     "pre-push": "^0.1.1",
+    "rollup": "^2.33.3",
     "sinon": "^7.2.2",
     "sinon-chai": "^3.5.0",
     "webpack": "^4.42.1",
