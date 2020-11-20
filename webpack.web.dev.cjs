@@ -8,6 +8,6 @@ module.exports = merge(common, {
     devtool: 'cheap-module-source-map',
     watch: true,
     plugins: [
-        new BundleAnalyzerPlugin({ analyzerPort: '1234', openAnalyzer: true }),
+        new BundleAnalyzerPlugin({ analyzerPort: '1234', openAnalyzer: false }),
     ],
 });
