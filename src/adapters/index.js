@@ -7,6 +7,7 @@ import * as projectAdapter from './project';
 import * as runAdapter from './run';
 import * as vaultAdapter from './vault';
 import * as worldAdapter from './world';
+import * as timeAdapter from './time';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -19,6 +20,7 @@ export {
     presenceAdapter,
     projectAdapter,
     runAdapter,
+    timeAdapter,
     vaultAdapter,
     worldAdapter,
     Channel,
