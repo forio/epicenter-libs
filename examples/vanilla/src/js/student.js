@@ -1,6 +1,6 @@
 require('./common');
 import {
-    authAdapter, presenceAdapter,
+    authAdapter, presenceAdapter, timeAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,
 } from 'epicenter';
 
@@ -11,6 +11,7 @@ const unauthedEl = document.getElementById('unauthed');
 const formEl = document.getElementById('form');
 const chatInputEl = document.getElementById('text-box');
 const submitEl = document.getElementById('submit');
+const timeEl = document.getElementById('time');
 
 const initialize = () => {
     presenceAdapter.connect();
@@ -36,6 +37,10 @@ const initialize = () => {
             submitEl.innerText = 'Send';
             waiting = false;
         }, 10);
+    };
+    timeEl.onclick = (e) => {
+        e.preventDefault();
+        timeAdapter.get().then((time) => console.log(time));
     };
 };
 
