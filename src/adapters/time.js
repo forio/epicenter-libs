@@ -13,8 +13,8 @@ import { Router } from 'utils';
  * @memberof timeAdapter
  * @example
  *
- * import { worldAdapter } from 'epicenter';
- * const worlds = await worldAdapter.get();
+ * import { timeAdapter } from 'epicenter';
+ * const worlds = await timeAdapter.get();
  *
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
