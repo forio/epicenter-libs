@@ -26,6 +26,7 @@ export async function logout() {
 export async function login(options) {
     const { handle, password, groupKey, objectType = 'user', ...others } = options;
     const { accountShortName, projectShortName } = others;
+    console.log('%c logging in!', 'font-size: 20px; color: #FB15B9FF;');
     const session = await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)

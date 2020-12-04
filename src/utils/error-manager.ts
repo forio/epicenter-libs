@@ -1,5 +1,6 @@
-import { authAdapter } from 'adapters';
-import { identification, isNode } from 'utils';
+import { authAdapter } from 'adapters/index';
+import identification from './identification';
+import { isNode } from './helpers';
 
 
 const handleByRelog = (error) => {

@@ -1,5 +1,5 @@
 /* Main file; defines public APIs & load order */
-const version = VERSION;
+const version = '__VERSION__';
 export { version };
 export {
     SCOPE_BOUNDARY,
@@ -11,7 +11,7 @@ export {
     config,
     errorManager,
     Router,
-} from 'utils';
+} from 'utils/index';
 export {
     Channel,
     accountAdapter,
@@ -23,4 +23,4 @@ export {
     runAdapter,
     vaultAdapter,
     worldAdapter,
-} from 'adapters';
+} from 'adapters/index';

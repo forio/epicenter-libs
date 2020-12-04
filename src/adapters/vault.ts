@@ -1,4 +1,4 @@
-import { Router } from 'utils';
+import { Router } from 'utils/index';
 import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
 
 /**
