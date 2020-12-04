@@ -11306,6 +11306,22 @@ var PUSH_CATEGORY = {
   RUN: 'RUN',
 
   /**
+   * Used for the {@link https://github.com/forio Vault API}
+   * no pub
+   * @constant
+   * @type {string}
+   */
+  VAULT: 'VAULT',
+
+  /**
+   * Used for the {@link https://github.com/forio World API}
+   * no pub
+   * @constant
+   * @type {string}
+   */
+  WORLD: 'WORLD',
+
+  /**
    * internal
    * @constant
    * @type {string}
