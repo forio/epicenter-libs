@@ -7,6 +7,9 @@ node_modules/
 .cache/
 examples/**/dist/
 
+# Rollup
+stats.html
+
 # Debugging file for documentation generation
 documentation.json
 documentation.raw.json

@@ -1,13 +1,27 @@
 import fetch from 'cross-fetch';
-import { EpicenterError, Fault, Result, identification, prefix, errorManager, config } from 'utils';
+import EpicenterError from './error';
+import Fault from './fault';
+import Result from './result';
+import identification from './identification';
+import errorManager from './error-manager';
+import config from './config';
+import { prefix } from './helpers';
 
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
-function paginate(json, url, options) {
-    const parsePage = options.parsePage ?? ((i) => i);
+
+interface Page {
+    firstResult: number,
+    maxResults: number,
+    totalResults: number,
+    values: any[]
+}
+
+function paginate(json: Page, url: URL, options: any) {
+    const parsePage = options.parsePage ?? ((i: any) => i);
     const page = { ...json, values: parsePage(json.values) };
 
     const prev = async function() {
@@ -22,7 +36,7 @@ function paginate(json, url, options) {
 
         searchParams.set('first', Math.max(first, 0));
         searchParams.set('max', max);
-        url.search = searchParams;
+        url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
         const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         prevPage.values = parsePage(prevPage.values);
@@ -39,7 +53,7 @@ function paginate(json, url, options) {
         }
 
         searchParams.set('first', first);
-        url.search = searchParams;
+        url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
         const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         nextPage.values = parsePage(nextPage.values);
@@ -100,6 +114,7 @@ async function request(url, options) {
     }
 
     const json = await response.json();
+    console.log('%c json!', 'font-size: 20px; color: #FB15B9FF;', json);
     if ((response.status >= 200) && (response.status < 400)) {
         const result = new Result(
             paginated ? paginate(json, url, options) : json,
@@ -119,6 +134,7 @@ async function request(url, options) {
  * Used to make the network calls in all API adapters
  */
 export default class Router {
+    _searchParams: URLSearchParams = new URLSearchParams()
     /**
      * The root path used for the call, essentially protocol + hostname
      * @type {string}
@@ -193,7 +209,7 @@ export default class Router {
     get searchParams() {
         return this._searchParams;
     }
-    set searchParams(query) {
+    set searchParams(query: any) {
         if (query.constructor === URLSearchParams) {
 
             this._searchParams = query;
@@ -202,10 +218,10 @@ export default class Router {
 
         /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
         if (typeof query === 'object' && query.constructor === Object) {
-            query = Object.entries(query).reduce((arr, [key, value]) => {
+            query = Object.entries(query).reduce<[string, unknown][]>((arr, [key, value]) => {
                 if (Array.isArray(value)) {
                     /* Special case for arrayed param values: use duplicated params here */
-                    return [...arr, ...value.map((v) => [key, v])];
+                    return [...arr, ...value.map<[string, unknown]>((v) => [key, v])];
                 }
                 if (value === undefined || value === null) {
                     /* Skip nullish values */

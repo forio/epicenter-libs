@@ -1,8 +1,8 @@
-import { cookies } from 'utils';
+import cookies from 'utils/cookies';
 
 class Store {
     _store;
-    constructor(store) {
+    constructor(store: any) {
         this._store = store;
     }
     clear() {
@@ -21,13 +21,13 @@ export class NodeStore extends Store {
     constructor() {
         super(nodeMap);
     }
-    getItem(key) {
+    getItem(key: string) {
         return super.store.get(key);
     }
-    setItem(key, value) {
+    setItem(key: string, value: any) {
         return super.store.set(key, value);
     }
-    removeItem(key) {
+    removeItem(key: string) {
         return super.store.delete(key);
     }
 }
@@ -36,30 +36,32 @@ export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
-    getItem(key) {
-        return JSON.parse(super.store.getItem(key.toString()));
+    getItem(key: string) {
+        return JSON.parse(super.store.getItem(key));
     }
-    setItem(key, value) {
-        return super.store.setItem(key.toString(), JSON.stringify(value));
+    setItem(key: string, value: any) {
+        return super.store.setItem(key, JSON.stringify(value));
     }
-    removeItem(key) {
-        return super.store.removeItem(key.toString());
+    removeItem(key: string) {
+        return super.store.removeItem(key);
     }
 }
 
 export class CookieStore {
-    constructor(options) {
+    options = {};
+    constructor(options = {}) {
         const defaults = { domain: `.${window.location.hostname}`, path: '/' };
         this.options = { ...defaults, ...options };
     }
-    getItem(key) {
-        return JSON.parse(cookies.getItem(key.toString()));
+    getItem(key: string) {
+        const item = cookies.getItem(key);
+        return item ? JSON.parse(item) : null;
     }
-    setItem(key, value) {
-        return cookies.setItem(key.toString(), JSON.stringify(value), this.options);
+    setItem(key: string, value: any) {
+        return cookies.setItem(key, JSON.stringify(value), this.options);
     }
-    removeItem(key) {
-        return cookies.removeItem(key.toString(), this.options);
+    removeItem(key: string) {
+        return cookies.removeItem(key, this.options);
     }
     clear() {
         return cookies.clear();

@@ -1,7 +1,14 @@
-export const BROWSER_STORAGE_TYPE = {
-    COOKIE: 'COOKIE',
-    SESSION: 'SESSION',
-};
+
+
+export enum BROWSER_STORAGE_TYPE {
+    COOKIE = 'COOKIE',
+    SESSION = 'SESSION',
+}
+
+// export const BROWSER_STORAGE_TYPE = {
+//     COOKIE: 'COOKIE',
+//     SESSION: 'SESSION',
+// };
 
 
 /**

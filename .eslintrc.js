@@ -2,8 +2,7 @@
 
 module.exports = {
     "globals": {
-        "epicenter": true,
-        "VERSION": true,
+        "epicenter": true
     },
     'parser': 'babel-eslint',
     'parserOptions': {

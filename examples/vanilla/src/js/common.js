@@ -1,4 +1,8 @@
+import { SCOPE_BOUNDARY } from 'epicenter';
 import { config } from 'epicenter';
+import * as epicenter from 'epicenter';
+
+console.log('%c !!M!!M', 'font-size: 20px; color: #FB15B9FF;', epicenter, SCOPE_BOUNDARY);
 
 if (config.isLocal()) {
     /* For Production Site */
