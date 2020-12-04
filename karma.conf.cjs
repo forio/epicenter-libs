@@ -10,7 +10,7 @@ module.exports = function(config) {
             },
         },
         files: [
-            { pattern: 'dist/epicenter.iife.js', watched: false, included: true, served: true},
+            { pattern: 'dist/epicenter.js', watched: false, included: true, served: true},
             { pattern: 'tests/*.spec.js', watched: false },
         ],
         port: 9876,  // karma web server port

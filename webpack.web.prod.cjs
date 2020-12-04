@@ -6,6 +6,6 @@ module.exports = merge(common, {
     mode: 'production',
     devtool: 'source-map',
     plugins: [
-        new BundleAnalyzerPlugin({ analyzerPort: '1234', openAnalyzer: true }),
+        new BundleAnalyzerPlugin({ analyzerPort: '1234', openAnalyzer: false }),
     ],
 });
