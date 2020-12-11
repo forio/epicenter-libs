@@ -1,8 +1,12 @@
 
 /* For failed network calls */
 export default class Fault extends Error {
+    status;
+    code;
+    information;
+    cause;
 
-    constructor(body, response) {
+    constructor(body: any, response: any = {}) {
 
         super();
         const { status } = response;

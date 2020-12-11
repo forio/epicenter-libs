@@ -1,4 +1,4 @@
-import { EpicenterError, Router, identification } from 'utils';
+import { EpicenterError, Router, identification } from 'utils/index';
 import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
