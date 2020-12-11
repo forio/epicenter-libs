@@ -34,8 +34,8 @@ function paginate(json: Page, url: URL, options: any) {
         const first = page.firstResult - page.maxResults;
         const max = page.maxResults + (first < 0 ? first : 0);
 
-        searchParams.set('first', Math.max(first, 0));
-        searchParams.set('max', max);
+        searchParams.set('first', Math.max(first, 0).toString());
+        searchParams.set('max', max.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
         const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
@@ -52,7 +52,7 @@ function paginate(json: Page, url: URL, options: any) {
             return [];
         }
 
-        searchParams.set('first', first);
+        searchParams.set('first', first.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
         const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
@@ -66,9 +66,9 @@ function paginate(json: Page, url: URL, options: any) {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
-        searchParams.set('first', first);
+        searchParams.set('first', first.toString());
         searchParams.delete('max');
-        url.search = searchParams;
+        url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
         const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         allValues.push(...parsePage(nextPage.values));
