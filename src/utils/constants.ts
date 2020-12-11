@@ -5,11 +5,6 @@ export enum BROWSER_STORAGE_TYPE {
     SESSION = 'SESSION',
 }
 
-// export const BROWSER_STORAGE_TYPE = {
-//     COOKIE: 'COOKIE',
-//     SESSION: 'SESSION',
-// };
-
 
 /**
  * Scope boundaries are values associated with runs. They help to define the *default* user permissions used when a run is created, althought further permission configuration can be done with {@link #ROLE lock types}. Scopes also provide an index that in which a run can be queried for.
