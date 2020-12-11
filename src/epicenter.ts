@@ -21,6 +21,7 @@ export {
     presenceAdapter,
     projectAdapter,
     runAdapter,
+    timeAdapter,
     vaultAdapter,
     worldAdapter,
 } from 'adapters/index';
