@@ -80,43 +80,37 @@ export const PUSH_CATEGORY = {
      * intended for messaging users
      * yes pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     CHAT: 'CHAT',
     /**
      * Used for the {@link https://github.com/forio Consensus API}
      * no pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     CONSENSUS: 'CONSENSUS',
     /**
      * intended for general non-chat, sim-level communication
      * yes pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     CONTROL: 'CONTROL',
     /**
      * Used for the {@link https://github.com/forio Presence API}
      * no pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     PRESENCE: 'PRESENCE',
     /**
      * intended for awaiting entering games
      * yes pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     LOBBY: 'LOBBY',
     /**
      * Used for the {@link https://github.com/forio Run API}
      * no pub
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     RUN: 'RUN',
     /**
      * Used for the {@link https://github.com/forio Vault API}
@@ -135,9 +129,18 @@ export const PUSH_CATEGORY = {
     /**
      * internal
      * @constant
-     * @type {string}
-     */
+     * @type {string} */
     SYSTEM: 'SYSTEM',
+    /**
+     * Used for the {@link https://github.com/forio Vault API}
+     * @constant
+     * @type {string} */
+    VAULT: 'VAULT',
+    /**
+     * Used for the {@link https://github.com/forio World API}
+     * @constant
+     * @type {string} */
+    WORLD: 'WORLD',
 };
 
 /**
