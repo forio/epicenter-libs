@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "declarationDir": "dist/types",
+    "declaration": true,
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": ["src/*"],
+      "adapters/*": ["src/adapters/*"],
+      "utils/*": ["src/utils/*"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}

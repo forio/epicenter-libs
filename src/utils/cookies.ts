@@ -1,5 +1,5 @@
 // Modified version of https://github.com/madmurphy/cookies.js
-const getExpiration = (vEnd) => {
+const getExpiration = (vEnd: any) => {
     if (!vEnd) return '';
     switch (vEnd.constructor) {
         case Number: return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : `; max-age=${vEnd}`;
@@ -18,12 +18,20 @@ const getExpiration = (vEnd) => {
     }
 };
 
+interface EditCookieOptions {
+    path?: string,
+    domain?: string,
+    end?: any,
+    secure?: boolean,
+    samesite?: boolean,
+}
+
 export default {
-    getItem(key) {
+    getItem(key: string) {
         if (!key) return null;
         return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
     },
-    setItem(key, value, options = {}) {
+    setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}) {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
 
         const { path, domain, end, secure, samesite } = options;
@@ -36,7 +44,7 @@ export default {
         document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}${expireStr}${domainStr}${pathStr}${secureStr}${samesiteStr}`;
         return true;
     },
-    removeItem(key, options = {}) {
+    removeItem(key: string, options: EditCookieOptions = {}) {
         if (!this.hasItem(key)) return false;
         const { path, domain } = options;
         const domainStr = domain ? `; domain=${domain}` : '';
@@ -44,7 +52,7 @@ export default {
         document.cookie = `${encodeURIComponent(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}${pathStr}`;
         return true;
     },
-    hasItem(key) {
+    hasItem(key: string) {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
 
         return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);

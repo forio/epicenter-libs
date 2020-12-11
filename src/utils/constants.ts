@@ -1,7 +1,9 @@
-export const BROWSER_STORAGE_TYPE = {
-    COOKIE: 'COOKIE',
-    SESSION: 'SESSION',
-};
+
+
+export enum BROWSER_STORAGE_TYPE {
+    COOKIE = 'COOKIE',
+    SESSION = 'SESSION',
+}
 
 
 /**
@@ -110,6 +112,20 @@ export const PUSH_CATEGORY = {
      * @constant
      * @type {string} */
     RUN: 'RUN',
+    /**
+     * Used for the {@link https://github.com/forio Vault API}
+     * no pub
+     * @constant
+     * @type {string}
+     */
+    VAULT: 'VAULT',
+    /**
+     * Used for the {@link https://github.com/forio World API}
+     * no pub
+     * @constant
+     * @type {string}
+     */
+    WORLD: 'WORLD',
     /**
      * internal
      * @constant

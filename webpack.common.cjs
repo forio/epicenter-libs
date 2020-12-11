@@ -6,7 +6,7 @@ const { version } = require('./package.json');
 
 module.exports = {
     entry: [
-        './src/epicenter.js',
+        './src/epicenter.ts',
     ],
     output: {
         path: path.join(__dirname, 'dist'),
@@ -21,11 +21,11 @@ module.exports = {
             adapters: path.resolve(__dirname, 'src', 'adapters'),
             utils: path.resolve(__dirname, 'src', 'utils'),
         },
-        extensions: ['.js'],
+        extensions: ['.js', '.ts', '.json'],
     },
     module: {
         rules: [{
-            test: /\.js$/,
+            test: /\.(ts|js)x?$/,
             exclude: /(node_modules|dist)/,
             loader: 'babel-loader',
         }],

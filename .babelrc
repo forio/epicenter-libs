@@ -1,6 +1,7 @@
 {
     "presets": [
-        "@babel/preset-env"
+        "@babel/env",
+        "@babel/typescript"
     ],
     "plugins": [
         "@babel/plugin-proposal-private-methods",

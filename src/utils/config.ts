@@ -1,12 +1,23 @@
-import { EpicenterError, isBrowser, isNode } from 'utils';
+import EpicenterError from './error';
+import { isBrowser, isNode } from './helpers';
 
 const API_VERSION = 3;
 class Config {
     _apiVersion = API_VERSION;
+    _apiProtocol = '';
+    _apiHost = '';
+    _accountShortName = '';
+    _projectShortName = '';
 
     constructor() {
-        if (isBrowser()) return this.loadBrowser();
-        if (isNode()) return this.loadNode();
+        if (isBrowser()) {
+            this.loadBrowser();
+            return;
+        }
+        if (isNode()) {
+            this.loadNode();
+            return;
+        }
         throw new EpicenterError('Could not identify environment; no configuration was setup');
     }
 
@@ -49,7 +60,7 @@ class Config {
         return this._apiVersion;
     }
 
-    set apiVersion(apiVersion) {
+    set apiVersion(_apiVersion) {
         return;
     }
 

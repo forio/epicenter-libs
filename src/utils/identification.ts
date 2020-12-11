@@ -1,14 +1,18 @@
-import { EpicenterError, NodeStore, SessionStore, CookieStore, cookies, isNode, config } from 'utils';
-import { BROWSER_STORAGE_TYPE } from 'utils/constants';
+import EpicenterError from './error';
+import cookies from './cookies';
+import { NodeStore, SessionStore, CookieStore } from './store';
+import { BROWSER_STORAGE_TYPE } from './constants';
+import { isNode } from './helpers';
+import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
 
-const SESSION_KEY = Symbol('com.forio.epicenter.session');
+const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
 class Identification {
     type
 
-    constructor(storeType) {
+    constructor(storeType: keyof typeof BROWSER_STORAGE_TYPE) {
         if (storeType !== COOKIE && storeType !== SESSION) {
             throw new EpicenterError(`Invalid Storage Type: "${storeType}", please use "${COOKIE}" or "${SESSION}".`);
         }
@@ -17,16 +21,16 @@ class Identification {
     }
     get session() {
         const Store = this.getStore();
-        return new Store().getItem(SESSION_KEY.description);
+        return new Store().getItem(SESSION_KEY);
     }
     set session(session) {
         const Store = this.getStore();
         const path = this.getSessionPath(session);
 
         if (session) {
-            new Store({ path }).setItem(SESSION_KEY.description, session);
+            new Store({ path }).setItem(SESSION_KEY, session);
         } else if (this.session) {
-            new Store({ path }).removeItem(SESSION_KEY.description);
+            new Store({ path }).removeItem(SESSION_KEY);
         }
     }
     getStore() {
@@ -38,7 +42,7 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getSessionPath(session) {
+    getSessionPath(session?: any) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 
