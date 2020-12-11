@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.2.0-alpha",
+  "version": "3.2.0",
   "type": "module",
   "main": "dist/epicenter.js",
   "module": "dist/epicenter.esm.js",
@@ -18,6 +18,7 @@
     "test": "karma start --browsers ChromeHeadless karma.conf.cjs",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.cjs --single-run",
     "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
+    "changelog:all": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
     "rollup:build:types": "tsc --emitDeclarationOnly",

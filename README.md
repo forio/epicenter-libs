@@ -26,8 +26,8 @@ JIRA: https://issues.forio.com/projects/EPILIBS/issues
 2. Make sure you have the latest tags from master: `git fetch origin`
 3. Update the `package.json` with the to your new version*
 4. Update the change log: `npm run changelog`
-5. Build to the `dist/` folder: `npm run prod`
-6. Commit `package.json` and `CHANGELOG.md` files to `master`
+5. Build to the `dist/` folder: `npm run build`
+6. Commit `package.json`, `CHANGELOG.md`, and `dist/` changes to `master`
 7. Tag `master` with the same version you used in step 3 (prefix with 'v')
 8. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
 
