@@ -22,13 +22,13 @@ JIRA: https://issues.forio.com/projects/EPILIBS/issues
 4. Merge your branch into `master`
 
 ## How to Prepare a Release
-1. Test to make sure there are no breaking changes: `npm run single-test`
-2. Make sure you have the latest tags from master: `git fetch origin`
-3. Update the `package.json` with the to your new version*
-4. Update the change log: `npm run changelog`
-5. Build to the `dist/` folder: `npm run build`
-6. Commit `package.json`, `CHANGELOG.md`, and `dist/` changes to `master`
-7. Tag `master` with the same version you used in step 3 (prefix with 'v')
+1. Build to the `dist/` folder: `npm run build`
+2. Test to make sure there are no breaking changes: `npm run single-test`
+3. Make sure you have the latest tags from master: `git fetch origin`
+4. Update the `package.json` with the to your new version*
+5. Update the change log: `npm run changelog`
+6. Commit `package.json` and `CHANGELOG.md` files to `master`
+7. Tag `master` with the same version you used in step 4 (prefix with 'v')
 8. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
 
 \*We do not follow semver standards; because we'd like to retain the MAJOR version at 3 to match in parallel with the Epicenter platform's versioning, we have our own means of versioning:
@@ -61,7 +61,7 @@ Logs during testing are sent to `browser.log`
 ## How to Use Examples (Locally)
 By default, all examples currently go to the `forio-dev/epi-v3` account/project on Epicenter. Examples files are intended to provide a sandbox environment for development, feel free to edit as you wish.
 
-### Vanilla JavaScript (with Webpack)
+### Vanilla JavaScript
 ```
 npm install             # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
