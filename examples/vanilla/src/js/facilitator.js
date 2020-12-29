@@ -1,4 +1,4 @@
-require('./common');
+import './config';
 import {
     authAdapter, presenceAdapter, episodeAdapter, runAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,

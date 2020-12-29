@@ -4,7 +4,7 @@
   "description": "JavaScript implementation of a project using epicenter APIs",
   "private": true,
   "scripts": {
-    "start": "parcel ./src/html/index.html --port 3913"
+    "start": "parcel ./src/html/*.html --port 3913"
   },
   "author": "Forio",
   "license": "ISC",
