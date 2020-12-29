@@ -18,6 +18,7 @@ export {
     authAdapter,
     episodeAdapter,
     groupAdapter,
+    leaderboardAdapter,
     presenceAdapter,
     projectAdapter,
     runAdapter,

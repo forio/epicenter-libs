@@ -157,7 +157,7 @@
 //     load();
 // }
 
-import './common';
+import './config';
 import { authAdapter } from 'epicenter';
 
 const session = authAdapter.getLocalSession();

@@ -17,13 +17,15 @@ interface Page {
     firstResult: number,
     maxResults: number,
     totalResults: number,
-    values: any[]
+    values: any[],
+    prev: Function,
+    next: Function,
+    all: Function,
 }
 
 function paginate(json: Page, url: URL, options: any) {
     const parsePage = options.parsePage ?? ((i: any) => i);
     const page = { ...json, values: parsePage(json.values) };
-
     const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
@@ -62,7 +64,7 @@ function paginate(json: Page, url: URL, options: any) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues = []) {
+    const all = async function(first = 0, allValues: any[] = []):Promise<any[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -81,8 +83,9 @@ function paginate(json: Page, url: URL, options: any) {
     return page;
 }
 
-const createHeaders = (includeAuthorization) => {
-    const headers = { 'Content-type': 'application/json; charset=UTF-8' };
+
+const createHeaders = (includeAuthorization: boolean) => {
+    const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
     const { session } = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
@@ -93,10 +96,10 @@ const createHeaders = (includeAuthorization) => {
     return headers;
 };
 const NO_CONTENT = 204;
-async function request(url, options) {
+async function request(url: URL, options) {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
-    const response = await fetch(url, {
+    const response = await fetch(url.toString(), {
         method: method,
         cache: 'no-cache',
         headers: headers,
@@ -114,7 +117,6 @@ async function request(url, options) {
     }
 
     const json = await response.json();
-    console.log('%c json!', 'font-size: 20px; color: #FB15B9FF;', json);
     if ((response.status >= 200) && (response.status < 400)) {
         const result = new Result(
             paginated ? paginate(json, url, options) : json,
@@ -211,7 +213,6 @@ export default class Router {
     }
     set searchParams(query: any) {
         if (query.constructor === URLSearchParams) {
-
             this._searchParams = query;
             return;
         }
@@ -239,7 +240,7 @@ export default class Router {
      * @param {string} [server] Root path to use
      * @returns {Router}        The Router instance
      */
-    withServer(server) {
+    withServer(server: undefined | string) {
         if (typeof server !== 'undefined') this.server = server;
         return this;
     }
@@ -249,7 +250,7 @@ export default class Router {
      * @param {string} [version]    Version to use
      * @returns {Router}            The Router instance
      */
-    withVersion(version) {
+    withVersion(version: undefined | number) {
         if (typeof version !== 'undefined') this.version = version;
         return this;
     }
@@ -259,7 +260,7 @@ export default class Router {
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
      */
-    withAccountShortName(accountShortName) {
+    withAccountShortName(accountShortName: undefined | string) {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
@@ -269,7 +270,7 @@ export default class Router {
      * @param {string} [projectShortName]   Project name to use
      * @returns {Router}                    The Router instance
      */
-    withProjectShortName(projectShortName) {
+    withProjectShortName(projectShortName: undefined | string) {
         if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
         return this;
     }
@@ -279,12 +280,12 @@ export default class Router {
      * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
      * @returns {Router}                                            The Router instance
      */
-    withSearchParams(searchParams) {
+    withSearchParams(searchParams: undefined | string | string[] | Object | URLSearchParams) {
         if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
         return this;
     }
 
-    getURL(uriComponent) {
+    getURL(uriComponent: string) {
         if (!this.server) this.withServer(`${config.apiProtocol}://${config.apiHost}`);
         if (!this.accountShortName) this.withAccountShortName(config.accountShortName);
         if (!this.projectShortName) this.withProjectShortName(config.projectShortName);
@@ -297,13 +298,13 @@ export default class Router {
     }
 
     //Network Requests
-    async get(uriComponent, options) {
+    async get(uriComponent: string, options = {}) {
         const url = this.getURL(uriComponent);
 
         /* Handle sufficiently large GET requests with POST calls instead */
         if (url.href.length > MAX_URL_LENGTH) {
-            const newURL = new URL(url.href.split('?')[0]);
-            return this.post(newURL, {
+            this.searchParams = '';
+            return this.post(uriComponent, {
                 ...options,
                 body: url.search,
             });
@@ -316,7 +317,7 @@ export default class Router {
         });
     }
 
-    async delete(uriComponent, options) {
+    async delete(uriComponent: string, options = {}) {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -325,7 +326,7 @@ export default class Router {
         });
     }
 
-    async patch(uriComponent, options) {
+    async patch(uriComponent: string, options = {}) {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -334,7 +335,7 @@ export default class Router {
         });
     }
 
-    async post(uriComponent, options) {
+    async post(uriComponent: string, options = {}) {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -343,7 +344,7 @@ export default class Router {
         });
     }
 
-    async put(uriComponent, options) {
+    async put(uriComponent: string, options = {}) {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,

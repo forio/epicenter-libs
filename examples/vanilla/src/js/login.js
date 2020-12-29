@@ -1,4 +1,4 @@
-require('./common');
+import './config';
 import { authAdapter, groupAdapter } from 'epicenter';
 
 const identifyError = (code) => {

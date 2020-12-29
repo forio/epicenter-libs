@@ -16,200 +16,197 @@ export enum BROWSER_STORAGE_TYPE {
  * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
  * @enum {string}
  */
-export const SCOPE_BOUNDARY = {
+export enum SCOPE_BOUNDARY {
     /**
      * Runs scoped by project, users and facilitators are allowed access so long as they are a user in a group on the project.
      * @constant
      * @type {string}
      */
-    PROJECT: 'PROJECT',
+    PROJECT = 'PROJECT',
     /**
      * Runs scoped by group, users and facilitators are allowed access only if they are in the associated group
      * Groups are scoped by projects
      * @constant
      * @type {string}
      */
-    GROUP: 'GROUP',
+    GROUP = 'GROUP',
     /**
      * Runs scoped by episode, not sure what this one is permission-wise
      * Episodes are scoped by groups
      * @constant
      * @type {string}
      */
-    EPISODE: 'EPISODE',
+    EPISODE = 'EPISODE',
     /**
      * Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world
      * Worlds can be scoped by group or episode
      * @constant
      * @type {string}
      */
-    WORLD: 'WORLD',
+    WORLD = 'WORLD',
+    /**
+     * Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world
+     * Worlds can be scoped by group or episode
+     * @constant
+     * @type {string}
+     */
+    RUN = 'RUN',
 };
 
 /**
  * Rituals are used to define the way in which the Epicenter stores a run while running actions like getting variables, saving meta data, and call model operations. Runs can exist in-memory for a certain amount of time before expiring, and requiring their revival again before use.
  * @enum {string}
  */
-export const RITUAL = {
+export enum RITUAL {
     /**
      * Allow GET action against archive, no revival of run
      * @constant
      * @type {string}
      */
-    NONE: 'NONE',
+    NONE = 'NONE',
     /**
      * A run with this ritual will be pulled into memory as needed, and will stay in memory until it's lifespan (defined in your project Settings) has expired.
      * @constant
      * @type {string}
      */
-    REANIMATE: 'REANIMATE',
+    REANIMATE = 'REANIMATE',
     /**
      * A run with this ritual will be pulled into memory as needed, and removed from memory afterwards.
      * @constant
      * @type {string}
      */
-    EXORCISE: 'EXORCISE',
+    EXORCISE = 'EXORCISE',
 };
 
 /**
  * Push categories are pre-defined channels types in which one might use to receive push channel updates
  * @enum {string}
  */
-export const PUSH_CATEGORY = {
+export enum PUSH_CATEGORY {
     /**
      * intended for messaging users
      * yes pub
      * @constant
      * @type {string} */
-    CHAT: 'CHAT',
+    CHAT = 'CHAT',
     /**
      * Used for the {@link https://github.com/forio Consensus API}
      * no pub
      * @constant
      * @type {string} */
-    CONSENSUS: 'CONSENSUS',
+    CONSENSUS = 'CONSENSUS',
     /**
      * intended for general non-chat, sim-level communication
      * yes pub
      * @constant
      * @type {string} */
-    CONTROL: 'CONTROL',
+    CONTROL = 'CONTROL',
     /**
      * Used for the {@link https://github.com/forio Presence API}
      * no pub
      * @constant
      * @type {string} */
-    PRESENCE: 'PRESENCE',
+    PRESENCE = 'PRESENCE',
     /**
      * intended for awaiting entering games
      * yes pub
      * @constant
      * @type {string} */
-    LOBBY: 'LOBBY',
+    LOBBY = 'LOBBY',
     /**
      * Used for the {@link https://github.com/forio Run API}
      * no pub
      * @constant
      * @type {string} */
-    RUN: 'RUN',
+    RUN = 'RUN',
     /**
      * Used for the {@link https://github.com/forio Vault API}
      * no pub
      * @constant
      * @type {string}
      */
-    VAULT: 'VAULT',
+    VAULT = 'VAULT',
     /**
      * Used for the {@link https://github.com/forio World API}
      * no pub
      * @constant
      * @type {string}
      */
-    WORLD: 'WORLD',
+    WORLD = 'WORLD',
     /**
      * internal
      * @constant
      * @type {string} */
-    SYSTEM: 'SYSTEM',
-    /**
-     * Used for the {@link https://github.com/forio Vault API}
-     * @constant
-     * @type {string} */
-    VAULT: 'VAULT',
-    /**
-     * Used for the {@link https://github.com/forio World API}
-     * @constant
-     * @type {string} */
-    WORLD: 'WORLD',
+    SYSTEM = 'SYSTEM',
 };
 
 /**
  * Roles are used to define permissions on resources in Epicenter.
  * @enum {string}
  */
-export const ROLE = {
+export enum ROLE {
     /**
      * System -- Epicenter Manager
      * @constant
      * @type {string}
      */
-    SYSTEM: 'system',
+    SYSTEM = 'system',
     /**
      * System minus -- read-only system access, write for certain accounts; think Geromel
      * @constant
      * @type {string}
      */
-    MONITOR: 'monitor',
+    MONITOR = 'monitor',
     /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
      * @type {string}
      */
-    AUTHOR: 'author',
+    AUTHOR = 'author',
     /**
      * Author minus
      * @constant
      * @type {string}
      */
-    SUPPORT: 'support',
+    SUPPORT = 'support',
     /**
      * Facilitators
      * @constant
      * @type {string}
      */
-    FACILITATOR: 'facilitator',
+    FACILITATOR = 'facilitator',
     /**
      * Reviewers (weaker facilitator)
      * Facilitator minus
      * @constant
      * @type {string}
      */
-    REVIEWER: 'reviewer',
+    REVIEWER = 'reviewer',
     /**
      * Users -- psuedonymKey (userKey) required in scope
      * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}
      */
-    USER: 'user',
+    USER = 'user',
     /**
      * Leader
      * Participant plus
      * @constant
      * @type {string}
      */
-    LEADER: 'leader',
+    LEADER = 'leader',
     /**
      * Participant
      * @constant
      * @type {string}
      */
-    PARTICIPANT: 'participant',
+    PARTICIPANT = 'participant',
     /**
      * Anonymous
      * @constant
      * @type {string}
      */
-    ANONYMOUS: 'anonymous',
+    ANONYMOUS = 'anonymous',
 };
