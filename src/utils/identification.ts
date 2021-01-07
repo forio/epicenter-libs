@@ -42,7 +42,7 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getSessionPath(session?: any) {
+    getSessionPath(session?: FIXME) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 

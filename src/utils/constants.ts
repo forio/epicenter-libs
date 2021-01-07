@@ -150,63 +150,63 @@ export enum ROLE {
      * @constant
      * @type {string}
      */
-    SYSTEM = 'system',
+    SYSTEM = 'SYSTEM',
     /**
      * System minus -- read-only system access, write for certain accounts; think Geromel
      * @constant
      * @type {string}
      */
-    MONITOR = 'monitor',
+    MONITOR = 'MONITOR',
     /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
      * @type {string}
      */
-    AUTHOR = 'author',
+    AUTHOR = 'AUTHOR',
     /**
      * Author minus
      * @constant
      * @type {string}
      */
-    SUPPORT = 'support',
+    SUPPORT = 'SUPPORT',
     /**
      * Facilitators
      * @constant
      * @type {string}
      */
-    FACILITATOR = 'facilitator',
+    FACILITATOR = 'FACILITATOR',
     /**
      * Reviewers (weaker facilitator)
      * Facilitator minus
      * @constant
      * @type {string}
      */
-    REVIEWER = 'reviewer',
+    REVIEWER = 'REVIEWER',
     /**
      * Users -- psuedonymKey (userKey) required in scope
      * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}
      */
-    USER = 'user',
+    USER = 'USER',
     /**
      * Leader
      * Participant plus
      * @constant
      * @type {string}
      */
-    LEADER = 'leader',
+    LEADER = 'LEADER',
     /**
      * Participant
      * @constant
      * @type {string}
      */
-    PARTICIPANT = 'participant',
+    PARTICIPANT = 'PARTICIPANT',
     /**
      * Anonymous
      * @constant
      * @type {string}
      */
-    ANONYMOUS = 'anonymous',
+    ANONYMOUS = 'ANONYMOUS',
 };

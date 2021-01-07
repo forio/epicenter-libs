@@ -9,6 +9,8 @@ class Config {
     _accountShortName = '';
     _projectShortName = '';
 
+    tokenOverride?: string
+
     constructor() {
         if (isBrowser()) {
             this.loadBrowser();

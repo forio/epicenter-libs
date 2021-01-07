@@ -22,6 +22,16 @@ class CometdError extends Error {
     }
 }
 
+interface CometdReply {
+    successful: boolean,
+}
+interface Subscription {
+    channel: string,
+};
+interface Channel {
+    path: string,
+}
+
 class CometdAdapter {
 
     url;
@@ -61,6 +71,8 @@ class CometdAdapter {
                 }
             };
         }
+
+        return true;
     }
 
     async reinit(customCometd, options) {
@@ -127,7 +139,7 @@ class CometdAdapter {
         await this.empty();
         if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
-        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply) => {
+        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: CometdReply) => {
             if (!disconnectReply.successful) {
                 reject(new EpicenterError('Unable to disconnect from CometD server'));
             } else {
@@ -136,7 +148,7 @@ class CometdAdapter {
         }));
     }
 
-    async add(channel, update, options = {}) {
+    async add(channel: Channel | Channel[], update, options = {}) {
         await this.init();
         const channels = [].concat(channel);
 
@@ -149,13 +161,15 @@ class CometdAdapter {
             subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
         }
 
-        const handleCometdUpdate = ({ channel, data }) => {
+        const handleCometdUpdate = ({ data }) => {
+            // TODO -- figure out why there's ambiguity here and try to remove it
             data = typeof data === 'string' ? JSON.parse(data) : data;
             return update(data);
         };
-        const promises = [];
+
+        const promises:Promise<Subscription>[] = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply) => {
+            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: CometdReply) => {
                 if (subscribeReply.successful) {
                     this.subscriptions.set(subscription.channel, subscription);
                     resolve(subscription);
@@ -190,14 +204,13 @@ class CometdAdapter {
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
         }
-        const publishProps = {};
         const { session } = identification;
-        if (session) {
-            publishProps.ext = { [AUTH_TOKEN_KEY]: session.token };
-        }
+        const publishProps = {
+            ext: session ? { [AUTH_TOKEN_KEY]: session.token } : undefined,
+        };
         const promises = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            this.cometd.publish(path, content, publishProps, (publishReply) => {
+            this.cometd.publish(path, content, publishProps, (publishReply: CometdReply) => {
                 if (publishReply.successful) {
                     resolve(publishReply);
                     return;
@@ -227,7 +240,7 @@ class CometdAdapter {
     async remove(subscription) {
         await this.init();
         this.subscriptions.delete(subscription.channel);
-        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply) => {
+        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: CometdReply) => {
             if (unsubscribeReply.successful) {
                 resolve(unsubscribeReply);
             }

@@ -1,7 +1,7 @@
 import './config';
 import { showLoading, hideLoading } from './common';
 import {
-    authAdapter, presenceAdapter, timeAdapter, leaderboardAdapter,
+    groupAdapter, authAdapter, presenceAdapter, timeAdapter, leaderboardAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,
 } from 'epicenter';
 
@@ -21,6 +21,16 @@ const submitEl = document.getElementById('submit');
 const timeEl = document.getElementById('time');
 
 const initialize = () => {
+    groupAdapter.search({
+        filter: [
+            // `group.name|=${'wallace-dev-1-oct-2020'}|${'wallace-dev-2-oct-2020'}`,
+            'permission.role=PARTICIPANT',
+            `user.userKey=${session.userKey}`,
+        ],
+        // sort: ['+group.name'],
+        first: 0,
+        max: 2,
+    });
     presenceAdapter.connect();
     let waiting = false;
     chatFormEl.onsubmit = (e) => {

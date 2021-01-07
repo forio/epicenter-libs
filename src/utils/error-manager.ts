@@ -35,7 +35,7 @@ class ErrorManager {
     _handlers = [
         {/* Default Unauthorized (401) Error Handler */
             identifier: (error) => error.status === UNAUTHORIZED,
-            handle: (error, retry) => {
+            handle: (error, retry: Function) => {
                 if (error.code === 'AUTHENTICATION_INVALIDATED') {
                     const groupKey = identification.session.groupKey;
                     return authAdapter.upgrade(groupKey, { objectType: 'user', inert: true })
