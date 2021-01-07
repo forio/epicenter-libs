@@ -11,6 +11,8 @@ module.exports = function(config) {
         },
         files: [
             { pattern: 'dist/epicenter.js', watched: false, included: true, served: true},
+            { pattern: 'tests/config.spec.js', watched: false },
+            { pattern: 'tests/router.spec.js', watched: false },
             { pattern: 'tests/*.spec.js', watched: false },
         ],
         port: 9876,  // karma web server port

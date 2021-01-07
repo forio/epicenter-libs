@@ -6,6 +6,56 @@ import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  * @namespace runAdapter
  */
 
+interface ModelContext {
+
+}
+interface ExecutionContext {
+
+}
+interface CreateOptions extends GenericAdapterOptions {
+    readLock?: string,
+    writeLock?: string,
+    userKey?: string,
+    ephemeral?: boolean,
+    trackingKey?: string,
+    modelContext?: ModelContext,
+    executionContext?: ExecutionContext,
+}
+interface GetOptions extends GenericAdapterOptions {
+    timeout?: number,
+    ritual?: keyof typeof RITUAL,
+}
+interface UpdateOptions {
+    readLock?: string,
+    writeLock?: string,
+    trackingKey?: string,
+    marked?: boolean,
+    hidden?: boolean,
+    closed?: boolean,
+}
+interface QueryOptions extends GenericAdapterQueryOptions {
+    timeout?: number,
+    variables?: string[],
+    metadata?: string[],
+}
+interface ProcAction {
+    name: string,
+    arguments?: any[],
+    objectType: 'execute',
+}
+interface GetAction {
+    name: string,
+    objectType: 'get',
+}
+interface SetAction {
+    name: string,
+    value: any,
+    objectType: 'set',
+}
+type Action =
+    | ProcAction
+    | GetAction
+    | SetAction;
 
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
@@ -36,12 +86,16 @@ import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Newly created run
  */
-export async function create(model, scope, optionals = {}) {
+export async function create(
+    model: string,
+    scope: GenericScope,
+    optionals: CreateOptions = {}
+) {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock, userKey, ephemeral,
         trackingKey, modelContext, executionContext,
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
@@ -49,6 +103,7 @@ export async function create(model, scope, optionals = {}) {
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/run', {
@@ -82,12 +137,13 @@ export async function create(model, scope, optionals = {}) {
  * @param {object}  [optionals={}]  Object for all optional fields
  * @returns {object}                Response with the run in the "body"
  */
-export async function clone(runKey, optionals = {}) {
+export async function clone(runKey: string, optionals: CreateOptions = {}) {
     const {
-        accountShortName, projectShortName, ephemeral,
-        trackingKey, modelContext = {}, executionContext = {},
+        ephemeral, trackingKey, modelContext = {}, executionContext = {},
+        accountShortName, projectShortName, server,
     } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/run/clone/${runKey}`, {
@@ -100,12 +156,13 @@ export async function clone(runKey, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function restore(runKey, optionals = {}) {
+export async function restore(runKey: string, optionals: CreateOptions = {}) {
     const {
-        accountShortName, projectShortName, ephemeral,
-        modelContext = {}, executionContext = {},
+        ephemeral, modelContext = {}, executionContext = {},
+        accountShortName, projectShortName, server,
     } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/run/restore/${runKey}`, {
@@ -117,12 +174,17 @@ export async function restore(runKey, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function rewind(runKey, steps, optionals = {}) {
+export async function rewind(
+    runKey: string,
+    steps: number,
+    optionals: CreateOptions = {}
+) {
     const {
-        accountShortName, projectShortName,
         ephemeral, modelContext = {},
+        accountShortName, projectShortName, server,
     } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/run/rewind/${runKey}`, {
@@ -134,13 +196,18 @@ export async function rewind(runKey, steps, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function update(runKey, update, optionals = {}) {
+export async function update(
+    runKey: string,
+    update: UpdateOptions,
+    optionals: GenericAdapterOptions = {}
+) {
     const { readLock, writeLock, trackingKey, marked, hidden, closed } = update;
-    const { accountShortName, projectShortName } = optionals;
+    const { accountShortName, projectShortName, server } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(hasMultiple ? { runKey } : '')
@@ -173,18 +240,20 @@ export async function update(runKey, update, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                TODO
  */
-export async function remove(runKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function remove(runKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .delete(`/run/${runKey}`)
         .then(({ body }) => body);
 }
 
-export async function get(runKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function get(runKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/run/${runKey}`)
@@ -228,11 +297,15 @@ export async function get(runKey, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                    TODO
  */
-export async function query(model, scope, optionals = {}) {
+export async function query(
+    model: string,
+    scope: GenericScope,
+    optionals: QueryOptions = {}
+) {
     const { scopeBoundary, scopeKey } = scope;
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
     } = optionals;
 
     const searchParams = {
@@ -244,17 +317,18 @@ export async function query(model, scope, optionals = {}) {
     };
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
         .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
             paginated: true,
-            parsePage: (values) => {
+            parsePage: (values: any[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
                         variableMap[key] = variables[index];
                         return variableMap;
-                    }, {});
+                    }, {} as Record<string, any>);
                     return run;
                 });
             },
@@ -262,18 +336,27 @@ export async function query(model, scope, optionals = {}) {
         .then(({ body }) => body);
 }
 
-export async function introspect(model, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function introspect(model: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
+
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/run/introspect/${model}`)
         .then(({ body }) => body);
-
 }
 
-export async function operation(runKey, name, args = [], optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function operation(
+    runKey: string,
+    name: string,
+    args: any[] = [],
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
@@ -283,6 +366,7 @@ export async function operation(runKey, name, args = [], optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -295,8 +379,15 @@ export async function operation(runKey, name, args = [], optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function getVariables(runKey, variables, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function getVariables(
+    runKey: string | string[],
+    variables: string[],
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
@@ -306,12 +397,13 @@ export async function getVariables(runKey, variables, optionals = {}) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
-    const mappify = (values) => variables.reduce((variableMap, key, index) => {
+    const mappify = (values: any[]) => variables.reduce((variableMap, key, index) => {
         variableMap[key] = values[index];
         return variableMap;
-    }, {});
+    }, {} as Record<string, any>);
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -327,8 +419,15 @@ export async function getVariables(runKey, variables, optionals = {}) {
         });
 }
 
-export async function getVariable(runKey, variable, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function getVariable(
+    runKey: string | string[],
+    variable: string | string[],
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
         const variables = Array.isArray(variable) ? variable : [variable];
@@ -336,6 +435,7 @@ export async function getVariable(runKey, variable, optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams({ timeout, ritual })
@@ -352,8 +452,11 @@ export async function getVariable(runKey, variable, optionals = {}) {
  * @param {object}  optionals   Something meaningful about optionals
  * @returns {object}            Object with the variables & new values that were updated
  */
-export async function updateVariables(runKey, update, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function updateVariables(runKey: string, update: UpdateOptions , optionals: GetOptions = {}) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
@@ -363,6 +466,7 @@ export async function updateVariables(runKey, update, optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -371,9 +475,16 @@ export async function updateVariables(runKey, update, optionals = {}) {
 
 }
 
-export async function getMetadata(runKey, variables, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
-    const include = variables.join(';');
+export async function getMetadata(
+    runKey: string,
+    metadata: string[],
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
+    const include = metadata.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
@@ -383,6 +494,7 @@ export async function getMetadata(runKey, variables, optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -390,8 +502,15 @@ export async function getMetadata(runKey, variables, optionals = {}) {
         .then(({ body }) => body);
 }
 
-export async function updateMetadata(runKey, update, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function updateMetadata(
+    runKey: string,
+    update: Record<string, any>,
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
@@ -401,6 +520,7 @@ export async function updateMetadata(runKey, update, optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -408,8 +528,15 @@ export async function updateMetadata(runKey, update, optionals = {}) {
         .then(({ body }) => body);
 }
 
-export async function action(runKey, actionList, optionals = {}) {
-    const { accountShortName, projectShortName, timeout, ritual } = optionals;
+export async function action(
+    runKey: string,
+    actionList: Action[],
+    optionals: GetOptions = {}
+) {
+    const {
+        timeout, ritual,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
@@ -419,6 +546,7 @@ export async function action(runKey, actionList, optionals = {}) {
     }
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
@@ -426,43 +554,6 @@ export async function action(runKey, actionList, optionals = {}) {
         .then(({ body }) => body);
 
 }
-
-async function serial(runKey, operations, optionals = {}) {
-    const normalizedOps = operations.map((item) => ({
-        name: typeof item === 'string' ? item : item.name,
-        params: item.params,
-    }));
-
-    //Perform all operations, sequentially
-    return normalizedOps.reduce((promise, { name, params }) => {
-        return promise.then(() => operation(runKey, name, params, optionals = {}));
-    }, Promise.resolve());
-}
-
-export async function getWithStrategy(strategy, model, scope, optionals = {}) {
-    const { initOperations = [] } = optionals;
-    if (strategy === 'reuse-across-sessions') {
-        const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
-        if (runs.length) {
-            return runs[0];
-        }
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-never') {
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-by-tracking-key') {
-        //TBD write out if needed
-        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
-    } else if (strategy === 'multiplayer') {
-        //TODO when multiplayer API is ready
-        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
-    }
-    throw new EpicenterError('Invalid run strategy.');
-}
-
 
 /**
  * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
@@ -490,15 +581,20 @@ export async function getWithStrategy(strategy, model, scope, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Run retrieved from the world
  */
-export async function retrieveFromWorld(worldKey, model, optionals = {}) {
+export async function retrieveFromWorld(
+    worldKey: string,
+    model: string,
+    optionals: CreateOptions = {}
+) {
     const {
         readLock, writeLock, ephemeral, trackingKey,
         modelContext, executionContext,
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
     } = optionals;
     const { PARTICIPANT } = ROLE;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/run/world/${worldKey}`, {
@@ -537,12 +633,50 @@ export async function retrieveFromWorld(worldKey, model, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Run retrieved from the world
  */
-export async function removeFromWorld(worldKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function removeFromWorld(worldKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .delete(`/run/world/${worldKey}`)
         .then(({ body }) => body);
+}
+
+
+async function serial(runKey: string, operations, optionals = {}) {
+    const normalizedOps = operations.map((item) => ({
+        name: typeof item === 'string' ? item : item.name,
+        params: item.params,
+    }));
+
+    //Perform all operations, sequentially
+    return normalizedOps.reduce((promise, { name, params }) => {
+        return promise.then(() => operation(runKey, name, params, optionals = {}));
+    }, Promise.resolve());
+}
+
+export async function getWithStrategy(strategy, model, scope, optionals = {}) {
+    const { initOperations = [] } = optionals;
+    if (strategy === 'reuse-across-sessions') {
+        const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
+        if (runs.length) {
+            return runs[0];
+        }
+        const newRun = await create(model, scope, optionals = {});
+        await serial(newRun.runKey, initOperations, optionals = {});
+        return newRun;
+    } else if (strategy === 'reuse-never') {
+        const newRun = await create(model, scope, optionals = {});
+        await serial(newRun.runKey, initOperations, optionals = {});
+        return newRun;
+    } else if (strategy === 'reuse-by-tracking-key') {
+        //TBD write out if needed
+        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+    } else if (strategy === 'multiplayer') {
+        //TODO when multiplayer API is ready
+        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+    }
+    throw new EpicenterError('Invalid run strategy.');
 }

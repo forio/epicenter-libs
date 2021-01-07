@@ -1,623 +1,863 @@
 import sinon from 'sinon';
-import chai, { expect } from 'chai';
-import { ENDPOINTS, SESSION_KEY, SESSION, OK_CODE, CREATED_CODE } from './common';
+import chai from 'chai';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './common';
 chai.use(require('sinon-chai'));
 
 describe('Run API Service', () => {
     const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
-    let server;
+    let fakeServer;
 
-    config.accountShortName = ENDPOINTS.accountShortName;
-    config.projectShortName = ENDPOINTS.projectShortName;
+    config.accountShortName = ACCOUNT;
+    config.projectShortName = PROJECT;
+
     before(() => {
-        server = sinon.fakeServer.create();
-        document.cookies = `${SESSION_KEY}=${JSON.stringify(encodeURIComponent(SESSION))}`;
-        server.respondWith(/(.*)\/config/, (xhr, id) => {
-            const RESPONSE = {
-                api: { host: 'test.forio.com', protocol: 'https' },
-                clusterId: 'epicenter-test-monolith-1',
-            };
+        fakeServer = sinon.fakeServer.create();
+        authAdapter.setLocalSession(SESSION);
+
+        fakeServer.respondWith('DELETE', /(.*)\/run/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
         });
-        server.respondWith('DELETE', /(.*)\/run/, function(xhr, id) {
-            const RESPONSE = {
-                api: { host: 'test.forio.com', protocol: 'https' },
-                clusterId: 'epicenter-test-monolith-1',
-            };
-            xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        server.respondWith('GET', /(.*)\/run/, function(xhr, id) {
-            // Some mutant response
-            const RESPONSE = {
-                // getting a run
-                id: '065dfe50-d29d-4b55-a0fd-30868d7dd26c',
-                model: 'model.vmf',
-                account: 'mit',
-                project: 'afv',
-                saved: false,
-                lastModified: '2014-06-20T04:09:45.738Z',
-                created: '2014-06-20T04:09:45.738Z',
-                // getting many runs
-                values: [],
-            };
+        fakeServer.respondWith('GET', /(.*)\/run/, function(xhr, id) {
+            const RESPONSE = { values: [/* Need values here to account for built-in pagination */] };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
-        server.respondWith('POST', /(.*)\/run/, function(xhr, id) {
-            const RESPONSE = {
-                id: '065dfe50-d29d-4b55-a0fd-30868d7dd26c',
-                model: 'model.vmf',
-                account: 'mit',
-                project: 'afv',
-                saved: false,
-                lastModified: '2014-06-20T04:09:45.738Z',
-                created: '2014-06-20T04:09:45.738Z',
-            };
+        fakeServer.respondWith('POST', /(.*)\/run/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
-        server.respondWith('PATCH', /(.*)\/run/, function(xhr, id) {
-            const RESPONSE = {
-                id: '065dfe50-d29d-4b55-a0fd-30868d7dd26c',
-                model: 'model.vmf',
-                account: 'mit',
-                project: 'afv',
-                saved: false,
-                lastModified: '2014-06-20T04:09:45.738Z',
-                created: '2014-06-20T04:09:45.738Z',
-            };
+        fakeServer.respondWith('PATCH', /(.*)\/run/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
 
-        server.respondImmediately = true;
+        fakeServer.respondImmediately = true;
     });
 
     after(() => {
-        server.restore();
-        document.cookie = `${SESSION_KEY}=; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+        fakeServer.restore();
+        authAdapter.setLocalSession(undefined);
     });
 
-    describe('Create', () => {
+    describe('runAdapter.create', () => {
         const MODEL = 'model.vmf';
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
-        const OPTIONALS = {
-            trackingKey: 'tracking-key-123456',
+        it('Should do a POST', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run URL', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run`);
+        });
+        it('Should pass the run to the request body', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE, {
+                readLock: ROLE.AUTHOR,
+                writeLock: ROLE.AUTHOR,
+                userKey: 'userkey',
+                ephemeral: true,
+                trackingKey: 'trackingkey',
+            });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.have.property('scope');
+            body.scope.scopeBoundary.should.equal(WORLD_SCOPE.scopeBoundary);
+            body.scope.scopeKey.should.equal(WORLD_SCOPE.scopeKey);
+            body.should.have.property('permit');
+            body.permit.readLock.should.equal(ROLE.AUTHOR);
+            body.permit.writeLock.should.equal(ROLE.AUTHOR);
+            body.trackingKey.should.equal('trackingkey');
+            body.modelFile.should.equal(MODEL);
+            body.morphology.should.equal('MANY');
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+        it('Should have read lock default to participant when using world scope', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.permit.readLock.should.equal(ROLE.PARTICIPANT);
+        });
+        it('Should not provide a userKey with a world scope', async() => {
+            await runAdapter.create(MODEL, WORLD_SCOPE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.scope.should.not.have.property('userKey');
+        });
+        it('Should use a user read lock when creating with a group scope', async() => {
+            await runAdapter.create(MODEL, GROUP_SCOPE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.permit.readLock.should.equal(ROLE.USER);
+        });
+        it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
+            await runAdapter.create(MODEL, GROUP_SCOPE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
+        });
+    });
+    describe('runAdapter.clone', () => {
+        const RUN_KEY = 'runkey';
+        it('Should do a POST', async() => {
+            await runAdapter.clone(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.clone(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/clone/runKey URL', async() => {
+            await runAdapter.clone(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/clone/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.clone(RUN_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/clone/${RUN_KEY}`);
+        });
+        it('Should pass the appropriate options to the request body', async() => {
+            await runAdapter.clone(RUN_KEY, {
+                trackingKey: 'trackingkey',
+                ephemeral: true,
+            });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.trackingKey.should.equal('trackingkey');
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+    });
+    describe('runAdapter.restore', () => {
+        const RUN_KEY = 'runkey';
+        it('Should do a POST', async() => {
+            await runAdapter.restore(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.restore(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/restore/runKey URL', async() => {
+            await runAdapter.restore(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/restore/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.restore(RUN_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/restore/${RUN_KEY}`);
+        });
+        it('Should pass the appropriate options to the request body', async() => {
+            await runAdapter.restore(RUN_KEY, { ephemeral: true });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+    });
+    describe('runAdapter.rewind', () => {
+        const RUN_KEY = 'runkey';
+        const STEPS = 2;
+        it('Should do a POST', async() => {
+            await runAdapter.rewind(RUN_KEY, STEPS);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.rewind(RUN_KEY, STEPS);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/rewind/runKey URL', async() => {
+            await runAdapter.rewind(RUN_KEY, STEPS);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/rewind/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.rewind(RUN_KEY, STEPS, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/rewind/${RUN_KEY}`);
+        });
+        it('Should pass the appropriate options to the request body', async() => {
+            await runAdapter.rewind(RUN_KEY, STEPS, { ephemeral: true });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.rewindCount.should.equal(STEPS);
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+        });
+    });
+    describe('runAdapter.update', () => {
+        const UPDATE = {
+            trackingKey: 'trackingkey',
             readLock: ROLE.AUTHOR,
             writeLock: ROLE.AUTHOR,
-            accountShortName: 'some-account',
-            projectShortName: 'some-project',
-        };
-        it('Should do a POST', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run`);
-        }));
-        it('Should have authorization', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should pass the run options to the request', async() => await runAdapter.create(MODEL, WORLD_SCOPE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.scope).to.exist;
-            expect(reqBody.scope.scopeBoundary).to.equal(WORLD_SCOPE.scopeBoundary);
-            expect(reqBody.scope.scopeKey).to.equal(WORLD_SCOPE.scopeKey);
-            expect(reqBody.permit).to.exist;
-            expect(reqBody.permit.readLock).to.equal(OPTIONALS.readLock);
-            expect(reqBody.permit.writeLock).to.equal(OPTIONALS.writeLock);
-            expect(reqBody.trackingKey).to.equal(OPTIONALS.trackingKey);
-            expect(reqBody.modelFile).to.equal(MODEL);
-            expect(reqBody.morphology).to.equal('MANY');
-            expect(reqBody.ephemeral).to.equal(OPTIONALS.ephemeral);
-            expect(reqBody.modelContext).to.be.an('object').that.is.empty;
-            expect(reqBody.executionContext).to.be.an('object').that.is.empty;
-
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${OPTIONALS.accountShortName}/${OPTIONALS.projectShortName}/run`);
-        }));
-        it('Should use PARTICIPANT when a lock is undefined with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.permit.readLock).to.equal(ROLE.PARTICIPANT);
-        }));
-        it('Should not provide a userKey with a WORLD scope', async() => await runAdapter.create(MODEL, WORLD_SCOPE).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.scope.userKey).to.not.exist;
-        }));
-        it('Should use USER when a lock is undefined with GROUP scope', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.permit.readLock).to.equal(ROLE.USER);
-        }));
-        it('Should use the session\'s userKey as an userKey when not provided one for GROUP scope ', async() => await runAdapter.create(MODEL, GROUP_SCOPE).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.scope.userKey).to.equal(authAdapter.getLocalSession().userKey);
-        }));
-    });
-    describe('Clone', () => {
-        const OPTIONALS = { trackingKey: 'tracking-key-123456' };
-        const RUN_KEY = '123456789';
-        it('Should do a POST', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/clone/${RUN_KEY}`);
-        }));
-        it('Should pass the options to the request body', async() => await runAdapter.clone(RUN_KEY, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            (reqBody.trackingKey).should.equal(OPTIONALS.trackingKey);
-        }));
-    });
-    describe('Restore', () => {
-        const RUN_KEY = '123456789';
-        it('Should do a POST', async() => await runAdapter.restore(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.restore(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.restore(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/restore/${RUN_KEY}`);
-        }));
-    });
-    describe('Rewind', () => {
-        const RUN_KEY = '123456789';
-        it('Should do a POST', async() => await runAdapter.rewind(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.rewind(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.rewind(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/rewind/${RUN_KEY}`);
-        }));
-    });
-    describe('Update', () => {
-        const UPDATE = {
-            trackingKey: 'tracking-key-123456',
-            readLock: 'AUTHOR',
-            writeLock: 'AUTHOR',
             marked: true,
             hidden: true,
             closed: false,
         };
-        const RUN_KEY = '123456789';
-        it('Should do a PATCH', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
-            const req = server.requests.pop();
+        const RUN_KEY = 'runkey';
+        it('Should do a PATCH', async() => {
+            await runAdapter.update(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
-        }));
-        it('Should have authorization', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
-        }));
-        it('Should pass the options to the request body', async() => await runAdapter.update(RUN_KEY, UPDATE).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.readLock).to.equal(UPDATE.readLock);
-            expect(reqBody.writeLock).to.equal(UPDATE.writeLock);
-            expect(reqBody.trackingKey).to.equal(UPDATE.trackingKey);
-            expect(reqBody.marked).to.equal(UPDATE.marked);
-            expect(reqBody.hidden).to.equal(UPDATE.hidden);
-            expect(reqBody.closed).to.equal(UPDATE.closed);
-        }));
-        it('Should properly omit options that aren\'t passed in', async() => await runAdapter.update(RUN_KEY, { marked: true }).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            expect(reqBody.marked).to.equal(true);
-            expect(reqBody).to.not.have.any.keys('readLock', 'writeLock', 'trackingKey', 'hidden', 'closed');
-        }));
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.update(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/runKey URL', async() => {
+            await runAdapter.update(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.update(RUN_KEY, UPDATE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
+        });
+        it('Should pass the update to the request body', async() => {
+            await runAdapter.update(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.deep.equal(UPDATE);
+        });
+        it('Should properly omit options that aren\'t passed in', async() => {
+            await runAdapter.update(RUN_KEY, { marked: true });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.marked.should.equal(true);
+            body.should.not.have.any.keys('readLock', 'writeLock', 'trackingKey', 'hidden', 'closed');
+        });
     });
-    describe('Remove', () => {
-        const RUN_KEY = '123456789';
-        it('Should do a DELETE', async() => await runAdapter.remove(RUN_KEY).then(() => {
-            const req = server.requests.pop();
+    describe('runAdapter.remove', () => {
+        const RUN_KEY = 'runkey';
+        it('Should do a DELETE', async() => {
+            await runAdapter.remove(RUN_KEY);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('DELETE');
-        }));
-        it('Should have authorization', async() => await runAdapter.remove(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.remove(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
-        }));
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.remove(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/runKey URL', async() => {
+            await runAdapter.remove(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.remove(RUN_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
+        });
     });
-    describe('Get', () => {
-        const RUN_KEY = '123456789';
-        it('Should do a GET', async() => await runAdapter.get(RUN_KEY).then(() => {
-            const req = server.requests.pop();
+    describe('runAdapter.get', () => {
+        const RUN_KEY = 'runkey';
+        it('Should do a GET', async() => {
+            await runAdapter.get(RUN_KEY);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.get(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.get(RUN_KEY).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${RUN_KEY}`);
-        }));
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.get(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/runKey URL', async() => {
+            await runAdapter.get(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.get(RUN_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
+        });
     });
-    describe('Query', () => {
+    describe('runAdapter.query', () => {
         const MODEL = 'model.vmf';
         const SCOPE = {
             scopeBoundary: 'PROJECT',
             scopeKey: '123456789',
         };
-        const OPTIONALS = {
+        const OPTIONS = {
             filter: ['var.vartest=23', 'var.trackingKey=1234', 'var.something#else@here'],
             sort: ['-run.created', '+run.trackingKey'],
-            first: '20',
-            max: '15',
-            timeout: '20',
-            metadata: ['includedvar1', 'inludedvar2'],
+            first: 20,
+            max: 15,
+            timeout: 20,
+            variables: ['includedvar1', 'inludedvar2'],
+            metadata: ['meta1', 'meta2'],
         };
-        it('Should do a GET', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a GET', async() => {
+            await runAdapter.query(MODEL, SCOPE);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.query(MODEL, SCOPE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${MODEL}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.query(MODEL, SCOPE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async() => {
+            await runAdapter.query(MODEL, SCOPE);
+            const req = fakeServer.requests.pop();
+            const { scopeBoundary, scopeKey } = SCOPE;
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.query(MODEL, SCOPE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { scopeBoundary, scopeKey } = SCOPE;
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+        });
+        it('Should pass in query options as a part of the search parameters (query string)', async() => {
+            await runAdapter.query(MODEL, SCOPE, OPTIONS);
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('filter').split(';').forEach((f) => expect(f).to.satisfy((f) => f.startsWith('var.') || f.startsWith('meta.')));
-            searchParams.get('meta').split(';').forEach((p, i) => expect(p).to.equal(OPTIONALS.metadata[i]));
-            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.startsWith('-') || s.startsWith('+')));
-            searchParams.get('sort').split(';').forEach((s) => expect(decodeURIComponent(s)).to.satisfy((s) => s.includes('run.')));
-            expect(searchParams.get('first')).to.equal(OPTIONALS.first);
-            expect(searchParams.get('max')).to.equal(OPTIONALS.max);
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-        }));
+            searchParams.get('filter').should.equal(OPTIONS.filter.join(';'));
+            searchParams.get('sort').should.equal(OPTIONS.sort.join(';'));
+            searchParams.get('var').should.equal(OPTIONS.variables.join(';'));
+            searchParams.get('meta').should.equal(OPTIONS.metadata.join(';'));
+            searchParams.get('first').should.equal(OPTIONS.first.toString());
+            searchParams.get('max').should.equal(OPTIONS.max.toString());
+            searchParams.get('timeout').should.equal(OPTIONS.timeout.toString());
+        });
     });
-    describe('Introspect', () => {
+    describe('runAdapter.introspect', () => {
         const MODEL = 'test-model.py';
-        it('Should do a GET', async() => await runAdapter.introspect(MODEL).then(() => {
-            const req = server.requests.pop();
+        it('Should do a GET', async() => {
+            await runAdapter.introspect(MODEL);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.introspect(MODEL).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL', async() => await runAdapter.introspect(MODEL).then(() => {
-            const req = server.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/introspect/${MODEL}`);
-        }));
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.introspect(MODEL);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/introspect/modelFile URL', async() => {
+            await runAdapter.introspect(MODEL);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/${MODEL}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.introspect(MODEL, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${MODEL}`);
+        });
     });
-    describe('Operation', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.operation', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
         const NAME = 'test-operation';
         const ARGUMENTS = ['arg1', 'arg2', 'arg3'];
 
-        it('Should do a GET', async() => await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a POST', async() => {
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL with one runKey', async() => await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/operation/runKey URL', async() => {
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/operation/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/operation/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            const OPTIONS = { timeout: 300, ritual: RITUAL.REANIMATE };
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONS);
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL with multiple runKeys', async() => await runAdapter.operation(RUN_KEYS, NAME, ARGUMENTS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal(OPTIONS.timeout.toString());
+            searchParams.get('ritual').should.equal(OPTIONS.ritual.toString());
+        });
+        it('Should handle the use of multiple run keys in the URL search parameters', async() => {
+            await runAdapter.operation([RUN_KEY, '987654321'], NAME, ARGUMENTS);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/operation`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/operation`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.operation([RUN_KEY, '987654321'], NAME, ARGUMENTS, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
+        it('Should pass the operation to the request body', async() => {
+            await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.name.should.equal(NAME);
+            body.arguments.should.deep.equal(ARGUMENTS);
+        });
     });
-    describe('Get Variables', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.getVariables', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
         const VARIABLES = ['var1', 'var2', 'var3'];
-        it('Should do a GET', async() => await runAdapter.getVariables(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a GET', async() => {
+            await runAdapter.getVariables(RUN_KEY, VARIABLES);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.getVariables(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single runKey', async() => await runAdapter.getVariables(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.getVariables(RUN_KEY, VARIABLES);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/variable/runKey URL', async() => {
+            await runAdapter.getVariables(RUN_KEY, VARIABLES);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.getVariables(RUN_KEY, VARIABLES, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
             searchParams.get('include').should.equal(VARIABLES.join(';'));
-        }));
-        it('Should create a proper URL; multiple runKeys', async() => await runAdapter.getVariables(RUN_KEYS, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle the use of multiple run keys in the URL search parameters', async() => {
+            await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('include')).to.equal(VARIABLES.join(';'));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
     });
-    describe('Get Variable', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.getVariable', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
         const VARIABLE = 'var1';
-        const VARIABLES = ['var1', 'var2', 'var3'];
-        it('Should do a GET', async() => await runAdapter.getVariable(RUN_KEY, VARIABLE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a GET', async() => {
+            await runAdapter.getVariable(RUN_KEY, VARIABLE);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.getVariable(RUN_KEY, VARIABLE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single runKey', async() => await runAdapter.getVariable(RUN_KEY, VARIABLE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.getVariable(RUN_KEY, VARIABLE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/variable/runKey/variableName URL', async() => {
+            await runAdapter.getVariable(RUN_KEY, VARIABLE);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}/${VARIABLE}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.getVariable(RUN_KEY, VARIABLE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.getVariable(RUN_KEY, VARIABLE, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL; multiple runKeys, single variable', async() => await runAdapter.getVariable(RUN_KEYS, VARIABLE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle multiple run keys in the URL search parameters', async() => {
+            await runAdapter.getVariable([RUN_KEY, '987654321'], VARIABLE);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('include')).to.equal(VARIABLE);
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
-        it('Should create a proper URL; single runKey, multiple variables', async() => await runAdapter.getVariable(RUN_KEY, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should handle multiple variables in the URL search parameters', async() => {
+            await runAdapter.getVariable(RUN_KEY, [VARIABLE, 'var2']);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-            searchParams.get('include').should.equal(VARIABLES.join(';'));
-        }));
-        it('Should create a proper URL; multiple runKeys, multiple variables', async() => await runAdapter.getVariable(RUN_KEYS, VARIABLES, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
+        });
+        it('Should handle multiple run keys and multiple variables in the URL search parameters', async() => {
+            await runAdapter.getVariable([RUN_KEY, '987654321'], [VARIABLE, 'var2']);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('include')).to.equal(VARIABLES.join(';'));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+            searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
+        });
     });
-    describe('Update Variable', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.updateVariables', () => {
         const UPDATE = {
-            'varname#selector@dialect': 123456,
+            'varname1#selector1@dialect1': 123456,
             'varname2#selector2@dialect2': 654987,
             'varname3#selector3@dialect3': 987654,
         };
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
-        it('Should do a PATCH', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a PATCH', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
-        }));
-        it('Should have authorization', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single RUN_KEY', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/variable/runKey URL', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL; multiple RUN_KEYs', async() => await runAdapter.updateVariables(RUN_KEYS, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle multiple run keys in the URL search parameters', async() => {
+            await runAdapter.updateVariables([RUN_KEY, '987654321'], UPDATE);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
-        it('Should pass the Body appropriately', async() => await runAdapter.updateVariables(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            Object.keys(UPDATE).forEach((key) => reqBody[key].should.equal(UPDATE[key]));
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.updateVariables([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
+        it('Should pass the variables update to the request body', async() => {
+            await runAdapter.updateVariables(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.be.deep.equal(UPDATE);
+        });
     });
-    describe('Get Metadata', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.getMetadata', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
-        const METADATA = ['var1', 'var2', 'var3'];
-        it('Should do a GET', async() => await runAdapter.getMetadata(RUN_KEY, METADATA, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        const METADATA = ['meta1', 'meta2', 'meta3'];
+        it('Should do a GET', async() => {
+            await runAdapter.getMetadata(RUN_KEY, METADATA);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }));
-        it('Should have authorization', async() => await runAdapter.getMetadata(RUN_KEY, METADATA, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single runKey', async() => await runAdapter.getMetadata(RUN_KEY, METADATA, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.getMetadata(RUN_KEY, METADATA);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/meta/runKey URL', async() => {
+            await runAdapter.getMetadata(RUN_KEY, METADATA);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.getMetadata(RUN_KEY, METADATA, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.getMetadata(RUN_KEY, METADATA, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL; multiple runKeys', async() => await runAdapter.getMetadata(RUN_KEYS, METADATA, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle multiple run keys in the URL search parameters', async() => {
+            await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('include')).to.equal(METADATA.join(';'));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
     });
-    describe('Update Metadata', () => {
-        const OPTIONALS = {
-
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.updateMetadata', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
         const UPDATE = {
-            'varname#selector@dialect': 123456,
-            'varname2#selector2@dialect2': 654987,
-            'varname3#selector3@dialect3': 987654,
+            meta1: 123456,
+            meta2: 654987,
+            meta3: 987654,
         };
-        it('Should do a PATCH', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a PATCH', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('PATCH');
-        }));
-        it('Should have authorization', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single runKey', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/meta/runKey URL', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL; multiple runKeys', async() => await runAdapter.updateMetadata(RUN_KEYS, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle multiple run keys in the URL search parameters', async() => {
+            await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/meta`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
-        it('Should pass the Body appropriately', async() => await runAdapter.updateMetadata(RUN_KEY, UPDATE, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-            Object.keys(UPDATE).forEach((key) => reqBody[key].should.equal(UPDATE[key]));
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
+        it('Should pass the metadata update to the request body', async() => {
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.be.deep.equal(UPDATE);
+        });
     });
-    describe('Action', () => {
-        const OPTIONALS = {
-            timeout: '12345',
-            ritual: RITUAL.REANIMATE,
-        };
+    describe('runAdapter.action', () => {
         const RUN_KEY = '123456789';
-        const RUN_KEYS = ['123456789', '987654321'];
         const ACTIONS = [
-            { objectType: 'GET', val1: 'example1'},
-            { objectType: 'SET', val1: 'example1'},
-            { objectType: 'PROC', val1: 'example1'},
+            { objectType: 'get', name: 'name1' },
+            { objectType: 'set', name: 'name1', value: 'value1' },
+            { objectType: 'execute', name: 'name1' },
         ];
-        it('Should do a POST', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+        it('Should do a POST', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS);
+            const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
-        }));
-        it('Should have authorization', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
-        }));
-        it('Should create a proper URL; single runKey', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action/${RUN_KEY}`);
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/action/runKey URL', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/action/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/action/${RUN_KEY}`);
+        });
+        it('Should pass non-generic options to URL search parameters', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS, { timeout: 300, ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-
-            searchParams.get('timeout').should.equal(OPTIONALS.timeout);
-            searchParams.get('ritual').should.equal(OPTIONALS.ritual);
-        }));
-        it('Should create a proper URL; multiple runKeys', async() => await runAdapter.action(RUN_KEYS, ACTIONS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
+            searchParams.get('timeout').should.equal('300');
+            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+        });
+        it('Should handle multiple run keys in the URL search parameters', async() => {
+            await runAdapter.action([RUN_KEY, '987654321'], ACTIONS);
+            const req = fakeServer.requests.pop();
             const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ENDPOINTS.accountShortName}/${ENDPOINTS.projectShortName}/run/action`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/action`);
             const searchParams = new URLSearchParams(search);
-
-            RUN_KEYS.forEach((key) => expect(searchParams.getAll('runKey')).to.include(key));
-            expect(searchParams.get('timeout')).to.equal(OPTIONALS.timeout);
-            expect(searchParams.get('ritual')).to.be.null;
-        }));
-        it('Should pass the body appropriately', async() => await runAdapter.action(RUN_KEY, ACTIONS, OPTIONALS).then(() => {
-            const req = server.requests.pop();
-            const reqBody = JSON.parse(req.requestBody);
-
-            ACTIONS.forEach((action, idx) => Object.keys(action).forEach((key) => reqBody[idx][key].should.equal(action[key])));
-        }));
+            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+        });
+        it('Should set ritual to undefined when using mutiple run keys', async() => {
+            await runAdapter.action([RUN_KEY, '987654321'], ACTIONS, { ritual: RITUAL.REANIMATE });
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.has('ritual').should.equal(false);
+        });
+        it('Should pass the action list to the request body', async() => {
+            await runAdapter.action(RUN_KEY, ACTIONS);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.be.deep.equal(ACTIONS);
+        });
+    });
+    describe('runAdapter.retrieveFromWorld', () => {
+        const WORLD_KEY = 'worldkey';
+        const MODEL = 'model.py';
+        it('Should do a POST', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/world/worldKey URL', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/world/${WORLD_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
+        });
+        it('Should use participant as the default for read/write locks', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.permit.readLock.should.equal(ROLE.PARTICIPANT);
+            body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+        });
+        it('Should pass creation options to the request body', async() => {
+            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
+                readLock: ROLE.AUTHOR,
+                writeLock: ROLE.AUTHOR,
+                ephemeral: true,
+                trackingKey: 'trackingkey',
+            });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.have.property('permit');
+            body.permit.readLock.should.equal(ROLE.AUTHOR);
+            body.permit.writeLock.should.equal(ROLE.AUTHOR);
+            body.trackingKey.should.equal('trackingkey');
+            body.modelFile.should.equal(MODEL);
+            body.morphology.should.equal('MANY');
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+    });
+    describe('runAdapter.removeFromWorld', () => {
+        const WORLD_KEY = 'worldkey';
+        it('Should do a DELETE', async() => {
+            await runAdapter.removeFromWorld(WORLD_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('DELETE');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.removeFromWorld(WORLD_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/world/worldKey URL', async() => {
+            await runAdapter.removeFromWorld(WORLD_KEY);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/world/${WORLD_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.removeFromWorld(WORLD_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
+        });
     });
 });

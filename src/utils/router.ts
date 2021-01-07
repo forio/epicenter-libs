@@ -22,6 +22,14 @@ interface Page {
     next: Function,
     all: Function,
 }
+interface RequestOptions {
+    method: string,
+    body?: Record<string, any>,
+    includeAuthorization?: boolean,
+    inert?: boolean,
+    paginated?: boolean,
+}
+
 
 function paginate(json: Page, url: URL, options: any) {
     const parsePage = options.parsePage ?? ((i: any) => i);
@@ -84,7 +92,7 @@ function paginate(json: Page, url: URL, options: any) {
 }
 
 
-const createHeaders = (includeAuthorization: boolean) => {
+const createHeaders = (includeAuthorization?: boolean) => {
     const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
     const { session } = identification;
     if (includeAuthorization && session) {
@@ -95,8 +103,9 @@ const createHeaders = (includeAuthorization: boolean) => {
     }
     return headers;
 };
+
 const NO_CONTENT = 204;
-async function request(url: URL, options) {
+async function request(url: URL, options: RequestOptions) {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
     const response = await fetch(url.toString(), {
@@ -136,7 +145,12 @@ async function request(url: URL, options) {
  * Used to make the network calls in all API adapters
  */
 export default class Router {
-    _searchParams: URLSearchParams = new URLSearchParams()
+    _searchParams: URLSearchParams | undefined = undefined
+    _server: string | undefined = undefined
+    _version: number | undefined = undefined
+    _accountShortName: string | undefined = undefined;
+    _projectShortName: string | undefined = undefined;
+
     /**
      * The root path used for the call, essentially protocol + hostname
      * @type {string}
@@ -286,13 +300,13 @@ export default class Router {
     }
 
     getURL(uriComponent: string) {
-        if (!this.server) this.withServer(`${config.apiProtocol}://${config.apiHost}`);
-        if (!this.accountShortName) this.withAccountShortName(config.accountShortName);
-        if (!this.projectShortName) this.withProjectShortName(config.projectShortName);
-        if (!this.version) this.withVersion(config.apiVersion);
+        const server = this.server ?? `${config.apiProtocol}://${config.apiHost}`;
+        const accountShortName = this.accountShortName ?? config.accountShortName;
+        const projectShortName = this.projectShortName ?? config.projectShortName;
+        const version = this.version ?? config.apiVersion;
 
-        const url = new URL(`${this.server}`);
-        url.pathname = `api/v${this.version}/${this.accountShortName}/${this.projectShortName}${prefix('/', uriComponent)}`;
+        const url = new URL(`${server}`);
+        url.pathname = `api/v${version}/${accountShortName}/${projectShortName}${prefix('/', uriComponent)}`;
         url.search = this.searchParams ?? new URLSearchParams();
         return url;
     }

@@ -1,8 +1,9 @@
-import { EpicenterError } from 'utils';
-import { cometdAdapter } from 'adapters';
+import { EpicenterError } from 'utils/index';
+import { cometdAdapter } from 'adapters/index';
 import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
 
-const validateScope = (scope) => {
+
+const validateScope = (scope: Scope) => {
     if (!scope) throw new EpicenterError('No scope found where one was required');
     const { scopeBoundary, scopeKey, pushCategory } = scope;
     if (!scopeBoundary) throw new EpicenterError('Missing scope component: scopeBoundary');
@@ -23,7 +24,7 @@ export default class Channel {
      * Make a new channel
      * @param {*} scope wordsd here
      */
-    constructor(scope) {
+    constructor(scope: Scope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
         validateScope(scope);
         this.path = `/${scopeBoundary.toLowerCase()}/${scopeKey}/${pushCategory.toLowerCase()}`;
@@ -36,11 +37,11 @@ export default class Channel {
      * @param {*} content someom
      * @returns {Promise} something here
      */
-    publish(content) {
+    publish(content:any) {
         return cometdAdapter.publish(this, content);
     }
 
-    async subscribe(update, options) {
+    async subscribe(update: Function, options) {
         if (this.subscription) await this.unsubscribe();
         this.update = update;
         return cometdAdapter.add(this, update, options).then((subscription) => {

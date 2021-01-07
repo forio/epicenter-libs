@@ -1,10 +1,9 @@
 export const OK_CODE = 200;
 export const CREATED_CODE = 201;
+export const UNAUTHORIZED_CODE = 401;
 
-export const ENDPOINTS = {
-    accountShortName: 'forio-dev',
-    projectShortName: 'epi-v3',
-};
+export const ACCOUNT = 'forio-dev';
+export const PROJECT = 'epi-v3';
 
 export const SESSION_KEY = 'com.forio.epicenter.session';
 export const SESSION = {
@@ -12,7 +11,7 @@ export const SESSION = {
     expires: true,
     timeoutMinutes: 240,
     groupRole: 'PARTICIPANT',
-    loginMethod: {objectType: 'native'},
+    loginMethod: { objectType: 'sso' },
     assignedWorldKeys: [],
     assignedWorldRoles: [],
     userHandle: 'wallace-dev0',
@@ -24,4 +23,10 @@ export const SESSION = {
     groupKey: '00000163228dee7ddc347d0a5d6156d4a143',
     session: '***REMOVED***',
     objectType: 'user',
+};
+
+export const GENERIC_OPTIONS = {
+    server: 'https://mydomain.com',
+    accountShortName: 'myaccount',
+    projectShortName: 'myproject',
 };

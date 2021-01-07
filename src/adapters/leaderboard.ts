@@ -17,12 +17,6 @@ interface UpdateOptions extends GenericAdapterOptions {
     tags?: Tag[],
     userKey?: string,
 }
-interface QueryOptions extends GenericAdapterOptions {
-    filter?: string[],
-    sort?: string[],
-    first?: number,
-    max?: number,
-}
 
 /**
  * Updates leaderboard information
@@ -81,7 +75,7 @@ export async function update(
 export async function get(
     collection: string,
     scope: GenericScope,
-    optionals: QueryOptions = {}
+    optionals: GenericAdapterQueryOptions = {}
 ) {
     const { scopeBoundary, scopeKey } = scope;
     const {
