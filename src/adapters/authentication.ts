@@ -1,5 +1,22 @@
-import { Router, identification } from 'utils';
-import { cometdAdapter } from 'adapters';
+import { Router, identification } from 'utils/index';
+import { cometdAdapter } from 'adapters/index';
+
+
+interface Credentials {
+    handle: string,
+    password: string,
+    groupKey?: string,
+}
+interface LoginOptions extends GenericAdapterOptions {
+    objectType?: string,
+}
+interface UpgradeOptions extends GenericAdapterOptions {
+    objectType?: string,
+    inert?: boolean,
+}
+interface Session {
+
+}
 
 
 /**
@@ -23,17 +40,23 @@ export async function logout() {
     await cometdAdapter.disconnect();
 }
 
-export async function login(options) {
-    const { handle, password, groupKey, objectType = 'user', ...others } = options;
-    const { accountShortName, projectShortName } = others;
-    console.log('%c logging in!', 'font-size: 20px; color: #FB15B9FF;');
+export async function login(
+    credentials: Credentials,
+    optionals: LoginOptions = {}
+) {
+    const { handle, password, groupKey } = credentials;
+    const {
+        objectType = 'user',
+        accountShortName, projectShortName, server,
+    } = optionals;
     const session = await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/authentication', {
-            body: { objectType, handle, password, groupKey: groupKey || undefined },
-            includeAuthorization: false,
             inert: true,
+            includeAuthorization: false,
+            body: { objectType, handle, password, groupKey: groupKey || undefined },
         }).then(({ body }) => body);
     await logout();
 
@@ -41,16 +64,22 @@ export async function login(options) {
     return session;
 }
 
-export async function upgrade(groupKey, options) {
-    const { objectType = 'user', inert, ...others } = options;
-    const { accountShortName, projectShortName } = others;
+export async function upgrade(
+    groupKey: string,
+    optionals: UpgradeOptions = {}
+) {
+    const {
+        objectType = 'user', inert,
+        accountShortName, projectShortName, server,
+    } = optionals;
 
     const session = await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .patch('/authentication', {
-            body: { objectType, groupKey },
             inert,
+            body: { objectType, groupKey },
         }).then(({ body }) => body);
     await logout();
 
@@ -58,10 +87,11 @@ export async function upgrade(groupKey, options) {
     return session;
 }
 
-export async function sso(options) {
-    const { accountShortName, projectShortName } = options;
+export async function sso(optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
 
     const session = await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/registration/sso')
@@ -80,4 +110,8 @@ export async function getSession() {
 
 export function getLocalSession() {
     return identification.session;
+}
+
+export function setLocalSession(session: Session) {
+    return identification.session = session;
 }
