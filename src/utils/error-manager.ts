@@ -1,9 +1,10 @@
 import { authAdapter } from 'adapters/index';
 import identification from './identification';
 import { isNode } from './helpers';
+import Fault from './fault';
 
 
-const handleByRelog = (error) => {
+const handleByRelog = (error: Fault) => {
     let query = '';
     if (error.code) {
         query = query.concat(`?error=${error.code}`);
@@ -19,28 +20,38 @@ const handleUnknown = () => {
     return authAdapter.logout().then(() => window.location.href = '/unknown.html');
 };
 
-const handleByLoginMethod = (error) => {
+const handleByLoginMethod = (error: Fault) => {
     const { session } = identification;
     const loginType = session?.loginMethod?.objectType;
     switch (loginType) {
-        case 'sso': return handleSSO(error);
-        case 'none':return handleUnknown(error);
+        case 'sso': return handleSSO();
+        case 'none':return handleUnknown();
         case 'native':
         default: return handleByRelog(error);
     }
 };
 
+type Identifier = (error: Fault) => boolean
+type HandleFunction = (error: Fault, retry: Function) => Promise<any>
+
+interface Handler {
+    identifier: Identifier,
+    handle: HandleFunction,
+}
+
 const UNAUTHORIZED = 401;
 class ErrorManager {
-    _handlers = [
+    _handlers: Handler[] = [
         {/* Default Unauthorized (401) Error Handler */
             identifier: (error) => error.status === UNAUTHORIZED,
-            handle: (error, retry: Function) => {
+            handle: (error: Fault, retry: Function) => {
                 if (error.code === 'AUTHENTICATION_INVALIDATED') {
                     const groupKey = identification.session.groupKey;
                     return authAdapter.upgrade(groupKey, { objectType: 'user', inert: true })
                         .then(() => retry())
-                        .catch(() => handleByLoginMethod(error));
+                        .catch(() => {
+                            handleByLoginMethod(error);
+                        });
                 }
                 if (isNode()) return Promise.reject(error);
                 return handleByLoginMethod(error);
@@ -52,14 +63,21 @@ class ErrorManager {
         return this._handlers;
     }
 
-    registerHandler(identifier, handleFn) {
+    registerHandler(
+        identifier: Identifier,
+        handleFn: HandleFunction
+    ) {
         this.handlers.unshift({
             identifier,
             handle: handleFn,
         });
     }
 
-    async handle(error, retryFn, handlers/* which is undefined unless recursing */) {
+    async handle(
+        error: Fault,
+        retryFn: Function,
+        handlers: undefined | Handler[]
+    ): Promise<any> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
         const handler = handlers[index];

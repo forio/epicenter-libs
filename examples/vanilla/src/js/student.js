@@ -111,7 +111,7 @@ const initialize = () => {
             marketShare.append(entry.scores.find((score) => score.name === 'market-share')?.quantity ?? '');
 
             const tags = document.createElement('td');
-            tags.append(entry.tags.reduce((t, { content }) => `${t} ${content}`, ''));
+            tags.append((entry.tags ?? []).reduce((t, { content }) => `${t} ${content}`, ''));
 
             const row = document.createElement('tr');
             row.append(user, points, marketShare, tags);

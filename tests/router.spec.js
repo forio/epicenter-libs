@@ -4,7 +4,7 @@ import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, UNAUTHORIZED_CODE } f
 chai.use(require('sinon-chai'));
 
 describe('Router (Fetch/Request Wrapper)', () => {
-    const { config, Router, authAdapter } = epicenter;
+    const { config, Router, authAdapter, errorManager } = epicenter;
     let fakeServer;
 
     config.accountShortName = ACCOUNT;
@@ -73,12 +73,17 @@ describe('Router (Fetch/Request Wrapper)', () => {
         });
         /* Mock erroneous calls */
         fakeServer.respondWith('GET', /(.*)\/unauthorized/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
+            /* Authentication invalidated assumes a session currently exists, it's just invalidated, setting one here */
+            authAdapter.setLocalSession(SESSION);
+            /* Provide call for invalidated authentication to trigger error handler upgrade */
+            const RESPONSE = { information: { code: 'AUTHENTICATION_INVALIDATED' } };
             xhr.respond(UNAUTHORIZED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
         fakeServer.respondWith('PATCH', /(.*)\/authentication/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(UNAUTHORIZED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+            /* Upgrade should return new session -- in this case use SSO login method b/c
+             * the subsequent retry will always fail and login via SSO doesn't refresh the page (bad for tests) */
+            const RESPONSE = { loginMethod: { objectType: 'sso' } };
+            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
 
         fakeServer.respondImmediately = true;
@@ -98,6 +103,9 @@ describe('Router (Fetch/Request Wrapper)', () => {
     let router;
     beforeEach(() => {
         router = new Router();
+    });
+    afterEach(() => {
+        authAdapter.setLocalSession(undefined);
     });
     describe('Configuration', () => {
         it('Should start with URI components all undefined', () => {
@@ -244,6 +252,7 @@ describe('Router (Fetch/Request Wrapper)', () => {
             req2.requestHeaders.should.have.property('authorization');
         });
         it('Should use the auth token in the session', async() => {
+            authAdapter.setLocalSession(SESSION);
             await router.get('/run');
             const req = fakeServer.requests.pop();
             req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
@@ -344,18 +353,18 @@ describe('Router (Fetch/Request Wrapper)', () => {
             ]);
         });
     });
-    describe('Error Handling', () => {
-        it('Might work', async() => {
-            console.log('%c doing error handling', 'font-size: 20px; color: #FB15B9FF;', document.cookies);
-            // const getSpy = sinon.spy(router, 'get');
-            // const patchSpy = sinon.spy(router, 'patch');
-            // await router.get('/unauthorized');
-            // getSpy.called.should.equal(true);
-            // patchSpy.called.should.equal(true);
-
-            // router.get.restore();
-            // router.patch.restore();
-
+    describe('Inert Requests', () => {
+        it('Should call the errorManager to handle non-inert requests', async() => {
+            const handleSpy = sinon.spy(errorManager, 'handle');
+            try {
+                await router.get('/unauthorized', { inert: true });
+            } catch (error) {
+                /* Do nothing, it should error here */
+            }
+            handleSpy.calledOnce.should.equal(false);
+            await router.get('/unauthorized');
+            handleSpy.calledOnce.should.equal(true);
+            errorManager.handle.restore();
         });
     });
 });
