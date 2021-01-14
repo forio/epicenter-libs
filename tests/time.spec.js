@@ -6,8 +6,6 @@ chai.use(require('sinon-chai'));
 describe('Time API Service', () => {
     const { config, authAdapter, timeAdapter } = epicenter;
 
-    console.log(config.apiHost);
-
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
