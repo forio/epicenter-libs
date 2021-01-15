@@ -254,7 +254,7 @@ export default class Router {
      * @param {string} [server] Root path to use
      * @returns {Router}        The Router instance
      */
-    withServer(server: undefined | string) {
+    withServer(server?: string) {
         if (typeof server !== 'undefined') this.server = server;
         return this;
     }
@@ -264,7 +264,7 @@ export default class Router {
      * @param {string} [version]    Version to use
      * @returns {Router}            The Router instance
      */
-    withVersion(version: undefined | number) {
+    withVersion(version?: number) {
         if (typeof version !== 'undefined') this.version = version;
         return this;
     }
@@ -274,7 +274,7 @@ export default class Router {
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
      */
-    withAccountShortName(accountShortName: undefined | string) {
+    withAccountShortName(accountShortName?: string) {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
@@ -284,7 +284,7 @@ export default class Router {
      * @param {string} [projectShortName]   Project name to use
      * @returns {Router}                    The Router instance
      */
-    withProjectShortName(projectShortName: undefined | string) {
+    withProjectShortName(projectShortName?: string) {
         if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
         return this;
     }
@@ -294,7 +294,7 @@ export default class Router {
      * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
      * @returns {Router}                                            The Router instance
      */
-    withSearchParams(searchParams: undefined | string | string[] | Object | URLSearchParams) {
+    withSearchParams(searchParams?: string | string[] | Object | URLSearchParams) {
         if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
         return this;
     }
