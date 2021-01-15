@@ -1,4 +1,4 @@
-import { CometD } from 'cometd';
+import { CometD, Message } from 'cometd';
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
 import { EpicenterError, identification, isBrowser, errorManager, config, isNode } from 'utils/index';
@@ -11,10 +11,13 @@ const CONNECTED = 'connected';
 
 
 class CometdError extends Error {
-    constructor(reply) {
+    status?: number
+    information?: Message
+    message: string
 
+    constructor(reply: Message) {
         super();
-        const { error, successful } = reply;
+        const { error = '', successful } = reply;
         if (error && error.includes('403') && !successful) {
             this.status = 401;
         }
@@ -41,7 +44,7 @@ class CometdAdapter {
     url: string = '';
     customCometd: any;
     defaultCometd: any;
-    initialization;
+    initialization: Boolean = false;
     subscriptions = new Map();
     state = DISCONNECTED;
     requireAcknowledgement = true;
@@ -84,14 +87,14 @@ class CometdAdapter {
 
     async reinit(customCometd, options) {
         await this.disconnect();
-        this.initialization = undefined;
+        this.initialization = false;
         this.customCometd = customCometd;
         return this.init(options);
     }
 
     async init(options) {
         if (!this.initialization) {
-            this.initialization = this.startup(options);
+            this.initialization = await this.startup(options);
         }
         return this.initialization;
     }

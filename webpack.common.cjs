@@ -33,6 +33,6 @@ module.exports = {
     plugins: [
         new CleanWebpackPlugin(),
         new webpack.BannerPlugin({ banner: `Epicenter v${version}` }),
-        new webpack.DefinePlugin({ VERSION: JSON.stringify(version) }),
+        new webpack.DefinePlugin({ __VERSION__: JSON.stringify(version) }),
     ],
 };
