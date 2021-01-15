@@ -79,7 +79,10 @@ interface UserOptions extends GenericAdapterOptions {
  * });
  *
  */
-export async function get(groupKey: string, optionals: GetOptions = {}) {
+export async function get(
+    groupKey: string,
+    optionals: GetOptions = {}
+) {
     const { accountShortName, projectShortName, server, augment } = optionals;
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';

@@ -76,7 +76,7 @@ class ErrorManager {
     async handle(
         error: Fault,
         retryFn: Function,
-        handlers: undefined | Handler[]
+        handlers?: Handler[]
     ): Promise<any> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
