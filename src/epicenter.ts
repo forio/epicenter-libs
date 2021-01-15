@@ -1,3 +1,5 @@
+import 'regenerator-runtime/runtime';
+
 /* Main file; defines public APIs & load order */
 const version = '__VERSION__';
 export { version };

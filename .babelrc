@@ -1,6 +1,15 @@
 {
     "presets": [
-        "@babel/env",
+        ["@babel/env", {
+            "targets": [
+                "defaults",
+                "not IE 11",
+                "maintained node versions"
+            ],
+            "useBuiltIns": "usage",
+            "corejs": 3,
+            "debug": true
+        }],
         "@babel/typescript"
     ],
     "plugins": [
