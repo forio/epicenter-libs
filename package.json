@@ -2,9 +2,9 @@
   "name": "epicenter-libs",
   "version": "3.3.0-alpha",
   "type": "module",
-  "main": "dist/epicenter.js",
-  "module": "dist/epicenter.esm.js",
-  "browser": "dist/epicenter.iife.js",
+  "main": "dist/main/epicenter.cjs.js",
+  "module": "dist/module/epicenter.esm.js",
+  "browser": "dist/browser/epicenter.esm.js",
   "types": "dist/types/index.d.ts",
   "scripts": {
     "start": "npm run build-web:dev",
@@ -26,6 +26,11 @@
     "rollup:build": "npm run rollup:build:types && npm run rollup:build:js",
     "rollup:start": "rollup -c -m inline -w"
   },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -43,7 +48,9 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.9.2",
+    "@babel/runtime-corejs3": "^7.12.5",
     "cometd": "^4.0.7",
+    "core-js": "^3.8.2",
     "cross-fetch": "^3.0.6"
   },
   "devDependencies": {

@@ -14,59 +14,116 @@ const extensions = [
     '.js', '.jsx', '.ts', '.tsx',
 ];
 
-export default (cliArgs) => {
-    return {
-        input: './src/epicenter.ts',
+export default [{
+    input: './src/epicenter.ts',
+    external: [/@babel\/runtime/],
+    plugins: [
+        replace({
+            __DATE__: () => new Date(),
+            __VERSION__: pkg.version,
+        }),
+        alias({
+            entries: [
+                { find: '~', replacement: path.resolve(__dirname, 'src') },
+                { find: 'adapters', replacement: path.resolve(__dirname, 'src', 'adapters') },
+                { find: 'utils', replacement: path.resolve(__dirname, 'src', 'utils') },
+            ],
+        }),
 
-        // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
-        // https://rollupjs.org/guide/en/#external
-        external: [],
+        // Allows node_modules resolution
+        resolve({ extensions, browser: true }),
 
-        plugins: [
-            // replace({
-            //     __ENV__: 'production',
-            //     __DATE__: () => new Date(),
-            //     __VERSION__: pkg.version,
-            // }),
-            // terser(),
-            alias({
-                entries: [
-                    { find: '~', replacement: path.resolve(__dirname, 'src') },
-                    { find: 'adapters', replacement: path.resolve(__dirname, 'src', 'adapters') },
-                    { find: 'utils', replacement: path.resolve(__dirname, 'src', 'utils') },
-                ],
-            }),
+        // Allow bundling cjs modules. Rollup doesn't understand cjs
+        commonjs(),
 
-            // Allows node_modules resolution
-            resolve({ extensions }),
+        // Compile TypeScript/JavaScript files
+        babel({
+            extensions,
+            babelHelpers: 'runtime',
+            include: ['src/**/*'],
+        }),
+        progress(),
+        visualizer(),
+        filesize(),
+    ],
+    output: {
+        file: pkg.browser,
+        format: 'esm',
+    },
+// }, {
+//     input: './src/epicenter.ts',
+//     plugins: [
+//         replace({
+//             __DATE__: () => new Date(),
+//             __VERSION__: pkg.version,
+//         }),
+//         alias({
+//             entries: [
+//                 { find: '~', replacement: path.resolve(__dirname, 'src') },
+//                 { find: 'adapters', replacement: path.resolve(__dirname, 'src', 'adapters') },
+//                 { find: 'utils', replacement: path.resolve(__dirname, 'src', 'utils') },
+//             ],
+//         }),
 
-            // Allow bundling cjs modules. Rollup doesn't understand cjs
-            commonjs(),
+//         // Allows node_modules resolution
+//         resolve({ extensions }),
 
-            // Compile TypeScript/JavaScript files
-            babel({
-                extensions,
-                babelHelpers: 'bundled',
-                include: ['src/**/*'],
-            }),
-            progress(),
-            visualizer(),
-            filesize(),
-        ],
+//         // Allow bundling cjs modules. Rollup doesn't understand cjs
+//         commonjs(),
 
-        output: [{
-            file: pkg.main,
-            format: 'cjs',
-        // }, {
-        //     file: pkg.module,
-        //     format: 'es',
-        // }, {
-        //     file: pkg.browser,
-        //     format: 'iife',
-        //     name: 'epicenter',
+//         // Compile TypeScript/JavaScript files
+//         babel({
+//             extensions,
+//             babelHelpers: 'bundled',
+//             include: ['src/**/*'],
+//         }),
+//         progress(),
+//         visualizer(),
+//         filesize(),
+//     ],
+//     output: [{
+//         file: pkg.module,
+//         format: 'esm',
+//     }, {
+//         file: pkg.main,
+//         format: 'cjs',
+//     }],
+// }, {
+//     input: './src/epicenter.ts',
+//     plugins: [
+//         replace({
+//             __DATE__: () => new Date(),
+//             __VERSION__: pkg.version,
+//         }),
+//         terser(),
+//         alias({
+//             entries: [
+//                 { find: '~', replacement: path.resolve(__dirname, 'src') },
+//                 { find: 'adapters', replacement: path.resolve(__dirname, 'src', 'adapters') },
+//                 { find: 'utils', replacement: path.resolve(__dirname, 'src', 'utils') },
+//             ],
+//         }),
 
-        //     // https://rollupjs.org/guide/en/#outputglobals
-        //     globals: {},
-        }],
-    };
-};
+//         // Allows node_modules resolution
+//         resolve({ extensions, browser: true }),
+
+//         // Allow bundling cjs modules. Rollup doesn't understand cjs
+//         commonjs(),
+
+//         // Compile TypeScript/JavaScript files
+//         babel({
+//             extensions,
+//             babelHelpers: 'bundled',
+//             include: ['src/**/*'],
+//         }),
+//         progress(),
+//         visualizer(),
+//         filesize(),
+//     ],
+//     output: {
+//         file: 'dist/umd/epicenter.js',
+//         format: 'umd',
+//         name: 'epicenter',
+//         esModule: false,
+//     },
+}];
