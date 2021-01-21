@@ -1,3 +1,22 @@
+## [3.2.1](https://github.com/forio/epicenter-libs/compare/v3.2.0...v3.2.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* add samesite, secure to session cookies ([101b261](https://github.com/forio/epicenter-libs/commit/101b261e49a48bf571b7fc05e953c5efeea0296b))
+
+
+### Code Refactoring
+
+* authAdapter.login to take generic URL options as 2nd arg ([be231a9](https://github.com/forio/epicenter-libs/commit/be231a9bee4562deff764193ead92e868fa9c83f))
+
+
+### BREAKING CHANGES
+
+* authAdapter.login now takes account/project overrides as second argument
+
+
+
 # [3.2.0](https://github.com/forio/epicenter-libs/compare/v3.1.0...v3.2.0) (2020-12-11)
 
 
