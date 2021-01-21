@@ -2,29 +2,27 @@
   "name": "epicenter-libs",
   "version": "3.3.0-alpha",
   "type": "module",
-  "main": "dist/main/epicenter.cjs.js",
+  "main": "dist/cjs/epicenter.js",
   "module": "dist/module/epicenter.esm.js",
   "browser": "dist/browser/epicenter.esm.js",
   "types": "dist/types/index.d.ts",
+  "files": [
+    "browser/*",
+    "module/*",
+    "cjs/*",
+    "types/*"
+  ],
   "scripts": {
-    "start": "npm run build-web:dev",
-    "build": "npm run build-web:prod",
-    "build-web": "npm run build-web:dev",
-    "build-node": "npm run build-node:dev",
-    "build-web:dev": "webpack --config webpack.web.dev.cjs",
-    "build-web:prod": "webpack --config webpack.web.prod.cjs",
-    "build-node:dev": "webpack --config webpack.node.dev.cjs",
-    "build-node:prod": "webpack --config webpack.node.prod.cjs",
     "test": "karma start --browsers ChromeHeadless karma.conf.cjs",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.cjs --single-run",
     "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "changelog:all": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "rollup:build:types": "tsc --emitDeclarationOnly",
-    "rollup:build:js": "rollup -c -m",
-    "rollup:build": "npm run rollup:build:types && npm run rollup:build:js",
-    "rollup:start": "rollup -c -m inline -w"
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rollup -c rollup.config.prod.js -m",
+    "build": "npm run build:types && npm run build:js",
+    "start": "rollup -c rollup.config.dev.js -m inline -w"
   },
   "browserslist": [
     "defaults",
@@ -47,8 +45,6 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.9.2",
-    "@babel/runtime-corejs3": "^7.12.5",
     "cometd": "^4.0.7",
     "core-js": "^3.8.2",
     "cross-fetch": "^3.0.6"
@@ -61,7 +57,6 @@
     "@babel/plugin-proposal-numeric-separator": "^7.8.3",
     "@babel/plugin-proposal-optional-chaining": "^7.9.0",
     "@babel/plugin-proposal-private-methods": "^7.4.4",
-    "@babel/plugin-transform-runtime": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@babel/preset-typescript": "^7.12.7",
     "@commitlint/cli": "^11.0.0",
