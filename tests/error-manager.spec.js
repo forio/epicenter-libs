@@ -44,7 +44,11 @@ describe('Error Manager', () => {
 
     describe('Error Handlers', () => {
         it('Should by default handle invalidated authentication via a PATCH to upgrade the session and retrying after', async() => {
-            await new Router().get('/unauthorized');
+            try {
+                await new Router().get('/unauthorized');
+            } catch (error) {
+                /* Do nothing, it should error here */
+            }
             const retry = fakeServer.requests.pop();
             const upgrade = fakeServer.requests.pop();
             const get = fakeServer.requests.pop();
