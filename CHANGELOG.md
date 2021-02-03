@@ -1,3 +1,17 @@
+# [3.3.0](https://github.com/forio/epicenter-libs/compare/v3.2.1...v3.3.0) (2021-02-03)
+
+
+### Code Refactoring
+
+* change authAdapter.upgrade to authAdapter.regenerate ([3d05f2d](https://github.com/forio/epicenter-libs/commit/3d05f2dd12649cbcd23f8a32cb6192f77615b39e))
+
+
+### BREAKING CHANGES
+
+* authAdapter.upgrade renamed to authAdapter.regenerate
+
+
+
 ## [3.2.1](https://github.com/forio/epicenter-libs/compare/v3.2.0...v3.2.1) (2021-01-21)
 
 
