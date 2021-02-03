@@ -1,3 +1,17 @@
+## [3.3.1](https://github.com/forio/epicenter-libs/compare/v3.3.0...v3.3.1) (2021-02-03)
+
+
+### Bug Fixes
+
+* errorManager default handler to actually return retry resp ([e5ba658](https://github.com/forio/epicenter-libs/commit/e5ba6589f12685c5ae1031a65695370b3dae294b))
+
+
+### Features
+
+* attach args to retry function ([443a1bf](https://github.com/forio/epicenter-libs/commit/443a1bf2e96c6b683e9ab88bf5a195502620a78c))
+
+
+
 # [3.3.0](https://github.com/forio/epicenter-libs/compare/v3.2.1...v3.3.0) (2021-02-03)
 
 
