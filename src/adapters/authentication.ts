@@ -64,8 +64,16 @@ export async function login(
     return session;
 }
 
-export async function upgrade(
-    groupKey: string,
+/**
+ * Regenerates your epicenter session with the appropriate context. Allows users to update their session to the correct group, and admins to update their session with the correct account name. Will fail if the user/admin does not already belong to the group/account.
+ *
+ * @memberof authAdapter
+ * @param {string} groupOrAccount   Group key or account name
+ * @param {object} [optionals={}]   Optional parameters
+ * @returns {Promise}   Promise resolving to successful logout
+ */
+export async function regenerate(
+    groupOrAccount: string,
     optionals: UpgradeOptions = {}
 ) {
     const {
@@ -75,14 +83,17 @@ export async function upgrade(
 
     const session = await new Router()
         .withServer(server)
-        .withAccountShortName(accountShortName)
+        .withAccountShortName(objectType === 'admin' ? groupOrAccount : accountShortName)
         .withProjectShortName(projectShortName)
         .patch('/authentication', {
             inert,
-            body: { objectType, groupKey },
+            body: {
+                objectType,
+                groupKey: objectType === 'user' ? groupOrAccount : undefined,
+            },
         }).then(({ body }) => body);
-    await logout();
 
+    await logout();
     identification.session = session;
     return session;
 }
