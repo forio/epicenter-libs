@@ -15,7 +15,7 @@ export {
 export {
     accountAdapter,
     authAdapter,
-    consensusAdapter,
+    // consensusAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
