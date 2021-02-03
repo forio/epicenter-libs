@@ -51,7 +51,7 @@ export enum SCOPE_BOUNDARY {
      * @type {string}
      */
     RUN = 'RUN',
-};
+}
 
 /**
  * Rituals are used to define the way in which the Epicenter stores a run while running actions like getting variables, saving meta data, and call model operations. Runs can exist in-memory for a certain amount of time before expiring, and requiring their revival again before use.
@@ -76,7 +76,7 @@ export enum RITUAL {
      * @type {string}
      */
     EXORCISE = 'EXORCISE',
-};
+}
 
 /**
  * Push categories are pre-defined channels types in which one might use to receive push channel updates
@@ -209,4 +209,4 @@ export enum ROLE {
      * @type {string}
      */
     ANONYMOUS = 'ANONYMOUS',
-};
+}
