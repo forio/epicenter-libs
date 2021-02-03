@@ -2,6 +2,7 @@ import { authAdapter } from 'adapters/index';
 import identification from './identification';
 import { isNode } from './helpers';
 import Fault from './fault';
+import Result from './result';
 
 
 const handleByRelog = (error: Fault) => {
@@ -21,6 +22,7 @@ const handleUnknown = () => {
 };
 
 const handleByLoginMethod = (error: Fault) => {
+    if (isNode()) throw error;
     const { session } = identification;
     const loginType = session?.loginMethod?.objectType;
     switch (loginType) {
@@ -32,8 +34,8 @@ const handleByLoginMethod = (error: Fault) => {
 };
 
 type Identifier = (error: Fault) => boolean
-type RetryFunction = () => Promise<unknown>
-type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<unknown>
+type RetryFunction = () => Promise<Result | void>
+type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<Result | void>
 
 interface Handler {
     identifier: Identifier,
@@ -49,17 +51,15 @@ class ErrorManager {
                 if (error.code === 'AUTHENTICATION_INVALIDATED') {
                     const groupKey = identification.session.groupKey;
                     await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
-
                     try {
-                        await retry();
+                        return await retry();
                     } catch (e) {
-                        handleByLoginMethod(error);
+                        await handleByLoginMethod(error);
+                        throw error;
                     }
-                    return;
                 }
-                if (isNode()) throw error;
-                handleByLoginMethod(error);
-                return;
+                await handleByLoginMethod(error);
+                throw error;
             },
         },
     ];
@@ -86,7 +86,7 @@ class ErrorManager {
         error: Fault,
         retryFn: RetryFunction,
         handlers?: Handler[]
-    ): Promise<unknown> {
+    ): Promise<Result | void> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
         const handler = handlers[index];
