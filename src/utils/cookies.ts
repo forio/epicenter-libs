@@ -33,7 +33,6 @@ export default {
     },
     setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}) {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
-        console.log('%c setting with stuff', 'font-size: 20px; color: #FB15B9FF;', key, value ,options);
         const { path, domain, end, secure, samesite } = options;
         const expireStr = getExpiration(end);
         const domainStr = domain ? `; domain=${domain}` : '';

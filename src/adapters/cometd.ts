@@ -1,7 +1,7 @@
 import { CometD, Message } from 'cometd';
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
-import { EpicenterError, identification, isBrowser, errorManager, config, isNode } from 'utils/index';
+import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils/index';
 import { channelsEnabled } from 'adapters/project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
@@ -12,7 +12,7 @@ const CONNECTED = 'connected';
 
 class CometdError extends Error {
     status?: number
-    information?: Message
+    information: Message
     message: string
 
     constructor(reply: Message) {

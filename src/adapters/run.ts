@@ -90,7 +90,7 @@ export async function create(
     model: string,
     scope: GenericScope,
     optionals: CreateOptions = {}
-) {
+):Promise<Run> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock, userKey, ephemeral,
@@ -137,7 +137,7 @@ export async function create(
  * @param {object}  [optionals={}]  Object for all optional fields
  * @returns {object}                Response with the run in the "body"
  */
-export async function clone(runKey: string, optionals: CreateOptions = {}) {
+export async function clone(runKey: string, optionals: CreateOptions = {}):Promise<JSON> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
         accountShortName, projectShortName, server,
@@ -383,7 +383,7 @@ export async function getVariables(
     runKey: string | string[],
     variables: string[],
     optionals: GetOptions = {}
-) {
+): Promise<Record<string, unknown> | Record<string, unknown>[]> {
     const {
         timeout, ritual,
         accountShortName, projectShortName, server,
@@ -397,10 +397,10 @@ export async function getVariables(
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
-    const mappify = (values: any[]) => variables.reduce((variableMap, key, index) => {
+    const mappify = (values: unknown[]) => variables.reduce((variableMap, key, index) => {
         variableMap[key] = values[index];
         return variableMap;
-    }, {} as Record<string, any>);
+    }, {} as Record<string, unknown>);
 
     return await new Router()
         .withServer(server)
@@ -565,7 +565,7 @@ export async function action(
  *
  * import { runAdapter, authAdapter } from 'epicenter';
  * const worldKey = authAdapter.getLocalSession().worldKey
- * const run = await runAdapter.retrieveFromWorld('model.py', worldKey);
+ * const run = await runAdapter.retrieveFromWorld(worldKey, 'model.py');
  *
  *
  * @param {object}  worldKey                        Key associated with the world you'd like a run from
@@ -585,7 +585,7 @@ export async function retrieveFromWorld(
     worldKey: string,
     model: string,
     optionals: CreateOptions = {}
-) {
+): Promise<unknown> {
     const {
         readLock, writeLock, ephemeral, trackingKey,
         modelContext, executionContext,
