@@ -105,7 +105,7 @@ const createHeaders = (includeAuthorization?: boolean) => {
 };
 
 const NO_CONTENT = 204;
-async function request(url: URL, options: RequestOptions) {
+async function request(url: URL, options: RequestOptions): Promise<Result | void> {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
     const response = await fetch(url.toString(), {
@@ -137,7 +137,9 @@ async function request(url: URL, options: RequestOptions) {
     const fault = new Fault(json, response);
     if (inert) throw fault;
 
-    const retry = () => request(url, { ...options, inert: true });
+    const retryOptions = { ...options, inert: true };
+    const retry = () => request(url, retryOptions);
+    retry.requestArguments = [url, retryOptions];
     return errorManager.handle(fault, retry);
 }
 

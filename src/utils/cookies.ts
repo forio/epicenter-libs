@@ -33,13 +33,12 @@ export default {
     },
     setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}) {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
-
         const { path, domain, end, secure, samesite } = options;
         const expireStr = getExpiration(end);
         const domainStr = domain ? `; domain=${domain}` : '';
         const pathStr = path ? `; path=${path}` : '';
         const secureStr = secure ? '; secure' : '';
-        const samesiteStr = samesite ? '; samesite' : '';
+        const samesiteStr = samesite ? `; samesite=${samesite}` : '';
 
         document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}${expireStr}${domainStr}${pathStr}${secureStr}${samesiteStr}`;
         return true;

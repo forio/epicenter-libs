@@ -16,9 +16,9 @@ export {
     Router,
 } from 'utils/index';
 export {
-    Channel,
     accountAdapter,
     authAdapter,
+    // consensusAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
@@ -28,4 +28,5 @@ export {
     timeAdapter,
     vaultAdapter,
     worldAdapter,
+    Channel,
 } from 'adapters/index';
