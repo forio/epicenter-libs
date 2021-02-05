@@ -42,33 +42,38 @@ describe('Group API Service', () => {
     describe('groupAdapter.get', () => {
         const GROUP_KEY = SESSION.groupKey;
         it('Should do a GET', async() => {
-            await groupAdapter.get(GROUP_KEY);
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.get(GROUP_KEY);
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/groupKey URL', async() => {
-            await groupAdapter.get(GROUP_KEY);
+        it('Should use the group/groupKey URL, using the session\'s groupKey by default', async() => {
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
         });
         it('Should support generic URL options', async() => {
-            await groupAdapter.get(GROUP_KEY, GENERIC_OPTIONS);
+            await groupAdapter.get(GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+        it('Should optionally allow you to pass a specific group key', async() => {
+            await groupAdapter.get({ groupKey: '123' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/123`);
+        });
         it('Should use an updated URL when provided the members augment', async() => {
-            await groupAdapter.get(GROUP_KEY, { augment: 'MEMBERS' });
+            await groupAdapter.get({ augment: 'MEMBERS' });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
         });
         it('Should use an updated URL when provided the quantized augment', async() => {
-            await groupAdapter.get(GROUP_KEY, { augment: 'QUANTIZED' });
+            await groupAdapter.get({ augment: 'QUANTIZED' });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/${GROUP_KEY}`);
         });
