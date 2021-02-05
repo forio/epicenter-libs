@@ -83,7 +83,10 @@ interface UserOptions extends GenericAdapterOptions {
 export async function get(
     optionals: GetOptions = {}
 ): Promise<Group> {
-    const { accountShortName, projectShortName, groupKey, server, augment } = optionals;
+    const {
+        groupKey, server, augment,
+        accountShortName, projectShortName,
+    } = optionals;
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
     if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
