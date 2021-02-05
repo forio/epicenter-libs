@@ -1,4 +1,4 @@
-import { Router, EpicenterError } from 'utils/index';
+import { Router, EpicenterError, identification } from 'utils/index';
 import { ROLE } from 'utils/constants';
 
 /**
@@ -11,7 +11,8 @@ enum AUGMENT {
 }
 
 interface GetOptions extends GenericAdapterOptions {
-    augment?: keyof typeof AUGMENT
+    augment?: keyof typeof AUGMENT,
+    groupKey?: string,
 }
 
 interface GatherOptions extends GenericAdapterOptions {
@@ -80,10 +81,9 @@ interface UserOptions extends GenericAdapterOptions {
  *
  */
 export async function get(
-    groupKey: string,
     optionals: GetOptions = {}
-) {
-    const { accountShortName, projectShortName, server, augment } = optionals;
+): Promise<Group> {
+    const { accountShortName, projectShortName, groupKey, server, augment } = optionals;
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
     if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
@@ -92,7 +92,7 @@ export async function get(
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/group${uriComponent}/${groupKey}`)
+        .get(`/group${uriComponent}/${groupKey ?? identification.session?.groupKey}`)
         .then(({ body }) => body);
 }
 
