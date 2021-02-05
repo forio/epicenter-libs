@@ -1,4 +1,4 @@
-import { Router, identification } from 'utils';
+import { Router, identification } from 'utils/index';
 import { SCOPE_BOUNDARY } from 'utils/constants';
 
 /**
