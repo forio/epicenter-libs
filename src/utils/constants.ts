@@ -134,6 +134,12 @@ export enum PUSH_CATEGORY {
      */
     WORLD = 'WORLD',
     /**
+     * For group related things; assignments, unassignments
+     * @constant
+     * @type {string}
+     */
+    GROUP = 'GROUP',
+    /**
      * internal
      * @constant
      * @type {string} */
