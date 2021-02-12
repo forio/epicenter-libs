@@ -25,12 +25,12 @@ class Identification {
     }
     set session(session) {
         const Store = this.getStore();
-        const path = this.getSessionPath(session);
+        const options = this.getStoreOptions(session);
 
         if (session) {
-            new Store({ path }).setItem(SESSION_KEY, session);
+            new Store(options).setItem(SESSION_KEY, session);
         } else if (this.session) {
-            new Store({ path }).removeItem(SESSION_KEY);
+            new Store(options).removeItem(SESSION_KEY);
         }
     }
     getStore() {
@@ -42,19 +42,20 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getSessionPath(session?: FIXME) {
+    getStoreOptions(session?: FIXME) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 
         const { accountShortName, projectShortName, objectType } = mySession;
         const isLocal = config.isLocal();
+        const base = { samesite: isLocal ? 'lax' : 'none', secure: !isLocal };
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
         if (objectType === 'user' && accountShortName && projectShortName && isEpicenterDomain) {
-            return `/app/${accountShortName}/${projectShortName}`;
+            return { ...base, path: `/app/${accountShortName}/${projectShortName}` };
         }
         /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
-        return '/';
+        return { ...base, path: '/' };
     }
     consumeSSO() {
         if (isNode()) return;
