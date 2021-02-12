@@ -1,3 +1,50 @@
+## [3.3.1](https://github.com/forio/epicenter-libs/compare/v3.3.0...v3.3.1) (2021-02-03)
+
+
+### Bug Fixes
+
+* errorManager default handler to actually return retry resp ([e5ba658](https://github.com/forio/epicenter-libs/commit/e5ba6589f12685c5ae1031a65695370b3dae294b))
+
+
+### Features
+
+* attach args to retry function ([443a1bf](https://github.com/forio/epicenter-libs/commit/443a1bf2e96c6b683e9ab88bf5a195502620a78c))
+
+
+
+# [3.3.0](https://github.com/forio/epicenter-libs/compare/v3.2.1...v3.3.0) (2021-02-03)
+
+
+### Code Refactoring
+
+* change authAdapter.upgrade to authAdapter.regenerate ([3d05f2d](https://github.com/forio/epicenter-libs/commit/3d05f2dd12649cbcd23f8a32cb6192f77615b39e))
+
+
+### BREAKING CHANGES
+
+* authAdapter.upgrade renamed to authAdapter.regenerate
+
+
+
+## [3.2.1](https://github.com/forio/epicenter-libs/compare/v3.2.0...v3.2.1) (2021-01-21)
+
+
+### Bug Fixes
+
+* add samesite, secure to session cookies ([101b261](https://github.com/forio/epicenter-libs/commit/101b261e49a48bf571b7fc05e953c5efeea0296b))
+
+
+### Code Refactoring
+
+* authAdapter.login to take generic URL options as 2nd arg ([be231a9](https://github.com/forio/epicenter-libs/commit/be231a9bee4562deff764193ead92e868fa9c83f))
+
+
+### BREAKING CHANGES
+
+* authAdapter.login now takes account/project overrides as second argument
+
+
+
 # [3.2.0](https://github.com/forio/epicenter-libs/compare/v3.1.0...v3.2.0) (2020-12-11)
 
 

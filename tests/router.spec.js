@@ -361,9 +361,14 @@ describe('Router (Fetch/Request Wrapper)', () => {
             } catch (error) {
                 /* Do nothing, it should error here */
             }
-            handleSpy.calledOnce.should.equal(false);
-            await router.get('/unauthorized');
-            handleSpy.calledOnce.should.equal(true);
+            handleSpy.called.should.equal(false);
+
+            try {
+                await router.get('/unauthorized');
+            } catch (error) {
+                /* Do nothing, it should error here */
+            }
+            handleSpy.called.should.equal(true);
             errorManager.handle.restore();
         });
     });

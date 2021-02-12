@@ -4,7 +4,7 @@ import { ACCOUNT, PROJECT, SESSION, OK_CODE, UNAUTHORIZED_CODE } from './common'
 chai.use(require('sinon-chai'));
 
 describe('Error Manager', () => {
-    const { config, Router, authAdapter, errorManager } = epicenter;
+    const { config, Router, authAdapter } = epicenter;
     let fakeServer;
 
     config.accountShortName = ACCOUNT;
@@ -42,9 +42,13 @@ describe('Error Manager', () => {
         config.tokenOverride = undefined;
     });
 
-    describe('Default Handlers', () => {
+    describe('Error Handlers', () => {
         it('Should by default handle invalidated authentication via a PATCH to upgrade the session and retrying after', async() => {
-            await new Router().get('/unauthorized');
+            try {
+                await new Router().get('/unauthorized');
+            } catch (error) {
+                /* Do nothing, it should error here */
+            }
             const retry = fakeServer.requests.pop();
             const upgrade = fakeServer.requests.pop();
             const get = fakeServer.requests.pop();

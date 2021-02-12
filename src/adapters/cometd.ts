@@ -1,3 +1,4 @@
+import { CometD, Message } from 'cometd';
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
 import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils/index';
@@ -10,10 +11,13 @@ const CONNECTED = 'connected';
 
 
 class CometdError extends Error {
-    constructor(reply) {
+    status?: number
+    information: Message
+    message: string
 
+    constructor(reply: Message) {
         super();
-        const { error, successful } = reply;
+        const { error = '', successful } = reply;
         if (error && error.includes('403') && !successful) {
             this.status = 401;
         }
@@ -32,12 +36,15 @@ interface Channel {
     path: string,
 }
 
+
+// TODO -- split this code so that people who don't use channels do not import this by default
+// https://levelup.gitconnected.com/code-splitting-for-libraries-bundling-for-npm-with-rollup-1-0-2522c7437697
 class CometdAdapter {
 
-    url;
-    customCometd;
-    defaultCometd;
-    initialization;
+    url: string = '';
+    customCometd: any;
+    defaultCometd: any;
+    initialization: Boolean = false;
     subscriptions = new Map();
     state = DISCONNECTED;
     requireAcknowledgement = true;
@@ -49,21 +56,15 @@ class CometdAdapter {
     async startup(options = { logLevel: 'error' }) {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
-        if (isBrowser()) {
-            const cometd = await import('cometd');
-            this.defaultCometd = new cometd.CometD();
-        }
+        this.defaultCometd = new CometD();
 
         const { apiProtocol, apiHost, apiVersion } = config;
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
         this.cometd.registerExtension('ack', new AckExtension());
-        this.cometd.registerExtension('reload', new ReloadExtension());
-        this.cometd.configure({
-            url: this.url,
-            logLevel: options.logLevel,
-        });
 
         if (isBrowser()) {
+            this.cometd.registerExtension('reload', new ReloadExtension());
+
             window.onunload = () => {
                 if (this.cometd.getStatus() === CONNECTED) {
                     this.cometd.reload();
@@ -72,19 +73,28 @@ class CometdAdapter {
             };
         }
 
+        // if (isNode()) {
+        //     const { adapt } = await import('cometd-nodejs-client');
+        //     adapt();
+        // }
+
+        this.cometd.configure({
+            url: this.url,
+            logLevel: options.logLevel,
+        });
         return true;
     }
 
     async reinit(customCometd, options) {
         await this.disconnect();
-        this.initialization = undefined;
+        this.initialization = false;
         this.customCometd = customCometd;
         return this.init(options);
     }
 
     async init(options) {
         if (!this.initialization) {
-            this.initialization = this.startup(options);
+            this.initialization = await this.startup(options);
         }
         return this.initialization;
     }
