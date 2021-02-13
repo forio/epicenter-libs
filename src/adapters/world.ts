@@ -148,7 +148,7 @@ export async function get(optionals = {}) {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
  * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {boolean} [optionals.exceedMinimums]      Indicates something... TODO
+ * @param {boolean} [optionals.exceedMinimums]      Allows platform to assign users beyond minimum amount
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                World users were assigned to
@@ -187,8 +187,8 @@ export async function selfAssign(role, optionals = {}) {
  * @param {object}      [optionals={}]                      Optional parameters
  * @param {string}      [optionals.groupName]               Name of the group (defaults to name of group associated with session)
  * @param {string}      [optionals.episodeName]             Name of the episode
- * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
- * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
+ * @param {boolean}     [optionals.exceedMinimums]          Allows platform to assign users beyond minimum amount
+ * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
  * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of worlds assigned to
@@ -226,8 +226,8 @@ export async function assignUsers(assignments, optionals = {}) {
  * @param {string}      worldKey                            Key associated with the world
  * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
  * @param {object}      [optionals={}]                      Optional parameters
- * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
- * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
+ * @param {boolean}     [optionals.exceedMinimums]          Allows platform to assign users beyond minimum amount
+ * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
  * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object}                                        Updated world object
@@ -305,7 +305,7 @@ export async function removeUsers(userKeys, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams({ userKey: userKeys })
-        .get(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
         .then(({ body }) => body);
 }
 
