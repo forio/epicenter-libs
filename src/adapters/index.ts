@@ -1,5 +1,6 @@
 import * as accountAdapter from './account';
 import * as authAdapter from './authentication';
+import * as assetAdapter from './asset';
 import * as episodeAdapter from './episode';
 import * as groupAdapter from './group';
 import * as leaderboardAdapter from './leaderboard';
@@ -15,6 +16,7 @@ import { default as Channel } from './channel';
 export {
     accountAdapter,
     authAdapter,
+    assetAdapter,
     cometdAdapter,
     episodeAdapter,
     groupAdapter,

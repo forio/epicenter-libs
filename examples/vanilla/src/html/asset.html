@@ -14,23 +14,23 @@
     <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
     <link rel="stylesheet" href="../css/common.scss">
+    <!-- <link rel="stylesheet" href="../css/asset.scss"> -->
 </head>
-
 <body>
     <main>
-        <h1>Welcome</h1>
-        <p>Hello <span id="display-name">stranger</span>,</p>
-        <p>You are <span id="group-role">not currently signed in on Epicenter</span>, click below to navigate to a page</p>
-        <ul>
-            <li><a href="login.html">Login</a></li>
-            <li><a href="student.html">Student</a></li>
-            <li><a href="facilitator.html">Facilitator</a></li>
-            <li><a href="asset.html">Asset APIs</a></li>
-        </ul>
-        <section class="buttons">
-            <button id="logout">Logout</button>
-        </section>
+        <h1>Asset</h1>
+        <a href="index.html"><< Back</a>
+        <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+        <h2>Upload a thing (it'll be you scoped)</h2>
+        <input
+            id="file-input"
+            type="file"
+            accept="image/*"
+        />
+        <button id="upload">Upload</button>
+        <h2>Things you've uploaded</h2>
+        <ul id="asset-list">There's nothing here!</ul>
     </main>
 </body>
-<script src="../js/index.js"></script>
+<script src="../js/asset.js"></script>
 </html>
