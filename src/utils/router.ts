@@ -12,27 +12,29 @@ const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
+type Value = any;
 
 interface Page {
     firstResult: number,
     maxResults: number,
     totalResults: number,
-    values: any[],
-    prev: Function,
-    next: Function,
-    all: Function,
+    values: Value[],
+    prev: () => Promise<Value[]>,
+    next: () => Promise<Value[]>,
+    all: (first?: number, allValues?: Value[]) => Promise<Value[]>,
 }
 interface RequestOptions {
     method: string,
-    body?: Record<string, any>,
+    body?: Record<string, unknown>,
     includeAuthorization?: boolean,
     inert?: boolean,
     paginated?: boolean,
+    parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
 }
 
 
-function paginate(json: Page, url: URL, options: any) {
-    const parsePage = options.parsePage ?? ((i: any) => i);
+function paginate(json: Page, url: URL, options: RequestOptions) {
+    const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = { ...json, values: parsePage(json.values) };
     const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
@@ -72,7 +74,7 @@ function paginate(json: Page, url: URL, options: any) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues: any[] = []):Promise<any[]> {
+    const all = async function(first = 0, allValues: Value[] = []):Promise<Value[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -105,7 +107,7 @@ const createHeaders = (includeAuthorization?: boolean) => {
 };
 
 const NO_CONTENT = 204;
-async function request(url: URL, options: RequestOptions): Promise<Result | void> {
+async function request(url: URL, options: RequestOptions): Promise<Result> {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
     const response = await fetch(url.toString(), {

@@ -144,7 +144,7 @@ export enum PUSH_CATEGORY {
      * @constant
      * @type {string} */
     SYSTEM = 'SYSTEM',
-};
+}
 
 /**
  * Roles are used to define permissions on resources in Epicenter.

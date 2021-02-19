@@ -2,8 +2,11 @@ import { EpicenterError } from 'utils/index';
 import { cometdAdapter } from 'adapters/index';
 import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
 
+interface ChannelScope extends GenericScope {
+    pushCategory: string,
+}
 
-const validateScope = (scope: Scope) => {
+const validateScope = (scope: ChannelScope) => {
     if (!scope) throw new EpicenterError('No scope found where one was required');
     const { scopeBoundary, scopeKey, pushCategory } = scope;
     if (!scopeBoundary) throw new EpicenterError('Missing scope component: scopeBoundary');
@@ -24,7 +27,7 @@ export default class Channel {
      * Make a new channel
      * @param {*} scope wordsd here
      */
-    constructor(scope: Scope) {
+    constructor(scope: ChannelScope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
         validateScope(scope);
         this.path = `/${scopeBoundary.toLowerCase()}/${scopeKey}/${pushCategory.toLowerCase()}`;
