@@ -50,12 +50,12 @@ export async function get(vaultKey, optionals = {}) {
 
 export async function getWithScope(collection, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
-    const { accountShortName, projectShortName } = optionals;
-    const userKey = optionals.userKey ? `/${optionals.userKey}` : '';
+    const { accountShortName, projectShortName, userKey } = optionals;
+    const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/vault/with/${scopeBoundary}/${scopeKey}${userKey}/${collection}`)
+        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${collection}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
             return Promise.reject(error);
@@ -120,7 +120,7 @@ export async function create(collection, scope, items, optionals = {}) {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey: scopeBoundary === WORLD ? undefined : userKey,
+                    userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
