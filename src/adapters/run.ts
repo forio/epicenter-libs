@@ -13,8 +13,8 @@ interface ExecutionContext {
 
 }
 interface CreateOptions extends GenericAdapterOptions {
-    readLock?: string,
-    writeLock?: string,
+    readLock?: keyof typeof ROLE,
+    writeLock?: keyof typeof ROLE,
     userKey?: string,
     ephemeral?: boolean,
     trackingKey?: string,
@@ -452,7 +452,11 @@ export async function getVariable(
  * @param {object}  optionals   Something meaningful about optionals
  * @returns {object}            Object with the variables & new values that were updated
  */
-export async function updateVariables(runKey: string, update: UpdateOptions , optionals: GetOptions = {}) {
+export async function updateVariables(
+    runKey: string | string[],
+    update: UpdateOptions ,
+    optionals: GetOptions = {}
+) {
     const {
         timeout, ritual,
         accountShortName, projectShortName, server,
@@ -476,7 +480,7 @@ export async function updateVariables(runKey: string, update: UpdateOptions , op
 }
 
 export async function getMetadata(
-    runKey: string,
+    runKey: string | string[],
     metadata: string[],
     optionals: GetOptions = {}
 ) {
@@ -503,7 +507,7 @@ export async function getMetadata(
 }
 
 export async function updateMetadata(
-    runKey: string,
+    runKey: string | string[],
     update: Record<string, any>,
     optionals: GetOptions = {}
 ) {
@@ -529,7 +533,7 @@ export async function updateMetadata(
 }
 
 export async function action(
-    runKey: string,
+    runKey: string | string[],
     actionList: Action[],
     optionals: GetOptions = {}
 ) {

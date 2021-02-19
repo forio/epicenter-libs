@@ -1,3 +1,5 @@
+
+
 interface GenericScope {
     scopeBoundary: string,
     scopeKey: string,
