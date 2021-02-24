@@ -1,6 +1,13 @@
 import { Router, identification } from 'utils/index';
 import { SCOPE_BOUNDARY } from 'utils/constants';
 
+interface AssignmentOptions extends GenericAdapterOptions {
+    groupName?: string,
+    episodeName?: string,
+    exceedMinimums?: boolean,
+    requireAllAssignments?: boolean,
+}
+
 /**
  * World API adapters -- handles worlds and user role/assignments
  * @namespace worldAdapter
@@ -24,13 +31,18 @@ import { SCOPE_BOUNDARY } from 'utils/constants';
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Group with updated attributes
+ * @returns {object}                                world with updated attributes
  */
-export async function update(worldKey, update, optionals = {}) {
+export async function update(
+    worldKey: string,
+    update: WorldUpdate,
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
     const { name, runKey } = update;
-    const { accountShortName, projectShortName } = optionals;
+    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .patch(`/world/${worldKey}`, {
@@ -208,9 +220,8 @@ export async function assignUsers(assignments, optionals = {}) {
         .then(({ body }) => body);
 }
 
-
 /**
- * Updates a world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
+ * Updates a specific world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
  *
  * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
  *
@@ -232,7 +243,7 @@ export async function assignUsers(assignments, optionals = {}) {
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object}                                        Updated world object
  */
-export async function updateUsers(worldKey, assignments, optionals = {}) {
+export async function updateAssignments(worldKey, assignments, optionals = {}) {
     const {
         exceedMinimums, requireAllAssignments,
         accountShortName, projectShortName,
