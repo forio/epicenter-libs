@@ -1,6 +1,14 @@
 import { Router } from 'utils/index';
 import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
 
+interface CreateOptions extends GenericAdapterOptions {
+    readLock?: keyof typeof ROLE,
+    writeLock?: keyof typeof ROLE,
+    userKey?: string,
+    ttlSeconds?: string,
+    mutationKey?: string,
+}
+
 /**
  * Episode API adapters -- use this to create, update, delete, and manage your episodes
  * @namespace vaultAdapter
@@ -48,14 +56,14 @@ export async function get(vaultKey, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function getWithScope(collection, scope, optionals = {}) {
+export async function getWithScope(name, scope, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName, userKey } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${collection}`)
+        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
             return Promise.reject(error);
@@ -101,7 +109,12 @@ export async function remove(vaultKey, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Newly created run
  */
-export async function create(collection, scope, items, optionals = {}) {
+export async function create(
+    name: string,
+    scope: GenericScope,
+    items: Record<string, unknown>,
+    optionals: CreateOptions = {}
+): Promise<Vault> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock,
@@ -115,7 +128,7 @@ export async function create(collection, scope, items, optionals = {}) {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/vault/${collection}`, {
+        .post(`/vault/${name}`, {
             body: {
                 scope: {
                     scopeBoundary,
@@ -131,6 +144,5 @@ export async function create(collection, scope, items, optionals = {}) {
                 items,
             },
         }).then(({ body }) => body);
-
 }
 
