@@ -220,6 +220,25 @@ export async function assignUsers(assignments, optionals = {}) {
         .then(({ body }) => body);
 }
 
+export async function makeAssignments(
+    assignments: AssignmentMap,
+    optionals: AssignmentOptions = {}
+): Promise<World[]> {
+    const {
+        groupName, episodeName, exceedMinimums, requireAllAssignments,
+        accountShortName, projectShortName, server,
+    } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .put(`/world/assignment/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: { assignments, exceedMinimums, requireAllAssignments },
+        })
+        .then(({ body }) => body);
+}
+
 /**
  * Updates a specific world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
  *
