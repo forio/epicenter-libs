@@ -39,6 +39,7 @@ interface CreateOptions extends AssetOptions {
 
 interface StoreOptions extends CreateOptions {
     overwrite?: boolean,
+    fileName?: string,
 }
 
 export async function create(
@@ -166,7 +167,7 @@ export async function list(
         .then(({ body }) => body);
 }
 
-export async function getUrl(
+export async function getURL(
     assetKey: string,
     optionals: GenericAdapterOptions = {}
 ): Promise<string> {
@@ -179,7 +180,7 @@ export async function getUrl(
         .then(({ body }) => body);
 }
 
-export async function getUrlWith(
+export async function getURLWithScope(
     file: string,
     scope: Scope,
     optionals: AssetOptions = {}
@@ -204,15 +205,16 @@ export async function store(
     scope: Scope,
     optionals: StoreOptions = {}
 ): Promise<void> {
-    const { overwrite, ...remaining } = optionals;
+    const { overwrite, fileName, ...remaining } = optionals;
+    const name = fileName ?? file.name;
     let presignedUrl = '';
     try {
-        const response = await create(file.name, scope, remaining);
+        const response = await create(name, scope, remaining);
         presignedUrl = response.url;
     } catch (error) {
         const shouldUpdate = error.status === CONFLICT && overwrite;
         if (!shouldUpdate) throw error;
-        const response = await update(file.name, scope, remaining);
+        const response = await update(name, scope, remaining);
         presignedUrl = response.url;
     }
     await fetch(presignedUrl, { method: 'PUT', body: file });
