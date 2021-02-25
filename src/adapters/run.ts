@@ -266,6 +266,8 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  *
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
  *
+ * `filters` take in an array of strings that are serialized as a JSON object on the backend using the JSONiq (JSON query language). See their docs for addtional info
+ *
  * @memberof runAdapter
  * @example
  *
@@ -273,8 +275,11 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  * runAdapter.query({
  *      filter: [
  *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
+ *          'var.certified*=true'           // looks for runs where the variable 'certified' exists,
  *          'run.hidden=false',             // where the run's 'hidden' attribute is false
- *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-'
+ *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
+ *          'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
  *      ],
  *      sort: ['+run.created']              // sort all findings by the 'created' field
  *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response

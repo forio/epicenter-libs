@@ -16,7 +16,7 @@ interface CreateOptions extends GenericAdapterOptions {
 
 
 /**
- * Create an episode.
+ * Updates a vault
  *
  * TODO -- add meaningful text here
  * @memberof vaultAdapter
@@ -25,8 +25,8 @@ interface CreateOptions extends GenericAdapterOptions {
  * import { vaultAdapter } from 'epicenter';
  * vaultAdapter.update
  *
- * @param {string}  vaultKey            Episode name
- * @param {object}  items               Group to make the episode under
+ * @param {string}  vaultKey            Vault key
+ * @param {object}  items               Object with a set/push field to update the vault with
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
@@ -82,7 +82,7 @@ export async function remove(vaultKey, optionals = {}) {
 
 
 /**
- * Creates a vault.
+ * Creates a vault. Vault names are unique to within their scope
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
  *
@@ -94,7 +94,7 @@ export async function remove(vaultKey, optionals = {}) {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
  * });
- * @param {string}  collection                      Name of the vault
+ * @param {string}  name                            Name of the vault
  * @param {object}  scope                           Scope associated with your run
  * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
