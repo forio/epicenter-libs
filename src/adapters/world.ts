@@ -205,7 +205,7 @@ export async function selfAssign(role, optionals = {}) {
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of worlds assigned to
  */
-export async function assignUsers(assignments, optionals = {}) {
+export async function autoAssignUsers(assignments, optionals = {}) {
     const {
         groupName, episodeName, exceedMinimums, requireAllAssignments,
         accountShortName, projectShortName,
