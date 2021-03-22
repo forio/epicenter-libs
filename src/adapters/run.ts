@@ -341,6 +341,9 @@ export async function query(
         .then(({ body }) => body);
 }
 
+// TODO -- add GET for run/in/groupName/episodeName/
+
+
 export async function introspect(model: string, optionals: GenericAdapterOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
 
@@ -353,7 +356,7 @@ export async function introspect(model: string, optionals: GenericAdapterOptions
 }
 
 export async function operation(
-    runKey: string,
+    runKey: string | string[],
     name: string,
     args: any[] = [],
     optionals: GetOptions = {}
