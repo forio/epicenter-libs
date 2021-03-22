@@ -326,7 +326,7 @@ export async function removeUsers(userKeys, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function editPersonas(personas, scope = {}, optionals = {}) {
+export async function setPersonas(personas, scope = {}, optionals = {}) {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName } = optionals;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
