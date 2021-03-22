@@ -220,7 +220,7 @@ export async function autoAssignUsers(assignments, optionals = {}) {
         .then(({ body }) => body);
 }
 
-export async function makeAssignments(
+export async function editAssignments(
     assignments: AssignmentMap,
     optionals: AssignmentOptions = {}
 ): Promise<World[]> {
