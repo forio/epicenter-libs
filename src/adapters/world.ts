@@ -114,7 +114,7 @@ export async function create(world, optionals = {}) {
 
 
 /**
- * Fetches the worlds in a group
+ * Fetches the worlds in a group or episode if specified
  *
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
  *
@@ -182,7 +182,7 @@ export async function selfAssign(role, optionals = {}) {
 
 
 /**
- * Assigns a list of users to a world.
+ * (Auto assign) -- makes worlds given a list of users.
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{GROUP_NAME}[/{EPISODE_NAME}]`
  *
@@ -192,7 +192,7 @@ export async function selfAssign(role, optionals = {}) {
  * import { worldAdapter } from 'epicenter';
  * const worlds = await worldAdapter.assignUsers([
  *      { userKey: '123', role: 'locksmith' },
- *      { userKey: '456', role: 'cartographer' },
+ *      { userKey: '456' },
  * ]);
  *
  * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
@@ -233,45 +233,7 @@ export async function makeAssignments(
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .put(`/world/assignment/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, exceedMinimums, requireAllAssignments },
-        })
-        .then(({ body }) => body);
-}
-
-/**
- * Updates a specific world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
- *
- * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
- *
- * @memberof worldAdapter
- * @example
- *
- * import { worldAdapter } from 'epicenter';
- * const worlds = await worldAdapter.updateUsers(world.worldKey, [
- *      { userKey: '123', role: 'locksmith' },
- *      { userKey: '456', role: 'cartographer' },
- * ]);
- *
- * @param {string}      worldKey                            Key associated with the world
- * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
- * @param {object}      [optionals={}]                      Optional parameters
- * @param {boolean}     [optionals.exceedMinimums]          Allows platform to assign users beyond minimum amount
- * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
- * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
- * @returns {object}                                        Updated world object
- */
-export async function updateAssignments(worldKey, assignments, optionals = {}) {
-    const {
-        exceedMinimums, requireAllAssignments,
-        accountShortName, projectShortName,
-    } = optionals;
-
-    return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .put(`/world/assignment/${worldKey}`, {
+        .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { assignments, exceedMinimums, requireAllAssignments },
         })
         .then(({ body }) => body);
@@ -304,6 +266,8 @@ export async function getAssignments(worldKey, optionals = {}) {
         .get(`/world/assignment/${worldKey}`)
         .then(({ body }) => body);
 }
+
+// TODO do GET assignment/in (essentially to get MY world given a group or episode)
 
 
 /**
@@ -341,8 +305,8 @@ export async function removeUsers(userKeys, optionals = {}) {
 
 
 /**
- * Edits the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
- *
+ * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
+ * null minimum is 0, but null maximum is uncapped
  * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/persona/{SCOPE_BOUNDARY}[/{SCOPE_KEY}]`
  *
  * @memberof worldAdapter
