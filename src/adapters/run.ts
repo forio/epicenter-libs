@@ -656,39 +656,39 @@ export async function removeFromWorld(worldKey: string, optionals: GenericAdapte
         .then(({ body }) => body);
 }
 
+// TODO -- revisit the code below when considering reimplmenting v2 run strategies
+// async function serial(runKey: string, operations, optionals = {}) {
+//     const normalizedOps = operations.map((item) => ({
+//         name: typeof item === 'string' ? item : item.name,
+//         params: item.params,
+//     }));
 
-async function serial(runKey: string, operations, optionals = {}) {
-    const normalizedOps = operations.map((item) => ({
-        name: typeof item === 'string' ? item : item.name,
-        params: item.params,
-    }));
+//     //Perform all operations, sequentially
+//     return normalizedOps.reduce((promise, { name, params }) => {
+//         return promise.then(() => operation(runKey, name, params, optionals = {}));
+//     }, Promise.resolve());
+// }
 
-    //Perform all operations, sequentially
-    return normalizedOps.reduce((promise, { name, params }) => {
-        return promise.then(() => operation(runKey, name, params, optionals = {}));
-    }, Promise.resolve());
-}
-
-export async function getWithStrategy(strategy, model, scope, optionals = {}) {
-    const { initOperations = [] } = optionals;
-    if (strategy === 'reuse-across-sessions') {
-        const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
-        if (runs.length) {
-            return runs[0];
-        }
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-never') {
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-by-tracking-key') {
-        //TBD write out if needed
-        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
-    } else if (strategy === 'multiplayer') {
-        //TODO when multiplayer API is ready
-        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
-    }
-    throw new EpicenterError('Invalid run strategy.');
-}
+// export async function getWithStrategy(strategy, model, scope, optionals = {}) {
+//     const { initOperations = [] } = optionals;
+//     if (strategy === 'reuse-across-sessions') {
+//         const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
+//         if (runs.length) {
+//             return runs[0];
+//         }
+//         const newRun = await create(model, scope, optionals = {});
+//         await serial(newRun.runKey, initOperations, optionals = {});
+//         return newRun;
+//     } else if (strategy === 'reuse-never') {
+//         const newRun = await create(model, scope, optionals = {});
+//         await serial(newRun.runKey, initOperations, optionals = {});
+//         return newRun;
+//     } else if (strategy === 'reuse-by-tracking-key') {
+//         //TBD write out if needed
+//         //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+//     } else if (strategy === 'multiplayer') {
+//         //TODO when multiplayer API is ready
+//         //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+//     }
+//     throw new EpicenterError('Invalid run strategy.');
+// }

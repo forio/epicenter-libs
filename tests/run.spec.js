@@ -6,6 +6,7 @@ chai.use(require('sinon-chai'));
 describe('Run API Service', () => {
     const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
     let fakeServer;
+    const testedMethods = [];
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
@@ -111,6 +112,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
         });
+        testedMethods.push('create');
     });
     describe('runAdapter.clone', () => {
         const RUN_KEY = 'runkey';
@@ -147,6 +149,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('clone');
     });
     describe('runAdapter.restore', () => {
         const RUN_KEY = 'runkey';
@@ -179,6 +182,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('restore');
     });
     describe('runAdapter.rewind', () => {
         const RUN_KEY = 'runkey';
@@ -212,6 +216,7 @@ describe('Run API Service', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('rewind');
     });
     describe('runAdapter.update', () => {
         const UPDATE = {
@@ -257,6 +262,7 @@ describe('Run API Service', () => {
             body.marked.should.equal(true);
             body.should.not.have.any.keys('readLock', 'writeLock', 'trackingKey', 'hidden', 'closed');
         });
+        testedMethods.push('update');
     });
     describe('runAdapter.remove', () => {
         const RUN_KEY = 'runkey';
@@ -281,6 +287,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
+        testedMethods.push('remove');
     });
     describe('runAdapter.get', () => {
         const RUN_KEY = 'runkey';
@@ -305,6 +312,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
+        testedMethods.push('get');
     });
     describe('runAdapter.query', () => {
         const MODEL = 'model.vmf';
@@ -357,6 +365,7 @@ describe('Run API Service', () => {
             searchParams.get('max').should.equal(OPTIONS.max.toString());
             searchParams.get('timeout').should.equal(OPTIONS.timeout.toString());
         });
+        testedMethods.push('query');
     });
     describe('runAdapter.introspect', () => {
         const MODEL = 'test-model.py';
@@ -381,6 +390,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${MODEL}`);
         });
+        testedMethods.push('introspect');
     });
     describe('runAdapter.operation', () => {
         const RUN_KEY = '123456789';
@@ -439,6 +449,7 @@ describe('Run API Service', () => {
             body.name.should.equal(NAME);
             body.arguments.should.deep.equal(ARGUMENTS);
         });
+        testedMethods.push('operation');
     });
     describe('runAdapter.getVariables', () => {
         const RUN_KEY = '123456789';
@@ -490,6 +501,7 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.has('ritual').should.equal(false);
         });
+        testedMethods.push('getVariables');
     });
     describe('runAdapter.getVariable', () => {
         const RUN_KEY = '123456789';
@@ -550,6 +562,7 @@ describe('Run API Service', () => {
             searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
             searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
         });
+        testedMethods.push('getVariable');
     });
     describe('runAdapter.updateVariables', () => {
         const UPDATE = {
@@ -610,6 +623,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(UPDATE);
         });
+        testedMethods.push('updateVariables');
     });
     describe('runAdapter.getMetadata', () => {
         const RUN_KEY = '123456789';
@@ -660,6 +674,7 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.has('ritual').should.equal(false);
         });
+        testedMethods.push('getMetadata');
     });
     describe('runAdapter.updateMetadata', () => {
         const RUN_KEY = '123456789';
@@ -720,6 +735,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(UPDATE);
         });
+        testedMethods.push('updateMetadata');
     });
     describe('runAdapter.action', () => {
         const RUN_KEY = '123456789';
@@ -780,6 +796,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(ACTIONS);
         });
+        testedMethods.push('action');
     });
     describe('runAdapter.retrieveFromWorld', () => {
         const WORLD_KEY = 'worldkey';
@@ -833,6 +850,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('retrieveFromWorld');
     });
     describe('runAdapter.removeFromWorld', () => {
         const WORLD_KEY = 'worldkey';
@@ -858,6 +876,13 @@ describe('Run API Service', () => {
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
+        });
+        testedMethods.push('removeFromWorld');
+    });
+
+    it('Should not have any untested methods', () => {
+        Object.keys(runAdapter).forEach((method) => {
+            testedMethods.should.contain(method);
         });
     });
 });
