@@ -145,6 +145,20 @@ export async function get(optionals = {}) {
 }
 
 
+// Fetches the assignments (plus some world info) in a group or episode if specified
+export async function getAssignments(optionals = {}) {
+    const {
+        groupName, episodeName,
+        accountShortName, projectShortName,
+    } = optionals;
+
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/world/assignment/for/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .then(({ body }) => body);
+}
+
 /**
  * Automatically assigns the current session's user to a world
  *
@@ -249,7 +263,7 @@ export async function editAssignments(
  * @example
  *
  * import { worldAdapter } from 'epicenter';
- * const assignments = await worldAdapter.getAssignments(world.worldKey);
+ * const assignments = await worldAdapter.getAssignmentsByKey(world.worldKey);
  *
  * @param {string}      worldKey                            Key associated with the world
  * @param {object}      [optionals={}]                      Optional parameters
@@ -257,7 +271,7 @@ export async function editAssignments(
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of assignment objects containing user and role information
  */
-export async function getAssignments(worldKey, optionals = {}) {
+export async function getAssignmentsByKey(worldKey, optionals = {}) {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -266,9 +280,6 @@ export async function getAssignments(worldKey, optionals = {}) {
         .get(`/world/assignment/${worldKey}`)
         .then(({ body }) => body);
 }
-
-// TODO do GET assignment/in (essentially to get MY world given a group or episode)
-
 
 /**
  * Removes a user or list of users the all worlds in a given group or episode. Any worlds that do not contain users within them will be automatically deleted in the process.
