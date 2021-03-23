@@ -29,9 +29,9 @@ interface UpdateOptions {
     readLock?: string,
     writeLock?: string,
     trackingKey?: string,
-    marked?: boolean,
-    hidden?: boolean,
-    closed?: boolean,
+    marked?: boolean, /* analogous to v2's 'saved' */
+    hidden?: boolean, /* analogous to v2's 'trashed' */
+    closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
 }
 interface QueryOptions extends GenericAdapterQueryOptions {
     timeout?: number,
