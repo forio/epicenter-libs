@@ -1,11 +1,58 @@
 import { Router, identification } from 'utils/index';
 import { SCOPE_BOUNDARY } from 'utils/constants';
 
-interface AssignmentOptions extends GenericAdapterOptions {
+enum OBJECTIVE {
+    MINIMUM = 'MINIMUM',
+    MAXIMUM = 'MAXIMUM',
+}
+
+enum ORBIT_TYPE {
+    GROUP = 'GROUP',
+    EPISODE = 'EPISODE',
+}
+
+interface WorldOptions extends GenericAdapterOptions {
     groupName?: string,
     episodeName?: string,
-    exceedMinimums?: boolean,
+}
+
+interface AssignmentOptions extends WorldOptions {
+    objective?: keyof typeof OBJECTIVE,
     requireAllAssignments?: boolean,
+}
+
+interface UserAssignment {
+    userKey: string,
+    role?: string,
+}
+
+interface Persona {
+    role: string,
+    minimum: number,
+    maximum?: number,
+}
+
+interface Assignment {
+    role: string,
+    user: {
+        lastUpdated: string,
+        displayName: string,
+        created: string,
+        detail: any,
+        userId: number,
+        userKey: string,
+    },
+}
+
+interface World {
+    lastUpdated: string,
+    personae: Persona[],
+    assignments: Assignment[],
+    orbitKey: string,
+    worldKey: string,
+    created: string,
+    orbitType: keyof typeof ORBIT_TYPE,
+    runKey: string,
 }
 
 /**
@@ -68,7 +115,10 @@ export async function update(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function destroy(worldKey, optionals = {}) {
+export async function destroy(
+    worldKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<void> {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -99,7 +149,10 @@ export async function destroy(worldKey, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function create(world, optionals = {}) {
+export async function create(
+    world: string,
+    optionals: WorldOptions = {}
+): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -131,7 +184,7 @@ export async function create(world, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                              List of worlds
  */
-export async function get(optionals = {}) {
+export async function get(optionals: WorldOptions = {}): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -146,7 +199,7 @@ export async function get(optionals = {}) {
 
 
 // Fetches the assignments (plus some world info) in a group or episode if specified
-export async function getAssignments(optionals = {}) {
+export async function getAssignments(optionals: WorldOptions = {}): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -174,14 +227,17 @@ export async function getAssignments(optionals = {}) {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
  * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {boolean} [optionals.exceedMinimums]      Allows platform to assign users beyond minimum amount
+ * @param {boolean} [optionals.objective]           Allows platform to assign users beyond minimum amount
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                World users were assigned to
  */
-export async function selfAssign(role, optionals = {}) {
+export async function selfAssign(
+    role: string,
+    optionals: AssignmentOptions = {}
+): Promise<World> {
     const {
-        groupName, episodeName, exceedMinimums,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM,
         accountShortName, projectShortName,
     } = optionals;
 
@@ -189,7 +245,7 @@ export async function selfAssign(role, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/world/selfassign/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { role, exceedMinimums },
+            body: { role, objective },
         })
         .then(({ body }) => body);
 }
@@ -213,15 +269,18 @@ export async function selfAssign(role, optionals = {}) {
  * @param {object}      [optionals={}]                      Optional parameters
  * @param {string}      [optionals.groupName]               Name of the group (defaults to name of group associated with session)
  * @param {string}      [optionals.episodeName]             Name of the episode
- * @param {boolean}     [optionals.exceedMinimums]          Allows platform to assign users beyond minimum amount
+ * @param {boolean}     [optionals.objective]               Allows platform to assign users beyond minimum amount
  * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
  * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of worlds assigned to
  */
-export async function autoAssignUsers(assignments, optionals = {}) {
+export async function autoAssignUsers(
+    assignments: UserAssignment[],
+    optionals: AssignmentOptions = {}
+): Promise<World> {
     const {
-        groupName, episodeName, exceedMinimums, requireAllAssignments,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
         accountShortName, projectShortName,
     } = optionals;
 
@@ -229,7 +288,7 @@ export async function autoAssignUsers(assignments, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, exceedMinimums, requireAllAssignments },
+            body: { assignments, objective, requireAllAssignments },
         })
         .then(({ body }) => body);
 }
@@ -239,7 +298,7 @@ export async function editAssignments(
     optionals: AssignmentOptions = {}
 ): Promise<World[]> {
     const {
-        groupName, episodeName, exceedMinimums, requireAllAssignments,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
         accountShortName, projectShortName, server,
     } = optionals;
 
@@ -248,7 +307,7 @@ export async function editAssignments(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, exceedMinimums, requireAllAssignments },
+            body: { assignments, objective, requireAllAssignments },
         })
         .then(({ body }) => body);
 }
@@ -271,7 +330,10 @@ export async function editAssignments(
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of assignment objects containing user and role information
  */
-export async function getAssignmentsByKey(worldKey, optionals = {}) {
+export async function getAssignmentsByKey(
+    worldKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -300,7 +362,10 @@ export async function getAssignmentsByKey(worldKey, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function removeUsers(userKeys, optionals = {}) {
+export async function removeUsers(
+    userKeys: string[],
+    optionals: WorldOptions = {}
+): Promise<void> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -337,7 +402,11 @@ export async function removeUsers(userKeys, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function setPersonas(personas, scope = {}, optionals = {}) {
+export async function setPersonas(
+    personas: Persona[],
+    scope: GenericScope,
+    optionals: GenericAdapterOptions = {}
+): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName } = optionals;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
