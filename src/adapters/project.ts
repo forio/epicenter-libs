@@ -1,12 +1,12 @@
 import { ROLE, Router } from 'utils/index';
 
-enum AccessType {
+enum ACCESS_TYPE {
     PUBLIC = 'PUBLIC',
     PRIVATE = 'PRIVATE',
     AUTHENTICATED = 'AUTHENTICATED',
 }
 
-enum WorkerPartition {
+enum WORKER_PARTITION {
     NONE = 'NONE',
     ALL = 'ALL',
     FREE = 'FREE',
@@ -14,7 +14,7 @@ enum WorkerPartition {
     ACCOUNT = 'ACCOUNT',
 }
 
-enum Phylogeny {
+enum PHYLOGENY {
     ORIGINAL = 'ORIGINAL',
     HISTORICAL = 'HISTORICAL',
     REFERENTIAL = 'REFERENTIAL',
@@ -22,7 +22,7 @@ enum Phylogeny {
     EVENTUAL = 'EVENTUAL',
 }
 
-enum FileType {
+enum FILE_TYPE {
     INSENSITIVE = 'INSENSITIVE',
     SENSITIVE = 'SENSITIVE',
 }
@@ -58,14 +58,14 @@ interface TeamProject {
         dataApiEnforceScope: boolean,
     },
     objectType: 'team',
-    accessType: keyof typeof AccessType,
+    accessType: keyof typeof ACCESS_TYPE,
     sessionTimeoutSeconds: number,
     projectKey: string,
     members: Member[],
     channelEnabled: boolean,
-    workerPartition : keyof typeof WorkerPartition,
+    workerPartition : keyof typeof WORKER_PARTITION,
     name: string,
-    phylogeny : keyof typeof Phylogeny,
+    phylogeny : keyof typeof PHYLOGENY,
     multiPlayerEnabled: boolean,
     shortName: string,
     approximateRunCount: number,
@@ -73,7 +73,7 @@ interface TeamProject {
         amount: number,
     },
     dataRetentionDays: number,
-    fileType: keyof typeof FileType,
+    fileType: keyof typeof FILE_TYPE,
     dimensions: 'UNIVERSE' | 'MULTIVERSE',
     deployment: Deployment,
 }
@@ -82,15 +82,15 @@ interface PersonalProject {
     concurrentRunLimit: number,
     available: boolean,
     objectType: 'personal',
-    accessType: keyof typeof AccessType,
+    accessType: keyof typeof ACCESS_TYPE,
     sessionTimeoutSeconds: number,
     projectKey: string,
-    workerPartition: keyof typeof WorkerPartition,
+    workerPartition: keyof typeof WORKER_PARTITION,
     name: string,
-    phylogeny: keyof typeof Phylogeny,
+    phylogeny: keyof typeof PHYLOGENY,
     shortName: string,
     approximateRunCount: number,
-    fileType: keyof typeof FileType,
+    fileType: keyof typeof FILE_TYPE,
     deployment: Deployment,
 }
 
