@@ -16,7 +16,7 @@ describe('Group API Service', () => {
 
         fakeServer.respondWith('DELETE', /(.*)\/group/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
+            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
         fakeServer.respondWith('GET', /(.*)\/group/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };

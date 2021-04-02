@@ -124,7 +124,7 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
 
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {
-        throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json'`);
+        throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json' and my url is ${url.toString()}, ${method}`);
     }
 
     const json = await response.json();
