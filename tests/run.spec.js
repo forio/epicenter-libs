@@ -330,30 +330,37 @@ describe('Run API Service', () => {
             metadata: ['meta1', 'meta2'],
         };
         it('Should do a GET', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+            await runAdapter.query(MODEL);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+            await runAdapter.query(MODEL);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+        it('Should use the run/in/groupName/[episodeName]/modelFile URL', async() => {
+            await runAdapter.query(MODEL);
+            const req1 = fakeServer.requests.pop();
+            req1.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
+            await runAdapter.query(MODEL, { episodeName: 'myepisodename' });
+            const req2 = fakeServer.requests.pop();
+            req2.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/myepisodename/${MODEL}`);
+        });
+        it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
+            await runAdapter.query(MODEL, { scope: SCOPE });
             const req = fakeServer.requests.pop();
             const { scopeBoundary, scopeKey } = SCOPE;
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
         });
         it('Should support generic URL options', async() => {
-            await runAdapter.query(MODEL, SCOPE, GENERIC_OPTIONS);
+            await runAdapter.query(MODEL, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
-            const { scopeBoundary, scopeKey } = SCOPE;
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
         });
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
-            await runAdapter.query(MODEL, SCOPE, OPTIONS);
+            await runAdapter.query(MODEL, OPTIONS);
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);

@@ -37,6 +37,9 @@ interface QueryOptions extends GenericAdapterQueryOptions {
     timeout?: number,
     variables?: string[],
     metadata?: string[],
+    scope?: GenericScope,
+    groupName?: string,
+    episodeName?: string,
 }
 interface ProcAction {
     name: string,
@@ -287,10 +290,9 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  * });
  *
  * @param {string}      model                           Name of your model file
- * @param {object}      scope                           Scope associated with your run
- * @param {string}      scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}      scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.scope.scopeBoundary] Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      [optionals.scope.scopeKey]      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {string[]}    [optionals.filter]              List of conditionals to filter for
  * @param {string[]}    [optionals.sort]                List of values to sort by
  * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
@@ -304,14 +306,16 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  */
 export async function query(
     model: string,
-    scope: GenericScope,
     optionals: QueryOptions = {}
 ) {
-    const { scopeBoundary, scopeKey } = scope;
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, scope, groupName, episodeName,
     } = optionals;
+
+    const uriComponent = scope ?
+        `${scope.scopeBoundary}/${scope.scopeKey}` :
+        `in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
 
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -326,7 +330,7 @@ export async function query(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
+        .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
             parsePage: (values: any[]) => {
                 return values.map((run) => {
