@@ -335,7 +335,7 @@ export async function query(
             parsePage: (values: any[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
-                        variableMap[key] = variables[index];
+                        variableMap[key] = run.variables[index];
                         return variableMap;
                     }, {} as Record<string, any>);
                     return run;
@@ -344,9 +344,6 @@ export async function query(
         })
         .then(({ body }) => body);
 }
-
-// TODO -- add GET for run/in/groupName/episodeName/
-
 
 export async function introspect(model: string, optionals: GenericAdapterOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
