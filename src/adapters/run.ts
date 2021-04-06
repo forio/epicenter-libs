@@ -335,7 +335,8 @@ export async function query(
             parsePage: (values: any[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
-                        variableMap[key] = run.variables[index];
+                        // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'
+                        variableMap[key] = run.variables?.[index];
                         return variableMap;
                     }, {} as Record<string, any>);
                     return run;
