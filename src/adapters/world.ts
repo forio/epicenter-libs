@@ -12,6 +12,7 @@ enum ORBIT_TYPE {
 }
 
 interface WorldOptions extends GenericAdapterOptions {
+    name?: string,
     groupName?: string,
     episodeName?: string,
 }
@@ -82,7 +83,7 @@ interface World {
  */
 export async function update(
     worldKey: string,
-    update: WorldUpdate,
+    update: { name?: string, runKey?: string },
     optionals: GenericAdapterOptions = {}
 ): Promise<World> {
     const { name, runKey } = update;
@@ -150,19 +151,19 @@ export async function destroy(
  * @returns {undefined}
  */
 export async function create(
-    world: string,
     optionals: WorldOptions = {}
 ): Promise<World> {
     const {
-        groupName, episodeName,
+        name, groupName, episodeName,
         accountShortName, projectShortName,
     } = optionals;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, { body: world })
-        .then(({ body }) => body);
+        .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: { name },
+        }).then(({ body }) => body);
 }
 
 
