@@ -321,10 +321,22 @@ export default class Router {
 
         /* Handle sufficiently large GET requests with POST calls instead */
         if (url.href.length > MAX_URL_LENGTH) {
+            const entries = Array.from(this.searchParams.entries()) as Array<[string, string]>;
+            const searchObject = entries.reduce((searchObject, [key, value]) => {
+
+                if (!searchObject[key]) {
+                    searchObject[key] = value;
+                    return searchObject;
+                }
+                if (!Array.isArray(searchObject[key])) searchObject[key] = [searchObject[key] as string];
+                Array.prototype.push.call(searchObject[key], value);
+                // searchObject[key].push(value);
+                return searchObject;
+            }, {} as Record<string, string | number | string[] | number[]>);
             this.searchParams = '';
             return this.post(uriComponent, {
                 ...options,
-                body: url.search,
+                body: searchObject,
             });
         }
 
