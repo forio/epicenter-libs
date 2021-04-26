@@ -95,7 +95,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
 
 
 const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
+    const headers: Record<string, string> = {};
     const { session } = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
