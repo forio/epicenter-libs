@@ -24,6 +24,7 @@ export {
     projectAdapter,
     runAdapter,
     timeAdapter,
+    userAdapter,
     vaultAdapter,
     worldAdapter,
     Channel,

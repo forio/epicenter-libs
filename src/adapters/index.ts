@@ -7,6 +7,7 @@ import * as leaderboardAdapter from './leaderboard';
 import * as presenceAdapter from './presence';
 import * as projectAdapter from './project';
 import * as runAdapter from './run';
+import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
 import * as worldAdapter from './world';
 import * as timeAdapter from './time';
@@ -25,6 +26,7 @@ export {
     projectAdapter,
     runAdapter,
     timeAdapter,
+    userAdapter,
     vaultAdapter,
     worldAdapter,
     Channel,
