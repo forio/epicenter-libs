@@ -52,10 +52,15 @@ describe('Group API Service', () => {
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/groupKey URL, using the session\'s groupKey by default', async() => {
+        it('Should use the group/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+        });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.get({ groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/mygroupkey`);
         });
         it('Should support generic URL options', async() => {
             await groupAdapter.get(GENERIC_OPTIONS);
@@ -437,10 +442,15 @@ describe('Group API Service', () => {
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/member URL', async() => {
+        it('Should use the group/member/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
+        });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.addUser(USER_KEY, { groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey`);
         });
         it('Should support generic URL options', async() => {
             await groupAdapter.addUser(USER_KEY, GENERIC_OPTIONS);
@@ -453,7 +463,7 @@ describe('Group API Service', () => {
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             Array.isArray(body).should.be.true;
-            body.map((u) => u.userKey).should.deep.equal(USER_KEY);
+            body.map((u) => u.userKey).should.deep.equal([USER_KEY]);
         });
         it('Should by default set user as an available participant', async() => {
             await groupAdapter.addUser(USER_KEY);
@@ -477,31 +487,36 @@ describe('Group API Service', () => {
         testedMethods.push('updateUser');
     });
     describe('groupAdapter.removeUser', () => {
-        const GROUP_KEY = 'mygroupkey';
+        const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
         it('Should do a DELETE', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('DELETE');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/member/groupKey/userKey URL', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+        it('Should use the group/member/groupKey/userKey URL (using session.groupKey by default)', async() => {
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.removeUser(USER_KEY, { groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey/${USER_KEY}`);
+        });
         it('Should support generic URL options', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY, GENERIC_OPTIONS);
+            await groupAdapter.removeUser(USER_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
         it('Should support multiple userKeys', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, [USER_KEY, 'anotheruserkey']);
+            await groupAdapter.removeUser([USER_KEY, 'anotheruserkey']);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
         });
