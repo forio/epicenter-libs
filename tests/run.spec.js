@@ -888,8 +888,6 @@ describe('Run API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        Object.keys(runAdapter).forEach((method) => {
-            testedMethods.should.contain(method);
-        });
+        runAdapter.should.have.all.keys(...testedMethods);
     });
 });
