@@ -1,4 +1,4 @@
-import { Router } from 'utils';
+import { Router } from 'utils/index';
 
 /**
  * Time API adapter -- handles getting the current server time
@@ -22,14 +22,17 @@ import { Router } from 'utils';
  * @returns {string}                                The current server time, in ISO 8601 format
  */
 
-export async function get(optionals = {}) {
+const NOT_FOUND = 404;
+export async function get(
+    optionals: GenericAdapterOptions = {}
+):Promise<void | string> {
     const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/time')
         .catch((error) => {
-            if (error.status === 404) return { body: undefined };
+            if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
         }).then(({ body }) => body);
 }
