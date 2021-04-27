@@ -15,6 +15,7 @@ interface WorldOptions extends GenericAdapterOptions {
     name?: string,
     groupName?: string,
     episodeName?: string,
+    keepEmptyWorlds?: boolean,
 }
 
 interface AssignmentOptions extends WorldOptions {
@@ -299,7 +300,7 @@ export async function editAssignments(
     optionals: AssignmentOptions = {}
 ): Promise<World[]> {
     const {
-        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
         accountShortName, projectShortName, server,
     } = optionals;
 
@@ -308,7 +309,7 @@ export async function editAssignments(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, objective, requireAllAssignments },
+            body: { assignments, objective, requireAllAssignments, keepEmptyWorlds },
         })
         .then(({ body }) => body);
 }
@@ -368,14 +369,14 @@ export async function removeUsers(
     optionals: WorldOptions = {}
 ): Promise<void> {
     const {
-        groupName, episodeName,
+        groupName, episodeName, keepEmptyWorlds,
         accountShortName, projectShortName,
     } = optionals;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withSearchParams({ userKey: userKeys })
+        .withSearchParams({ userKey: userKeys, keepEmptyWorlds: Boolean(keepEmptyWorlds) })
         .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
         .then(({ body }) => body);
 }
