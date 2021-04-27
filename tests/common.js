@@ -6,6 +6,7 @@ export const ACCOUNT = 'forio-dev';
 export const PROJECT = 'epi-v3';
 
 export const SESSION_KEY = 'com.forio.epicenter.session';
+// TODO -- clean this up before you're able to publish
 export const SESSION = {
     token: '***REMOVED***',
     expires: true,

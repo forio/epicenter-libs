@@ -95,7 +95,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
 
 
 const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = {};
+    const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
     const { session } = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
@@ -106,25 +106,34 @@ const createHeaders = (includeAuthorization?: boolean) => {
     return headers;
 };
 
+const createBody = (headers, body) => {
+    if (body instanceof FormData) {
+        delete headers['Content-type'];
+        return body;
+    }
+    return body ? JSON.stringify(body) : null;
+};
+
 const NO_CONTENT = 204;
 async function request(url: URL, options: RequestOptions): Promise<Result> {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
+    const payload = createBody(headers, body);
     const response = await fetch(url.toString(), {
         method: method,
         cache: 'no-cache',
         headers: headers,
         redirect: 'follow',
-        body: body ? JSON.stringify(body) : null,
+        body: payload,
     });
 
     if (response.status === NO_CONTENT) {
         return new Result(undefined, response);
     }
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-        throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json' and my url is ${url.toString()}, ${method}`);
+    const resContentType = response.headers.get('content-type');
+    if (!resContentType || !resContentType.includes('application/json')) {
+        throw new EpicenterError(`Response content-type '${resContentType}' does not include 'application/json' and my url is ${url.toString()}, ${method}`);
     }
 
     const json = await response.json();
@@ -347,7 +356,7 @@ export default class Router {
         });
     }
 
-    async delete(uriComponent: string, options = {}) {
+    async delete(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -356,7 +365,7 @@ export default class Router {
         });
     }
 
-    async patch(uriComponent: string, options = {}) {
+    async patch(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -365,7 +374,7 @@ export default class Router {
         });
     }
 
-    async post(uriComponent: string, options = {}) {
+    async post(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -374,7 +383,7 @@ export default class Router {
         });
     }
 
-    async put(uriComponent: string, options = {}) {
+    async put(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
