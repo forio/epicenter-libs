@@ -40,7 +40,7 @@ interface QueryOptions extends GenericAdapterQueryOptions {
     scope?: GenericScope,
     groupName?: string,
     episodeName?: string,
-    includeEpisode?: boolean,
+    includeEpisodes?: boolean,
 }
 interface ProcAction {
     name: string,
@@ -311,7 +311,7 @@ export async function query(
 ): Promise<Page> {
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
-        accountShortName, projectShortName, server, scope, groupName, episodeName, includeEpisode,
+        accountShortName, projectShortName, server, scope, groupName, episodeName, includeEpisodes,
     } = optionals;
 
     const uriComponent = scope ?
@@ -323,7 +323,7 @@ export async function query(
         sort: sort.join(';') || undefined,
         var: variables.join(';') || undefined,
         meta: metadata.join(';') || undefined,
-        first, max, timeout, includeEpisode,
+        first, max, timeout, includeEpisodes,
     };
 
     return await new Router()
