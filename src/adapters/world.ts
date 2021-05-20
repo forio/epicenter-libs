@@ -423,3 +423,39 @@ export async function setPersonas(
         })
         .then(({ body }) => body);
 }
+
+/**
+ * Assigns an existing run to the given world.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/run/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * await worldAdapter.assignRun(world.worldKey, { runKey: run.runKey });
+ *
+ * @param {string}      worldKey                        Key associated with the world
+ * @param {string}      runKey                          Key associated with the world
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}      [optionals.episodeName]         Name of the episode
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns object[]
+ */
+export async function assignRun(
+    worldKey: string,
+    runKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
+    const { accountShortName, projectShortName, server } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .patch(`/world/run/${worldKey}`, {
+            body: { runKey },
+        })
+        .then(({ body }) => body);
+}
