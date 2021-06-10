@@ -26,8 +26,9 @@ const NOT_FOUND = 404;
 export async function get(
     optionals: GenericAdapterOptions = {}
 ):Promise<void | string> {
-    const { accountShortName, projectShortName } = optionals;
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/time')
