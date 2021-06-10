@@ -1,3 +1,61 @@
+# [3.4.0](https://github.com/forio/epicenter-libs/compare/v3.3.1...v3.4.0) (2021-06-10)
+
+
+### Bug Fixes
+
+* accept userKeys when using world scope in vault ([ec1cee9](https://github.com/forio/epicenter-libs/commit/ec1cee95ec468a53ac90a8d4f162a12cde8d86ea))
+* no GETs for channelsEnabled on login ([820e5a4](https://github.com/forio/epicenter-libs/commit/820e5a43384034f47cf1b15e20c0034e21ed937f))
+* query crashing on runs with no variables ([f6db421](https://github.com/forio/epicenter-libs/commit/f6db421d22823ccfc62989a973e54e0dfc9a3720))
+* query variables return payload ([bfe4d2a](https://github.com/forio/epicenter-libs/commit/bfe4d2a7d2a6f6a78e1b403905b805c28a10af32))
+* typo ([f57192c](https://github.com/forio/epicenter-libs/commit/f57192ce44aeb20ef3ea335ba03b3309e305847c))
+* v3 SSO cookie occasionally wrapped in quotes ([a364b6c](https://github.com/forio/epicenter-libs/commit/a364b6cf9e49f576c8c917fbf484ba0529ed007e))
+* worldAdapter.removeUsers to actually use DELETE ([ace23c5](https://github.com/forio/epicenter-libs/commit/ace23c5e4cd612896ba801acbfe67e9e832cfc8d))
+
+
+### Code Refactoring
+
+* change exceedMinimums to objective ([3f6fe10](https://github.com/forio/epicenter-libs/commit/3f6fe10f3ef20d25d71945fe05750180d5fc3be0))
+* change runAdapter.query to better support multiplayer ([b9b6fab](https://github.com/forio/epicenter-libs/commit/b9b6fab21d8a2104f822f9dd50bba004cb53ae91))
+* change worldAdapter.create to only take optional args ([addae8e](https://github.com/forio/epicenter-libs/commit/addae8e55e28b91f71400932be2da0676d380185))
+* cleanup; remove updateAssignments ([eb2c721](https://github.com/forio/epicenter-libs/commit/eb2c7215b03f7d92834178d227bc73ca80470e1b))
+* groupAdapter add/update/remove user ([efb6ed4](https://github.com/forio/epicenter-libs/commit/efb6ed4ba8799fcf55b26861b1ac822e6316400c))
+* groupAdapter.get to use session groupkey by default ([5a3f667](https://github.com/forio/epicenter-libs/commit/5a3f667e6caaf54d11e361deff759e43bfc29bfb))
+* rename 'updateUsers' -> 'updateAssignments' ([d21a0f1](https://github.com/forio/epicenter-libs/commit/d21a0f1751073abf5768150ab7fd678703de58fa))
+* rename assignUsers to autoAssignUsers ([eabff19](https://github.com/forio/epicenter-libs/commit/eabff1936951a64758b78698e043105776cf62b0))
+* rename editPersonas -> setPersonas ([dcba7e2](https://github.com/forio/epicenter-libs/commit/dcba7e24227d7a45645e249d644db348aa218b3b))
+* rename getAssignments -> getAssignmentsByKey ([d02d5fd](https://github.com/forio/epicenter-libs/commit/d02d5fd08dc0b64193c815243c36ed6184b4e906))
+* rename makeAssignments -> editAssignments ([142a2e9](https://github.com/forio/epicenter-libs/commit/142a2e9588fecd01500bd7d90a5e95ed537e803f))
+
+
+### Features
+
+* add 'keepEmptyWorlds' flag ([0c1d557](https://github.com/forio/epicenter-libs/commit/0c1d55703642dce3c587042a064a9690ab9e4611))
+* add assetAdapter ([472358d](https://github.com/forio/epicenter-libs/commit/472358dac7e7459a7d565d5c651de7de81604d87))
+* add assignRun for worldAdapter ([4ab0e11](https://github.com/forio/epicenter-libs/commit/4ab0e114ca4527ba9b3884787848526c9ae0c59a))
+* add includeEpisode option for query ([01cbbeb](https://github.com/forio/epicenter-libs/commit/01cbbebb0b66b78f26acf5e7490c5032940ca4f4))
+* add makeAssignments function ([f133bde](https://github.com/forio/epicenter-libs/commit/f133bdeb4513b91b46666ddf676227504ce501a5))
+* add projectAdapter.get ([4dc13c5](https://github.com/forio/epicenter-libs/commit/4dc13c538e19241676715cf8f3df198c0c534f1b))
+* add PUSH_CATEGORY.GROUP for assignments ([d8c6dfe](https://github.com/forio/epicenter-libs/commit/d8c6dfed85ca8ffab9e826c6ea281a9d4d73c460))
+* add user adapter ([66bbe15](https://github.com/forio/epicenter-libs/commit/66bbe15cab723ffe7421cc5ab95330c58057b6cd))
+* attempt to support formdata (browser) ([b073e48](https://github.com/forio/epicenter-libs/commit/b073e48eb30119c21fbc08ad769f3a607cc9b5c3))
+
+
+### BREAKING CHANGES
+
+* changed the arguments accepted by addUser, updateUser, removeUser
+* worldAdapter.create to only take one (optional) argument
+* query(modelFile, scope, optionals) -> query(modelFile, optionals)
+* exceedMinimums -> objective; changed from bool to enum
+* worldAdapter.getAssignments -> worldAdapter.getAssignmentsByKey
+* worldAdapter.editPersonas -> worldAdapter.setPersonas
+* worldAdapter.makeAssignments -> worldAdapter.editAssignments
+* worldAdapter.assignUsers -> worldAdapter.autoAssignUsers
+* worldAdapter.updateAssignments no longer supported
+* worldAdapter.updateUsers -> worldAdapter.updateAssignments
+* groupAdapter.get(groupKey) -> groupAdapter.get({ groupKey })
+
+
+
 ## [3.3.1](https://github.com/forio/epicenter-libs/compare/v3.3.0...v3.3.1) (2021-02-03)
 
 
