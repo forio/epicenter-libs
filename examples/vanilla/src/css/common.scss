@@ -1,0 +1,98 @@
+
+
+html {
+    font-size: 1em;
+    font-family: 'Open Sans', sans-serif;
+    min-height: 100vh;
+    height: 100%;
+    color: darkslategray;
+    box-sizing: border-box;
+}
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    font-family: inherit;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+main {
+    width: 30rem;
+    margin: 1rem 0;
+}
+
+fieldset {
+    margin: 1rem 0;
+}
+
+h1 {
+    margin-top: 0;
+}
+
+hr {
+    margin: 1.25rem 0;
+}
+
+/* Button CSS taken shamelessly from epicenter UI */
+button {
+    position: relative;
+    vertical-align: middle;
+
+    border: 1px solid rgb(76, 148, 255);
+    border-radius: 20px;
+    display: inline-block;
+    overflow: hidden;
+    margin-bottom: 0;
+    padding: 6px 24px;
+
+    background-color: transparent;
+    color: rgb(76, 148, 255);
+
+    font-size: 14px;
+    font-weight: normal;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition: all 0.3s;
+    user-select: none;
+}
+
+button:hover {
+    background-color: rgb(76, 148, 255);
+    border-color: rgb(76, 148, 255);
+    color: rgb(245, 248, 249);
+
+    outline: none;
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+select {
+    padding: 0.25rem;
+    font-size: 1rem;
+}
+
+input {
+    padding: 0.25rem;
+    font-size: 1rem;
+}
+
+.buttons {
+    margin: 1rem 0;
+}
+
+.hidden {
+    display: none;
+}

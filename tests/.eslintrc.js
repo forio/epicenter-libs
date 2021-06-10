@@ -1,30 +1,30 @@
 'use strict';
 // More lenient version of our eslint
 module.exports = {
-    "root": true,
-    "globals": {
-        "epicenter": true,
-        "chai": true,
-        "sinon": true,
+    root: true,
+    globals: {
+        'epicenter': true,
+        'chai': true,
+        'sinon': true,
         /* namespace used by cometd */
-        "org": true,
+        'org': true,
     },
-    'parser': 'babel-eslint',
-    'parserOptions': {
+    parser: 'babel-eslint',
+    parserOptions: {
         'sourceType': 'module',
         'ecmaVersion': 6,
         'ecmaFeatures': {
 
         }
     },
-    'env': {
+    env: {
         'browser': true,
         'es6': true,
         'mocha': true,
         'commonjs': true,
         'node': true
     },
-    'rules': {
+    rules: {
         'comma-dangle': [2, 'always-multiline'],
         'no-cond-assign': [2, 'always'],
         'no-console': 0,

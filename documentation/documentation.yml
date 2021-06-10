@@ -7,7 +7,24 @@ toc:
       Maybe they're worth looking at?
 
       Maybe not.
-    children:
   - config
+  - authAdapter
+  - groupAdapter
+  - episodeAdapter
   - runAdapter
+  - vaultAdapter
+  - accountAdapter
+  - projectAdapter
+  - Router
+  - errorManager
+  - name: Constants
+    description: |
+      Here are some constants that we use; we use them everywhere
+  - SCOPE_BOUNDARY
+  - ROLE
+  - PUSH_CATEGORY
   - RITUAL
+  - name: Push Channels
+    description: |
+      Talk about push channel stuff here - cometd blah blah
+  - Channel

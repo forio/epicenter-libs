@@ -4,30 +4,33 @@
 <head>
     <meta charset="utf-8">
     <title>v3 Vanilla</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../css/common.scss">
 </head>
 
 <body>
-    <main id="main">
-        <h1>Decisions</h1>
-        <p>Hello, <span id="display-name"></span></p>
-        <p class="student">Send your facilitator a message:</p>
-        <p class="facilitator">See messages left by your students:</p>
-        <div id="chat-box" class="facilitator">
-
-        </div>
-        <form id="form" class="student">
-            <input
-                id="text-box"
-                class="student"
-                type="text"
-            />
-            <button id="submit">Send</button>
-        </form>
-        <div id="buttons">
-            <button id="presence">Presence</button>
+    <main>
+        <h1>Welcome</h1>
+        <p>Hello <span id="display-name">stranger</span>,</p>
+        <p>You are <span id="group-role">not currently signed in on Epicenter</span>, click below to navigate to a page</p>
+        <ul>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="student.html">Student</a></li>
+            <li><a href="facilitator.html">Facilitator</a></li>
+            <li><a href="asset.html">Asset APIs</a></li>
+        </ul>
+        <section class="buttons">
             <button id="logout">Logout</button>
-        </div>
-        <ul id="users"></ul>
+        </section>
     </main>
 </body>
+<script src="../js/index.js"></script>
 </html>
