@@ -1,0 +1,31 @@
+
+#unauthed:not(.hidden) ~ * {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+#update-leaderboard-form,
+#get-leaderboard-form {
+    margin: 1rem 0;
+}
+
+#update-leaderboard-form section,
+#get-leaderboard-form section {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 1rem;
+    row-gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+table {
+    border-collapse: collapse;
+}
+thead th {
+    border-bottom: solid 1px gray;
+}
+td, th {
+    padding: 0.5rem;
+}

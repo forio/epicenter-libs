@@ -4,17 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "./node_modules/documentation/bin/documentation.js serve --watch ../src/**",
-    "nodemon": "./node_modules/nodemon/bin/nodemon.js index.js"
+    "start": "node index.js",
+    "build": "node build.js",
+    "serve": "./node_modules/documentation/bin/documentation.js serve --watch ../src/**"
   },
   "author": "Forio",
   "dependencies": {
     "documentation": "^12.1.4",
-    "handlebars": "^4.7.3",
+    "handlebars": "^4.7.6",
     "html-minifier": "^4.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "live-server": "^1.2.1",
+    "nodemon": "^2.0.2",
+    "watch": "^1.0.2"
   }
 }

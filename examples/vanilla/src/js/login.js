@@ -1,10 +1,5 @@
-import { authAdapter, config } from 'epicenter';
-import '../css/common.css';
-
-if (config.isLocal()) {
-    config.accountShortName = 'forio-dev';
-    config.projectShortName = 'epi-v3';
-}
+import './config';
+import { authAdapter, groupAdapter } from 'epicenter';
 
 const identifyError = (code) => {
     switch (code) {
@@ -32,16 +27,33 @@ if (query.error) {
 
 document.getElementById('submit').onclick = (e) => {
     e.preventDefault();
+    if (e.target.innerText !== 'Submit') return;
 
+    e.target.innerHTML = 'Logging in';
     const usernameEl = document.getElementById('username');
     const passwordEl = document.getElementById('password');
+    const groupEl = document.getElementById('group');
+    const groupLabelEl = document.getElementById('group-label');
 
     authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
-    }).then((res) => {
-        const session = res.body;
-        console.log('%c Logged in with this session', 'font-size: 20px; color: #FB15B9FF;', session);
-        window.location.href = '/index.html';
+        groupKey: groupEl.value,
+    }).then((session) => {
+        if (!session.groupKey) {
+            groupAdapter.getSessionGroups().then((groups) => {
+                groups.forEach(({ name, groupKey }) => {
+                    const optionEl = document.createElement('option');
+                    optionEl.value = groupKey;
+                    optionEl.innerHTML = name;
+                    groupEl.append(optionEl);
+                });
+                groupEl.classList.add('visible');
+                groupLabelEl.classList.add('visible');
+                e.target.innerHTML = 'Submit';
+            });
+        } else {
+            window.location.href = '/index.html';
+        }
     });
 };

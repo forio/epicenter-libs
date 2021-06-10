@@ -1,81 +1,70 @@
 import sinon from 'sinon';
-import chai, { expect } from 'chai';
-import { CREATED_CODE, SESSION } from './common';
+import chai from 'chai';
+import { CREATED_CODE, SESSION, ACCOUNT, PROJECT, GENERIC_OPTIONS } from './common';
 chai.use(require('sinon-chai'));
 
 describe('Authentication', () => {
     const { config, authAdapter } = epicenter;
-    let server;
+
+    config.accountShortName = ACCOUNT;
+    config.projectShortName = PROJECT;
+
+    let fakeServer;
 
     before(() => {
-        server = sinon.fakeServer.create();
-        server.respondWith(/(.*)\/authentication/, (xhr, id) => {
+        fakeServer = sinon.fakeServer.create();
+        fakeServer.respondWith('POST', /(.*)\/authentication/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
-        server.respondImmediately = true;
+        fakeServer.respondImmediately = true;
     });
 
     after(() => {
-        server.restore();
+        fakeServer.restore();
+        authAdapter.logout();
     });
 
-    describe('Login Process', () => {
-        it('Should Do a POST', async() => {
-            await authAdapter.login({
-                handle: 'joe',
-                password: 'pass',
-            })
-                .then((res) => {
-                    const req = server.requests.pop();
-                    req.method.toUpperCase().should.equal('POST');
-                });
+    describe('authAdapter.login', () => {
+        const CREDENTIALS = { handle: 'joe', password: 'pass', groupKey: 'groupkey' };
+        it('Should do a POST', async() => {
+            await authAdapter.login(CREDENTIALS);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
         });
-        it('Should go to the right url', async() => {
-            const endpoints = { account: 'forio-dev', project: 'epi-v3' };
-
-            config.accountShortName = endpoints.account;
-            config.projectShortName = endpoints.project;
-
-            await authAdapter.login({
-                handle: 'joe',
-                password: 'pass',
-                objectType: 'user',
-            })
-                .then((res) => {
-                    const req = server.requests.pop();
-                    req.url.should.equal(`${config.apiProtocol}://${config.apiHost}/api/v${config.apiVersion}/${endpoints.account}/${endpoints.project}/authentication`);
-                });
+        it('Should use the authentication URL', async() => {
+            await authAdapter.login(CREDENTIALS);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/authentication`);
         });
-
-        it('Should send requests to body', async() => {
-            await authAdapter.login({
-                handle: 'joe',
-                password: 'pass',
-                objectType: 'user',
-            })
-                .then((res) => {
-                    const req = server.requests.pop();
-                    req.requestBody.should.equal(JSON.stringify({
-                        handle: 'joe',
-                        password: 'pass',
-                        objectType: 'user',
-                    }));
-                });
+        it('Should support generic URL options', async() => {
+            await authAdapter.login(CREDENTIALS, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
         });
-        it('Should not do a DELETE', async() => {
-            server.requests = [];
-            await authAdapter.logout()
-                .then((res) => {
-                    expect(authAdapter.getLocalSession()).to.equal(null);
-                    server.requests.should.be.empty;
-                });
+        it('Should pass login credentials to the request body', async() => {
+            await authAdapter.login(CREDENTIALS);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.include(CREDENTIALS);
         });
-        it('Should store the authentication payload as the session', async() => {
-            await authAdapter.login({
-                handle: 'joe',
-                password: 'pass',
-                objectType: 'user',
-            }).then((res) => expect(authAdapter.getLocalSession()).to.deep.equal(res.body));
+        it('Should store the payload as the current session', async() => {
+            await authAdapter.login(CREDENTIALS);
+            authAdapter.getLocalSession().should.deep.equal(SESSION);
+        });
+        it('Should set objectType as user when one is not provided', async() => {
+            await authAdapter.login(CREDENTIALS);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.have.property('objectType', 'user');
+        });
+    });
+    describe('authAdapter.logout', () => {
+        it('Should not make a network request', async() => {
+            fakeServer.requests = [];
+            await authAdapter.logout();
+            Boolean(authAdapter.getLocalSession()).should.equal(false);
+            fakeServer.requests.should.be.empty;
         });
     });
 });

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>v3 Vanilla</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../css/common.scss">
+    <link rel="stylesheet" href="../css/student.scss">
+</head>
+<body>
+    <main>
+        <h1>Student</h1>
+        <a href="index.html"><< Back</a>
+        <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+        <h2>Chat</h2>
+        <p>Send your facilitator a message:</p>
+        <form id="chat-form" autocomplete="off">
+            <input
+                id="text-box"
+                type="text"
+            />
+            <button id="submit">Send</button>
+        </form>
+        <hr></hr>
+        <button id="time">Get Time</button>
+        <h2>Leaderboard</h2>
+        <table>
+            <thead>
+                <th>User</th>
+                <th>Points</th>
+                <th>Market Share</th>
+                <th>Tags</th>
+            </thead>
+            <tbody id="leaderboard">
+            </tbody>
+        </table>
+        <form id="get-leaderboard-form">
+            <h3>Get leaderboard</h3>
+            <h4>Filters</h4>
+            <section id="filters">
+                <label for="filter-points">Points</label>
+                <input
+                    id="filter-points"
+                    value="score.points>0"
+                    name="which-score"
+                    type="radio"
+                    checked
+                />
+                <label for="filter-market-share">Market Share</label>
+                <input
+                    id="filter-market-share"
+                    value="score.market-share>0"
+                    name="which-score"
+                    type="radio"
+                />
+                <label for="filter-doctor-tag">Doctors</label>
+                <input
+                    id="filter-doctor-tag"
+                    value="tag.role=doctor"
+                    type="checkbox"
+                />
+                <label for="filter-runner-tag">Runners</label>
+                <input
+                    id="filter-runner-tag"
+                    value="tag.role=runner"
+                    type="checkbox"
+                />
+            </section>
+            <button id="get-leaderboard">Get Leaderboard</button>
+        </form>
+        <form id="update-leaderboard-form" autocomplete="off">
+            <h3>Update leaderboard</h3>
+            <h4>Scores</h4>
+            <section id="scores">
+                <label for="points">Points</label>
+                <input
+                    id="points"
+                    name="points"
+                    type="text"
+                />
+                <label for="market-share">Market Share</label>
+                <input
+                    id="market-share"
+                    name="market-share"
+                    type="text"
+                />
+            </section>
+            <h4>Tags</h4>
+            <section id="tags">
+                <label for="role">Role</label>
+                <select
+                    id="role"
+                    name="role"
+                >
+                    <option value="none" selected>None</option>
+                    <option value="">Nullish</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="runner">Runner</option>
+                </select>
+                <label for="status">Status</label>
+                <select
+                    id="status"
+                    name="status"
+                >
+                    <option value="none" selected>None</option>
+                    <option value="">Nullish</option>
+                    <option value="certified">Certified</option>
+                    <option value="energized">Energized</option>
+                </select>
+            </section>
+            <button id="update-leaderboard">Update Leaderboard</button>
+        </form>
+    </main>
+</body>
+<script src="../js/student.js"></script>
+</html>
