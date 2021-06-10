@@ -37,6 +37,7 @@ export async function update(
 ) {
     const { accountShortName, projectShortName, tags, userKey } = optionals;
     const { scopeBoundary, scopeKey } = scope;
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
@@ -48,8 +49,8 @@ export async function update(
                     userKey: userKey ?? identification.session.userKey,
                 },
                 collection,
-                scores, tags
-            }
+                scores, tags,
+            },
         }).then(({ body }) => body);
 }
 

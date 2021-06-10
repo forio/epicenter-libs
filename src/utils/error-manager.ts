@@ -34,8 +34,8 @@ const handleByLoginMethod = (error: Fault) => {
 };
 
 type Identifier = (error: Fault) => boolean
-type RetryFunction = () => Promise<Result | void>
-type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<Result | void>
+type RetryFunction = () => Promise<Result>
+type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<Result>
 
 interface Handler {
     identifier: Identifier,
@@ -86,7 +86,7 @@ class ErrorManager {
         error: Fault,
         retryFn: RetryFunction,
         handlers?: Handler[]
-    ): Promise<Result | void> {
+    ): Promise<Result> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
         const handler = handlers[index];

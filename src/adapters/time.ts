@@ -22,7 +22,10 @@ import { Router } from 'utils/index';
  * @returns {string}                                The current server time, in ISO 8601 format
  */
 
-export async function get(optionals: GenericAdapterOptions = {}) {
+const NOT_FOUND = 404;
+export async function get(
+    optionals: GenericAdapterOptions = {}
+):Promise<void | string> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -30,7 +33,7 @@ export async function get(optionals: GenericAdapterOptions = {}) {
         .withProjectShortName(projectShortName)
         .get('/time')
         .catch((error) => {
-            if (error.status === 404) return { body: undefined };
+            if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
         }).then(({ body }) => body);
 }

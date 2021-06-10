@@ -59,11 +59,24 @@ class Identification {
     }
     consumeSSO() {
         if (isNode()) return;
+
+        // Occasionally, the backend might already wrap the cookie in quotes, have to handle
+        // both cases, where we get string serialized content w/ quotes and without
+        let cookieContent = cookies.getItem(EPI_SSO_KEY);
+        if (
+            typeof cookieContent === 'string' &&
+            cookieContent.charAt(0) !== '"' &&
+            cookieContent.charAt(cookieContent.length - 1) !== '"'
+        ) {
+            cookieContent = `"${cookieContent}"`;
+        }
+
         /* Double parse here b/c the backend serializes it as a string; the first parse
          * converts it into a json string, the second parse converts the json string into
          * json. Yes, it's weird, no, we can't change it (unless we want to rewrite
          * Interface Builder code to accommodate) */
-        const session = JSON.parse(JSON.parse(`"${cookies.getItem(EPI_SSO_KEY)}"`));
+        const session = JSON.parse(JSON.parse(cookieContent ?? '"null"'));
+
         if (session) {
             const { accountShortName, projectShortName } = session;
             this.session = session;

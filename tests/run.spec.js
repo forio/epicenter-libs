@@ -6,6 +6,7 @@ chai.use(require('sinon-chai'));
 describe('Run API Service', () => {
     const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
     let fakeServer;
+    const testedMethods = [];
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
@@ -111,6 +112,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
         });
+        testedMethods.push('create');
     });
     describe('runAdapter.clone', () => {
         const RUN_KEY = 'runkey';
@@ -147,6 +149,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('clone');
     });
     describe('runAdapter.restore', () => {
         const RUN_KEY = 'runkey';
@@ -179,6 +182,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('restore');
     });
     describe('runAdapter.rewind', () => {
         const RUN_KEY = 'runkey';
@@ -212,6 +216,7 @@ describe('Run API Service', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('rewind');
     });
     describe('runAdapter.update', () => {
         const UPDATE = {
@@ -257,6 +262,7 @@ describe('Run API Service', () => {
             body.marked.should.equal(true);
             body.should.not.have.any.keys('readLock', 'writeLock', 'trackingKey', 'hidden', 'closed');
         });
+        testedMethods.push('update');
     });
     describe('runAdapter.remove', () => {
         const RUN_KEY = 'runkey';
@@ -281,6 +287,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
+        testedMethods.push('remove');
     });
     describe('runAdapter.get', () => {
         const RUN_KEY = 'runkey';
@@ -305,6 +312,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
+        testedMethods.push('get');
     });
     describe('runAdapter.query', () => {
         const MODEL = 'model.vmf';
@@ -322,30 +330,37 @@ describe('Run API Service', () => {
             metadata: ['meta1', 'meta2'],
         };
         it('Should do a GET', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+            await runAdapter.query(MODEL);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+            await runAdapter.query(MODEL);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async() => {
-            await runAdapter.query(MODEL, SCOPE);
+        it('Should use the run/in/groupName/[episodeName]/modelFile URL', async() => {
+            await runAdapter.query(MODEL);
+            const req1 = fakeServer.requests.pop();
+            req1.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
+            await runAdapter.query(MODEL, { episodeName: 'myepisodename' });
+            const req2 = fakeServer.requests.pop();
+            req2.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/myepisodename/${MODEL}`);
+        });
+        it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
+            await runAdapter.query(MODEL, { scope: SCOPE });
             const req = fakeServer.requests.pop();
             const { scopeBoundary, scopeKey } = SCOPE;
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
         });
         it('Should support generic URL options', async() => {
-            await runAdapter.query(MODEL, SCOPE, GENERIC_OPTIONS);
+            await runAdapter.query(MODEL, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
-            const { scopeBoundary, scopeKey } = SCOPE;
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
         });
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
-            await runAdapter.query(MODEL, SCOPE, OPTIONS);
+            await runAdapter.query(MODEL, OPTIONS);
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
@@ -357,6 +372,7 @@ describe('Run API Service', () => {
             searchParams.get('max').should.equal(OPTIONS.max.toString());
             searchParams.get('timeout').should.equal(OPTIONS.timeout.toString());
         });
+        testedMethods.push('query');
     });
     describe('runAdapter.introspect', () => {
         const MODEL = 'test-model.py';
@@ -381,6 +397,7 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${MODEL}`);
         });
+        testedMethods.push('introspect');
     });
     describe('runAdapter.operation', () => {
         const RUN_KEY = '123456789';
@@ -439,6 +456,7 @@ describe('Run API Service', () => {
             body.name.should.equal(NAME);
             body.arguments.should.deep.equal(ARGUMENTS);
         });
+        testedMethods.push('operation');
     });
     describe('runAdapter.getVariables', () => {
         const RUN_KEY = '123456789';
@@ -490,6 +508,7 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.has('ritual').should.equal(false);
         });
+        testedMethods.push('getVariables');
     });
     describe('runAdapter.getVariable', () => {
         const RUN_KEY = '123456789';
@@ -550,6 +569,7 @@ describe('Run API Service', () => {
             searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
             searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
         });
+        testedMethods.push('getVariable');
     });
     describe('runAdapter.updateVariables', () => {
         const UPDATE = {
@@ -610,6 +630,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(UPDATE);
         });
+        testedMethods.push('updateVariables');
     });
     describe('runAdapter.getMetadata', () => {
         const RUN_KEY = '123456789';
@@ -660,6 +681,7 @@ describe('Run API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.has('ritual').should.equal(false);
         });
+        testedMethods.push('getMetadata');
     });
     describe('runAdapter.updateMetadata', () => {
         const RUN_KEY = '123456789';
@@ -720,6 +742,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(UPDATE);
         });
+        testedMethods.push('updateMetadata');
     });
     describe('runAdapter.action', () => {
         const RUN_KEY = '123456789';
@@ -780,6 +803,7 @@ describe('Run API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(ACTIONS);
         });
+        testedMethods.push('action');
     });
     describe('runAdapter.retrieveFromWorld', () => {
         const WORLD_KEY = 'worldkey';
@@ -833,6 +857,7 @@ describe('Run API Service', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
+        testedMethods.push('retrieveFromWorld');
     });
     describe('runAdapter.removeFromWorld', () => {
         const WORLD_KEY = 'worldkey';
@@ -859,5 +884,10 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
         });
+        testedMethods.push('removeFromWorld');
+    });
+
+    it('Should not have any untested methods', () => {
+        runAdapter.should.have.all.keys(...testedMethods);
     });
 });

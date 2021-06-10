@@ -13,7 +13,7 @@ describe('Authentication', () => {
 
     before(() => {
         fakeServer = sinon.fakeServer.create();
-        fakeServer.respondWith(/(.*)\/authentication/, (xhr, id) => {
+        fakeServer.respondWith('POST', /(.*)\/authentication/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
         fakeServer.respondImmediately = true;

@@ -7,6 +7,10 @@ import { cometdAdapter } from 'adapters';
  * @namespace presenceAdapter
  */
 
+interface Presence {
+
+}
+
 
 /**
  * Makes a connection request to the cometd server; effectively marking the user as online; using [logout](#authAdapter-logout) will automatically disconnect for you.
@@ -39,7 +43,10 @@ export async function connect() {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                List of users online
  */
-export async function forGroup(groupKey, optionals = {}) {
+export async function forGroup(
+    groupKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<Presence[]> {
     const { accountShortName, projectShortName } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)

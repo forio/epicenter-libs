@@ -87,9 +87,6 @@ module.exports = {
         'no-label-var': 2,
         'no-shadow': 0,
         'no-undef-init': 2,
-        'no-unused-vars': [1, {
-            'args': 'none'
-        }],
         'no-use-before-define': 1,
         'callback-return': 2,
         'global-require': 0,
