@@ -15,6 +15,7 @@ export {
 export {
     accountAdapter,
     authAdapter,
+    assetAdapter,
     // consensusAdapter,
     episodeAdapter,
     groupAdapter,
@@ -23,6 +24,7 @@ export {
     projectAdapter,
     runAdapter,
     timeAdapter,
+    userAdapter,
     vaultAdapter,
     worldAdapter,
     Channel,

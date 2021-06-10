@@ -1,4 +1,4 @@
-import { Router, EpicenterError } from 'utils/index';
+import { Router, EpicenterError, identification } from 'utils/index';
 import { ROLE } from 'utils/constants';
 
 /**
@@ -11,7 +11,8 @@ enum AUGMENT {
 }
 
 interface GetOptions extends GenericAdapterOptions {
-    augment?: keyof typeof AUGMENT
+    augment?: keyof typeof AUGMENT,
+    groupKey?: string,
 }
 
 interface GatherOptions extends GenericAdapterOptions {
@@ -80,10 +81,12 @@ interface UserOptions extends GenericAdapterOptions {
  *
  */
 export async function get(
-    groupKey: string,
     optionals: GetOptions = {}
-) {
-    const { accountShortName, projectShortName, server, augment } = optionals;
+): Promise<Group> {
+    const {
+        groupKey, server, augment,
+        accountShortName, projectShortName,
+    } = optionals;
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
     if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
@@ -92,7 +95,7 @@ export async function get(
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/group${uriComponent}/${groupKey}`)
+        .get(`/group${uriComponent}/${groupKey ?? identification.session?.groupKey}`)
         .then(({ body }) => body);
 }
 
@@ -452,7 +455,7 @@ export async function register(groupKey: string, optionals: GenericAdapterOption
 
 
 /**
- * Adds a user to a group
+ * Adds user(s) to the group
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}`
  *
@@ -462,7 +465,7 @@ export async function register(groupKey: string, optionals: GenericAdapterOption
  * epicenter.groupAdapter.addUser(group.groupKey);
  *
  * @param {string}          groupKey                        Key associated with group
- * @param {string}          userKey                         Key associated with group
+ * @param {string}          usersOfUserKeys                 Key associated with group
  * @param {object}          [optionals={}]                  Optional parameters
  * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
  * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
@@ -470,27 +473,37 @@ export async function register(groupKey: string, optionals: GenericAdapterOption
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                        Group the user was added to
  */
+
+type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available?: boolean };
+
 export async function addUser(
-    groupKey: string,
-    userKey: string,
-    optionals: UserOptions = {}
-) {
+    usersInput: UserInput | UserInput[],
+    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+):Promise<Group> {
     const {
-        role, available,
+        groupKey,
         accountShortName, projectShortName, server,
     } = optionals;
+
+    const users = Array.isArray(usersInput) ? usersInput : [usersInput];
 
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/group/member/${groupKey}`, {
-            body: {
-                objectType: 'group',
-                userKey,
-                role: role ?? ROLE.PARTICIPANT,
-                available: available ?? true,
-            },
+        .post(`/group/member/${groupKey ?? identification.session?.groupKey}`, {
+            body: users.map((u) => {
+                const userKey = typeof u === 'string' ? u : u.userKey;
+                const role = typeof u === 'string' ? ROLE.PARTICIPANT : u.role;
+                const available = typeof u === 'string' ? true : u.available;
+
+                return {
+                    role,
+                    userKey,
+                    objectType: 'group',
+                    available: available ?? true,
+                };
+            }),
         })
         .then(({ body }) => body);
 }
@@ -516,12 +529,13 @@ export async function addUser(
  * @returns {object}                                        Group the user was added to
  */
 export async function updateUser(
-    groupKey: string,
     userKey: string,
-    optionals: UserOptions = {}
-) {
+    update: { role?: keyof typeof ROLE, available?: boolean },
+    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+):Promise<User> {
+    const { role, available } = update;
     const {
-        role, available,
+        groupKey,
         accountShortName, projectShortName, server,
     } = optionals;
 
@@ -529,7 +543,7 @@ export async function updateUser(
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .patch(`/group/member/${groupKey}/${userKey}`, {
+        .patch(`/group/member/${groupKey ?? identification.session?.groupKey}/${userKey}`, {
             body: {
                 objectType: 'group',
                 role,
@@ -558,12 +572,12 @@ export async function updateUser(
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
+// TODO -- make this consistent w/ the groupAdapter.addUsers
 export async function removeUser(
-    groupKey: string,
     userKey: string | string[],
-    optionals: GenericAdapterOptions = {}
-) {
-    const { accountShortName, projectShortName, server } = optionals;
+    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+): Promise<void> {
+    const { groupKey, accountShortName, projectShortName, server } = optionals;
     const hasMultiple = Array.isArray(userKey) && userKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${userKey.length === 1 ? userKey[0] : userKey}`;
     const searchParams = hasMultiple ? { userKey } : undefined;
@@ -573,7 +587,7 @@ export async function removeUser(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .delete(`/group/member/${groupKey}${uriComponent}`)
+        .delete(`/group/member/${groupKey ?? identification.session?.groupKey}${uriComponent}`)
         .then(({ body }) => body);
 }
 

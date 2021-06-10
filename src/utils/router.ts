@@ -12,27 +12,29 @@ const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
+type Value = any;
 
 interface Page {
     firstResult: number,
     maxResults: number,
     totalResults: number,
-    values: any[],
-    prev: Function,
-    next: Function,
-    all: Function,
+    values: Value[],
+    prev: () => Promise<Value[]>,
+    next: () => Promise<Value[]>,
+    all: (first?: number, allValues?: Value[]) => Promise<Value[]>,
 }
 interface RequestOptions {
     method: string,
-    body?: Record<string, any>,
+    body?: Record<string, unknown>,
     includeAuthorization?: boolean,
     inert?: boolean,
     paginated?: boolean,
+    parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
 }
 
 
-function paginate(json: Page, url: URL, options: any) {
-    const parsePage = options.parsePage ?? ((i: any) => i);
+function paginate(json: Page, url: URL, options: RequestOptions) {
+    const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = { ...json, values: parsePage(json.values) };
     const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
@@ -72,7 +74,7 @@ function paginate(json: Page, url: URL, options: any) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues: any[] = []):Promise<any[]> {
+    const all = async function(first = 0, allValues: Value[] = []):Promise<Value[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -104,25 +106,34 @@ const createHeaders = (includeAuthorization?: boolean) => {
     return headers;
 };
 
+const createBody = (headers, body) => {
+    if (body instanceof FormData) {
+        delete headers['Content-type'];
+        return body;
+    }
+    return body ? JSON.stringify(body) : null;
+};
+
 const NO_CONTENT = 204;
-async function request(url: URL, options: RequestOptions): Promise<Result | void> {
+async function request(url: URL, options: RequestOptions): Promise<Result> {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
+    const payload = createBody(headers, body);
     const response = await fetch(url.toString(), {
         method: method,
         cache: 'no-cache',
         headers: headers,
         redirect: 'follow',
-        body: body ? JSON.stringify(body) : null,
+        body: payload,
     });
 
     if (response.status === NO_CONTENT) {
         return new Result(undefined, response);
     }
 
-    const contentType = response.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) {
-        throw new EpicenterError(`Response content-type '${contentType}' does not include 'application/json'`);
+    const resContentType = response.headers.get('content-type');
+    if (!resContentType || !resContentType.includes('application/json')) {
+        throw new EpicenterError(`Response content-type '${resContentType}' does not include 'application/json' and my url is ${url.toString()}, ${method}`);
     }
 
     const json = await response.json();
@@ -319,10 +330,22 @@ export default class Router {
 
         /* Handle sufficiently large GET requests with POST calls instead */
         if (url.href.length > MAX_URL_LENGTH) {
+            const entries = Array.from(this.searchParams.entries()) as Array<[string, string]>;
+            const searchObject = entries.reduce((searchObject, [key, value]) => {
+
+                if (!searchObject[key]) {
+                    searchObject[key] = value;
+                    return searchObject;
+                }
+                if (!Array.isArray(searchObject[key])) searchObject[key] = [searchObject[key] as string];
+                Array.prototype.push.call(searchObject[key], value);
+                // searchObject[key].push(value);
+                return searchObject;
+            }, {} as Record<string, string | number | string[] | number[]>);
             this.searchParams = '';
             return this.post(uriComponent, {
                 ...options,
-                body: url.search,
+                body: searchObject,
             });
         }
 
@@ -333,7 +356,7 @@ export default class Router {
         });
     }
 
-    async delete(uriComponent: string, options = {}) {
+    async delete(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -342,7 +365,7 @@ export default class Router {
         });
     }
 
-    async patch(uriComponent: string, options = {}) {
+    async patch(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -351,7 +374,7 @@ export default class Router {
         });
     }
 
-    async post(uriComponent: string, options = {}) {
+    async post(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,
@@ -360,7 +383,7 @@ export default class Router {
         });
     }
 
-    async put(uriComponent: string, options = {}) {
+    async put(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
         return request(url, {
             includeAuthorization: true,

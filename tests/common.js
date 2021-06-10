@@ -6,6 +6,7 @@ export const ACCOUNT = 'forio-dev';
 export const PROJECT = 'epi-v3';
 
 export const SESSION_KEY = 'com.forio.epicenter.session';
+// TODO -- clean this up before you're able to publish
 export const SESSION = {
     token: '***REMOVED***',
     expires: true,
@@ -14,12 +15,12 @@ export const SESSION = {
     loginMethod: { objectType: 'sso' },
     assignedWorldKeys: [],
     assignedWorldRoles: [],
-    userHandle: 'wallace-dev0',
+    userHandle: 'myhandle',
     userKey: '0000015ffe4b5399ddcfcf72545a54c808ed',
-    displayName: 'wallace-dev0',
-    accountShortName: 'harvard-test',
-    projectShortName: 'networks',
-    groupName: 'wallace-dev-may-2018',
+    displayName: 'My Display Name',
+    accountShortName: 'acme',
+    projectShortName: 'simulations',
+    groupName: 'mygroupname',
     groupKey: '00000163228dee7ddc347d0a5d6156d4a143',
     session: '***REMOVED***',
     objectType: 'user',

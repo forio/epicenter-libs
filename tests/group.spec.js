@@ -6,6 +6,7 @@ chai.use(require('sinon-chai'));
 describe('Group API Service', () => {
     const { config, groupAdapter, authAdapter, ROLE } = epicenter;
     let fakeServer;
+    const testedMethods = [];
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
@@ -16,7 +17,7 @@ describe('Group API Service', () => {
 
         fakeServer.respondWith('DELETE', /(.*)\/group/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
+            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
         fakeServer.respondWith('GET', /(.*)\/group/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
@@ -42,36 +43,47 @@ describe('Group API Service', () => {
     describe('groupAdapter.get', () => {
         const GROUP_KEY = SESSION.groupKey;
         it('Should do a GET', async() => {
-            await groupAdapter.get(GROUP_KEY);
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.get(GROUP_KEY);
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/groupKey URL', async() => {
-            await groupAdapter.get(GROUP_KEY);
+        it('Should use the group/groupKey URL (using session.groupKey by default)', async() => {
+            await groupAdapter.get();
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
         });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.get({ groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/mygroupkey`);
+        });
         it('Should support generic URL options', async() => {
-            await groupAdapter.get(GROUP_KEY, GENERIC_OPTIONS);
+            await groupAdapter.get(GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+        it('Should optionally allow you to pass a specific group key', async() => {
+            await groupAdapter.get({ groupKey: '123' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/123`);
+        });
         it('Should use an updated URL when provided the members augment', async() => {
-            await groupAdapter.get(GROUP_KEY, { augment: 'MEMBERS' });
+            await groupAdapter.get({ augment: 'MEMBERS' });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
         });
         it('Should use an updated URL when provided the quantized augment', async() => {
-            await groupAdapter.get(GROUP_KEY, { augment: 'QUANTIZED' });
+            await groupAdapter.get({ augment: 'QUANTIZED' });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/${GROUP_KEY}`);
         });
+        testedMethods.push('get');
     });
     describe('groupAdapter.destroy', () => {
         const GROUP_KEY = SESSION.groupKey;
@@ -96,6 +108,7 @@ describe('Group API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+        testedMethods.push('destroy');
     });
     describe('groupAdapter.gather', () => {
         it('Should do a GET', async() => {
@@ -124,6 +137,7 @@ describe('Group API Service', () => {
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?expired=true`);
         });
+        testedMethods.push('gather');
     });
     describe('groupAdapter.update', () => {
         const GROUP_KEY = SESSION.groupKey;
@@ -171,6 +185,7 @@ describe('Group API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.deep.equal(UPDATE);
         });
+        testedMethods.push('update');
     });
     describe('groupAdapter.create', () => {
         const GROUP = {
@@ -218,6 +233,7 @@ describe('Group API Service', () => {
             const body = JSON.parse(req.requestBody);
             body.should.be.deep.equal(GROUP);
         });
+        testedMethods.push('create');
     });
     describe('groupAdapter.search', () => {
         const OPTIONS = {
@@ -269,6 +285,8 @@ describe('Group API Service', () => {
             searchParams.get('first').should.equal(OPTIONS.first.toString());
             searchParams.get('max').should.equal(OPTIONS.max.toString());
         });
+        testedMethods.push('search');
+
     });
     describe('groupAdapter.withGroupName', () => {
         const GROUP_NAME = 'groupname';
@@ -293,6 +311,7 @@ describe('Group API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/with/${GROUP_NAME}`);
         });
+        testedMethods.push('withGroupName');
     });
     describe('groupAdapter.forUserKey', () => {
         const USER_KEY = 'userkey';
@@ -339,6 +358,7 @@ describe('Group API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.getAll('role').should.deep.equal([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
+        testedMethods.push('forUserKey');
     });
     describe('groupAdapter.getSessionGroups', () => {
         it('Should do a GET', async() => {
@@ -382,6 +402,7 @@ describe('Group API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.getAll('role').should.deep.equal([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
+        testedMethods.push('getSessionGroups');
     });
     describe('groupAdapter.register', () => {
         const GROUP_KEY = 'mygroupkey';
@@ -406,73 +427,103 @@ describe('Group API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/selfRegistration/${GROUP_KEY}`);
         });
+        testedMethods.push('register');
     });
     describe('groupAdapter.addUser', () => {
-        const GROUP_KEY = 'mygroupkey';
+        const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
         it('Should do a POST', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/member URL', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY);
+        it('Should use the group/member/groupKey URL (using session.groupKey by default)', async() => {
+            await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
         });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.addUser(USER_KEY, { groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey`);
+        });
         it('Should support generic URL options', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY, GENERIC_OPTIONS);
+            await groupAdapter.addUser(USER_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}`);
         });
-        it('Should pass the userKey to the request body', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY);
+        it('Should pass the userKey to the request body as an array', async() => {
+            await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
-            body.userKey.should.equal(USER_KEY);
+            Array.isArray(body).should.be.true;
+            body.map((u) => u.userKey).should.deep.equal([USER_KEY]);
         });
         it('Should by default set user as an available participant', async() => {
-            await groupAdapter.addUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.addUser(USER_KEY);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
-            body.available.should.equal(true);
-            body.role.should.equal(ROLE.PARTICIPANT);
+            body.every((u) => u.available).should.be.true;
+            body.every((u) => u.role === ROLE.PARTICIPANT).should.be.true;
         });
+        it('Should support adding multiple users', async() => {
+            const USER_KEYS = [USER_KEY, 'anotheruserkey'];
+            await groupAdapter.addUser(USER_KEYS);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            Array.isArray(body).should.be.true;
+            body.map((u) => u.userKey).should.deep.equal(USER_KEYS);
+        });
+        testedMethods.push('addUser');
+    });
+    describe('groupAdapter.updateUser', () => {
+        // TODO -- add tests!!!
+        testedMethods.push('updateUser');
     });
     describe('groupAdapter.removeUser', () => {
-        const GROUP_KEY = 'mygroupkey';
+        const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
         it('Should do a DELETE', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('DELETE');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/member/groupKey/userKey URL', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY);
+        it('Should use the group/member/groupKey/userKey URL (using session.groupKey by default)', async() => {
+            await groupAdapter.removeUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
+        it('Should use a custom groupKey, if provided', async() => {
+            await groupAdapter.removeUser(USER_KEY, { groupKey: 'mygroupkey' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey/${USER_KEY}`);
+        });
         it('Should support generic URL options', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, USER_KEY, GENERIC_OPTIONS);
+            await groupAdapter.removeUser(USER_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
         it('Should support multiple userKeys', async() => {
-            await groupAdapter.removeUser(GROUP_KEY, [USER_KEY, 'anotheruserkey']);
+            await groupAdapter.removeUser([USER_KEY, 'anotheruserkey']);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
         });
+        testedMethods.push('removeUser');
+    });
+
+    it('Should not have any untested methods', () => {
+        groupAdapter.should.have.all.keys(...testedMethods);
     });
 });

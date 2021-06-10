@@ -1,4 +1,102 @@
-import { Router } from 'utils/index';
+import { ROLE, Router } from 'utils/index';
+
+enum ACCESS_TYPE {
+    PUBLIC = 'PUBLIC',
+    PRIVATE = 'PRIVATE',
+    AUTHENTICATED = 'AUTHENTICATED',
+}
+
+enum WORKER_PARTITION {
+    NONE = 'NONE',
+    ALL = 'ALL',
+    FREE = 'FREE',
+    LICENSED = 'LICENSED',
+    ACCOUNT = 'ACCOUNT',
+}
+
+enum PHYLOGENY {
+    ORIGINAL = 'ORIGINAL',
+    HISTORICAL = 'HISTORICAL',
+    REFERENTIAL = 'REFERENTIAL',
+    ORDERED = 'ORDERED',
+    EVENTUAL = 'EVENTUAL',
+}
+
+enum FILE_TYPE {
+    INSENSITIVE = 'INSENSITIVE',
+    SENSITIVE = 'SENSITIVE',
+}
+
+interface Member {
+    role: ROLE.AUTHOR,
+    adminKey: string,
+    objectType: 'project',
+}
+
+interface Deployment {
+    defaultGroupName: string,
+    autoCreatePlayer: boolean,
+    loginFile: string,
+    welcomeFile: string,
+    groupFile: string,
+}
+
+interface TeamProject {
+    concurrentRunLimit: number,
+    modelFile: string,
+    available: boolean,
+    allowWorldSelfAssign: boolean,
+    legacySettings: {
+        blockDirectApiCalls: boolean,
+        channelAuthorizationRequired: boolean,
+        filePermissionsActive: boolean,
+        showEmail: boolean,
+        transmogrifierActive: boolean,
+        dataApiAllowAnonymousAccess: boolean,
+        channelVersion: number,
+        authorizationMode: 'LEGACY' | 'USER',
+        dataApiEnforceScope: boolean,
+    },
+    objectType: 'team',
+    accessType: keyof typeof ACCESS_TYPE,
+    sessionTimeoutSeconds: number,
+    projectKey: string,
+    members: Member[],
+    channelEnabled: boolean,
+    workerPartition : keyof typeof WORKER_PARTITION,
+    name: string,
+    phylogeny : keyof typeof PHYLOGENY,
+    multiPlayerEnabled: boolean,
+    shortName: string,
+    approximateRunCount: number,
+    pricing: {
+        amount: number,
+    },
+    dataRetentionDays: number,
+    fileType: keyof typeof FILE_TYPE,
+    dimensions: 'UNIVERSE' | 'MULTIVERSE',
+    deployment: Deployment,
+}
+
+interface PersonalProject {
+    concurrentRunLimit: number,
+    available: boolean,
+    objectType: 'personal',
+    accessType: keyof typeof ACCESS_TYPE,
+    sessionTimeoutSeconds: number,
+    projectKey: string,
+    workerPartition: keyof typeof WORKER_PARTITION,
+    name: string,
+    phylogeny: keyof typeof PHYLOGENY,
+    shortName: string,
+    approximateRunCount: number,
+    fileType: keyof typeof FILE_TYPE,
+    deployment: Deployment,
+}
+
+type Project =
+    | TeamProject
+    | PersonalProject;
 
 
 /**
@@ -22,14 +120,26 @@ import { Router } from 'utils/index';
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {Promise}                               Promise resolving true/false whether or not the project supports the use of push channels
  */
-export async function channelsEnabled(optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
-    const response = await new Router()
+export async function channelsEnabled(
+    optionals: GenericAdapterOptions = {}
+): Promise<boolean> {
+    const { accountShortName, projectShortName, server } = optionals;
+    return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/project/channel/isEnabled')
         .then(({ body }) => body);
-
-    return response;
 }
 
+export async function get(
+    optionals: GenericAdapterOptions = {}
+): Promise<Project> {
+    const { accountShortName, projectShortName, server } = optionals;
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get('/project')
+        .then(({ body }) => body);
+}

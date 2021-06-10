@@ -44,13 +44,6 @@ export enum SCOPE_BOUNDARY {
      * @type {string}
      */
     WORLD = 'WORLD',
-    /**
-     * Runs scoped by world, users are only allowed access to the if they are assigned to the associated world. Facilitators need only to belong on the group that created the world
-     * Worlds can be scoped by group or episode
-     * @constant
-     * @type {string}
-     */
-    RUN = 'RUN',
 }
 
 /**
@@ -134,11 +127,17 @@ export enum PUSH_CATEGORY {
      */
     WORLD = 'WORLD',
     /**
+     * For group related things; assignments, unassignments
+     * @constant
+     * @type {string}
+     */
+    GROUP = 'GROUP',
+    /**
      * internal
      * @constant
      * @type {string} */
     SYSTEM = 'SYSTEM',
-};
+}
 
 /**
  * Roles are used to define permissions on resources in Epicenter.

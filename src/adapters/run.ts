@@ -13,8 +13,8 @@ interface ExecutionContext {
 
 }
 interface CreateOptions extends GenericAdapterOptions {
-    readLock?: string,
-    writeLock?: string,
+    readLock?: keyof typeof ROLE,
+    writeLock?: keyof typeof ROLE,
     userKey?: string,
     ephemeral?: boolean,
     trackingKey?: string,
@@ -29,14 +29,18 @@ interface UpdateOptions {
     readLock?: string,
     writeLock?: string,
     trackingKey?: string,
-    marked?: boolean,
-    hidden?: boolean,
-    closed?: boolean,
+    marked?: boolean, /* analogous to v2's 'saved' */
+    hidden?: boolean, /* analogous to v2's 'trashed' */
+    closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
 }
 interface QueryOptions extends GenericAdapterQueryOptions {
     timeout?: number,
     variables?: string[],
     metadata?: string[],
+    scope?: GenericScope,
+    groupName?: string,
+    episodeName?: string,
+    includeEpisodes?: boolean,
 }
 interface ProcAction {
     name: string,
@@ -266,6 +270,8 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  *
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
  *
+ * `filters` take in an array of strings that are serialized as a JSON object on the backend using the JSONiq (JSON query language). See their docs for addtional info
+ *
  * @memberof runAdapter
  * @example
  *
@@ -273,8 +279,11 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  * runAdapter.query({
  *      filter: [
  *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
+ *          'var.certified*=true'           // looks for runs where the variable 'certified' exists,
  *          'run.hidden=false',             // where the run's 'hidden' attribute is false
- *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-'
+ *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
+ *          'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
  *      ],
  *      sort: ['+run.created']              // sort all findings by the 'created' field
  *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
@@ -282,10 +291,9 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  * });
  *
  * @param {string}      model                           Name of your model file
- * @param {object}      scope                           Scope associated with your run
- * @param {string}      scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}      scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.scope.scopeBoundary] Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      [optionals.scope.scopeKey]      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {string[]}    [optionals.filter]              List of conditionals to filter for
  * @param {string[]}    [optionals.sort]                List of values to sort by
  * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
@@ -299,21 +307,23 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  */
 export async function query(
     model: string,
-    scope: GenericScope,
     optionals: QueryOptions = {}
-) {
-    const { scopeBoundary, scopeKey } = scope;
+): Promise<Page> {
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, scope, groupName, episodeName, includeEpisodes,
     } = optionals;
+
+    const uriComponent = scope ?
+        `${scope.scopeBoundary}/${scope.scopeKey}` :
+        `in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
 
     const searchParams = {
         filter: filter.join(';') || undefined,
         sort: sort.join(';') || undefined,
         var: variables.join(';') || undefined,
         meta: metadata.join(';') || undefined,
-        first, max, timeout,
+        first, max, timeout, includeEpisodes,
     };
 
     return await new Router()
@@ -321,12 +331,13 @@ export async function query(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/${scopeBoundary}/${scopeKey}/${model}`, {
+        .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
             parsePage: (values: any[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
-                        variableMap[key] = variables[index];
+                        // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'
+                        variableMap[key] = run.variables?.[index];
                         return variableMap;
                     }, {} as Record<string, any>);
                     return run;
@@ -348,7 +359,7 @@ export async function introspect(model: string, optionals: GenericAdapterOptions
 }
 
 export async function operation(
-    runKey: string,
+    runKey: string | string[],
     name: string,
     args: any[] = [],
     optionals: GetOptions = {}
@@ -452,7 +463,11 @@ export async function getVariable(
  * @param {object}  optionals   Something meaningful about optionals
  * @returns {object}            Object with the variables & new values that were updated
  */
-export async function updateVariables(runKey: string, update: UpdateOptions , optionals: GetOptions = {}) {
+export async function updateVariables(
+    runKey: string | string[],
+    update: UpdateOptions ,
+    optionals: GetOptions = {}
+) {
     const {
         timeout, ritual,
         accountShortName, projectShortName, server,
@@ -476,7 +491,7 @@ export async function updateVariables(runKey: string, update: UpdateOptions , op
 }
 
 export async function getMetadata(
-    runKey: string,
+    runKey: string | string[],
     metadata: string[],
     optionals: GetOptions = {}
 ) {
@@ -503,7 +518,7 @@ export async function getMetadata(
 }
 
 export async function updateMetadata(
-    runKey: string,
+    runKey: string | string[],
     update: Record<string, any>,
     optionals: GetOptions = {}
 ) {
@@ -529,7 +544,7 @@ export async function updateMetadata(
 }
 
 export async function action(
-    runKey: string,
+    runKey: string | string[],
     actionList: Action[],
     optionals: GetOptions = {}
 ) {
@@ -644,39 +659,39 @@ export async function removeFromWorld(worldKey: string, optionals: GenericAdapte
         .then(({ body }) => body);
 }
 
+// TODO -- revisit the code below when considering reimplmenting v2 run strategies
+// async function serial(runKey: string, operations, optionals = {}) {
+//     const normalizedOps = operations.map((item) => ({
+//         name: typeof item === 'string' ? item : item.name,
+//         params: item.params,
+//     }));
 
-async function serial(runKey: string, operations, optionals = {}) {
-    const normalizedOps = operations.map((item) => ({
-        name: typeof item === 'string' ? item : item.name,
-        params: item.params,
-    }));
+//     //Perform all operations, sequentially
+//     return normalizedOps.reduce((promise, { name, params }) => {
+//         return promise.then(() => operation(runKey, name, params, optionals = {}));
+//     }, Promise.resolve());
+// }
 
-    //Perform all operations, sequentially
-    return normalizedOps.reduce((promise, { name, params }) => {
-        return promise.then(() => operation(runKey, name, params, optionals = {}));
-    }, Promise.resolve());
-}
-
-export async function getWithStrategy(strategy, model, scope, optionals = {}) {
-    const { initOperations = [] } = optionals;
-    if (strategy === 'reuse-across-sessions') {
-        const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
-        if (runs.length) {
-            return runs[0];
-        }
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-never') {
-        const newRun = await create(model, scope, optionals = {});
-        await serial(newRun.runKey, initOperations, optionals = {});
-        return newRun;
-    } else if (strategy === 'reuse-by-tracking-key') {
-        //TBD write out if needed
-        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
-    } else if (strategy === 'multiplayer') {
-        //TODO when multiplayer API is ready
-        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
-    }
-    throw new EpicenterError('Invalid run strategy.');
-}
+// export async function getWithStrategy(strategy, model, scope, optionals = {}) {
+//     const { initOperations = [] } = optionals;
+//     if (strategy === 'reuse-across-sessions') {
+//         const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
+//         if (runs.length) {
+//             return runs[0];
+//         }
+//         const newRun = await create(model, scope, optionals = {});
+//         await serial(newRun.runKey, initOperations, optionals = {});
+//         return newRun;
+//     } else if (strategy === 'reuse-never') {
+//         const newRun = await create(model, scope, optionals = {});
+//         await serial(newRun.runKey, initOperations, optionals = {});
+//         return newRun;
+//     } else if (strategy === 'reuse-by-tracking-key') {
+//         //TBD write out if needed
+//         //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+//     } else if (strategy === 'multiplayer') {
+//         //TODO when multiplayer API is ready
+//         //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+//     }
+//     throw new EpicenterError('Invalid run strategy.');
+// }

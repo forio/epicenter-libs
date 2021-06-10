@@ -31,42 +31,44 @@ interface CometdReply {
 }
 interface Subscription {
     channel: string,
-};
+}
 interface Channel {
     path: string,
 }
 
-
+let cometdInstance: CometD | undefined;
 // TODO -- split this code so that people who don't use channels do not import this by default
 // https://levelup.gitconnected.com/code-splitting-for-libraries-bundling-for-npm-with-rollup-1-0-2522c7437697
 class CometdAdapter {
 
-    url: string = '';
-    customCometd: any;
-    defaultCometd: any;
-    initialization: Boolean = false;
+    url = '';
+    cometdInstance?: CometD;
+    initialization = false;
     subscriptions = new Map();
     state = DISCONNECTED;
     requireAcknowledgement = true;
 
     get cometd() {
-        return this.customCometd || this.defaultCometd;
+        return cometdInstance;
     }
 
     async startup(options = { logLevel: 'error' }) {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
-        this.defaultCometd = new CometD();
 
         const { apiProtocol, apiHost, apiVersion } = config;
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
+
+        cometdInstance = new CometD();
+        if (!this.cometd) return false; /* This should never happen since this.cometd IS the cometdInstance */
+
         this.cometd.registerExtension('ack', new AckExtension());
 
         if (isBrowser()) {
             this.cometd.registerExtension('reload', new ReloadExtension());
 
             window.onunload = () => {
-                if (this.cometd.getStatus() === CONNECTED) {
+                if (this.cometd?.getStatus() === CONNECTED) {
                     this.cometd.reload();
                     this.cometd.getTransport().abort();
                 }
@@ -85,12 +87,12 @@ class CometdAdapter {
         return true;
     }
 
-    async reinit(customCometd, options) {
-        await this.disconnect();
-        this.initialization = false;
-        this.customCometd = customCometd;
-        return this.init(options);
-    }
+    // async reinit(customCometd, options) {
+    //     await this.disconnect();
+    //     this.initialization = false;
+    //     this.customCometd = customCometd;
+    //     return this.init(options);
+    // }
 
     async init(options) {
         if (!this.initialization) {
@@ -162,7 +164,7 @@ class CometdAdapter {
         await this.init();
         const channels = [].concat(channel);
 
-        if (this.cometd.getStatus() !== CONNECTED) {
+        if (this.cometd?.getStatus() !== CONNECTED) {
             await this.handshake();
         }
         const subscriptionProps = {};

@@ -1,5 +1,61 @@
-import { Router, identification } from 'utils';
+import { Router, identification } from 'utils/index';
 import { SCOPE_BOUNDARY } from 'utils/constants';
+
+enum OBJECTIVE {
+    MINIMUM = 'MINIMUM',
+    MAXIMUM = 'MAXIMUM',
+}
+
+enum ORBIT_TYPE {
+    GROUP = 'GROUP',
+    EPISODE = 'EPISODE',
+}
+
+interface WorldOptions extends GenericAdapterOptions {
+    name?: string,
+    groupName?: string,
+    episodeName?: string,
+    keepEmptyWorlds?: boolean,
+}
+
+interface AssignmentOptions extends WorldOptions {
+    objective?: keyof typeof OBJECTIVE,
+    requireAllAssignments?: boolean,
+}
+
+interface UserAssignment {
+    userKey: string,
+    role?: string,
+}
+
+interface Persona {
+    role: string,
+    minimum: number,
+    maximum?: number,
+}
+
+interface Assignment {
+    role: string,
+    user: {
+        lastUpdated: string,
+        displayName: string,
+        created: string,
+        detail: any,
+        userId: number,
+        userKey: string,
+    },
+}
+
+interface World {
+    lastUpdated: string,
+    personae: Persona[],
+    assignments: Assignment[],
+    orbitKey: string,
+    worldKey: string,
+    created: string,
+    orbitType: keyof typeof ORBIT_TYPE,
+    runKey: string,
+}
 
 /**
  * World API adapters -- handles worlds and user role/assignments
@@ -24,13 +80,18 @@ import { SCOPE_BOUNDARY } from 'utils/constants';
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Group with updated attributes
+ * @returns {object}                                world with updated attributes
  */
-export async function update(worldKey, update, optionals = {}) {
+export async function update(
+    worldKey: string,
+    update: { name?: string, runKey?: string },
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
     const { name, runKey } = update;
-    const { accountShortName, projectShortName } = optionals;
+    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .patch(`/world/${worldKey}`, {
@@ -56,7 +117,10 @@ export async function update(worldKey, update, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function destroy(worldKey, optionals = {}) {
+export async function destroy(
+    worldKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<void> {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -87,22 +151,25 @@ export async function destroy(worldKey, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function create(world, optionals = {}) {
+export async function create(
+    optionals: WorldOptions = {}
+): Promise<World> {
     const {
-        groupName, episodeName,
+        name, groupName, episodeName,
         accountShortName, projectShortName,
     } = optionals;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, { body: world })
-        .then(({ body }) => body);
+        .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: { name },
+        }).then(({ body }) => body);
 }
 
 
 /**
- * Fetches the worlds in a group
+ * Fetches the worlds in a group or episode if specified
  *
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
  *
@@ -119,7 +186,7 @@ export async function create(world, optionals = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                              List of worlds
  */
-export async function get(optionals = {}) {
+export async function get(optionals: WorldOptions = {}): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -132,6 +199,20 @@ export async function get(optionals = {}) {
         .then(({ body }) => body);
 }
 
+
+// Fetches the assignments (plus some world info) in a group or episode if specified
+export async function getAssignments(optionals: WorldOptions = {}): Promise<World> {
+    const {
+        groupName, episodeName,
+        accountShortName, projectShortName,
+    } = optionals;
+
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/world/assignment/for/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .then(({ body }) => body);
+}
 
 /**
  * Automatically assigns the current session's user to a world
@@ -148,14 +229,17 @@ export async function get(optionals = {}) {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
  * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {boolean} [optionals.exceedMinimums]      Indicates something... TODO
+ * @param {boolean} [optionals.objective]           Allows platform to assign users beyond minimum amount
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                World users were assigned to
  */
-export async function selfAssign(role, optionals = {}) {
+export async function selfAssign(
+    role: string,
+    optionals: AssignmentOptions = {}
+): Promise<World> {
     const {
-        groupName, episodeName, exceedMinimums,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM,
         accountShortName, projectShortName,
     } = optionals;
 
@@ -163,14 +247,14 @@ export async function selfAssign(role, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/world/selfassign/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { role, exceedMinimums },
+            body: { role, objective },
         })
         .then(({ body }) => body);
 }
 
 
 /**
- * Assigns a list of users to a world.
+ * (Auto assign) -- makes worlds given a list of users.
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{GROUP_NAME}[/{EPISODE_NAME}]`
  *
@@ -180,22 +264,25 @@ export async function selfAssign(role, optionals = {}) {
  * import { worldAdapter } from 'epicenter';
  * const worlds = await worldAdapter.assignUsers([
  *      { userKey: '123', role: 'locksmith' },
- *      { userKey: '456', role: 'cartographer' },
+ *      { userKey: '456' },
  * ]);
  *
  * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
  * @param {object}      [optionals={}]                      Optional parameters
  * @param {string}      [optionals.groupName]               Name of the group (defaults to name of group associated with session)
  * @param {string}      [optionals.episodeName]             Name of the episode
- * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
- * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
+ * @param {boolean}     [optionals.objective]               Allows platform to assign users beyond minimum amount
+ * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
  * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of worlds assigned to
  */
-export async function assignUsers(assignments, optionals = {}) {
+export async function autoAssignUsers(
+    assignments: UserAssignment[],
+    optionals: AssignmentOptions = {}
+): Promise<World> {
     const {
-        groupName, episodeName, exceedMinimums, requireAllAssignments,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
         accountShortName, projectShortName,
     } = optionals;
 
@@ -203,46 +290,26 @@ export async function assignUsers(assignments, optionals = {}) {
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, exceedMinimums, requireAllAssignments },
+            body: { assignments, objective, requireAllAssignments },
         })
         .then(({ body }) => body);
 }
 
-
-/**
- * Updates a world's user assignments. Users who have previously been assigned to a different world, will be automatically unassigned and reassigned to the provided world.
- *
- * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
- *
- * @memberof worldAdapter
- * @example
- *
- * import { worldAdapter } from 'epicenter';
- * const worlds = await worldAdapter.updateUsers(world.worldKey, [
- *      { userKey: '123', role: 'locksmith' },
- *      { userKey: '456', role: 'cartographer' },
- * ]);
- *
- * @param {string}      worldKey                            Key associated with the world
- * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
- * @param {object}      [optionals={}]                      Optional parameters
- * @param {boolean}     [optionals.exceedMinimums]          Indicates something... TODO
- * @param {boolean}     [optionals.requireAllAssignments]   Indicates something... TODO
- * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
- * @returns {object}                                        Updated world object
- */
-export async function updateUsers(worldKey, assignments, optionals = {}) {
+export async function editAssignments(
+    assignments: AssignmentMap,
+    optionals: AssignmentOptions = {}
+): Promise<World[]> {
     const {
-        exceedMinimums, requireAllAssignments,
-        accountShortName, projectShortName,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
+        accountShortName, projectShortName, server,
     } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .put(`/world/assignment/${worldKey}`, {
-            body: { assignments, exceedMinimums, requireAllAssignments },
+        .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: { assignments, objective, requireAllAssignments, keepEmptyWorlds },
         })
         .then(({ body }) => body);
 }
@@ -257,7 +324,7 @@ export async function updateUsers(worldKey, assignments, optionals = {}) {
  * @example
  *
  * import { worldAdapter } from 'epicenter';
- * const assignments = await worldAdapter.getAssignments(world.worldKey);
+ * const assignments = await worldAdapter.getAssignmentsByKey(world.worldKey);
  *
  * @param {string}      worldKey                            Key associated with the world
  * @param {object}      [optionals={}]                      Optional parameters
@@ -265,7 +332,10 @@ export async function updateUsers(worldKey, assignments, optionals = {}) {
  * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of assignment objects containing user and role information
  */
-export async function getAssignments(worldKey, optionals = {}) {
+export async function getAssignmentsByKey(
+    worldKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
     const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
@@ -274,7 +344,6 @@ export async function getAssignments(worldKey, optionals = {}) {
         .get(`/world/assignment/${worldKey}`)
         .then(({ body }) => body);
 }
-
 
 /**
  * Removes a user or list of users the all worlds in a given group or episode. Any worlds that do not contain users within them will be automatically deleted in the process.
@@ -295,24 +364,27 @@ export async function getAssignments(worldKey, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function removeUsers(userKeys, optionals = {}) {
+export async function removeUsers(
+    userKeys: string[],
+    optionals: WorldOptions = {}
+): Promise<void> {
     const {
-        groupName, episodeName,
+        groupName, episodeName, keepEmptyWorlds,
         accountShortName, projectShortName,
     } = optionals;
 
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withSearchParams({ userKey: userKeys })
-        .get(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .withSearchParams({ userKey: userKeys, keepEmptyWorlds: Boolean(keepEmptyWorlds) })
+        .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
         .then(({ body }) => body);
 }
 
 
 /**
- * Edits the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
- *
+ * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
+ * null minimum is 0, but null maximum is uncapped
  * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/persona/{SCOPE_BOUNDARY}[/{SCOPE_KEY}]`
  *
  * @memberof worldAdapter
@@ -332,7 +404,11 @@ export async function removeUsers(userKeys, optionals = {}) {
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function editPersonas(personas, scope = {}, optionals = {}) {
+export async function setPersonas(
+    personas: Persona[],
+    scope: GenericScope,
+    optionals: GenericAdapterOptions = {}
+): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const { accountShortName, projectShortName } = optionals;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
@@ -344,6 +420,42 @@ export async function editPersonas(personas, scope = {}, optionals = {}) {
         /* We will at some point remove the need to explicitly lower case this */
         .put(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
             body: personas,
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Assigns an existing run to the given world.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/run/{WORLD_KEY}`
+ *
+ * @memberof worldAdapter
+ * @example
+ *
+ * import { worldAdapter } from 'epicenter';
+ * await worldAdapter.assignRun(world.worldKey, { runKey: run.runKey });
+ *
+ * @param {string}      worldKey                        Key associated with the world
+ * @param {string}      runKey                          Key associated with the world
+ * @param {object}      [optionals={}]                  Optional parameters
+ * @param {string}      [optionals.groupName]           Name of the group (defaults to name of group associated with session)
+ * @param {string}      [optionals.episodeName]         Name of the episode
+ * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns object[]
+ */
+export async function assignRun(
+    worldKey: string,
+    runKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<World> {
+    const { accountShortName, projectShortName, server } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .patch(`/world/run/${worldKey}`, {
+            body: { runKey },
         })
         .then(({ body }) => body);
 }
