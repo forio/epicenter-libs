@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.4.0-alpha",
+  "version": "3.4.0",
   "type": "module",
   "main": "dist/epicenter.js",
   "module": "dist/epicenter.esm.js",
