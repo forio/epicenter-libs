@@ -1,10 +1,14 @@
-import { Router } from 'utils';
+import { Router } from 'utils/index';
 
 /**
  * Episode API adapters -- use this to create, update, delete, and manage your episodes
  * @namespace episodeAdapter
  */
 
+interface EpisodeOptions extends GenericAdapterOptions {
+    draft?: boolean,
+    runLimit?: number,
+}
 
 /**
  * Create an episode.
@@ -23,9 +27,10 @@ import { Router } from 'utils';
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function create(name, groupName, optionals = {}) {
-    const { accountShortName, projectShortName, draft, runLimit } = optionals;
+export async function create(name: string, groupName: string, optionals: EpisodeOptions = {}) {
+    const { accountShortName, projectShortName, server, draft, runLimit } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/episode/${groupName}`, {
@@ -47,9 +52,10 @@ export async function create(name, groupName, optionals = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function get(episodeKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function get(episodeKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/episode/${episodeKey}`)
@@ -71,13 +77,14 @@ export async function get(episodeKey, optionals = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function query(optionals = {}) {
+export async function query(optionals: GenericAdapterQueryOptions = {}) {
     const {
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
         filter = [], sort = [], first = 0, max = 100,
     } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams({
@@ -103,9 +110,10 @@ export async function query(optionals = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function forGroup(groupKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function forGroup(groupKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/episode/in/${groupKey}`)
@@ -128,9 +136,10 @@ export async function forGroup(groupKey, optionals = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function byName(groupName, episodeName, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function byName(groupName: string, episodeName: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/episode/with/${groupName}/${episodeName}`)
@@ -152,9 +161,10 @@ export async function byName(groupName, episodeName, optionals = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function remove(episodeKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function remove(episodeKey: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .delete(`/episode/${episodeKey}`)
