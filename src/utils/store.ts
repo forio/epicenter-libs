@@ -50,7 +50,10 @@ export class SessionStore extends Store {
 export class CookieStore {
     options = {};
     constructor(options = {}) {
-        const defaults = { domain: `.${window.location.hostname}`, path: '/' };
+        const hostname = window.location.hostname;
+        const defaults = hostname !== 'localhost' ?
+            { path: '/', domain: `.${hostname}` } :
+            { path: '/' };
         this.options = { ...defaults, ...options };
     }
     getItem(key: string) {
