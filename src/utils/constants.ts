@@ -1,5 +1,4 @@
 
-
 export enum BROWSER_STORAGE_TYPE {
     COOKIE = 'COOKIE',
     SESSION = 'SESSION',

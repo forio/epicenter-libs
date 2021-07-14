@@ -68,11 +68,6 @@ describe('Group API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
-        it('Should optionally allow you to pass a specific group key', async() => {
-            await groupAdapter.get({ groupKey: '123' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/123`);
-        });
         it('Should use an updated URL when provided the members augment', async() => {
             await groupAdapter.get({ augment: 'MEMBERS' });
             const req = fakeServer.requests.pop();

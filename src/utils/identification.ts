@@ -6,6 +6,14 @@ import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
+interface Session {
+    groupName?: string,
+    userKey: string,
+    groupKey: string,
+    loginMethod: {
+        objectType: string,
+    },
+}
 
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
@@ -21,14 +29,14 @@ class Identification {
     }
     get session() {
         const Store = this.getStore();
-        return new Store().getItem(SESSION_KEY);
+        return new Store().getItem(SESSION_KEY) as Session;
     }
     set session(session) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session);
 
         if (session) {
-            new Store(options).setItem(SESSION_KEY, session);
+            new Store(options).setItem(SESSION_KEY, session as JSON);
         } else if (this.session) {
             new Store(options).removeItem(SESSION_KEY);
         }

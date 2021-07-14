@@ -2,6 +2,7 @@ import cookies from 'utils/cookies';
 
 class Store {
     _store;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(store: any) {
         this._store = store;
     }
@@ -21,10 +22,10 @@ export class NodeStore extends Store {
     constructor() {
         super(nodeMap);
     }
-    getItem(key: string) {
+    getItem(key: string): Record<string, unknown> {
         return super.store.get(key);
     }
-    setItem(key: string, value: any) {
+    setItem(key: string, value: Record<string, unknown>) {
         return super.store.set(key, value);
     }
     removeItem(key: string) {
@@ -36,10 +37,10 @@ export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
-    getItem(key: string) {
+    getItem(key: string): Record<string, unknown> {
         return JSON.parse(super.store.getItem(key));
     }
-    setItem(key: string, value: any) {
+    setItem(key: string, value: Record<string, unknown>) {
         return super.store.setItem(key, JSON.stringify(value));
     }
     removeItem(key: string) {
@@ -51,16 +52,18 @@ export class CookieStore {
     options = {};
     constructor(options = {}) {
         const hostname = window.location.hostname;
+        // We have to explicitly not set domain in the cookie when it's localhost (for Chrome)
+        // https://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain
         const defaults = hostname !== 'localhost' ?
             { path: '/', domain: `.${hostname}` } :
             { path: '/' };
         this.options = { ...defaults, ...options };
     }
-    getItem(key: string) {
+    getItem(key: string): Record<string, unknown> {
         const item = cookies.getItem(key);
         return item ? JSON.parse(item) : null;
     }
-    setItem(key: string, value: any) {
+    setItem(key: string, value: Record<string, unknown>): boolean {
         return cookies.setItem(key, JSON.stringify(value), this.options);
     }
     removeItem(key: string) {
