@@ -100,37 +100,37 @@ describe('Vault API Service', () => {
         });
         testedMethods.push('get');
     });
-    describe('vaultAdapter.getWithScope', () => {
+    describe('vaultAdapter.withScope', () => {
         const NAME = 'myvaultname';
         const USER_KEY = 'myuserkey';
         const SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         it('Should do a GET', async() => {
-            await vaultAdapter.getWithScope(NAME, SCOPE);
+            await vaultAdapter.withScope(NAME, SCOPE);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await vaultAdapter.getWithScope(NAME, SCOPE);
+            await vaultAdapter.withScope(NAME, SCOPE);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the vault/with/scopeBoundary/scopeKey/name URL', async() => {
-            await vaultAdapter.getWithScope(NAME, SCOPE);
+            await vaultAdapter.withScope(NAME, SCOPE);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${NAME}`);
         });
         it('Should use insert userKey into URL when provided', async() => {
-            await vaultAdapter.getWithScope(NAME, SCOPE, { userKey: USER_KEY });
+            await vaultAdapter.withScope(NAME, SCOPE, { userKey: USER_KEY });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${USER_KEY}/${NAME}`);
         });
         it('Should support generic URL options', async() => {
-            await vaultAdapter.getWithScope(NAME, SCOPE, GENERIC_OPTIONS);
+            await vaultAdapter.withScope(NAME, SCOPE, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${NAME}`);
         });
-        testedMethods.push('getWithScope');
+        testedMethods.push('withScope');
     });
     describe('vaultAdapter.byName', () => {
         const NAME = 'myvaultname';
