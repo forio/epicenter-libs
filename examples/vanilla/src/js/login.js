@@ -25,7 +25,7 @@ if (query.error) {
     errorEl.classList.add('visible');
 }
 
-document.getElementById('submit').onclick = (e) => {
+document.getElementById('submit').onclick = async(e) => {
     e.preventDefault();
     if (e.target.innerText !== 'Submit') return;
 
@@ -35,25 +35,25 @@ document.getElementById('submit').onclick = (e) => {
     const groupEl = document.getElementById('group');
     const groupLabelEl = document.getElementById('group-label');
 
-    authAdapter.login({
+    const session = await authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
         groupKey: groupEl.value,
-    }).then((session) => {
-        if (!session.groupKey) {
-            groupAdapter.getSessionGroups().then((groups) => {
-                groups.forEach(({ name, groupKey }) => {
-                    const optionEl = document.createElement('option');
-                    optionEl.value = groupKey;
-                    optionEl.innerHTML = name;
-                    groupEl.append(optionEl);
-                });
-                groupEl.classList.add('visible');
-                groupLabelEl.classList.add('visible');
-                e.target.innerHTML = 'Submit';
-            });
-        } else {
-            window.location.href = '/index.html';
-        }
     });
+
+    if (!session.groupKey) {
+        groupAdapter.getSessionGroups().then((groups) => {
+            groups.forEach(({ name, groupKey }) => {
+                const optionEl = document.createElement('option');
+                optionEl.value = groupKey;
+                optionEl.innerHTML = name;
+                groupEl.append(optionEl);
+            });
+            groupEl.classList.add('visible');
+            groupLabelEl.classList.add('visible');
+            e.target.innerHTML = 'Submit';
+        });
+    } else {
+        window.location.href = '/index.html';
+    }
 };
