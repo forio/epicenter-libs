@@ -313,31 +313,31 @@ describe('Group API Service', () => {
         });
         testedMethods.push('withGroupName');
     });
-    describe('groupAdapter.forUserKey', () => {
+    describe('groupAdapter.forUser', () => {
         const USER_KEY = 'userkey';
         it('Should do a GET', async() => {
-            await groupAdapter.forUserKey(USER_KEY);
+            await groupAdapter.forUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.forUserKey(USER_KEY);
+            await groupAdapter.forUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the group/member/for/userKey URL', async() => {
-            await groupAdapter.forUserKey(USER_KEY);
+            await groupAdapter.forUser(USER_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/for/${USER_KEY}`);
         });
         it('Should support generic URL options', async() => {
-            await groupAdapter.forUserKey(USER_KEY, GENERIC_OPTIONS);
+            await groupAdapter.forUser(USER_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/for/${USER_KEY}`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
-            await groupAdapter.forUserKey(USER_KEY, {
+            await groupAdapter.forUser(USER_KEY, {
                 expired: false,
                 all: true,
                 role: ROLE.PARTICIPANT,
@@ -350,7 +350,7 @@ describe('Group API Service', () => {
             searchParams.get('role').should.equal(ROLE.PARTICIPANT);
         });
         it('Should handle the use of multiple roles in the URL search parameters', async() => {
-            await groupAdapter.forUserKey(USER_KEY, {
+            await groupAdapter.forUser(USER_KEY, {
                 role: [ROLE.PARTICIPANT, ROLE.FACILITATOR],
             });
             const req = fakeServer.requests.pop();
@@ -358,7 +358,7 @@ describe('Group API Service', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.getAll('role').should.deep.equal([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
-        testedMethods.push('forUserKey');
+        testedMethods.push('forUser');
     });
     describe('groupAdapter.getSessionGroups', () => {
         it('Should do a GET', async() => {

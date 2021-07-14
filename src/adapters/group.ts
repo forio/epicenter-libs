@@ -350,7 +350,7 @@ export async function withGroupName(name: string, optionals: GenericAdapterOptio
  * @memberof groupAdapter
  * @example
  *
- * epicenter.groupAdapter.forUserKey(
+ * epicenter.groupAdapter.forUser(
  *      user.userKey,               // get groups where this user is a member of
  *      { role: ['FACILITATOR'] }   // where this user is a facilitator in the group
  * );
@@ -364,7 +364,14 @@ export async function withGroupName(name: string, optionals: GenericAdapterOptio
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of groups
  */
-export async function forUserKey(userKey: string, optionals: GroupOptions = {}) {
+export async function forUser(
+    userKey: string,
+    optionals: {
+        all?: boolean,
+        expired?: boolean,
+        role?: string | string[],
+    } & GenericAdapterOptions = {},
+): Promise<Group[]> {
     const {
         expired, all, role,
         accountShortName, projectShortName, server,
@@ -404,7 +411,13 @@ export async function forUserKey(userKey: string, optionals: GroupOptions = {}) 
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of groups
  */
-export async function getSessionGroups(optionals: GroupOptions = {}) {
+export async function getSessionGroups(
+    optionals: {
+        all?: boolean,
+        expired?: boolean,
+        role?: string | string[],
+    } & GenericAdapterOptions = {},
+): Promise<Group[]> {
     const {
         expired, role,
         accountShortName, projectShortName, server,
