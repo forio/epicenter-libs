@@ -1,19 +1,20 @@
-import { Router } from 'utils/index';
+import { identification, Router } from 'utils/index';
 import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
 
-interface CreateOptions extends GenericAdapterOptions {
-    readLock?: keyof typeof ROLE,
-    writeLock?: keyof typeof ROLE,
-    userKey?: string,
-    ttlSeconds?: string,
-    mutationKey?: string,
+
+interface Vault {
+    created: string,
+    lastUpdated: string,
+    mutationKey: string,
+    address: unknown,
+    scope: { userKey: string } & GenericScope,
+    name: string,
+    permit: Permit,
+    vaultKey: string,
+    expiration: string,
+    items: Record<string, unknown>,
+    changed?: boolean
 }
-
-/**
- * Episode API adapters -- use this to create, update, delete, and manage your episodes
- * @namespace vaultAdapter
- */
-
 
 /**
  * Updates a vault
@@ -30,11 +31,23 @@ interface CreateOptions extends GenericAdapterOptions {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function update(vaultKey, items, optionals = {}) {
-    const { accountShortName, projectShortName, mutationKey } = optionals;
+export async function update(
+    vaultKey: string,
+    items: {
+        set?: Record<string, unknown>,
+        push?: Record<string, unknown>,
+    },
+    optionals: { mutationKey?: string } & GenericAdapterOptions = {}
+): Promise<Vault> {
+    const {
+        mutationKey,
+        accountShortName, projectShortName, server,
+    } = optionals;
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
+        .withServer(server)
         .withSearchParams({ MutationKey: mutationKey })
         .patch(`/vault/${vaultKey}`, {
             body: {
@@ -44,11 +57,15 @@ export async function update(vaultKey, items, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function get(vaultKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function get(
+    vaultKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<Vault> {
+    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
+        .withServer(server)
         .get(`/vault/${vaultKey}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
@@ -56,13 +73,22 @@ export async function get(vaultKey, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function getWithScope(name, scope, optionals = {}) {
+
+export async function getWithScope(
+    name: string,
+    scope: GenericScope,
+    optionals: { userKey?: string } & GenericAdapterOptions = {}
+): Promise<Vault> {
     const { scopeBoundary, scopeKey } = scope;
-    const { accountShortName, projectShortName, userKey } = optionals;
+    const {
+        userKey,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
+        .withServer(server)
         .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`)
         .catch((error) => {
             if (error.status === 404) return { body: undefined };
@@ -70,11 +96,40 @@ export async function getWithScope(name, scope, optionals = {}) {
         }).then(({ body }) => body);
 }
 
-export async function remove(vaultKey, optionals = {}) {
-    const { accountShortName, projectShortName, mutationKey } = optionals;
+export async function byName(
+    name: string,
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+        userKey?: string,
+    } & GenericAdapterOptions = {}
+): Promise<Vault[]> {
+    const {
+        groupName, episodeName, userKey,
+        accountShortName, projectShortName, server,
+    } = optionals;
+
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
+        .withServer(server)
+        .withSearchParams({ userKey })
+        .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`)
+        .then(({ body }) => body);
+}
+
+export async function remove(
+    vaultKey: string,
+    optionals: { mutationKey?: string } & GenericAdapterOptions = {}
+) {
+    const {
+        mutationKey,
+        accountShortName, projectShortName, server,
+    } = optionals;
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .withServer(server)
         .withSearchParams({ MutationKey: mutationKey })
         .delete(`/vault/${vaultKey}`)
         .then(({ body }) => body);
@@ -82,7 +137,10 @@ export async function remove(vaultKey, optionals = {}) {
 
 
 /**
- * Creates a vault. Vault names are unique to within their scope
+ * Creates a vault. Vault names are unique to within their scope.
+ * If the vault already exists, it will not error -- instead, it will modify the existing vault.
+ * TODO -- either rename this function to better match behavior or talk to David to change behavior
+ * to better match the function name.
  *
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
  *
@@ -113,13 +171,19 @@ export async function create(
     name: string,
     scope: GenericScope,
     items: Record<string, unknown>,
-    optionals: CreateOptions = {}
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        userKey?: string,
+        ttlSeconds?: string,
+        mutationKey?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<Vault> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock,
         userKey, ttlSeconds, mutationKey,
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
@@ -128,6 +192,7 @@ export async function create(
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
+        .withServer(server)
         .post(`/vault/${name}`, {
             body: {
                 scope: {
@@ -145,4 +210,5 @@ export async function create(
             },
         }).then(({ body }) => body);
 }
+
 
