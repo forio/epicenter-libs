@@ -1,3 +1,31 @@
+# [3.5.0](https://github.com/forio/epicenter-libs/compare/v3.4.0...v3.5.0) (2021-07-14)
+
+
+### Bug Fixes
+
+* handle localhost domain ([7d77cc5](https://github.com/forio/epicenter-libs/commit/7d77cc52f497019c304a1a44797fea9c0552221b))
+
+
+### Code Refactoring
+
+* episodeAdapter.byName -> episodeAdapter.withName (new args) ([4829496](https://github.com/forio/epicenter-libs/commit/48294965feb09300790ca4d7d5bbc15feee01e82))
+* forUserKey -> forUser ([f4fda50](https://github.com/forio/epicenter-libs/commit/f4fda5055995211957987082cbc6b842c8623bc8))
+* vaultAdapter.getWithScope -> vaultAdapter.withScope ([d2304cd](https://github.com/forio/epicenter-libs/commit/d2304cd45fbd5c552c7691de3e8f22fd45cc8836))
+
+
+### Features
+
+* add vaultAdapter.byName ([d4b3f7b](https://github.com/forio/epicenter-libs/commit/d4b3f7b7bc569b9d3cd3ba6f35dc2fcd833d3e24))
+
+
+### BREAKING CHANGES
+
+* vaultAdapter.getWithScope -> withScope, renamed for consistency
+* episodeAdapter.byName -> withName; takes groupName as an optional argument
+* groupAdapter.forUserKey renamed to groupAdapter.forUser
+
+
+
 # [3.4.0](https://github.com/forio/epicenter-libs/compare/v3.3.1...v3.4.0) (2021-06-10)
 
 
