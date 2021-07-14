@@ -1,4 +1,4 @@
-import { Router } from 'utils/index';
+import { identification, Router } from 'utils/index';
 
 /**
  * Episode API adapters -- use this to create, update, delete, and manage your episodes
@@ -110,7 +110,10 @@ export async function query(optionals: GenericAdapterQueryOptions = {}) {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function forGroup(groupKey: string, optionals: GenericAdapterOptions = {}) {
+export async function forGroup(
+    groupKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<Episode[]> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -136,13 +139,19 @@ export async function forGroup(groupKey: string, optionals: GenericAdapterOption
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function byName(groupName: string, episodeName: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function withName(
+    name: string,
+    optionals: { groupName?: string } & GenericAdapterOptions = {}
+): Promise<Episode> {
+    const {
+        groupName,
+        accountShortName, projectShortName, server,
+    } = optionals;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/episode/with/${groupName}/${episodeName}`)
+        .get(`/episode/with/${groupName ?? identification.session?.groupName}/${name}`)
         .then(({ body }) => body);
 }
 
