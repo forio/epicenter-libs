@@ -141,7 +141,7 @@ export async function create(
  * @param {object}  [optionals={}]  Object for all optional fields
  * @returns {object}                Response with the run in the "body"
  */
-export async function clone(runKey: string, optionals: CreateOptions = {}):Promise<JSON> {
+export async function clone(runKey: string, optionals: CreateOptions = {}):Promise<Run> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
         accountShortName, projectShortName, server,
@@ -303,6 +303,7 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  * @param {number}      [optionals.timeout]             Number of seconds we're willing to wait for the response from the server
  * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @param {string}      [optionals.includeEpisodes]     Only used for the `run/in/groupName` endpoint
  * @returns {object}                                    TODO
  */
 export async function query(

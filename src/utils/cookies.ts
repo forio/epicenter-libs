@@ -27,11 +27,11 @@ interface EditCookieOptions {
 }
 
 export default {
-    getItem(key: string) {
+    getItem(key: string): null | string {
         if (!key) return null;
         return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
     },
-    setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}) {
+    setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}): boolean {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
         const { path, domain, end, secure, samesite } = options;
         const expireStr = getExpiration(end);
@@ -43,7 +43,7 @@ export default {
         document.cookie = `${encodeURIComponent(key)}=${encodeURIComponent(value)}${expireStr}${domainStr}${pathStr}${secureStr}${samesiteStr}`;
         return true;
     },
-    removeItem(key: string, options: EditCookieOptions = {}) {
+    removeItem(key: string, options: EditCookieOptions = {}): boolean {
         if (!this.hasItem(key)) return false;
         const { path, domain } = options;
         const domainStr = domain ? `; domain=${domain}` : '';
@@ -51,7 +51,7 @@ export default {
         document.cookie = `${encodeURIComponent(key)}=; expires=Thu, 01 Jan 1970 00:00:00 GMT${domainStr}${pathStr}`;
         return true;
     },
-    hasItem(key: string) {
+    hasItem(key: string): boolean {
         if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
 
         return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);

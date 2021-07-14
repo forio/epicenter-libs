@@ -339,13 +339,14 @@ describe('Run API Service', () => {
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/in/groupName/[episodeName]/modelFile URL', async() => {
+        it('Should use the run/in/groupName[/episodeName]/modelFile URL', async() => {
+            const EPISODE_NAME = 'myepisodename';
             await runAdapter.query(MODEL);
             const req1 = fakeServer.requests.pop();
             req1.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
-            await runAdapter.query(MODEL, { episodeName: 'myepisodename' });
+            await runAdapter.query(MODEL, { episodeName: EPISODE_NAME });
             const req2 = fakeServer.requests.pop();
-            req2.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/myepisodename/${MODEL}`);
+            req2.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
         });
         it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
             await runAdapter.query(MODEL, { scope: SCOPE });

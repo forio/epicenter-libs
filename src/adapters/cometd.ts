@@ -109,13 +109,15 @@ class CometdAdapter {
             return Promise.resolve();
         }
 
-        const handshakeProps = {};
+        let handshakeProps = {};
         const { session } = identification;
 
         if (session) {
-            handshakeProps.ext = {
-                [AUTH_TOKEN_KEY]: session.token,
-                ack: this.requireAcknowledgement,
+            handshakeProps = {
+                ext: {
+                    [AUTH_TOKEN_KEY]: session.token,
+                    ack: this.requireAcknowledgement,
+                },
             };
         }
 
