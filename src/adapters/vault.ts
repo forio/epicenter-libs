@@ -74,7 +74,7 @@ export async function get(
 }
 
 
-export async function getWithScope(
+export async function withScope(
     name: string,
     scope: GenericScope,
     optionals: { userKey?: string } & GenericAdapterOptions = {}
