@@ -159,13 +159,20 @@ describe('Vault API Service', () => {
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/in/${GROUP_NAME}/${NAME}`);
         });
-        it('Should pass the userKey to the search params if provided', async() => {
+        it('Should pass the userKey and includeEpisodes to the search params if provided', async() => {
             const USER_KEY = 'myuserkey'
-            await vaultAdapter.byName(NAME, { userKey: USER_KEY });
+            const RANDOM_THING = { something: 'random' };
+            await vaultAdapter.byName(NAME, {
+                userKey: USER_KEY,
+                includeEpisodes: true,
+                ...RANDOM_THING,
+            });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
             searchParams.get('userKey').should.equal(USER_KEY);
+            searchParams.get('includeEpisodes').should.equal('true');
+            searchParams.has('something').should.equal(false);
         });
         it('Should support generic URL options', async() => {
             await vaultAdapter.byName(NAME, GENERIC_OPTIONS);
