@@ -148,7 +148,6 @@ export async function get(
         .then(({ body }) => body);
 }
 
-
 export async function list(
     scope: Scope,
     optionals: ListOptions = {}

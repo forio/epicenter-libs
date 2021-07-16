@@ -102,18 +102,19 @@ export async function byName(
         groupName?: string,
         episodeName?: string,
         userKey?: string,
+        includeEpisodes?: boolean,
     } & GenericAdapterOptions = {}
 ): Promise<Vault[]> {
     const {
-        groupName, episodeName, userKey,
+        groupName, episodeName, userKey, includeEpisodes,
         accountShortName, projectShortName, server,
     } = optionals;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
-        .withSearchParams({ userKey })
+        .withSearchParams({ userKey, includeEpisodes })
         .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`)
         .then(({ body }) => body);
 }
