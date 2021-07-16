@@ -1,3 +1,12 @@
+## [3.5.1](https://github.com/forio/epicenter-libs/compare/v3.5.0...v3.5.1) (2021-07-16)
+
+
+### Features
+
+* episodeAdapter.byName to take includeEpisodes ([d966d19](https://github.com/forio/epicenter-libs/commit/d966d19df3d94821bf78cd9aceaea707227bb26a))
+
+
+
 # [3.5.0](https://github.com/forio/epicenter-libs/compare/v3.4.0...v3.5.0) (2021-07-14)
 
 
