@@ -1,3 +1,17 @@
+# [3.6.0](https://github.com/forio/epicenter-libs/compare/v3.5.1...v3.6.0) (2021-07-26)
+
+
+### Code Refactoring
+
+* vault update changed from PATCH -> PUT ([998693c](https://github.com/forio/epicenter-libs/commit/998693c33bff9e4a956da72a76c627172a712f0f))
+
+
+### BREAKING CHANGES
+
+* vaultAdapter.update produces a PUT instead of a PATCH (to match epicenter 3.7.x)
+
+
+
 ## [3.5.1](https://github.com/forio/epicenter-libs/compare/v3.5.0...v3.5.1) (2021-07-16)
 
 
