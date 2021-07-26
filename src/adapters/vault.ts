@@ -49,7 +49,7 @@ export async function update(
         .withProjectShortName(projectShortName)
         .withServer(server)
         .withSearchParams({ MutationKey: mutationKey })
-        .patch(`/vault/${vaultKey}`, {
+        .put(`/vault/${vaultKey}`, {
             body: {
                 set: items.set ?? {},
                 push: items.push ?? {},
