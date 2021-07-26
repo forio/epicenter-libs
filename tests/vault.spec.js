@@ -31,6 +31,10 @@ describe('Vault API Service', () => {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
+        fakeServer.respondWith('PUT', /(.*)\/vault/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+        });
 
         fakeServer.respondImmediately = true;
     });
@@ -49,7 +53,7 @@ describe('Vault API Service', () => {
         it('Should do a PATCH', async() => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PATCH');
+            req.method.toUpperCase().should.equal('PUT');
         });
         it('Should have authorization', async() => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
