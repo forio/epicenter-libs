@@ -150,7 +150,10 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
 
     const retryOptions = { ...options, inert: true };
     const retry = () => request(url, retryOptions);
-    retry.requestArguments = [url, retryOptions];
+    retry.requestArguments = {
+        url,
+        ...retryOptions,
+    };
     return errorManager.handle(fault, retry);
 }
 
