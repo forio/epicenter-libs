@@ -604,3 +604,19 @@ export async function removeUser(
         .then(({ body }) => body);
 }
 
+
+export async function statusUpdate(
+    code: string,
+    message: string,
+    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+): Promise<Group> {
+    const { groupKey, accountShortName, projectShortName, server } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .patch(`/group/status/${groupKey ?? identification.session?.groupKey}`, {
+            body: { code, message },
+        }).then(({ body }) => body);
+}

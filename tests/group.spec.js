@@ -481,6 +481,10 @@ describe('Group API Service', () => {
         // TODO -- add tests!!!
         testedMethods.push('updateUser');
     });
+    describe('groupAdapter.statusUpdate', () => {
+        // TODO -- add tests!!!
+        testedMethods.push('statusUpdate');
+    });
     describe('groupAdapter.removeUser', () => {
         const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
