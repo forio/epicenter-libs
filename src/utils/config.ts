@@ -1,6 +1,7 @@
 import EpicenterError from './error';
 import { isBrowser, isNode } from './helpers';
 
+
 const API_VERSION = 3;
 class Config {
     _apiVersion = API_VERSION;
@@ -140,7 +141,7 @@ class Config {
     loadNode() {
         // TODO -- use process env variables instead here for Node server
         this.apiProtocol = 'https';
-        this.apiHost = 'test.forio.com';
+        this.apiHost = 'forio.com';
         return;
     }
 

@@ -12,7 +12,7 @@ const CONNECTED = 'connected';
 
 class CometdError extends Error {
     status?: number
-    information: Message
+    information?: Message
     message: string
 
     constructor(reply: Message) {
