@@ -1,3 +1,12 @@
+## [3.6.1](https://github.com/forio/epicenter-libs/compare/v3.6.0...v3.6.1) (2021-08-06)
+
+
+### Features
+
+* add group status endpoint adapter ([c2a34d9](https://github.com/forio/epicenter-libs/commit/c2a34d92bb5c2d8e4d297d1f536f9c0382e9f531))
+
+
+
 # [3.6.0](https://github.com/forio/epicenter-libs/compare/v3.5.1...v3.6.0) (2021-07-26)
 
 
