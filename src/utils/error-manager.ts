@@ -57,7 +57,7 @@ interface Handler {
 const UNAUTHORIZED = 401;
 class ErrorManager {
     _handlers: Handler[] = [
-        {/* Default Unauthorized (401) Error Handler */
+        {
             identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
             handle: async(error: Fault, retry: RetryFunction) => {
                 const groupKey = identification.session.groupKey;
@@ -72,12 +72,11 @@ class ErrorManager {
         }, {
             identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
             handle: async(error: Fault, retry: RetryFunction) => {
-                const [url, requestOptions] = retry.requestArguments;
-                if (url.toString().includes('/authentication') && requestOptions.method === 'POST') {
-
+                const { url, method } = retry.requestArguments;
+                if (url.toString().includes('/authentication') && method === 'POST') {
+                    // eslint-disable-next-line no-alert
+                    if (alert) alert('This group has expired. Try logging into a different group');
                 }
-                // eslint-disable-next-line no-alert
-                if (alert) alert('This group has expired.');
                 throw error;
             },
         },
