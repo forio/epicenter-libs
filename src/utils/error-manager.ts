@@ -33,8 +33,20 @@ const handleByLoginMethod = (error: Fault) => {
     }
 };
 
+
 type Identifier = (error: Fault) => boolean
-type RetryFunction = () => Promise<Result>
+interface RetryFunction {
+    (): Promise<Result>;
+    requestArguments: {
+        url: URL,
+        method: string,
+        body?: Record<string, unknown>,
+        includeAuthorization?: boolean,
+        inert?: boolean,
+        paginated?: boolean,
+        parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
+    };
+}
 type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<Result>
 
 interface Handler {
@@ -46,19 +58,26 @@ const UNAUTHORIZED = 401;
 class ErrorManager {
     _handlers: Handler[] = [
         {/* Default Unauthorized (401) Error Handler */
-            identifier: (error) => error.status === UNAUTHORIZED,
+            identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
             handle: async(error: Fault, retry: RetryFunction) => {
-                if (error.code === 'AUTHENTICATION_INVALIDATED') {
-                    const groupKey = identification.session.groupKey;
-                    await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
-                    try {
-                        return await retry();
-                    } catch (e) {
-                        await handleByLoginMethod(error);
-                        throw error;
-                    }
+                const groupKey = identification.session.groupKey;
+                await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
+                try {
+                    return await retry();
+                } catch (e) {
+                    await authAdapter.logout();
+                    throw error;
                 }
-                await handleByLoginMethod(error);
+            },
+        }, {
+            identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
+            handle: async(error: Fault, retry: RetryFunction) => {
+                const [url, requestOptions] = retry.requestArguments;
+                if (url.toString().includes('/authentication') && requestOptions.method === 'POST') {
+
+                }
+                // eslint-disable-next-line no-alert
+                if (alert) alert('This group has expired.');
                 throw error;
             },
         },
