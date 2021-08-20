@@ -52,7 +52,7 @@ class CometdAdapter {
         return cometdInstance;
     }
 
-    async startup(options = { logLevel: 'error' }) {
+    async startup(options = { logLevel: 'debug' }) {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
 
