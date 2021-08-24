@@ -31,12 +31,12 @@ class Identification {
         const Store = this.getStore();
         return new Store().getItem(SESSION_KEY) as Session;
     }
-    set session(session) {
+    set session(session: Session | undefined) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session);
 
         if (session) {
-            new Store(options).setItem(SESSION_KEY, session as JSON);
+            new Store(options).setItem(SESSION_KEY, session as Session);
         } else if (this.session) {
             new Store(options).removeItem(SESSION_KEY);
         }
