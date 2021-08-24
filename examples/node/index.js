@@ -2,7 +2,7 @@
 // require('cometd-nodejs-client').adapt();
 // const lib = require('cometd');
 
-const { authAdapter, SCOPE_BOUNDARY } = require('./epicenter.cjs.js');
+const { authAdapter, SCOPE_BOUNDARY } = require('../../dist/cjs/epicenter.cjs.js');
 // import { authAdapter, SCOPE_BOUNDARY } from 'epicenter';
 
 console.log('epicenter?', authAdapter);

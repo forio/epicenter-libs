@@ -5,9 +5,10 @@ import Result from './result';
 import identification from './identification';
 import errorManager from './error-manager';
 import config from './config';
-import { prefix } from './helpers';
+import { prefix, isBrowser } from './helpers';
 
 
+console.log('%c HERES MY FECTCH', 'font-size: 20px; color: #FB15B9FF;', fetch);
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
 const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
@@ -107,7 +108,7 @@ const createHeaders = (includeAuthorization?: boolean) => {
 };
 
 const createBody = (headers, body) => {
-    if (body instanceof FormData) {
+    if (isBrowser() && body instanceof FormData) {
         delete headers['Content-type'];
         return body;
     }
