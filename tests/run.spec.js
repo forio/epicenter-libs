@@ -889,6 +889,6 @@ describe('Run API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        runAdapter.should.have.all.keys(...testedMethods);
+        expect(runAdapter).to.have.all.keys(...testedMethods);
     });
 });
