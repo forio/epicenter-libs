@@ -1,37 +1,8 @@
 import { authAdapter } from 'adapters/index';
 import identification from './identification';
-import { isNode } from './helpers';
+import { isBrowser } from './helpers';
 import Fault from './fault';
 import Result from './result';
-
-
-const handleByRelog = (error: Fault) => {
-    let query = '';
-    if (error.code) {
-        query = query.concat(`?error=${error.code}`);
-    }
-    return authAdapter.logout().then(() => window.location.href = `/login.html${query}`);
-};
-
-const handleSSO = () => {
-    return authAdapter.logout();
-};
-
-const handleUnknown = () => {
-    return authAdapter.logout().then(() => window.location.href = '/unknown.html');
-};
-
-const handleByLoginMethod = (error: Fault) => {
-    if (isNode()) throw error;
-    const { session } = identification;
-    const loginType = session?.loginMethod?.objectType;
-    switch (loginType) {
-        case 'sso': return handleSSO();
-        case 'none':return handleUnknown();
-        case 'native':
-        default: return handleByRelog(error);
-    }
-};
 
 
 type Identifier = (error: Fault) => boolean
@@ -60,9 +31,9 @@ class ErrorManager {
         {
             identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
             handle: async(error: Fault, retry: RetryFunction) => {
-                const groupKey = identification.session.groupKey;
-                await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
                 try {
+                    const groupKey = identification.session?.groupKey ?? '';
+                    await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
                     return await retry();
                 } catch (e) {
                     await authAdapter.logout();
@@ -75,7 +46,7 @@ class ErrorManager {
                 const { url, method } = retry.requestArguments;
                 if (url.toString().includes('/authentication') && method === 'POST') {
                     // eslint-disable-next-line no-alert
-                    if (alert) alert('This group has expired. Try logging into a different group');
+                    if (isBrowser()) alert('This group has expired. Try logging into a different group');
                 }
                 throw error;
             },
