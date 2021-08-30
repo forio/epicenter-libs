@@ -16,7 +16,7 @@ interface GetOptions extends GenericAdapterOptions {
 }
 
 interface GatherOptions extends GenericAdapterOptions {
-    expired?: boolean,
+    includeExpired?: boolean,
 }
 
 interface Pricing {
@@ -51,8 +51,8 @@ interface QueryOptions extends GenericAdapterQueryOptions {
 }
 
 interface GroupOptions extends GenericAdapterOptions {
-    all?: boolean,
-    expired?: boolean,
+    includeAllMembers?: boolean,
+    includeExpired?: boolean,
     role?: string | string[],
 }
 
@@ -131,7 +131,7 @@ export async function destroy(groupKey: string, optionals: GenericAdapterOptions
 /**
  * Provides information on for all groups in the project
  *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group?expired={BOOLEAN}`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group?includeExpired={BOOLEAN}`
  *
  * @memberof groupAdapter
  * @example
@@ -139,19 +139,19 @@ export async function destroy(groupKey: string, optionals: GenericAdapterOptions
  * const groups = await epicenter.groupAdapter.gather();
  *
  * @param {object}  [optionals={}]                  Optional parameters
- * @param {boolean} [optionals.expired]             Indicates whether to include expired groups in the query
+ * @param {boolean} [optionals.includeExpired]             Indicates whether to include expired groups in the query
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                              List of groups
  */
 export async function gather(optionals: GatherOptions = {}) {
-    const { accountShortName, projectShortName, server, expired } = optionals;
+    const { accountShortName, projectShortName, server, includeExpired } = optionals;
 
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withSearchParams({ expired })
+        .withSearchParams({ includeExpired })
         .get('/group')
         .then(({ body }) => body);
 }
@@ -345,7 +345,7 @@ export async function withGroupName(name: string, optionals: GenericAdapterOptio
 /**
  * Retrieves the list of groups a particular user is in; intended for admin use
  *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/for/{USER_KEY}[?expired={BOOLEAN}&all={BOOLEAN}&role={ROLE}&role={ROLE}...]`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/for/{USER_KEY}[?includeExpired={BOOLEAN}&all={BOOLEAN}&role={ROLE}&role={ROLE}...]`
  *
  * @memberof groupAdapter
  * @example
@@ -357,8 +357,8 @@ export async function withGroupName(name: string, optionals: GenericAdapterOptio
  *
  * @param {string}          userKey                         Name associated with the group
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {boolean}         [optionals.expired]             Indicates whether to include expired groups in the query
- * @param {boolean}         [optionals.all]                 Indicates whether to include the other members in the group (by default, only the requested user appears)
+ * @param {boolean}         [optionals.includeExpired]             Indicates whether to include expired groups in the query
+ * @param {boolean}         [optionals.includeAllMembers]                 Indicates whether to include the other members in the group (by default, only the requested user appears)
  * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -367,20 +367,20 @@ export async function withGroupName(name: string, optionals: GenericAdapterOptio
 export async function forUser(
     userKey: string,
     optionals: {
-        all?: boolean,
-        expired?: boolean,
+        includeAllMembers?: boolean,
+        includeExpired?: boolean,
         role?: string | string[],
     } & GenericAdapterOptions = {},
 ): Promise<Group[]> {
     const {
-        expired, all, role,
+        includeExpired, includeAllMembers, role,
         accountShortName, projectShortName, server,
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
     const roleList = isMultiple ? role : [role];
     const searchParams = {
-        expired,
-        all,
+        includeExpired,
+        includeAllMembers,
         role: role ? roleList : undefined,
     };
 
@@ -397,7 +397,7 @@ export async function forUser(
 /**
  * Retrieves the list of groups particular to the current session
  *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member[?expired={BOOLEAN}&role={ROLE}&role={ROLE}...]`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member[?includeExpired={BOOLEAN}&role={ROLE}&role={ROLE}...]`
  *
  * @memberof groupAdapter
  * @example
@@ -405,7 +405,7 @@ export async function forUser(
  * const groups = await epicenter.groupAdapter.getSessionGroups();
  *
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {boolean}         [optionals.expired]             Indicates whether to include expired groups in the query (defaults to false)
+ * @param {boolean}         [optionals.includeExpired]             Indicates whether to include expired groups in the query (defaults to false)
  * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -413,19 +413,19 @@ export async function forUser(
  */
 export async function getSessionGroups(
     optionals: {
-        all?: boolean,
-        expired?: boolean,
+        includeAllMembers?: boolean,
+        includeExpired?: boolean,
         role?: string | string[],
     } & GenericAdapterOptions = {},
 ): Promise<Group[]> {
     const {
-        expired, role,
+        includeExpired, role,
         accountShortName, projectShortName, server,
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
     const roleList = isMultiple ? role : [role];
     const searchParams = {
-        expired,
+        includeExpired,
         role: role ? roleList : undefined,
     };
 
