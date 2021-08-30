@@ -49,13 +49,13 @@ export async function forAdmin(
         server,
     } = optionals;
     const searchParams = {
-        includeAllMembers, first, max
+        includeAllMembers, first, max,
     };
 
     return await new Router()
         .withServer(server)
-        .withAccountShortName("epicenter")
-        .withProjectShortName("manager")
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
         .withSearchParams(searchParams)
         .get(`/account/team/for/${adminKey}`)
         .then(({body}) => body);
