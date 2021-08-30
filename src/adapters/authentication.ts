@@ -1,5 +1,5 @@
 import { Router, identification } from 'utils/index';
-import { cometdAdapter } from 'adapters/index';
+import cometdAdapter from './cometd';
 
 
 interface Credentials {

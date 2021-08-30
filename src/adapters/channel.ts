@@ -1,6 +1,6 @@
 import { EpicenterError } from 'utils/index';
-import { cometdAdapter } from 'adapters/index';
 import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
+import cometdAdapter from 'cometd';
 
 interface ChannelScope extends GenericScope {
     pushCategory: string,

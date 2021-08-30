@@ -1,5 +1,5 @@
-import { Router } from 'utils';
-import { cometdAdapter } from 'adapters';
+import { Router } from 'utils/index';
+import cometdAdapter from 'cometd';
 
 
 /**

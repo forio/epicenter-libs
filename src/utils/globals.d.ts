@@ -66,6 +66,19 @@ interface Permit {
     writeLock: keyof typeof ROLE,
 }
 
+interface RetryFunction {
+    (): Promise<unknown>;
+    requestArguments: {
+        url: URL,
+        method: string,
+        body?: Record<string, unknown>,
+        includeAuthorization?: boolean,
+        inert?: boolean,
+        paginated?: boolean,
+        parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
+    };
+}
+
 interface FIXME {
 
 }
