@@ -6,6 +6,6 @@ export async function getWithHandle(handle: string, optionals: GenericAdapterOpt
         .withServer(server)
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
-        .get(`/admin/${handle}`)
+        .get(`/admin/with/${handle}`)
         .then(({body}) => body);
 }
