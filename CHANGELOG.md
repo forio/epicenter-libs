@@ -1,3 +1,7 @@
+# [3.7.0-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0-dberkman) (2021-08-31)
+
+
+
 ## [3.6.2-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.6.2-dberkman) (2021-08-30)
 
 

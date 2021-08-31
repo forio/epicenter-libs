@@ -14,6 +14,7 @@ export {
 } from 'utils/index';
 export {
     accountAdapter,
+    adminAdapter,
     authAdapter,
     assetAdapter,
     // consensusAdapter,
