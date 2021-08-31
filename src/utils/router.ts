@@ -5,7 +5,7 @@ import Result from './result';
 import identification from './identification';
 import errorManager from './error-manager';
 import config from './config';
-import { prefix } from './helpers';
+import {prefix} from './helpers';
 
 
 const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
@@ -23,20 +23,21 @@ interface Page {
     next: () => Promise<Value[]>,
     all: (first?: number, allValues?: Value[]) => Promise<Value[]>,
 }
+
 interface RequestOptions {
     method: string,
     body?: Record<string, unknown>,
     includeAuthorization?: boolean,
     inert?: boolean,
     paginated?: boolean,
-    parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
+    parsePage?: <T, V>(values: Array<T>) => Array<T | V>,
 }
 
 
 function paginate(json: Page, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
-    const page = { ...json, values: parsePage(json.values) };
-    const prev = async function() {
+    const page = {...json, values: parsePage(json.values)};
+    const prev = async function () {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
             console.warn('Pagination: cannot call "prev" on first page');
@@ -50,13 +51,13 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
         searchParams.set('max', max.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const prevPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         prevPage.values = parsePage(prevPage.values);
         Object.assign(page, prevPage);
         return page.values;
     };
 
-    const next = async function() {
+    const next = async function () {
         const searchParams = new URLSearchParams(url.search);
         const first = page.firstResult + page.maxResults;
         if (first >= page.totalResults) {
@@ -67,14 +68,14 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
         searchParams.set('first', first.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         nextPage.values = parsePage(nextPage.values);
         Object.assign(page, nextPage);
         return page.values;
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues: Value[] = []):Promise<Value[]> {
+    const all = async function (first = 0, allValues: Value[] = []): Promise<Value[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -82,7 +83,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
         searchParams.delete('max');
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         allValues.push(...parsePage(nextPage.values));
         return all(first + nextPage.maxResults, allValues);
     };
@@ -95,13 +96,17 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
 
 
 const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
-    const { session } = identification;
+    const headers: Record<string, string> = {'Content-type': 'application/json; charset=UTF-8'};
+    const {session} = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
     }
     if (includeAuthorization && config.tokenOverride) {
-        headers.Authorization = `Bearer ${config.tokenOverride}`;
+        if (config.tokenOverride.startsWith('Basic ')) {
+            headers.Authorization = config.tokenOverride;
+        } else {
+            headers.Authorization = `Bearer ${config.tokenOverride}`;
+        }
     }
     return headers;
 };
@@ -115,8 +120,9 @@ const createBody = (headers, body) => {
 };
 
 const NO_CONTENT = 204;
+
 async function request(url: URL, options: RequestOptions): Promise<Result> {
-    const { method, body, includeAuthorization, inert, paginated } = options;
+    const {method, body, includeAuthorization, inert, paginated} = options;
     const headers = createHeaders(includeAuthorization);
     const payload = createBody(headers, body);
     const response = await fetch(url.toString(), {
@@ -148,7 +154,7 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
     const fault = new Fault(json, response);
     if (inert) throw fault;
 
-    const retryOptions = { ...options, inert: true };
+    const retryOptions = {...options, inert: true};
     const retry = () => request(url, retryOptions);
     retry.requestArguments = {
         url,
@@ -174,6 +180,7 @@ export default class Router {
     get server() {
         return this._server;
     }
+
     set server(value) {
         this._server = value;
     }
@@ -185,6 +192,7 @@ export default class Router {
     get version() {
         return this._version;
     }
+
     set version(value) {
         this._version = value;
     }
@@ -196,6 +204,7 @@ export default class Router {
     get accountShortName() {
         return this._accountShortName;
     }
+
     set accountShortName(value) {
         this._accountShortName = value;
     }
@@ -207,6 +216,7 @@ export default class Router {
     get projectShortName() {
         return this._projectShortName;
     }
+
     set projectShortName(value) {
         this._projectShortName = value;
     }
@@ -241,6 +251,7 @@ export default class Router {
     get searchParams() {
         return this._searchParams;
     }
+
     set searchParams(query: any) {
         if (query.constructor === URLSearchParams) {
             this._searchParams = query;
