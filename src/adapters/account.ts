@@ -36,20 +36,21 @@ export async function removeAccount(accountShortName) {
         .then(({body}) => body);
 }
 
-export async function forAdmin(
+export async function teamForAdmin(
     adminKey: string,
     optionals: {
         includeAllMembers?: boolean,
+        filter?: string,
         first?: number,
         max?: number
     } & GenericAdapterOptions = {},
 ): Promise<Account[]> {
     const {
-        includeAllMembers, first, max,
+        includeAllMembers, filter, first, max,
         server,
     } = optionals;
     const searchParams = {
-        includeAllMembers, first, max,
+        includeAllMembers, filter, first, max,
     };
 
     return await new Router()
