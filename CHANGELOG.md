@@ -1,7 +1,13 @@
-# [3.7.0-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0-dberkman) (2021-09-03)
+# [3.7.0](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0) (2021-09-03)
 
-* Query parameter 'all' becomes 'includeAllMembers' and 'expired' becomes 'includeExpired'  (to match epicenter 3.7.x / 3.8.x)
+### Code Refactoring
 
+* groupAdapter optional arguments renamed: all -> includeAllMembers; expired -> includeExpired ([658e2a9](https://github.com/forio/epicenter-libs/commit/8ce6886773ac49d95984fa9e11cc48371658e2a9))
+
+
+### BREAKING CHANGES
+
+* Group API calls w/ query parameter 'all' becomes 'includeAllMembers' and 'expired' becomes 'includeExpired'  (to match epicenter 3.7.x / 3.8.x)
 
 ## [3.6.1](https://github.com/forio/epicenter-libs/compare/v3.6.0...v3.6.1) (2021-08-06)
 
