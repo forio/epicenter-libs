@@ -1,13 +1,6 @@
 # [3.7.0-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0-dberkman) (2021-09-03)
 
-
-
-# [3.7.0-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0-dberkman) (2021-08-31)
-
-
-
-## [3.6.2-dberkman](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.6.2-dberkman) (2021-08-30)
-
+* Query parameter 'all' becomes 'includeAllMembers' and 'expired' becomes 'includeExpired'  (to match epicenter 3.7.x / 3.8.x)
 
 
 ## [3.6.1](https://github.com/forio/epicenter-libs/compare/v3.6.0...v3.6.1) (2021-08-06)
