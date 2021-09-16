@@ -108,6 +108,13 @@ const createHeaders = (includeAuthorization?: boolean) => {
             headers.Authorization = `Bearer ${config.tokenOverride}`;
         }
     }
+    if (includeAuthorization && this.tokenOverride) {
+        if (this.tokenOverride.startsWith('Basic ')) {
+            headers.Authorization = this.tokenOverride;
+        } else {
+            headers.Authorization = `Bearer ${this.tokenOverride}`;
+        }
+    }
     return headers;
 };
 
@@ -172,6 +179,7 @@ export default class Router {
     _version: number | undefined = undefined
     _accountShortName: string | undefined = undefined;
     _projectShortName: string | undefined = undefined;
+    _tokenOverride: string | undefined = undefined;
 
     /**
      * The root path used for the call, essentially protocol + hostname
@@ -219,6 +227,18 @@ export default class Router {
 
     set projectShortName(value) {
         this._projectShortName = value;
+    }
+
+    /**
+     * Authentication tokenOverride
+     * @type {string}
+     */
+    get tokenOverride() {
+        return this._tokenOverride;
+    }
+
+    set tokenOverride(value) {
+        this._tokenOverride = value;
     }
 
     /**
@@ -303,6 +323,16 @@ export default class Router {
      */
     withAccountShortName(accountShortName?: string) {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
+        return this;
+    }
+
+    /**
+     * Sets the authentication token. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [token]   Token to use, either 'Basic ..' or a base64 encoded token (do not prefix with 'Bearer')
+     * @returns {Router}         The Router instance
+     */
+    withToken(token?: string) {
+        if (typeof token !== 'undefined') this.tokenOverride= token;
         return this;
     }
 
