@@ -21,7 +21,7 @@ export interface NativeAdminCreateView extends AdminCreateView {
 export async function createAdmin(optionals: AdminCreateView) {
 
     return await new Router()
-        .post('/account', {
+        .post('/admin', {
             body: optionals,
         }).then(({body}) => body);
 }
