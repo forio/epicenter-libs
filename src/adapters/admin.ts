@@ -18,13 +18,13 @@ export interface NativeAdminCreateView extends AdminCreateView {
     secret: Secret;
 }
 
-export async function createAdmin(optionals: AdminCreateView) {
+export async function createAdmin(view: AdminCreateView) {
 
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .post('/admin', {
-            body: optionals,
+            body: view,
         }).then(({body}) => body);
 }
 
