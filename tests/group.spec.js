@@ -128,9 +128,9 @@ describe('Group API Service', () => {
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group`);
         });
         it('Should support sending an \'expired\' flag', async() => {
-            await groupAdapter.gather({ expired: true });
+            await groupAdapter.gather({ includeExpired: true });
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?expired=true`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?includeExpired=true`);
         });
         testedMethods.push('gather');
     });

@@ -108,13 +108,13 @@ const createHeaders = (includeAuthorization?: boolean) => {
             headers.Authorization = `Bearer ${config.tokenOverride}`;
         }
     }
-    if (includeAuthorization && this.tokenOverride) {
-        if (this.tokenOverride.startsWith('Basic ')) {
-            headers.Authorization = this.tokenOverride;
-        } else {
-            headers.Authorization = `Bearer ${this.tokenOverride}`;
-        }
-    }
+    // if (includeAuthorization && this.tokenOverride) {
+    //     if (this.tokenOverride.startsWith('Basic ')) {
+    //         headers.Authorization = this.tokenOverride;
+    //     } else {
+    //         headers.Authorization = `Bearer ${this.tokenOverride}`;
+    //     }
+    // }
     return headers;
 };
 
