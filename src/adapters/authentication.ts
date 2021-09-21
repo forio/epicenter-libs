@@ -59,7 +59,6 @@ export async function login(
             body: { objectType, handle, password, groupKey: groupKey || undefined },
         }).then(({ body }) => body);
     await logout();
-
     identification.session = session;
     return session;
 }
