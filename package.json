@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.6.1",
+  "version": "3.7.1",
   "main": "dist/cjs/epicenter.cjs.js",
   "module": "dist/module/epicenter.esm.js",
   "browser": "dist/browser/epicenter.esm.js",
