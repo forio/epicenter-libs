@@ -333,15 +333,15 @@ describe('Group API Service', () => {
         });
         it('Should pass non-generic options to URL search parameters', async() => {
             await groupAdapter.forUser(USER_KEY, {
-                expired: false,
-                all: true,
+                includeExpired: false,
+                includeAllMembers: true,
                 role: ROLE.PARTICIPANT,
             });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('expired').should.equal('false');
-            searchParams.get('all').should.equal('true');
+            searchParams.get('includeExpired').should.equal('false');
+            searchParams.get('includeAllMembers').should.equal('true');
             searchParams.get('role').should.equal(ROLE.PARTICIPANT);
         });
         it('Should handle the use of multiple roles in the URL search parameters', async() => {
@@ -379,13 +379,13 @@ describe('Group API Service', () => {
         });
         it('Should pass non-generic options to URL search parameters', async() => {
             await groupAdapter.getSessionGroups({
-                expired: false,
+                includeExpired: false,
                 role: ROLE.PARTICIPANT,
             });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('expired').should.equal('false');
+            searchParams.get('includeExpired').should.equal('false');
             searchParams.get('role').should.equal(ROLE.PARTICIPANT);
         });
         it('Should handle the use of multiple roles in the URL search parameters', async() => {
