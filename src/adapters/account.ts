@@ -1,13 +1,15 @@
-import { Router } from 'utils/index';
+import {Router} from 'utils/index';
 
 /**
  * Account API adapters -- account stuff TODO
  * @namespace accountAdapter
  */
 
+type Account = FIXME;
+
 export async function createAccount(
-    account: FIXME,
-): Promise<FIXME> {
+    account: Account,
+): Promise<Account> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
         .patch('/account', {
@@ -24,8 +26,8 @@ export async function createAccount(
 
 // TODO -- just a copy-paste of create adapter ATM; need to figuure out how to actually use
 export async function updateAccount(
-    account: FIXME,
-): Promise<FIXME> {
+    account: Account,
+): Promise<Account> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
         .patch('/account', {
@@ -46,5 +48,31 @@ export async function removeAccount(
     return await new Router()
         .withAccountShortName(accountShortName)
         .delete('/account')
-        .then(({ body }) => body);
+        .then(({body}) => body);
+}
+
+export async function teamForAdmin(
+    adminKey: string,
+    optionals: {
+        includeAllMembers?: boolean,
+        filter?: string,
+        first?: number,
+        max?: number,
+    } & GenericAdapterOptions = {},
+): Promise<Account[]> {
+    const {
+        includeAllMembers, filter, first, max,
+        server,
+    } = optionals;
+    const searchParams = {
+        includeAllMembers, filter, first, max,
+    };
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
+        .withSearchParams(searchParams)
+        .get(`/account/team/for/${adminKey}`)
+        .then(({body}) => body);
 }

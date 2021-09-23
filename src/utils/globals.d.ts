@@ -95,6 +95,7 @@ interface RetryFunction<Output> {
 
 type UserDetails = Record<string, unknown>;
 
+
 interface User {
     lastUpdated: string,
     displayName: string,
@@ -102,6 +103,20 @@ interface User {
     detail: UserDetails,
     userId: number,
     userKey: string,
+}
+
+interface Admin {
+    lastUpdated: string,
+    lastLogin: string,
+    created: string,
+    familyName: string,
+    givenName: string,
+    verified: boolean,
+    handle: string,
+    active: boolean,
+    adminKey: string,
+    email: string,
+    objectType: 'external' | 'native',
 }
 
 interface ChannelScope extends GenericScope {

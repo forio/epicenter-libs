@@ -19,8 +19,8 @@ type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
-    const page = { ...json, values: parsePage(json.values) };
-    const prev = async function() {
+    const page = {...json, values: parsePage(json.values)};
+    const prev = async function () {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
             console.warn('Pagination: cannot call "prev" on first page');
@@ -34,13 +34,13 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.set('max', max.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const prevPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         prevPage.values = parsePage(prevPage.values);
         Object.assign(page, prevPage);
         return page.values;
     };
 
-    const next = async function() {
+    const next = async function () {
         const searchParams = new URLSearchParams(url.search);
         const first = page.firstResult + page.maxResults;
         if (first >= page.totalResults) {
@@ -51,7 +51,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.set('first', first.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         nextPage.values = parsePage(nextPage.values);
         Object.assign(page, nextPage);
         return page.values;
@@ -66,7 +66,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.delete('max');
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
+        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
         allValues.push(...parsePage(nextPage.values));
         return all(first + nextPage.maxResults, allValues);
     };
@@ -79,13 +79,17 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
 
 
 const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = { 'Content-type': 'application/json; charset=UTF-8' };
-    const { session } = identification;
+    const headers: Record<string, string> = {'Content-type': 'application/json; charset=UTF-8'};
+    const {session} = identification;
     if (includeAuthorization && session) {
         headers.Authorization = `Bearer ${session.token}`;
     }
     if (includeAuthorization && config.tokenOverride) {
-        headers.Authorization = `Bearer ${config.tokenOverride}`;
+        if (config.tokenOverride.startsWith('Basic ')) {
+            headers.Authorization = config.tokenOverride;
+        } else {
+            headers.Authorization = `Bearer ${config.tokenOverride}`;
+        }
     }
     return headers;
 };
@@ -105,7 +109,7 @@ const NO_CONTENT = 204;
 const BAD_REQUEST = 400;
 const OK = 200;
 async function request(url: URL, options: RequestOptions): Promise<Result> {
-    const { method, body, includeAuthorization, inert, paginated } = options;
+    const {method, body, includeAuthorization, inert, paginated} = options;
     const headers = createHeaders(includeAuthorization);
     const payload = createBody(headers, body);
     const response = await fetch(url.toString(), {
@@ -137,7 +141,7 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
     const fault = new Fault(json, response);
     if (inert) throw fault;
 
-    const retryOptions = { ...options, inert: true };
+    const retryOptions = {...options, inert: true};
     const retry = () => request(url, retryOptions);
     retry.requestArguments = {
         url,
@@ -170,6 +174,7 @@ export default class Router {
     get server(): Server {
         return this._server;
     }
+
     set server(value: Server) {
         this._server = value;
     }
@@ -180,6 +185,7 @@ export default class Router {
     get version(): Version {
         return this._version;
     }
+
     set version(value: Version) {
         this._version = value;
     }
@@ -191,6 +197,7 @@ export default class Router {
     get accountShortName(): AccountShortName {
         return this._accountShortName;
     }
+
     set accountShortName(value: AccountShortName) {
         this._accountShortName = value;
     }
@@ -202,6 +209,7 @@ export default class Router {
     get projectShortName(): ProjectShortName {
         return this._projectShortName;
     }
+
     set projectShortName(value: ProjectShortName) {
         this._projectShortName = value;
     }
@@ -236,6 +244,7 @@ export default class Router {
     get searchParams(): SearchParams {
         return this._searchParams;
     }
+
     set searchParams(query: SearchParams) {
         if (query.constructor === URLSearchParams) {
             this._searchParams = query;

@@ -52,6 +52,7 @@ export {
 
 export {
     accountAdapter,
+    adminAdapter,
     authAdapter,
     assetAdapter,
     // consensusAdapter,
