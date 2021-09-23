@@ -20,6 +20,11 @@
       "utils/*": ["src/utils/*"]
     }
   },
+  "typedocOptions": {
+    "entryPoints": ["src/epicenter.ts"],
+    "out": "docs",
+    "json": "docs/output.json"
+  },
   "include": [
     "src/**/*"
   ],

@@ -57,6 +57,7 @@ export async function update(
         }).then(({ body }) => body);
 }
 
+const NOT_FOUND = 404;
 export async function get(
     vaultKey: string,
     optionals: GenericAdapterOptions = {}
@@ -68,7 +69,7 @@ export async function get(
         .withServer(server)
         .get(`/vault/${vaultKey}`)
         .catch((error) => {
-            if (error.status === 404) return { body: undefined };
+            if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
         }).then(({ body }) => body);
 }
@@ -91,7 +92,7 @@ export async function withScope(
         .withServer(server)
         .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`)
         .catch((error) => {
-            if (error.status === 404) return { body: undefined };
+            if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
         }).then(({ body }) => body);
 }
@@ -122,7 +123,7 @@ export async function byName(
 export async function remove(
     vaultKey: string,
     optionals: { mutationKey?: string } & GenericAdapterOptions = {}
-) {
+): Promise<void> {
     const {
         mutationKey,
         accountShortName, projectShortName, server,
@@ -191,9 +192,9 @@ export async function create(
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
         .post(`/vault/${name}`, {
             body: {
                 scope: {

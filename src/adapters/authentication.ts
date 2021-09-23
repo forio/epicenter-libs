@@ -7,17 +7,6 @@ interface Credentials {
     password: string,
     groupKey?: string,
 }
-interface LoginOptions extends GenericAdapterOptions {
-    objectType?: string,
-}
-interface UpgradeOptions extends GenericAdapterOptions {
-    objectType?: string,
-    inert?: boolean,
-}
-interface Session {
-
-}
-
 
 /**
  * Authentication API adapters -- for authentication
@@ -35,15 +24,15 @@ interface Session {
  *
  * @returns {Promise}   Promise resolving to successful logout
  */
-export async function logout() {
+export async function logout(): Promise<void> {
     identification.session = undefined;
     await cometdAdapter.disconnect();
 }
 
 export async function login(
     credentials: Credentials,
-    optionals: LoginOptions = {}
-) {
+    optionals: { objectType?: string } & GenericAdapterOptions = {}
+): Promise<Session> {
     const { handle, password, groupKey } = credentials;
     const {
         objectType = 'user',
@@ -74,8 +63,11 @@ export async function login(
  */
 export async function regenerate(
     groupOrAccount: string,
-    optionals: UpgradeOptions = {}
-) {
+    optionals: {
+        objectType?: string,
+        inert?: boolean,
+    } & GenericAdapterOptions = {}
+): Promise<Session> {
     const {
         objectType = 'user', inert,
         accountShortName, projectShortName, server,
@@ -98,7 +90,9 @@ export async function regenerate(
     return session;
 }
 
-export async function sso(optionals: GenericAdapterOptions = {}) {
+export async function sso(
+    optionals: GenericAdapterOptions = {},
+): Promise<Session> {
     const { accountShortName, projectShortName, server } = optionals;
 
     const session = await new Router()
@@ -112,17 +106,17 @@ export async function sso(optionals: GenericAdapterOptions = {}) {
     return session;
 }
 
-export async function getSession() {
+export async function getSession(): Promise<Session> {
     const { body } = await new Router().get('/authentication');
-
     identification.session = body;
     return body;
 }
 
-export function getLocalSession() {
+export function getLocalSession(): Session | undefined {
     return identification.session;
 }
 
-export function setLocalSession(session: Session) {
+export function setLocalSession(session: Session): Session {
     return identification.session = session;
 }
+
