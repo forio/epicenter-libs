@@ -125,3 +125,19 @@ export function getLocalSession() {
 export function setLocalSession(session: Session) {
     return identification.session = session;
 }
+
+export async function resetPassword(handle: string, redirectUrl: string, subject: string, optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .post(`/authentication/password/user/${handle}`, {
+            body: {
+                redirectUrl,
+                subject,
+            },
+        })
+        .then(({ body }) => body);
+}
