@@ -1,10 +1,7 @@
 import fetch from 'cross-fetch';
 import { Router } from 'utils/index';
-import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
+import { ROLE } from 'utils/constants';
 
-interface Scope extends GenericScope {
-    scopeBoundary: keyof typeof SCOPE_BOUNDARY,
-}
 
 interface Asset {
     file: string,
@@ -15,7 +12,7 @@ interface Asset {
         worldKey: string,
         episodeName: string,
     },
-    scope: Scope,
+    scope: GenericScope,
 }
 
 interface AssetTicket {
@@ -23,29 +20,15 @@ interface AssetTicket {
 }
 
 
-interface AssetOptions extends GenericAdapterOptions {
-    userKey?: string,
-}
-
-interface ListOptions extends AssetOptions {
-    filter?: string,
-}
-
-interface CreateOptions extends AssetOptions {
-    readLock?: keyof typeof ROLE,
-    writeLock?: keyof typeof ROLE,
-    ttlSeconds?: number,
-}
-
-interface StoreOptions extends CreateOptions {
-    overwrite?: boolean,
-    fileName?: string,
-}
-
 export async function create(
     file: string,
-    scope: Scope,
-    optionals: CreateOptions = {}
+    scope: GenericScope,
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        ttlSeconds?: number,
+        userKey?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey } = scope;
     const {
@@ -75,8 +58,13 @@ export async function create(
 
 export async function update(
     file: string,
-    scope: Scope,
-    optionals: CreateOptions = {}
+    scope: GenericScope,
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        ttlSeconds?: number,
+        userKey?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey } = scope;
     const {
@@ -118,13 +106,13 @@ export async function remove(
 }
 
 export async function removeFromScope(
-    scope: Scope,
-    optionals: AssetOptions = {}
+    scope: GenericScope,
+    optionals: { userKey?: string } & GenericAdapterOptions = {}
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        server, accountShortName, projectShortName,
         userKey,
+        server, accountShortName, projectShortName,
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
@@ -149,13 +137,16 @@ export async function get(
 }
 
 export async function list(
-    scope: Scope,
-    optionals: ListOptions = {}
+    scope: GenericScope,
+    optionals: {
+        userKey?: string,
+        filter?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<Asset[]> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        server, accountShortName, projectShortName,
         userKey, filter,
+        server, accountShortName, projectShortName,
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
@@ -181,13 +172,13 @@ export async function getURL(
 
 export async function getURLWithScope(
     file: string,
-    scope: Scope,
-    optionals: AssetOptions = {}
+    scope: GenericScope,
+    optionals: { userKey?: string } & GenericAdapterOptions = {}
 ): Promise<string> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        server, accountShortName, projectShortName,
         userKey,
+        server, accountShortName, projectShortName,
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
@@ -201,8 +192,15 @@ export async function getURLWithScope(
 const CONFLICT = 409;
 export async function store(
     file: File,
-    scope: Scope,
-    optionals: StoreOptions = {}
+    scope: GenericScope,
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        ttlSeconds?: number,
+        overwrite?: boolean,
+        fileName?: string,
+        userKey?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;
     const name = fileName ?? file.name;

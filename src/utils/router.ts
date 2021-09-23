@@ -8,33 +8,16 @@ import config from './config';
 import { prefix, isBrowser } from './helpers';
 
 
-console.log('%c HERES MY FECTCH', 'font-size: 20px; color: #FB15B9FF;', fetch);
-const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
-const DEFAULT_PROJECT_SHORT_NAME = 'manager';
+// const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
+// const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
-type Value = any;
 
-interface Page {
-    firstResult: number,
-    maxResults: number,
-    totalResults: number,
-    values: Value[],
-    prev: () => Promise<Value[]>,
-    next: () => Promise<Value[]>,
-    all: (first?: number, allValues?: Value[]) => Promise<Value[]>,
-}
-interface RequestOptions {
-    method: string,
-    body?: Record<string, unknown>,
-    includeAuthorization?: boolean,
-    inert?: boolean,
-    paginated?: boolean,
-    parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
-}
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 
-function paginate(json: Page, url: URL, options: RequestOptions) {
+function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = { ...json, values: parsePage(json.values) };
     const prev = async function() {
@@ -75,7 +58,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues: Value[] = []):Promise<Value[]> {
+    const all = async function(first = 0, allValues: unknown[] = []):Promise<unknown[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -107,7 +90,10 @@ const createHeaders = (includeAuthorization?: boolean) => {
     return headers;
 };
 
-const createBody = (headers, body) => {
+const createBody = (
+    headers: Record<string, string>,
+    body?: Record<string, unknown>
+) => {
     if (isBrowser() && body instanceof FormData) {
         delete headers['Content-type'];
         return body;
@@ -116,6 +102,8 @@ const createBody = (headers, body) => {
 };
 
 const NO_CONTENT = 204;
+const BAD_REQUEST = 400;
+const OK = 200;
 async function request(url: URL, options: RequestOptions): Promise<Result> {
     const { method, body, includeAuthorization, inert, paginated } = options;
     const headers = createHeaders(includeAuthorization);
@@ -138,7 +126,7 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
     }
 
     const json = await response.json();
-    if ((response.status >= 200) && (response.status < 400)) {
+    if ((response.status >= OK) && (response.status < BAD_REQUEST)) {
         const result = new Result(
             paginated ? paginate(json, url, options) : json,
             response
@@ -155,38 +143,44 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
         url,
         ...retryOptions,
     };
-    return errorManager.handle(fault, retry);
+    return errorManager.handle<Result>(fault, retry);
 }
+
+
+type Server = string | undefined;
+type Version = number | undefined;
+type AccountShortName = string | undefined;
+type ProjectShortName = string | undefined;
+
 
 /**
  * Used to make the network calls in all API adapters
  */
 export default class Router {
-    _searchParams: URLSearchParams | undefined = undefined
-    _server: string | undefined = undefined
-    _version: number | undefined = undefined
-    _accountShortName: string | undefined = undefined;
-    _projectShortName: string | undefined = undefined;
+    _searchParams = new URLSearchParams();
+    _server: Server = undefined
+    _version: Version = undefined
+    _accountShortName: AccountShortName = undefined;
+    _projectShortName: ProjectShortName = undefined;
 
     /**
      * The root path used for the call, essentially protocol + hostname
      * @type {string}
      */
-    get server() {
+    get server(): Server {
         return this._server;
     }
-    set server(value) {
+    set server(value: Server) {
         this._server = value;
     }
 
     /**
      * The version of the Epicenter APIs being invoked; expected to stay at `3`
-     * @type {number}
      */
-    get version() {
+    get version(): Version {
         return this._version;
     }
-    set version(value) {
+    set version(value: Version) {
         this._version = value;
     }
 
@@ -194,10 +188,10 @@ export default class Router {
      * Name of the account; for administrative use, this value should be set to 'epicenter'
      * @type {string}
      */
-    get accountShortName() {
+    get accountShortName(): AccountShortName {
         return this._accountShortName;
     }
-    set accountShortName(value) {
+    set accountShortName(value: AccountShortName) {
         this._accountShortName = value;
     }
 
@@ -205,10 +199,10 @@ export default class Router {
      * Name of the project; for administrative use, this value should be set to 'manager'
      * @type {string}
      */
-    get projectShortName() {
+    get projectShortName(): ProjectShortName {
         return this._projectShortName;
     }
-    set projectShortName(value) {
+    set projectShortName(value: ProjectShortName) {
         this._projectShortName = value;
     }
 
@@ -239,10 +233,10 @@ export default class Router {
      *
      * @param {object|array|string|URLSearchParams} query   Value used to set the search parameters
      */
-    get searchParams() {
+    get searchParams(): SearchParams {
         return this._searchParams;
     }
-    set searchParams(query: any) {
+    set searchParams(query: SearchParams) {
         if (query.constructor === URLSearchParams) {
             this._searchParams = query;
             return;
@@ -250,20 +244,20 @@ export default class Router {
 
         /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
         if (typeof query === 'object' && query.constructor === Object) {
-            query = Object.entries(query).reduce<[string, unknown][]>((arr, [key, value]) => {
+            query = Object.entries(query).reduce((arr, [key, value]) => {
                 if (Array.isArray(value)) {
                     /* Special case for arrayed param values: use duplicated params here */
-                    return [...arr, ...value.map<[string, unknown]>((v) => [key, v])];
+                    return [...arr, ...value.map((v) => [key, v])];
                 }
                 if (value === undefined || value === null) {
                     /* Skip nullish values */
                     return arr;
                 }
-                arr.push([key, value]);
+                arr.push([key, value.toString()]);
                 return arr;
-            }, []);
+            }, [] as string[][]);
         }
-        this._searchParams = new URLSearchParams(query);
+        this._searchParams = new URLSearchParams(query as string | string[][] | URLSearchParams);
     }
 
     /**
@@ -271,7 +265,7 @@ export default class Router {
      * @param {string} [server] Root path to use
      * @returns {Router}        The Router instance
      */
-    withServer(server?: string) {
+    withServer(server?: string): Router {
         if (typeof server !== 'undefined') this.server = server;
         return this;
     }
@@ -281,7 +275,7 @@ export default class Router {
      * @param {string} [version]    Version to use
      * @returns {Router}            The Router instance
      */
-    withVersion(version?: number) {
+    withVersion(version?: number): Router {
         if (typeof version !== 'undefined') this.version = version;
         return this;
     }
@@ -291,7 +285,7 @@ export default class Router {
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
      */
-    withAccountShortName(accountShortName?: string) {
+    withAccountShortName(accountShortName?: string): Router {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
@@ -301,7 +295,7 @@ export default class Router {
      * @param {string} [projectShortName]   Project name to use
      * @returns {Router}                    The Router instance
      */
-    withProjectShortName(projectShortName?: string) {
+    withProjectShortName(projectShortName?: string): Router {
         if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
         return this;
     }
@@ -311,12 +305,12 @@ export default class Router {
      * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
      * @returns {Router}                                            The Router instance
      */
-    withSearchParams(searchParams?: string | string[] | Object | URLSearchParams) {
+    withSearchParams(searchParams?: SearchParams): Router {
         if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
         return this;
     }
 
-    getURL(uriComponent: string) {
+    getURL(uriComponent: string): URL {
         const server = this.server ?? `${config.apiProtocol}://${config.apiHost}`;
         const accountShortName = this.accountShortName ?? config.accountShortName;
         const projectShortName = this.projectShortName ?? config.projectShortName;
@@ -324,28 +318,33 @@ export default class Router {
 
         const url = new URL(`${server}`);
         url.pathname = `api/v${version}/${accountShortName}/${projectShortName}${prefix('/', uriComponent)}`;
-        url.search = this.searchParams ?? new URLSearchParams();
+        url.search = (this.searchParams ?? new URLSearchParams()).toString();
         return url;
     }
 
     //Network Requests
-    async get(uriComponent: string, options = {}) {
+    async get(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
 
         /* Handle sufficiently large GET requests with POST calls instead */
         if (url.href.length > MAX_URL_LENGTH) {
-            const entries = Array.from(this.searchParams.entries()) as Array<[string, string]>;
+            const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
+            const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
             const searchObject = entries.reduce((searchObject, [key, value]) => {
-
+                // Store values that only occur once as a the value itself
                 if (!searchObject[key]) {
                     searchObject[key] = value;
                     return searchObject;
                 }
-                if (!Array.isArray(searchObject[key])) searchObject[key] = [searchObject[key] as string];
-                Array.prototype.push.call(searchObject[key], value);
-                // searchObject[key].push(value);
+                // Store values that that appear more than once in an array
+                if (!Array.isArray(searchObject[key])) {
+                    // Make existing value an array
+                    searchObject[key] = [searchObject[key] as string];
+                }
+                (searchObject[key] as string[]).push(value);
+
                 return searchObject;
-            }, {} as Record<string, string | number | string[] | number[]>);
+            }, {} as Record<string, string | string[]>);
             this.searchParams = '';
             return this.post(uriComponent, {
                 ...options,

@@ -6,15 +6,6 @@ import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
-interface Session {
-    groupName?: string,
-    userKey: string,
-    groupKey: string,
-    loginMethod: {
-        objectType: string,
-    },
-}
-
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
 class Identification {
@@ -50,7 +41,7 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getStoreOptions(session?: FIXME) {
+    getStoreOptions(session?: Session) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 

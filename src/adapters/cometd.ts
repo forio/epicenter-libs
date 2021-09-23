@@ -1,4 +1,4 @@
-import { CometD, Message } from 'cometd';
+import { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
 import AckExtension from 'cometd/AckExtension';
 import ReloadExtension from 'cometd/ReloadExtension';
 import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils/index';
@@ -26,51 +26,43 @@ class CometdError extends Error {
     }
 }
 
-interface CometdReply {
-    successful: boolean,
-}
-interface Subscription {
-    channel: string,
-}
-interface Channel {
-    path: string,
+interface ChannelUpdate {
+    data: string | Record<string, unknown>,
 }
 
 let cometdInstance: CometD | undefined;
+// let cometdInstance: CometD | undefined;
 // TODO -- split this code so that people who don't use channels do not import this by default
 // https://levelup.gitconnected.com/code-splitting-for-libraries-bundling-for-npm-with-rollup-1-0-2522c7437697
 class CometdAdapter {
 
     url = '';
-    cometdInstance?: CometD;
     initialization = false;
     subscriptions = new Map();
-    state = DISCONNECTED;
-    requireAcknowledgement = true;
 
     get cometd() {
+        if (!cometdInstance) {
+            cometdInstance = new CometD();
+        }
         return cometdInstance;
     }
 
-    async startup(options = { logLevel: 'debug' }) {
+    async startup() {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
 
         const { apiProtocol, apiHost, apiVersion } = config;
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
 
-        cometdInstance = new CometD();
-        if (!this.cometd) return false; /* This should never happen since this.cometd IS the cometdInstance */
-
         this.cometd.registerExtension('ack', new AckExtension());
-
         if (isBrowser()) {
             this.cometd.registerExtension('reload', new ReloadExtension());
 
             window.onunload = () => {
-                if (this.cometd?.getStatus() === CONNECTED) {
-                    this.cometd.reload();
-                    this.cometd.getTransport().abort();
+                if (this.cometd.getStatus() === CONNECTED) {
+                    if (this.cometd.reload) this.cometd.reload();
+                    const transport = this.cometd.getTransport();
+                    if (transport) transport.abort();
                 }
             };
         }
@@ -82,27 +74,20 @@ class CometdAdapter {
 
         this.cometd.configure({
             url: this.url,
-            logLevel: options.logLevel,
+            logLevel: 'debug',
         });
         return true;
     }
 
-    // async reinit(customCometd, options) {
-    //     await this.disconnect();
-    //     this.initialization = false;
-    //     this.customCometd = customCometd;
-    //     return this.init(options);
-    // }
-
-    async init(options) {
+    async init() {
         if (!this.initialization) {
-            this.initialization = await this.startup(options);
+            this.initialization = await this.startup();
         }
         return this.initialization;
     }
 
     // Connects to CometD server
-    async handshake(options = {}) {
+    async handshake(options: { inert?: boolean } = {}) {
         await this.init();
 
         if (this.cometd.getStatus() !== DISCONNECTED) {
@@ -116,12 +101,13 @@ class CometdAdapter {
             handshakeProps = {
                 ext: {
                     [AUTH_TOKEN_KEY]: session.token,
-                    ack: this.requireAcknowledgement,
+                    ack: true,
                 },
             };
         }
 
-        this.cometd.ackEnabled = this.requireAcknowledgement;
+        // TODO -- this was line in the old libs, don't know why; probably not needed so commenting out for now.
+        // this.cometd.ackEnabled = true;
         this.cometd.websocketEnabled = true;
         return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
@@ -153,37 +139,39 @@ class CometdAdapter {
         await this.empty();
         if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
-        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: CometdReply) => {
+        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: Message) => {
             if (!disconnectReply.successful) {
                 reject(new EpicenterError('Unable to disconnect from CometD server'));
             } else {
-                resolve();
+                resolve(undefined);
             }
         }));
     }
 
-    async add(channel: Channel | Channel[], update, options = {}) {
+    async add(
+        channel: Channel | Channel[],
+        update: (data: unknown) => unknown,
+        options: { inert?: boolean } = {}
+    ): Promise<SubscriptionHandle | SubscriptionHandle[]> {
         await this.init();
-        const channels = [].concat(channel);
+        const channels = ([] as Channel[]).concat(channel);
 
         if (this.cometd?.getStatus() !== CONNECTED) {
             await this.handshake();
         }
-        const subscriptionProps = {};
         const { session } = identification;
-        if (session) {
-            subscriptionProps.ext = { [AUTH_TOKEN_KEY]: session.token };
-        }
+        const subscriptionProps = !session ? {} :
+            { ext: { [AUTH_TOKEN_KEY]: session.token } };
 
-        const handleCometdUpdate = ({ data }) => {
+        const handleCometdUpdate = ({ data }: ChannelUpdate) => {
             // TODO -- figure out why there's ambiguity here and try to remove it
             data = typeof data === 'string' ? JSON.parse(data) : data;
             return update(data);
         };
 
-        const promises:Promise<Subscription>[] = [];
+        const promises: Promise<SubscriptionHandle>[] = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: CometdReply) => {
+            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: SubscribeMessage) => {
                 if (subscribeReply.successful) {
                     this.subscriptions.set(subscription.channel, subscription);
                     resolve(subscription);
@@ -199,8 +187,9 @@ class CometdAdapter {
 
                 const retry = () => this.add(channel, update, { inert: true });
                 try {
-                    const result = errorManager.handle(error, retry);
-                    resolve(result);
+                    const result = errorManager.handle<SubscriptionHandle | SubscriptionHandle[]>(error, retry);
+                    const sub = Array.isArray(result) ? result[0] : result;
+                    resolve(sub);
                 } catch (e) {
                     reject(e);
                 }
@@ -211,9 +200,13 @@ class CometdAdapter {
             Promise.all(promises);
     }
 
-    async publish(channel, content, options = {}) {
+    async publish(
+        channel: Channel | Channel[],
+        content: Record<string, unknown>,
+        options: { inert?: boolean } = {}
+    ) {
         await this.init();
-        const channels = [].concat(channel);
+        const channels = ([] as Channel[]).concat(channel);
 
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
@@ -222,9 +215,9 @@ class CometdAdapter {
         const publishProps = {
             ext: session ? { [AUTH_TOKEN_KEY]: session.token } : undefined,
         };
-        const promises = [];
+        const promises: Promise<Message>[] = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            this.cometd.publish(path, content, publishProps, (publishReply: CometdReply) => {
+            this.cometd.publish(path, content, publishProps, (publishReply: Message) => {
                 if (publishReply.successful) {
                     resolve(publishReply);
                     return;
@@ -239,8 +232,9 @@ class CometdAdapter {
 
                 const retry = () => this.publish(channel, content, { inert: true });
                 try {
-                    const result = errorManager.handle(error, retry);
-                    resolve(result);
+                    const result = errorManager.handle<Message | Message[]>(error, retry);
+                    const message = Array.isArray(result) ? result[0] : result;
+                    resolve(message);
                 } catch (e) {
                     reject(e);
                 }
@@ -251,10 +245,10 @@ class CometdAdapter {
             Promise.all(promises);
     }
 
-    async remove(subscription) {
+    async remove(subscription: SubscriptionHandle) {
         await this.init();
         this.subscriptions.delete(subscription.channel);
-        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: CometdReply) => {
+        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
             if (unsubscribeReply.successful) {
                 resolve(unsubscribeReply);
             }
@@ -266,7 +260,7 @@ class CometdAdapter {
 
     async empty() {
         await this.init();
-        const promises = [];
+        const promises: Promise<unknown>[] = [];
         this.cometd.batch(() => this.subscriptions.forEach((subscription) => {
             promises.push(this.remove(subscription));
         }));

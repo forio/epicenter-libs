@@ -5,9 +5,8 @@ import { identification, Router } from 'utils/index';
  * @namespace episodeAdapter
  */
 
-interface EpisodeOptions extends GenericAdapterOptions {
-    draft?: boolean,
-    runLimit?: number,
+interface Episode {
+    episodeKey: string,
 }
 
 /**
@@ -27,8 +26,18 @@ interface EpisodeOptions extends GenericAdapterOptions {
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function create(name: string, groupName: string, optionals: EpisodeOptions = {}) {
-    const { accountShortName, projectShortName, server, draft, runLimit } = optionals;
+export async function create(
+    name: string,
+    groupName: string,
+    optionals: {
+        draft?: boolean,
+        runLimit?: number,
+    } & GenericAdapterOptions = {}
+): Promise<Episode> {
+    const {
+        draft, runLimit,
+        accountShortName, projectShortName, server,
+    } = optionals;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
@@ -52,7 +61,10 @@ export async function create(name: string, groupName: string, optionals: Episode
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function get(episodeKey: string, optionals: GenericAdapterOptions = {}) {
+export async function get(
+    episodeKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<Episode> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -77,10 +89,13 @@ export async function get(episodeKey: string, optionals: GenericAdapterOptions =
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function query(optionals: GenericAdapterQueryOptions = {}) {
+export async function query(
+    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+): Promise<Page<Episode>> {
+    const DEFAULT_MAX = 100;
     const {
         accountShortName, projectShortName, server,
-        filter = [], sort = [], first = 0, max = 100,
+        filter = [], sort = [], first = 0, max = DEFAULT_MAX,
     } = optionals;
 
     return await new Router()
@@ -92,7 +107,7 @@ export async function query(optionals: GenericAdapterQueryOptions = {}) {
             sort: sort.join(';'),
             first, max,
         })
-        .get('/episode/search')
+        .get('/episode/search', { paginated: true })
         .then(({ body }) => body);
 }
 
@@ -170,7 +185,10 @@ export async function withName(
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
-export async function remove(episodeKey: string, optionals: GenericAdapterOptions = {}) {
+export async function remove(
+    episodeKey: string,
+    optionals: GenericAdapterOptions = {}
+): Promise<void> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
