@@ -24,6 +24,7 @@ export {
     presenceAdapter,
     projectAdapter,
     runAdapter,
+    taskAdapter,
     timeAdapter,
     userAdapter,
     vaultAdapter,
