@@ -120,7 +120,7 @@ export async function sendValidationEmail(handle, subject) {
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
-        .post(`/admin/${handle}`, {
+        .post(`/validate/${handle}`, {
             body: {subject: subject},
         }).then(({body}) => body);
 }
