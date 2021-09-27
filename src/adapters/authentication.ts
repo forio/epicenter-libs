@@ -115,12 +115,12 @@ export async function sso(optionals: GenericAdapterOptions = {}) {
     return session;
 }
 
-export async function sendValidationEmail(handle, subject) {
+export async function sendVerificationEmail(handle, subject) {
 
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
-        .post(`/authentication/validate/${handle}`, {
+        .post(`/authentication/verify/${handle}`, {
             body: {subject: subject},
         }).then(({body}) => body);
 }
@@ -128,7 +128,7 @@ export async function sendValidationEmail(handle, subject) {
 export async function getSession() {
     const {body} = await new Router().get('/authentication');
 
-    identification.session = body;
+    identification.session = body;``
     return body;
 }
 
