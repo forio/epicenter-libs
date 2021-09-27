@@ -135,7 +135,7 @@ export function setLocalSession(session: Session) {
  * const subject = 'Please reset your project for Crafting your Life';
  * const url = 'https://forio.com/app/harvard-test/crafting-your-life';
  * const handle = 'testUser@test.com'
- * epicenter.authAdapter.resetPassword(handle { redirectURL, subject });
+ * epicenter.authAdapter.resetPassword(handle, { redirectURL, subject });
  *
  * @param {string}  handle                          Handle that user would use to login
  * @param {object}  [optionals={}]                  Optional parameters
