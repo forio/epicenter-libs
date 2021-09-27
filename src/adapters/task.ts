@@ -2,9 +2,9 @@ import { Router } from 'utils/index';
 import { SCOPE_BOUNDARY } from 'utils/constants';
 
 enum RETRY_POLICY {
-    DO_NOTHING = 'DO_NOTHING',
-    RESCHEDULE = 'RESCHEDULE',
-    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE',
+    DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
+    RESCHEDULE = 'RESCHEDULE', //If the task fails retry at the next scheduled time point
+    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', //Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
 }
 /**
  * Creates a task; requires support level authentication
@@ -14,8 +14,21 @@ enum RETRY_POLICY {
  * 
  * @memberof taskAdapter
  * @example
- *
- * epicenter.taskAdapter.create(scope, pseudonymKey, name, payload, trigger);
+ * const scope = {
+ *   scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *   scopeKey: session.groupKey,
+ * };
+ * const name = 'task-1-send-emails'
+ * const payload = {
+ *   method: 'POST',
+ *   url: 'http://sendEmails.com/apiKey=1234',
+ * }
+ * const trigger = {
+ *   value: '0 7 15 * *', //triggers on day 15 7am of each month
+ *   objectType: 'cron',
+ * }
+ * 
+ * epicenter.taskAdapter.create(scope, name, payload, trigger);
  *
  * @param {object}  scope                           Scope associated with your run
  * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
@@ -28,27 +41,27 @@ enum RETRY_POLICY {
  * 
  * @param {object}  trigger                         One of three types of objects that determine when to run the task
  * 
- * trigger option 1, Cron Object:                   Specifies a task that will repeat as a set amount of time passes
- * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (not command file path) https://phoenixnap.com/kb/set-up-cron-job-linux
+ * trigger option 1, Cron Object:                   Specifies a task that will execute once a set amount of time passes. This is the ONLY trigger that can be repeated
+ * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (i.e. '0 7 * * *' => trigger at 7am UTC everyday) https://en.wikipedia.org/wiki/Cron
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'cron'
  * 
- * trigger option 2, Offset Object:                 Specifies a task that will repeat as a set amount of time passes (clarify whether this is correct)
- * @param {number}  [trigger.minutes]               Number of minutes between task triggers
- * @param {number}  [trigger.hours]                 Number of hours between task triggers
- * @param {number}  [trigger.days]                  Number of days between task triggers
+ * trigger option 2, Offset Object:                 Specifies a task that will execute ONCE after the specified offset time has passed
+ * @param {number}  [trigger.minutes]               Number of minutes until the task triggers
+ * @param {number}  [trigger.hours]                 Number of hours until the task triggers
+ * @param {number}  [trigger.days]                  Number of days until the task triggers
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'offset'
  * 
- * trigger option 3, Date Object:                   Specifies a singular date for the task to be carried out
- * @param {string}  [trigger.value]                 A string in date-time format
+ * trigger option 3, Date Object:                   Specifies a singular date for the task to be carried out; will execute ONCE
+ * @param {string}  [trigger.value]                 A string in ISO-8601 date-time format (i.e. 2023-11-05T08:15:30-05:00 => November 5, 2023, 8:15:30 am, US Eastern Standard Time)
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'date'
  * 
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @param {string}  [optionals.pseudonymKey]        Key associated with the user
- * @param {string}  [optionals.retryPolicy]         Name of project (by default will be the project associated with the session)
- * @param {number}  [optionals.failSafeTermination] Name of project (by default will be the project associated with the session)
- * @param {number}  [optionals.ttlSeconds]          Name of project (by default will be the project associated with the session)
+ * @param {string}  [optionals.retryPolicy]         Specifies what to do should the task fail; see RETRY_POLICY
+ * @param {string}  [optionals.failSafeTermination] The ISO-8601 date-time when the task will be deleted regardless of any tiggers; defaults to null
+ * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function create(
@@ -105,7 +118,7 @@ export async function destroy(
 }
 
 /**
- * Gets a task by taskId; requires support level authentication
+ * Gets a task by taskKey; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{taskKey}`
  *
  * @memberof taskAdapter
@@ -132,7 +145,7 @@ export async function get(
 }
 
 /**
- * Gets a the history of a task by taskId; requires support level authentication
+ * Gets a the history of a task by taskKey; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/history/{taskKey}`
  *
  * @memberof taskAdapter
@@ -162,11 +175,11 @@ export async function getHistory(
  * Gets task based on the selected scope; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
  * Base URL with pseudonymKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{pseudonymKey}`
- *
+ * Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping
  * @memberof taskAdapter
  * @example
  *
- * epicenter.taskAdapter.getHistory(taskKey);
+ * epicenter.taskAdapter.getTaskIn(scope);
  *
  * @param {object}  scope                           Scope associated with your run
  * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
