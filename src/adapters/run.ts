@@ -205,8 +205,8 @@ export async function rewind(
 export async function update(
     runKey: string,
     update: {
-        readLock?: string,
-        writeLock?: string,
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
         trackingKey?: string,
         marked?: boolean, /* analogous to v2's 'saved' */
         hidden?: boolean, /* analogous to v2's 'trashed' */
@@ -218,6 +218,7 @@ export async function update(
     const { accountShortName, projectShortName, server } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
+    const permit = (readLock || writeLock) ? { readLock, writeLock } : undefined;
 
     return await new Router()
         .withServer(server)
@@ -226,10 +227,7 @@ export async function update(
         .withSearchParams(hasMultiple ? { runKey } : '')
         .patch(`/run${uriComponent}`, {
             body: {
-                permit: {
-                    readLock,
-                    writeLock,
-                },
+                permit,
                 trackingKey,
                 marked,
                 hidden,
