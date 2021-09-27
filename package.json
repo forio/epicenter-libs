@@ -1,9 +1,9 @@
 {
   "name": "epicenter-libs",
   "version": "3.7.1",
-  "main": "dist/cjs/epicenter.cjs.js",
-  "module": "dist/module/epicenter.esm.js",
-  "browser": "dist/browser/epicenter.esm.js",
+  "main": "dist/cjs",
+  "module": "dist/module",
+  "browser": "dist/browser",
   "types": "dist/types/index.d.ts",
   "files": [
     "browser/*",

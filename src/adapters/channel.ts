@@ -1,4 +1,4 @@
-import { Callback, SubscriptionHandle, Message } from 'cometd';
+import type { Callback, SubscriptionHandle, Message } from 'cometd';
 import { EpicenterError } from 'utils/index';
 import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
 import cometdAdapter from './cometd';

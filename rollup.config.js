@@ -71,19 +71,21 @@ export default [{
     ],
     output: [{
         // Intended for apps that use bundlers like webpack
-        file: pkg.browser,
+        dir: pkg.browser,
         format: 'esm',
     }, {
         // Intended for apps that use the <script> tag
         file: 'dist/epicenter.js',
         name: 'epicenter',
         format: 'umd',
+        inlineDynamicImports: true,
     }, {
         // Intended for apps that want to use smaller <script> tags
         file: 'dist/epicenter.min.js',
         name: 'epicenter',
         format: 'umd',
         plugins: [terser()],
+        inlineDynamicImports: true,
     }],
 }, {
     input,
@@ -148,11 +150,11 @@ export default [{
     output: [{
         // For more recent versions of nodejs supporting usage of esm
         // I.e., nodejs v13.2.0 or higher if we want to drop the experimental flags
-        file: pkg.module,
+        dir: pkg.module,
         format: 'esm',
     }, {
         // For older versions of node, using cjs
-        file: pkg.main,
+        dir: pkg.main,
         format: 'cjs',
     }],
 }];
