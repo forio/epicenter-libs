@@ -115,13 +115,13 @@ export async function sso(optionals: GenericAdapterOptions = {}) {
     return session;
 }
 
-export async function sendVerificationEmail(handle, subject) {
+export async function sendVerificationEmail(handle, subject, redirectUrl) {
 
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .post(`/authentication/verify/${handle}`, {
-            body: {subject: subject},
+            body: {subject: subject, redirectUrl: redirectUrl},
         }).then(({body}) => body);
 }
 
