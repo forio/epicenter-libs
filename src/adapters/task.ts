@@ -103,3 +103,30 @@ export async function destroy(
         .delete(`/task/${taskKey}`)
         .then(({ body }) => body);
 }
+
+/**
+ * Gets a task by taskId; requires support level authentication
+ * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{taskKey}`
+ *
+ * @memberof taskAdapter
+ * @example
+ *
+ * epicenter.taskAdapter.destroy(taskKey);
+ *
+ * @param {string}  taskKey                         Unique key associated with a task
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}                             
+ */
+export async function get(
+    taskKey: string, 
+    optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/task/${taskKey}`)
+        .then(({ body }) => body);
+}
