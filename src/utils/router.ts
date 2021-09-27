@@ -20,7 +20,7 @@ type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = {...json, values: parsePage(json.values)};
-    const prev = async function () {
+    const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
             console.warn('Pagination: cannot call "prev" on first page');
@@ -40,7 +40,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         return page.values;
     };
 
-    const next = async function () {
+    const next = async function() {
         const searchParams = new URLSearchParams(url.search);
         const first = page.firstResult + page.maxResults;
         if (first >= page.totalResults) {

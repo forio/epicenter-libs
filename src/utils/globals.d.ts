@@ -142,4 +142,8 @@ interface Session {
     },
 }
 
+interface SubscriptionHandle {
+    channel: string,
+}
+
 type FIXME = any;

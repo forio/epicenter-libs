@@ -1,6 +1,4 @@
-import { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
-import AckExtension from 'cometd/AckExtension';
-import ReloadExtension from 'cometd/ReloadExtension';
+import type { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
 import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils/index';
 import { channelsEnabled } from 'adapters/project';
 
@@ -31,9 +29,6 @@ interface ChannelUpdate {
 }
 
 let cometdInstance: CometD | undefined;
-// let cometdInstance: CometD | undefined;
-// TODO -- split this code so that people who don't use channels do not import this by default
-// https://levelup.gitconnected.com/code-splitting-for-libraries-bundling-for-npm-with-rollup-1-0-2522c7437697
 class CometdAdapter {
 
     url = '';
@@ -42,15 +37,23 @@ class CometdAdapter {
 
     get cometd() {
         if (!cometdInstance) {
-            cometdInstance = new CometD();
+            throw new EpicenterError('Tried to get non-existent cometd');
         }
         return cometdInstance;
+    }
+    set cometd(instance) {
+        cometdInstance = instance;
     }
 
     async startup() {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
 
+        const { CometD } = await import('cometd');
+        const AckExtension = (await import('cometd/AckExtension')).default;
+        const ReloadExtension = (await import('cometd/ReloadExtension')).default;
+
+        this.cometd = new CometD();
         const { apiProtocol, apiHost, apiVersion } = config;
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
 
@@ -133,7 +136,7 @@ class CometdAdapter {
     }
 
     async disconnect() {
-        if (!this.cometd) return Promise.resolve();
+        if (!this.initialization) return Promise.resolve();
 
         await this.init();
         await this.empty();
