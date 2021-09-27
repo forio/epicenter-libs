@@ -126,6 +126,25 @@ export function setLocalSession(session: Session) {
     return identification.session = session;
 }
 
+/**
+ * Sends a link to reset a user's password to their email
+ * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/authentication/password/user/{handle}`
+ *
+ * @memberof authAdapter
+ * @example
+ * const subject = 'Please reset your project for Crafting your Life';
+ * const url = 'https://forio.com/app/harvard-test/crafting-your-life';
+ * const handle = 'testUser@test.com'
+ * epicenter.authAdapter.resetPassword(handle, redirectUrl, subject);
+ *
+ * @param {string}  handle                          Handle that user would use to login
+ * @param {string}  redirectUrl                     Url to redirect to after password reset is completed. Must be in the forio domain otherwise an error will be thrown
+ * @param {string}  subject                         The subject of the email that will be sent
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {undefined}                             
+ */
 export async function resetPassword(handle: string, redirectUrl: string, subject: string, optionals: GenericAdapterOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
 
