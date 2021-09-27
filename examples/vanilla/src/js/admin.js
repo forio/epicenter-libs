@@ -34,3 +34,9 @@ document.getElementById('delete-task').addEventListener('click', (event) => {
     const taskId = document.getElementById('taskId').value;
     taskAdapter.destroy(taskId);
 });
+
+document.getElementById('get-task').addEventListener('click', (event) => {
+    event.preventDefault();
+    const taskId = document.getElementById('taskId').value;
+    taskAdapter.get(taskId);
+});
