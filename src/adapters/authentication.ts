@@ -1,5 +1,5 @@
-import { Router, identification } from 'utils/index';
-import { cometdAdapter } from 'adapters/index';
+import {identification, Router} from 'utils/index';
+import {cometdAdapter} from 'adapters/index';
 
 
 interface Credentials {
@@ -7,13 +7,16 @@ interface Credentials {
     password: string,
     groupKey?: string,
 }
+
 interface LoginOptions extends GenericAdapterOptions {
     objectType?: string,
 }
+
 interface UpgradeOptions extends GenericAdapterOptions {
     objectType?: string,
     inert?: boolean,
 }
+
 interface Session {
 
 }
@@ -44,7 +47,7 @@ export async function login(
     credentials: Credentials,
     optionals: LoginOptions = {}
 ) {
-    const { handle, password, groupKey } = credentials;
+    const {handle, password, groupKey} = credentials;
     const {
         objectType = 'user',
         accountShortName, projectShortName, server,
@@ -56,8 +59,8 @@ export async function login(
         .post('/authentication', {
             inert: true,
             includeAuthorization: false,
-            body: { objectType, handle, password, groupKey: groupKey || undefined },
-        }).then(({ body }) => body);
+            body: {objectType, handle, password, groupKey: groupKey || undefined},
+        }).then(({body}) => body);
     await logout();
 
     identification.session = session;
@@ -91,7 +94,7 @@ export async function regenerate(
                 objectType,
                 groupKey: objectType === 'user' ? groupOrAccount : undefined,
             },
-        }).then(({ body }) => body);
+        }).then(({body}) => body);
 
     await logout();
     identification.session = session;
@@ -99,21 +102,31 @@ export async function regenerate(
 }
 
 export async function sso(optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+    const {accountShortName, projectShortName, server} = optionals;
 
     const session = await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/registration/sso')
-        .then(({ body }) => body);
+        .then(({body}) => body);
 
     identification.session = session;
     return session;
 }
 
+export async function sendValidationEmail(handle, subject) {
+
+    return await new Router()
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
+        .post(`/admin/${handle}`, {
+            body: {subject: subject},
+        }).then(({body}) => body);
+}
+
 export async function getSession() {
-    const { body } = await new Router().get('/authentication');
+    const {body} = await new Router().get('/authentication');
 
     identification.session = body;
     return body;
