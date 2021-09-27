@@ -61,6 +61,7 @@ export {
     leaderboardAdapter,
     presenceAdapter,
     projectAdapter,
+    recaptchaAdapter,
     runAdapter,
     timeAdapter,
     userAdapter,

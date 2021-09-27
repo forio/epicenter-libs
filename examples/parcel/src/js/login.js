@@ -25,7 +25,7 @@ if (query.error) {
     errorEl.classList.add('visible');
 }
 
-document.getElementById('submit').onclick = async(e) => {
+document.getElementById('submit').onclick = async (e) => {
     e.preventDefault();
     if (e.target.innerText !== 'Submit') return;
 
@@ -57,3 +57,9 @@ document.getElementById('submit').onclick = async(e) => {
         window.location.href = '/index.html';
     }
 };
+
+document.getElementById('reset-password').addEventListener('submit', async(event) => {
+    event.preventDefault();
+    const { handle } = event.target.elements;
+    await authAdapter.resetPassword(handle.value, 'https://forio.com/app/harvard-test/crafting-your-life', 'Please reset your password for test!');
+});

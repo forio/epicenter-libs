@@ -1,3 +1,19 @@
+## [3.7.1](https://github.com/forio/epicenter-libs/compare/v3.7.0...v3.7.1) (2021-09-27)
+
+
+### Bug Fixes
+
+* added documentation for resetPassword ([dcfa14b](https://github.com/forio/epicenter-libs/commit/dcfa14b42f2550018a3a90d6b0d6cae53f0e0373))
+* fixed bug due to tokenOverride ([c6fbf42](https://github.com/forio/epicenter-libs/commit/c6fbf423791fecc60f2b8556b2805f87da9deb2e))
+* fixed group adapter test name changes ([dbf3fa0](https://github.com/forio/epicenter-libs/commit/dbf3fa00ca78a7f5b0a2bbfdea5208e77be07480))
+
+
+### Features
+
+* added resetPassword ([6c0fad3](https://github.com/forio/epicenter-libs/commit/6c0fad357dd2ce856d501a236119fd856b05c546))
+
+
+
 # [3.7.0](https://github.com/forio/epicenter-libs/compare/v3.6.1...v3.7.0) (2021-09-03)
 
 ### Code Refactoring
