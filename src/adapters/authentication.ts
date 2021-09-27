@@ -135,18 +135,27 @@ export function setLocalSession(session: Session) {
  * const subject = 'Please reset your project for Crafting your Life';
  * const url = 'https://forio.com/app/harvard-test/crafting-your-life';
  * const handle = 'testUser@test.com'
- * epicenter.authAdapter.resetPassword(handle, redirectUrl, subject);
+ * epicenter.authAdapter.resetPassword(handle { redirectURL, subject });
  *
  * @param {string}  handle                          Handle that user would use to login
- * @param {string}  redirectUrl                     Url to redirect to after password reset is completed. Must be in the forio domain otherwise an error will be thrown
- * @param {string}  subject                         The subject of the email that will be sent
  * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.redirectURL]         Url to redirect to after password reset is completed. Must be in the forio domain otherwise an error will be thrown
+ * @param {string}  [optionals.subject]             The subject of the email that will be sent
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}                             
+ * @returns {undefined}
  */
-export async function resetPassword(handle: string, redirectUrl: string, subject: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function resetPassword(
+    handle: string,
+    optionals: {
+        redirectURL?: string,
+        subject?: string,
+    } & GenericAdapterOptions = {}
+): Promise<void> {
+    const {
+        redirectURL, subject,
+        accountShortName, projectShortName, server,
+    } = optionals;
 
     return await new Router()
         .withServer(server)
@@ -154,7 +163,7 @@ export async function resetPassword(handle: string, redirectUrl: string, subject
         .withProjectShortName(projectShortName)
         .post(`/authentication/password/user/${handle}`, {
             body: {
-                redirectUrl,
+                redirectUrl: redirectURL,
                 subject,
             },
         })
