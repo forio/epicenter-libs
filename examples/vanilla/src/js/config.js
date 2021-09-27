@@ -9,5 +9,5 @@ if (config.isLocal()) {
     // config.accountShortName = 'test';
     // config.projectShortName = 'epi-v3';
     config.apiHost = 'epicenter-dev-2.forio.com';
-    config.tokenOverride = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJSUzI1NiJ9.IkFETUlOOjAwMDAwMTdjMTQ3MGVjODZlYTRkZGY0MzVhZWViYzVhYzQzMCI.LiWzXePNd85TJYvkjCRA9JjL_pdHfTX78pbhBZXOuls1Dx-IAAhQ5SygmT1VN28TfF6ggTtBmFMwQ3KAuQFs8gcEBkL3StCZ8frSDdwdZIbdMMZgBAy5Az5nwChl2Hjq9frNc5Dd7adWa9X7qsucFwz_Xe_aWK9Ycv6RNA3qjMuwY1NNfqGo5My0lH2Am9PPFPVOAcmyEVx0x7ntQAchvZATS1zLHjvsj0kXn2IWLe-PO-eVdUxzVJos5A7d-6yQ3mLPJ0TYopA11aBSAsoIpOOLuviu6h3AiRGDP0c-Bvq8psJR-6mzCj1MnTW_tV0FX0Wp3wwsxh94dRi_DBY8JQ';
+    config.tokenOverride = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJSUzI1NiJ9.IkFETUlOOjAwMDAwMTdjMjZmNjU1MmY1NjdiMTllMzZhMjBiMmZhOGUyZSI.m2a1q8zGyih6JCJhmqJhqG-B4ZBqj0Zct8MM7T1MDWJSZRNI2eYu6DubxzIzuoh6Cgz2gKbRP82nIsSJyWrgcl4JjPWBQTFNDX_uMK9mvNYXHsLD6f92NV9inImfwMFCiC2HaIgi49gIXlQ5YbC3xx0mkGUwAW1-8EcvUm5JZo_6085wVd2Zod1YH5wcru2eYcmGkggOVKTFYQmVov_K8NdomZozzO03Divp-yC2kgUlnZfbTGJ9pV0iDHAbdcsUm2Ed_ot4is7zTbK2a78aSw7OuBLT8KhHYcWkHasjXEfLJ18IWs5iCOCgaPpio0yiRyYuIAvLbCD__-wB8dI6Vw';
 }

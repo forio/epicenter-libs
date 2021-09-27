@@ -49,7 +49,7 @@ enum RETRY_POLICY {
  * @param {string}  [optionals.retryPolicy]         Name of project (by default will be the project associated with the session)
  * @param {number}  [optionals.failSafeTermination] Name of project (by default will be the project associated with the session)
  * @param {number}  [optionals.ttlSeconds]          Name of project (by default will be the project associated with the session)
- * @returns {object}                                Returns a task object including the taskKey
+ * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function create(
     scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope, 
@@ -111,13 +111,13 @@ export async function destroy(
  * @memberof taskAdapter
  * @example
  *
- * epicenter.taskAdapter.destroy(taskKey);
+ * epicenter.taskAdapter.get(taskKey);
  *
  * @param {string}  taskKey                         Unique key associated with a task
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}                             
+ * @returns {taskObject}                            Returns a task object including the taskKey 
  */
 export async function get(
     taskKey: string, 
@@ -128,5 +128,65 @@ export async function get(
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get(`/task/${taskKey}`)
+        .then(({ body }) => body);
+}
+
+/**
+ * Gets a the history of a task by taskId; requires support level authentication
+ * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/history/{taskKey}`
+ *
+ * @memberof taskAdapter
+ * @example
+ *
+ * epicenter.taskAdapter.getHistory(taskKey);
+ *
+ * @param {string}  taskKey                         Unique key associated with a task
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns {taskObject}                            Returns a task object including the taskKey 
+ */
+export async function getHistory(
+    taskKey: string, 
+    optionals: GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server } = optionals;
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/task/history/${taskKey}`)
+        .then(({ body }) => body);
+}
+
+/**
+ * Gets task based on the selected scope; requires support level authentication
+ * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
+ * Base URL with pseudonymKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{pseudonymKey}`
+ *
+ * @memberof taskAdapter
+ * @example
+ *
+ * epicenter.taskAdapter.getHistory(taskKey);
+ *
+ * @param {object}  scope                           Scope associated with your run
+ * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}  [optionals={}]                  Optional parameters
+ * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @param {string}  [optionals.pseudonymKey]        Key associated with the user
+ * @returns {taskObject}                            Returns a task object including the taskKey 
+ */
+export async function getTaskIn(
+    scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope,
+    optionals: {pseudonymKey?: string} & GenericAdapterOptions = {}) {
+    const { accountShortName, projectShortName, server,
+        pseudonymKey } = optionals;
+    const { scopeBoundary, scopeKey } = scope;
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .get(`/task/in/${scopeBoundary}/${scopeKey}${pseudonymKey ? `/${pseudonymKey}` : ''}`)
         .then(({ body }) => body);
 }
