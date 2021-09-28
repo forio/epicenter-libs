@@ -20,7 +20,7 @@ document.getElementById('create-task').addEventListener('click', (event) => {
     const defaultName = 'test-task-increment';
     const payload = {
         method: 'GET',
-        url: 'https://eecc-69-143-204-30.ngrok.io/increment',
+        url: '/increment',
     };
     const trigger = {
         minutes: 1,
@@ -28,7 +28,14 @@ document.getElementById('create-task').addEventListener('click', (event) => {
         days: 0,
         objectType: 'offset',
     };
-    taskAdapter.create(scope, taskName ?? defaultName, payload, trigger);
+    const cronTrigger = {
+        value: '1 * * * * ?', //triggers every minute
+        objectType: 'cron',
+    };
+    const optionals = {
+
+    };
+    taskAdapter.create(scope, taskName ?? defaultName, payload, cronTrigger);
     // taskID: 0000017c1470ec86ea4ddf435aeebc5ac43d
 });
 
@@ -57,5 +64,5 @@ document.getElementById('get-task-in').addEventListener('click', (event) => {
 
 document.getElementById('get-task-in-2').addEventListener('click', (event) => {
     event.preventDefault();
-    taskAdapter.getTaskIn(scope, {pseudonymKey});
+    taskAdapter.getTaskIn(scope, { pseudonymKey });
 });
