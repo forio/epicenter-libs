@@ -21,10 +21,10 @@ enum RETRY_POLICY {
  * const name = 'task-1-send-emails'
  * const payload = {
  *   method: 'POST',
- *   url: 'http://sendEmails.com/apiKey=1234',
+ *   url: 'https://forio.com/app/forio-dev/test-project/send-out-emails',
  * }
  * const trigger = {
- *   value: '0 7 15 * *', //triggers on day 15 7am of each month
+ *   value: '0 7 15 * * ?', //triggers on day 15 7am of each month
  *   objectType: 'cron',
  * }
  * 
@@ -35,14 +35,14 @@ enum RETRY_POLICY {
  * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {object}  payload                         An HTTP task object that will be executed when the task is triggered
  * @param {string}  [payload.method]                Type of method to use with the HTTP request (i.e. 'GET', 'POST', 'PATCH', etc.)
- * @param {string}  [payload.url]                   The url the HTTP request will be sent to
+ * @param {string}  [payload.url]                   The url the HTTP request will be sent to; MUST be on the forio.com domain
  * @param {object}  [payload.body]                  The body of the HTTP request. This is optional
  * @param {object}  [payload.headers]               Headers to send along with the HTTP request. Write as key-value pairs like you would with fetch. This is optional
  * 
  * @param {object}  trigger                         One of three types of objects that determine when to run the task
  * 
  * trigger option 1, Cron Object:                   Specifies a task that will execute once a set amount of time passes. This is the ONLY trigger that can be repeated
- * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (i.e. '0 7 * * *' => trigger at 7am UTC everyday) https://en.wikipedia.org/wiki/Cron
+ * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (i.e. '0 7 * * * ?' => trigger at 7am UTC everyday) https://en.wikipedia.org/wiki/Cron
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'cron'
  * 
  * trigger option 2, Offset Object:                 Specifies a task that will execute ONCE after the specified offset time has passed
