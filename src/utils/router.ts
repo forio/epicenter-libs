@@ -12,11 +12,6 @@ import { prefix, isBrowser } from './helpers';
 // const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
-
-type QueryObject = Record<string, unknown>;
-type SearchParams = string | string[][] | URLSearchParams | QueryObject;
-
-
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = {...json, values: parsePage(json.values)};
@@ -77,47 +72,60 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     return page;
 }
 
+interface Message {
+    headers: HeadersInit,
+    body: BodyInit | null,
+}
 
-const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = {'Content-type': 'application/json; charset=UTF-8'};
-    const {session} = identification;
-    if (includeAuthorization && session) {
-        headers.Authorization = `Bearer ${session.token}`;
+const createMessage = (
+    headersRaw?: Record<string, string>,
+    bodyRaw?: Record<string, unknown>,
+    includeAuthorization?: boolean,
+    authorization?: string,
+): Message => {
+    const headers = Object.assign({}, headersRaw);
+    let body = null;
+    if (isBrowser() && bodyRaw instanceof FormData) {
+        body = bodyRaw;
+    } else if (body) {
+        headers['Content-type'] = 'application/json; charset=UTF-8';
+        body = JSON.stringify(bodyRaw);
     }
-    if (includeAuthorization && config.tokenOverride) {
-        if (config.tokenOverride.startsWith('Basic ')) {
-            headers.Authorization = config.tokenOverride;
-        } else {
-            headers.Authorization = `Bearer ${config.tokenOverride}`;
-        }
-    }
-    return headers;
-};
 
-const createBody = (
-    headers: Record<string, string>,
-    body?: Record<string, unknown>
-) => {
-    if (isBrowser() && body instanceof FormData) {
-        delete headers['Content-type'];
-        return body;
+    if (!includeAuthorization) {
+        delete headers.Authorization;
+        return { headers, body };
     }
-    return body ? JSON.stringify(body) : null;
+
+    const { session } = identification;
+    if (!headers.Authorization) {                                               // Headers option first
+        if (session) headers.Authorization = `Bearer ${session.token}`;         // Session token second
+        if (authorization) headers.Authorization = authorization;               // Router fallback third
+        if (config.tokenOverride) headers.Authorization = config.tokenOverride; // Config fallback last
+    }
+    return { headers, body };
 };
 
 const NO_CONTENT = 204;
 const BAD_REQUEST = 400;
 const OK = 200;
-async function request(url: URL, options: RequestOptions): Promise<Result> {
-    const {method, body, includeAuthorization, inert, paginated} = options;
-    const headers = createHeaders(includeAuthorization);
-    const payload = createBody(headers, body);
+async function request(
+    url: URL,
+    options: RequestOptions,
+): Promise<Result> {
+    const { method, headers, body, includeAuthorization, inert, paginated, authorization } = options;
+    const message = createMessage(
+        headers,
+        body,
+        includeAuthorization,
+        authorization,
+    );
     const response = await fetch(url.toString(), {
-        method: method,
+        method,
         cache: 'no-cache',
-        headers: headers,
         redirect: 'follow',
-        body: payload,
+        headers: message.headers,
+        body: message.body,
     });
 
     if (response.status === NO_CONTENT) {
@@ -151,21 +159,35 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
 }
 
 
-type Server = string | undefined;
 type Version = number | undefined;
+type Server = string | undefined;
 type AccountShortName = string | undefined;
 type ProjectShortName = string | undefined;
-
+type Authorization = string | undefined;
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 /**
  * Used to make the network calls in all API adapters
  */
 export default class Router {
-    _searchParams = new URLSearchParams();
-    _server: Server = undefined
     _version: Version = undefined
+    _server: Server = undefined
     _accountShortName: AccountShortName = undefined;
     _projectShortName: ProjectShortName = undefined;
+    _authorization: Authorization = undefined;
+    _searchParams = new URLSearchParams();
+
+    /**
+     * The version of the Epicenter APIs being invoked; expected to stay at `3`
+     */
+    get version(): Version {
+        return this._version;
+    }
+
+    set version(value: Version) {
+        this._version = value;
+    }
 
     /**
      * The root path used for the call, essentially protocol + hostname
@@ -177,17 +199,6 @@ export default class Router {
 
     set server(value: Server) {
         this._server = value;
-    }
-
-    /**
-     * The version of the Epicenter APIs being invoked; expected to stay at `3`
-     */
-    get version(): Version {
-        return this._version;
-    }
-
-    set version(value: Version) {
-        this._version = value;
     }
 
     /**
@@ -212,6 +223,18 @@ export default class Router {
 
     set projectShortName(value: ProjectShortName) {
         this._projectShortName = value;
+    }
+
+    /**
+     * Auth header; looks like `Bearer TOKEN` or `Basic TOKEN`
+     * @type {string}
+     */
+    get authorization(): Authorization {
+        return this._authorization;
+    }
+
+    set authorization(value: Authorization) {
+        this._authorization = value;
     }
 
     /**
@@ -270,22 +293,22 @@ export default class Router {
     }
 
     /**
-     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
-     * @param {string} [server] Root path to use
-     * @returns {Router}        The Router instance
-     */
-    withServer(server?: string): Router {
-        if (typeof server !== 'undefined') this.server = server;
-        return this;
-    }
-
-    /**
      * Sets the version. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
      * @param {string} [version]    Version to use
      * @returns {Router}            The Router instance
      */
-    withVersion(version?: number): Router {
+    withVersion(version?: Version): Router {
         if (typeof version !== 'undefined') this.version = version;
+        return this;
+    }
+
+    /**
+     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [server] Root path to use
+     * @returns {Router}        The Router instance
+     */
+    withServer(server?: Server): Router {
+        if (typeof server !== 'undefined') this.server = server;
         return this;
     }
 
@@ -294,7 +317,7 @@ export default class Router {
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
      */
-    withAccountShortName(accountShortName?: string): Router {
+    withAccountShortName(accountShortName?: AccountShortName): Router {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
@@ -304,8 +327,18 @@ export default class Router {
      * @param {string} [projectShortName]   Project name to use
      * @returns {Router}                    The Router instance
      */
-    withProjectShortName(projectShortName?: string): Router {
+    withProjectShortName(projectShortName?: ProjectShortName): Router {
         if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
+        return this;
+    }
+
+    /**
+     * Sets the project. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [projectShortName]   Project name to use
+     * @returns {Router}                    The Router instance
+     */
+    withAuthorization(authorization?: Authorization): Router {
+        if (typeof authorization !== 'undefined') this.authorization = authorization;
         return this;
     }
 
@@ -340,7 +373,7 @@ export default class Router {
             const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
             const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
             const searchObject = entries.reduce((searchObject, [key, value]) => {
-                // Store values that only occur once as a the value itself
+                // Store values that only occur once as the value itself
                 if (!searchObject[key]) {
                     searchObject[key] = value;
                     return searchObject;
@@ -365,6 +398,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'GET',
+            authorization: this.authorization,
         });
     }
 
@@ -374,6 +408,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'DELETE',
+            authorization: this.authorization,
         });
     }
 
@@ -383,6 +418,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'PATCH',
+            authorization: this.authorization,
         });
     }
 
@@ -392,6 +428,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'POST',
+            authorization: this.authorization,
         });
     }
 
@@ -401,6 +438,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'PUT',
+            authorization: this.authorization,
         });
     }
 }

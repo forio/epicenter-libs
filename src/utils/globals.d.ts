@@ -81,8 +81,10 @@ interface Permit {
 
 interface RequestOptions {
     method: string,
+    headers?: Record<string, string>,
     body?: Record<string, unknown>,
     includeAuthorization?: boolean,
+    authorization?: string,
     inert?: boolean,
     paginated?: boolean,
     parsePage?: <Values, ParsedValues>(values: Array<Values>) => Array<Values | ParsedValues>,
