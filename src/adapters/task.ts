@@ -52,7 +52,7 @@ enum RETRY_POLICY {
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'offset'
  * 
  * trigger option 3, Date Object:                   Specifies a singular date for the task to be carried out; will execute ONCE
- * @param {string}  [trigger.value]                 A string in ISO-8601 date-time format (i.e. 2023-11-05T08:15:30-05:00 => November 5, 2023, 8:15:30 am, US Eastern Standard Time)
+ * @param {string}  [trigger.value]                 A string in ISO-8601 date-time format (i.e. 2023-11-05T08:15:30-04:00 => November 5, 2023, 8:15:30 am, US EDT)
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'date'
  * 
  * @param {object}  [optionals={}]                  Optional parameters
@@ -90,7 +90,7 @@ export async function create(
 }
 
 /**
- * Deletes a task; requires support level authentication
+ * Deletes a task (changes status to cancelled); requires support level authentication
  * Sends a 204 on successful deletion
  * Base URL: DELETE `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{taskKey}`
  *
@@ -145,7 +145,7 @@ export async function get(
 }
 
 /**
- * Gets a the history of a task by taskKey; requires support level authentication
+ * Gets a the history (100 most recent times it has triggered) of a task by taskKey; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/history/{taskKey}`
  *
  * @memberof taskAdapter
@@ -172,13 +172,17 @@ export async function getHistory(
 }
 
 /**
- * Gets task based on the selected scope; requires support level authentication
+ * Gets most recent 100 tasks related to the selected scope; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
  * Base URL with pseudonymKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{pseudonymKey}`
  * Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping
  * @memberof taskAdapter
  * @example
  *
+ * const scope = {
+ *   scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *   scopeKey: session.groupKey,
+ * };
  * epicenter.taskAdapter.getTaskIn(scope);
  *
  * @param {object}  scope                           Scope associated with your run
@@ -187,7 +191,7 @@ export async function getHistory(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.pseudonymKey]        Key associated with the user
+ * @param {string}  [optionals.pseudonymKey]        Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
  * @returns {taskObject}                            Returns a task object including the taskKey 
  */
 export async function getTaskIn(
