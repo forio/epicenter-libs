@@ -23,6 +23,7 @@ export {
     leaderboardAdapter,
     presenceAdapter,
     projectAdapter,
+    recaptchaAdapter,
     runAdapter,
     taskAdapter,
     timeAdapter,
