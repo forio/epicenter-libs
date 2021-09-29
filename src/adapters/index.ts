@@ -7,6 +7,7 @@ import * as groupAdapter from './group';
 import * as leaderboardAdapter from './leaderboard';
 import * as presenceAdapter from './presence';
 import * as projectAdapter from './project';
+import * as recaptchaAdapter from './recaptcha';
 import * as runAdapter from './run';
 import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
@@ -27,6 +28,7 @@ export {
     leaderboardAdapter,
     presenceAdapter,
     projectAdapter,
+    recaptchaAdapter,
     runAdapter,
     timeAdapter,
     userAdapter,
