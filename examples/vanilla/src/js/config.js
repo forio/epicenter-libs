@@ -8,6 +8,6 @@ if (config.isLocal()) {
     /* For Development Site (dev 2) */
     // config.accountShortName = 'test';
     // config.projectShortName = 'epi-v3';
-    config.apiHost = 'epicenter-dev-2.forio.com';
-    config.tokenOverride = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJSUzI1NiJ9.IkFETUlOOjAwMDAwMTdjMmQ1M2NiOWE0ZmE4NGQ3YzU1MzQwNGJkODYyYyI.ZnoeZu2ObDUHIunctSLsw5d8RwmZbX0s4fIT4AMLs3bfOx30AilsgmU0VdJ2Uq5oCLBYBffoM4MWtMPNNPj6yvPVxNCeGSwzP4fer7fXytOK-GOB0dDIQMz2z9k0mN_dfvAeBbWZxzTZfkJjFG7IEez6H8W634mP1WsqQfd-BNsCeRXad91QHZcLXNmwEO2UpTQZp8Yg99_LY0Fsq76G9i55K36vhLvZJoMIwSLsZawIiETyOVkJdt6eOKUvOOvFS45oFdfqac1OIi-z4afT4bRRrqRVd5RkEdB9Mxq3HqP3bCQUQX-V3EO6tq373no4rtIV85WEAkPp6nrrD6zkXA';
+    // config.apiHost = 'epicenter-dev-2.forio.com';
+    // config.tokenOverride = 'eyJ0eXAiOiJKV1QiLA0KICJhbGciOiJSUzI1NiJ9.IkFETUlOOjAwMDAwMTdjMmU3OWFhM2ZjZjNmN2IzYmM0MTc4Njk3ZGZmMCI.qLgHbaA7yYSYPlLTo4xuhoY3lOUaH0p8hLBALzeMus147uI7DU3-VvqqBJSUrtqHgmZGWhHimYi2bpeXCF16XK9YaJYAuO-ogdHMD55HWb1bDwiFfW0OqS2ICx4ewrN-QSFQbFibCTstqmUS41ySdzJOsMa9riDKOGU0iG0F9EigUYVNnpBIPVRLWsToMVBrmnG09yg9gBmE-DkBxTkvdm-G3RNgPLBvK-W2Vg_ym31g3SzQ7rUTx5aF00Es7xBCgH4vUhTb25K9U4bpMgZD-wVmllgNA-t6OHLzItZHBBp1wyVtbfE2wXMIZ9O8gV-6FeCgzNB7uOXBCPXp3fidfA';
 }

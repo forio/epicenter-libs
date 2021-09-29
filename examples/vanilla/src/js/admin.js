@@ -32,10 +32,14 @@ document.getElementById('create-task').addEventListener('click', (event) => {
         value: '1 * * * * ?', //triggers every minute
         objectType: 'cron',
     };
+    const dateTrigger = {
+        value: '2021-09-29T13:30:30-04:00',
+        objectType: 'date',
+    };
     const optionals = {
 
     };
-    taskAdapter.create(scope, taskName ?? defaultName, payload, cronTrigger);
+    taskAdapter.create(scope, taskName ?? defaultName, payload, dateTrigger);
     // taskID: 0000017c1470ec86ea4ddf435aeebc5ac43d
 });
 
