@@ -36,6 +36,13 @@ export async function removeAccount(accountShortName) {
         .then(({body}) => body);
 }
 
+export async function getAccount(accountShortName) {
+    return await new Router()
+        .withAccountShortName(accountShortName)
+        .get('/account')
+        .then(({body}) => body);
+}
+
 export async function teamForAdmin(
     adminKey: string,
     optionals: {
