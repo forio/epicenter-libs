@@ -6,17 +6,37 @@ import {Router} from 'utils/index';
  */
 
 interface Account {
-    name: string,
-    objectType: string
+    name: string;
+    objectType: string;
 }
 
-export async function createAccount(optionals = {}) {
-    const {objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval} = optionals;
-    const response = await new Router()
+interface AccountCreateView {
+    adminKey: string;
+    name: string;
+    shortName: string;
+    sharedSecret?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountCreateView extends AccountCreateView {
+    objectType: 'personal';
+}
+
+interface TeamAccountCreateView extends AccountCreateView {
+    objectType: 'team';
+    billingInterval: string;
+    subscriptionPlan: string;
+}
+
+export async function createAccount(view: AccountCreateView) {
+
+    return await new Router()
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
         .post('/account', {
-            body: {objectType, name, shortName, adminKey, subscriptionPlan, billingInterval},
+            body: view,
         }).then(({body}) => body);
-    return response;
 }
 
 // TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
