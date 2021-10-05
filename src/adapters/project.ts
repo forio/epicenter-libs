@@ -1,4 +1,4 @@
-import { ROLE, Router } from 'utils/index';
+import {ROLE, Router} from 'utils/index';
 
 enum ACCESS_TYPE {
     PUBLIC = 'PUBLIC',
@@ -63,9 +63,9 @@ interface TeamProject {
     projectKey: string,
     members: Member[],
     channelEnabled: boolean,
-    workerPartition : keyof typeof WORKER_PARTITION,
+    workerPartition: keyof typeof WORKER_PARTITION,
     name: string,
-    phylogeny : keyof typeof PHYLOGENY,
+    phylogeny: keyof typeof PHYLOGENY,
     multiPlayerEnabled: boolean,
     shortName: string,
     approximateRunCount: number,
@@ -123,23 +123,35 @@ type Project =
 export async function channelsEnabled(
     optionals: GenericAdapterOptions = {}
 ): Promise<boolean> {
-    const { accountShortName, projectShortName, server } = optionals;
+    const {accountShortName, projectShortName, server} = optionals;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/project/channel/isEnabled')
-        .then(({ body }) => body);
+        .then(({body}) => body);
 }
 
 export async function get(
     optionals: GenericAdapterOptions = {}
 ): Promise<Project> {
-    const { accountShortName, projectShortName, server } = optionals;
+    const {accountShortName, projectShortName, server} = optionals;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .get('/project')
-        .then(({ body }) => body);
+        .then(({body}) => body);
+}
+
+export async function list(
+    optionals: GenericAdapterOptions = {}
+): Promise<Project> {
+    const {accountShortName, server} = optionals;
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName("manager")
+        .get('/project/in')
+        .then(({body}) => body);
 }
