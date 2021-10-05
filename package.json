@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.7.1",
+  "version": "3.7.1-dberkman",
   "type": "module",
   "main": "dist/epicenter.js",
   "module": "dist/epicenter.esm.js",
