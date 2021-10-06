@@ -144,12 +144,8 @@ export async function get(
         .then(({body}) => body);
 }
 
-export async function list(
-    optionals: GenericAdapterOptions = {}
-): Promise<Project> {
-    const {accountShortName, server} = optionals;
+export async function list(accountShortName) {
     return await new Router()
-        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName("manager")
         .get('/project/in')
