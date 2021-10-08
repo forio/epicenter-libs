@@ -2,6 +2,7 @@ import * as accountAdapter from './account';
 import * as adminAdapter from './admin';
 import * as authAdapter from './authentication';
 import * as assetAdapter from './asset';
+import * as emailAdapter from './email';
 import * as episodeAdapter from './episode';
 import * as groupAdapter from './group';
 import * as leaderboardAdapter from './leaderboard';
@@ -22,6 +23,7 @@ export {
     authAdapter,
     assetAdapter,
     cometdAdapter,
+    emailAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
