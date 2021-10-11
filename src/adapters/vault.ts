@@ -41,13 +41,14 @@ export async function update(
 ): Promise<Vault> {
     const {
         mutationKey,
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, authorization,
     } = optionals;
 
     return await new Router()
+        .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
         .withSearchParams({ MutationKey: mutationKey })
         .put(`/vault/${vaultKey}`, {
             body: {
@@ -62,11 +63,12 @@ export async function get(
     vaultKey: string,
     optionals: GenericAdapterOptions = {}
 ): Promise<Vault> {
-    const { accountShortName, projectShortName, server } = optionals;
+    const { accountShortName, projectShortName, server, authorization } = optionals;
     return await new Router()
+        .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
         .get(`/vault/${vaultKey}`)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
@@ -83,13 +85,14 @@ export async function withScope(
     const { scopeBoundary, scopeKey } = scope;
     const {
         userKey,
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, authorization,
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
+        .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
         .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
@@ -108,11 +111,12 @@ export async function byName(
 ): Promise<Vault[]> {
     const {
         groupName, episodeName, userKey, includeEpisodes,
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, authorization,
     } = optionals;
 
     return await new Router()
         .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams({ userKey, includeEpisodes })
@@ -126,12 +130,13 @@ export async function remove(
 ): Promise<void> {
     const {
         mutationKey,
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, authorization,
     } = optionals;
     return await new Router()
+        .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .withServer(server)
         .withSearchParams({ MutationKey: mutationKey })
         .delete(`/vault/${vaultKey}`)
         .then(({ body }) => body);
@@ -185,7 +190,7 @@ export async function create(
     const {
         readLock, writeLock,
         userKey, ttlSeconds, mutationKey,
-        accountShortName, projectShortName, server,
+        accountShortName, projectShortName, server, authorization,
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
@@ -193,6 +198,7 @@ export async function create(
 
     return await new Router()
         .withServer(server)
+        .withAuthorization(authorization)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(`/vault/${name}`, {

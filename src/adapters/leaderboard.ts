@@ -84,7 +84,7 @@ export async function update(
 export async function get(
     collection: string,
     scope: GenericScope,
-    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+    optionals: GenericSearchOptions & GenericAdapterOptions = {}
 ): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
     const {

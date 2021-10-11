@@ -289,7 +289,7 @@ export async function create(
  * @returns {object}                                    Group object
  */
 export async function search(
-    optionals: { quantized?: boolean } & GenericQueryOptions & GenericAdapterOptions = {}
+    optionals: { quantized?: boolean } & GenericSearchOptions & GenericAdapterOptions = {}
 ): Promise<Page<Group>> {
     const {
         filter = [], sort = [], first, max, quantized,

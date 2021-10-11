@@ -331,7 +331,7 @@ export async function query(
         groupName?: string,
         episodeName?: string,
         includeEpisodes?: boolean,
-    } & GenericQueryOptions & GenericAdapterOptions = {}
+    } & GenericSearchOptions & GenericAdapterOptions = {}
 ): Promise<Page<Run>> {
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
