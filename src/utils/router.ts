@@ -87,7 +87,7 @@ const createMessage = (
     let body = null;
     if (isBrowser() && bodyRaw instanceof FormData) {
         body = bodyRaw;
-    } else if (body) {
+    } else if (bodyRaw) {
         headers['Content-type'] = 'application/json; charset=UTF-8';
         body = JSON.stringify(bodyRaw);
     }
@@ -101,7 +101,7 @@ const createMessage = (
     if (!headers.Authorization) {                                               // Headers option first
         if (session) headers.Authorization = `Bearer ${session.token}`;         // Session token second
         if (authorization) headers.Authorization = authorization;               // Router fallback third
-        if (config.tokenOverride) headers.Authorization = config.tokenOverride; // Config fallback last
+        if (config.authOverride) headers.Authorization = config.authOverride; // Config fallback last
     }
     return { headers, body };
 };
