@@ -54,6 +54,7 @@ interface GenericAdapterOptions {
     server?: string,
     accountShortName?: string,
     projectShortName?: string,
+    authorization?: string,
 }
 
 interface GenericQueryOptions {

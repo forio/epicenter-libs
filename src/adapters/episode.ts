@@ -90,7 +90,7 @@ export async function get(
  * @returns {object}                    Something meaningful about returns
  */
 export async function query(
-    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+    optionals: GenericSearchOptions & GenericAdapterOptions = {}
 ): Promise<Page<Episode>> {
     const DEFAULT_MAX = 100;
     const {
