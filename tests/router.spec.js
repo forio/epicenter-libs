@@ -97,7 +97,7 @@ describe('Router (Fetch/Request Wrapper)', () => {
         config.loadBrowser();
         config.accountShortName = ACCOUNT;
         config.projectShortName = PROJECT;
-        config.tokenOverride = undefined;
+        config.authOverride = undefined;
     });
 
     let router;
@@ -258,10 +258,10 @@ describe('Router (Fetch/Request Wrapper)', () => {
             req.requestHeaders.authorization.should.equal(`Bearer ${SESSION.token}`);
         });
         it('Should support overrides from the config', async() => {
-            config.tokenOverride = 'bananas';
+            config.authOverride = 'bananas';
             await router.get('/run');
             const req = fakeServer.requests.pop();
-            req.requestHeaders.authorization.should.equal('Bearer bananas');
+            req.requestHeaders.authorization.should.equal('bananas');
         });
         it('Should support includeAuthorization: false', async() => {
             await router.get('/run', { includeAuthorization: false });
