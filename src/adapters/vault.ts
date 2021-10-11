@@ -37,39 +37,31 @@ export async function update(
         set?: Record<string, unknown>,
         push?: Record<string, unknown>,
     },
-    optionals: { mutationKey?: string } & GenericAdapterOptions = {}
+    optionals: { mutationKey?: string } & RoutingOptions = {}
 ): Promise<Vault> {
     const {
         mutationKey,
-        accountShortName, projectShortName, server, authorization,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .withSearchParams({ MutationKey: mutationKey })
         .put(`/vault/${vaultKey}`, {
             body: {
                 set: items.set ?? {},
                 push: items.push ?? {},
             },
+            query: { MutationKey: mutationKey },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 const NOT_FOUND = 404;
 export async function get(
     vaultKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Vault> {
-    const { accountShortName, projectShortName, server, authorization } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/vault/${vaultKey}`)
+        .get(`/vault/${vaultKey}`, optionals)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
@@ -80,20 +72,16 @@ export async function get(
 export async function withScope(
     name: string,
     scope: GenericScope,
-    optionals: { userKey?: string } & GenericAdapterOptions = {}
+    optionals: { userKey?: string } & RoutingOptions = {}
 ): Promise<Vault> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         userKey,
-        accountShortName, projectShortName, server, authorization,
+        ...routingOptions
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`)
+        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`, routingOptions)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
@@ -107,38 +95,34 @@ export async function byName(
         episodeName?: string,
         userKey?: string,
         includeEpisodes?: boolean,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Vault[]> {
     const {
         groupName, episodeName, userKey, includeEpisodes,
-        accountShortName, projectShortName, server, authorization,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .withSearchParams({ userKey, includeEpisodes })
-        .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`)
+        .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
+            query: { userKey, includeEpisodes },
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
 export async function remove(
     vaultKey: string,
-    optionals: { mutationKey?: string } & GenericAdapterOptions = {}
+    optionals: { mutationKey?: string } & RoutingOptions = {}
 ): Promise<void> {
     const {
         mutationKey,
-        accountShortName, projectShortName, server, authorization,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .withSearchParams({ MutationKey: mutationKey })
-        .delete(`/vault/${vaultKey}`)
+        .delete(`/vault/${vaultKey}`, {
+            query: { MutationKey: mutationKey },
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
@@ -184,23 +168,19 @@ export async function create(
         userKey?: string,
         ttlSeconds?: string,
         mutationKey?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Vault> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock,
         userKey, ttlSeconds, mutationKey,
-        accountShortName, projectShortName, server, authorization,
+        ...routingOptions
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
-        .withServer(server)
-        .withAuthorization(authorization)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/vault/${name}`, {
             body: {
                 scope: {
@@ -216,6 +196,7 @@ export async function create(
                 mutationKey,
                 items,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
