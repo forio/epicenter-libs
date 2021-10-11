@@ -45,19 +45,30 @@ declare enum PUSH_CATEGORY {
     SYSTEM = 'SYSTEM',
 }
 
+type Version = number | undefined;
+type Server = string | undefined;
+type AccountShortName = string | undefined;
+type ProjectShortName = string | undefined;
+type Authorization = string | undefined;
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
+
+
 interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY,
     scopeKey: string,
 }
 
+// will be NIU -- replaced by RoutingOptions
 interface GenericAdapterOptions {
-    server?: string,
-    accountShortName?: string,
-    projectShortName?: string,
-    authorization?: string,
+    server?: Server,
+    accountShortName?: AccountShortName,
+    projectShortName?: ProjectShortName,
+    authorization?: Authorization,
+    query?: SearchParams,
 }
 
-interface GenericQueryOptions {
+interface GenericSearchOptions {
     filter?: string[],
     sort?: string[],
     first?: number,
@@ -79,16 +90,17 @@ interface Permit {
     writeLock: keyof typeof ROLE,
 }
 
-
-interface RequestOptions {
-    method: string,
+interface RoutingOptions extends GenericAdapterOptions {
     headers?: Record<string, string>,
     body?: Record<string, unknown>,
     includeAuthorization?: boolean,
-    authorization?: string,
     inert?: boolean,
     paginated?: boolean,
     parsePage?: <Values, ParsedValues>(values: Array<Values>) => Array<Values | ParsedValues>,
+}
+
+interface RequestOptions extends RoutingOptions {
+    method: string,
 }
 
 interface RetryFunction<Output> {
