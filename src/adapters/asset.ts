@@ -1,5 +1,5 @@
 import fetch from 'cross-fetch';
-import { Router } from 'utils/index';
+import { Fault, Router } from 'utils/index';
 import { ROLE } from 'utils/constants';
 
 
@@ -209,10 +209,14 @@ export async function store(
         const response = await create(name, scope, remaining);
         presignedUrl = response.url;
     } catch (error) {
-        const shouldUpdate = error.status === CONFLICT && overwrite;
-        if (!shouldUpdate) throw error;
-        const response = await update(name, scope, remaining);
-        presignedUrl = response.url;
+        if (error instanceof Fault) {
+            const shouldUpdate = error.status === CONFLICT && overwrite;
+            if (!shouldUpdate) throw error;
+            const response = await update(name, scope, remaining);
+            presignedUrl = response.url;
+        } else {
+            throw error;
+        }
     }
     await fetch(presignedUrl, { method: 'PUT', body: file });
     return;
