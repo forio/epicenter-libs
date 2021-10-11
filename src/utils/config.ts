@@ -10,7 +10,7 @@ class Config {
     _accountShortName = '';
     _projectShortName = '';
 
-    tokenOverride?: string
+    authOverride?: string
 
     constructor() {
         if (isBrowser()) {

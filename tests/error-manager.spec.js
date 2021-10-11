@@ -39,7 +39,7 @@ describe('Error Manager', () => {
         config.loadBrowser();
         config.accountShortName = ACCOUNT;
         config.projectShortName = PROJECT;
-        config.tokenOverride = undefined;
+        config.authOverride = undefined;
     });
 
     describe('Error Handlers', () => {
