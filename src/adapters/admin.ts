@@ -1,4 +1,4 @@
-import {Router} from 'utils/index';
+import { Router } from 'utils/index';
 
 export interface Secret {
     password: string;

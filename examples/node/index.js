@@ -1,16 +1,21 @@
-const epicenter = require('epicenter');
-require('cometd-nodejs-client').adapt();
-const lib = require('cometd');
+// const epicenter = require('epicenter');
+// require('cometd-nodejs-client').adapt();
+// const lib = require('cometd');
 
-const { authAdapter, SCOPE_BOUNDARY } = epicenter;
+const { authAdapter, SCOPE_BOUNDARY } = require('../../dist/cjs/epicenter.cjs.js');
+// import { authAdapter, SCOPE_BOUNDARY } from 'epicenter';
+
+console.log('epicenter?', authAdapter);
+
+// const { authAdapter, SCOPE_BOUNDARY } = epicenter;
 authAdapter.login({
-    accountShortName: 'forio-dev',
-    projectShortName: 'epi-v3',
     handle: 'wallace-fac',
     password: 'admin123',
-    objectType: 'user',
+}, {
+    accountShortName: 'forio-dev',
+    projectShortName: 'epi-v3',
 }).then((foo) => {
-    console.log(foo);
+    console.log('adododo', foo);
 
     // const cometd = new lib.CometD();
     // const channelManager = new epicenter.channel.ChannelManager(cometd, 'error', false, {
@@ -22,4 +27,4 @@ authAdapter.login({
     // });
 
     // channelManager.handshake();
-}).catch((fault) => console.log(fault, JSON.stringify(fault)));
+}).catch((fault) => console.log('adadad', fault, JSON.stringify(fault)));

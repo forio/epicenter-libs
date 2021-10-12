@@ -28,8 +28,6 @@ module.exports = function(config) {
         autoWatch: true,
         // singleRun: false, // Karma captures browsers, runs the tests and exits
         concurrency: Infinity,
-        // TODO -- consider cleaning up here; do we really need a webpack preprocesser?
-        // if we're testing the dist/ folder, it should already be preprocessed.
         preprocessors: {
             'tests/*.spec.js': ['webpack'],
         },
