@@ -9,13 +9,14 @@ interface Score {
     name: string,
     quantity: number,
 }
+
 interface Tag {
     label: string,
     content: string,
 }
-interface UpdateOptions extends GenericAdapterOptions {
-    tags?: Tag[],
-    userKey?: string,
+
+interface Leaderboard {
+    lastUpdated: Date,
 }
 
 /**
@@ -31,14 +32,21 @@ interface UpdateOptions extends GenericAdapterOptions {
  */
 export async function update(
     collection: string,
-    scores: Array<Score>,
+    scores: Score[],
     scope: GenericScope,
-    optionals: UpdateOptions = {}
-) {
-    const { accountShortName, projectShortName, tags, userKey } = optionals;
+    optionals: {
+        tags?: Tag[],
+        userKey?: string,
+    } & GenericAdapterOptions = {}
+): Promise<Leaderboard> {
+    const {
+        tags, userKey,
+        accountShortName, projectShortName, server,
+    } = optionals;
     const { scopeBoundary, scopeKey } = scope;
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post('/leaderboard', {
@@ -46,7 +54,7 @@ export async function update(
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey: userKey ?? identification.session.userKey,
+                    userKey: userKey ?? identification.session?.userKey,
                 },
                 collection,
                 scores, tags,
@@ -76,12 +84,12 @@ export async function update(
 export async function get(
     collection: string,
     scope: GenericScope,
-    optionals: GenericAdapterQueryOptions = {}
-) {
+    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         filter = [], sort = [], first, max,
-        accountShortName, projectShortName,
+        accountShortName, projectShortName, server,
     } = optionals;
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -90,6 +98,7 @@ export async function get(
     };
 
     return await new Router()
+        .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)

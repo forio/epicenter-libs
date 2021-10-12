@@ -1,4 +1,4 @@
-import { config } from 'epicenter';
+import { config, version } from 'epicenter';
 
 if (config.isLocal()) {
     /* For Production Site */
@@ -9,4 +9,6 @@ if (config.isLocal()) {
     // config.accountShortName = 'test';
     // config.projectShortName = 'epi-v3';
     // config.apiHost = 'epicenter-dev-2.forio.com';
+
+    console.log('%c Here’s the version', 'font-size: 20px; color: #FB15B9FF;', version);
 }

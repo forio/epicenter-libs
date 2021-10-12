@@ -11,18 +11,6 @@ enum ORBIT_TYPE {
     EPISODE = 'EPISODE',
 }
 
-interface WorldOptions extends GenericAdapterOptions {
-    name?: string,
-    groupName?: string,
-    episodeName?: string,
-    keepEmptyWorlds?: boolean,
-}
-
-interface AssignmentOptions extends WorldOptions {
-    objective?: keyof typeof OBJECTIVE,
-    requireAllAssignments?: boolean,
-}
-
 interface UserAssignment {
     userKey: string,
     role?: string,
@@ -36,14 +24,7 @@ interface Persona {
 
 interface Assignment {
     role: string,
-    user: {
-        lastUpdated: string,
-        displayName: string,
-        created: string,
-        detail: any,
-        userId: number,
-        userKey: string,
-    },
+    user: User,
 }
 
 interface World {
@@ -56,6 +37,7 @@ interface World {
     orbitType: keyof typeof ORBIT_TYPE,
     runKey: string,
 }
+
 
 /**
  * World API adapters -- handles worlds and user role/assignments
@@ -152,7 +134,11 @@ export async function destroy(
  * @returns {undefined}
  */
 export async function create(
-    optionals: WorldOptions = {}
+    optionals: {
+        name?: string,
+        groupName?: string,
+        episodeName?: string,
+    } & GenericAdapterOptions = {}
 ): Promise<World> {
     const {
         name, groupName, episodeName,
@@ -186,7 +172,12 @@ export async function create(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                              List of worlds
  */
-export async function get(optionals: WorldOptions = {}): Promise<World> {
+export async function get(
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+    } & GenericAdapterOptions = {}
+): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -201,7 +192,12 @@ export async function get(optionals: WorldOptions = {}): Promise<World> {
 
 
 // Fetches the assignments (plus some world info) in a group or episode if specified
-export async function getAssignments(optionals: WorldOptions = {}): Promise<World> {
+export async function getAssignments(
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+    } & GenericAdapterOptions = {}
+): Promise<World> {
     const {
         groupName, episodeName,
         accountShortName, projectShortName,
@@ -236,7 +232,11 @@ export async function getAssignments(optionals: WorldOptions = {}): Promise<Worl
  */
 export async function selfAssign(
     role: string,
-    optionals: AssignmentOptions = {}
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+        objective?: keyof typeof OBJECTIVE,
+    } & GenericAdapterOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM,
@@ -279,7 +279,12 @@ export async function selfAssign(
  */
 export async function autoAssignUsers(
     assignments: UserAssignment[],
-    optionals: AssignmentOptions = {}
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+        objective?: keyof typeof OBJECTIVE,
+        requireAllAssignments?: boolean,
+    } & GenericAdapterOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
@@ -296,8 +301,14 @@ export async function autoAssignUsers(
 }
 
 export async function editAssignments(
-    assignments: AssignmentMap,
-    optionals: AssignmentOptions = {}
+    assignments: Record<string, UserAssignment[]>,
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+        objective?: keyof typeof OBJECTIVE,
+        keepEmptyWorlds?: boolean,
+        requireAllAssignments?: boolean,
+    } & GenericAdapterOptions = {}
 ): Promise<World[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
@@ -366,7 +377,11 @@ export async function getAssignmentsByKey(
  */
 export async function removeUsers(
     userKeys: string[],
-    optionals: WorldOptions = {}
+    optionals: {
+        groupName?: string,
+        episodeName?: string,
+        keepEmptyWorlds?: boolean,
+    } & GenericAdapterOptions = {}
 ): Promise<void> {
     const {
         groupName, episodeName, keepEmptyWorlds,

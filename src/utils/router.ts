@@ -5,39 +5,17 @@ import Result from './result';
 import identification from './identification';
 import errorManager from './error-manager';
 import config from './config';
-import {prefix} from './helpers';
+import { prefix, isBrowser } from './helpers';
 
 
-const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
-const DEFAULT_PROJECT_SHORT_NAME = 'manager';
+// const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
+// const DEFAULT_PROJECT_SHORT_NAME = 'manager';
 const MAX_URL_LENGTH = 2048;
 
-type Value = any;
-
-interface Page {
-    firstResult: number,
-    maxResults: number,
-    totalResults: number,
-    values: Value[],
-    prev: () => Promise<Value[]>,
-    next: () => Promise<Value[]>,
-    all: (first?: number, allValues?: Value[]) => Promise<Value[]>,
-}
-
-interface RequestOptions {
-    method: string,
-    body?: Record<string, unknown>,
-    includeAuthorization?: boolean,
-    inert?: boolean,
-    paginated?: boolean,
-    parsePage?: <T, V>(values: Array<T>) => Array<T | V>,
-}
-
-
-function paginate(json: Page, url: URL, options: RequestOptions) {
+function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = {...json, values: parsePage(json.values)};
-    const prev = async function () {
+    const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
             console.warn('Pagination: cannot call "prev" on first page');
@@ -57,7 +35,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
         return page.values;
     };
 
-    const next = async function () {
+    const next = async function() {
         const searchParams = new URLSearchParams(url.search);
         const first = page.firstResult + page.maxResults;
         if (first >= page.totalResults) {
@@ -75,7 +53,7 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function (first = 0, allValues: Value[] = []): Promise<Value[]> {
+    const all = async function(first = 0, allValues: unknown[] = []):Promise<unknown[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -94,43 +72,60 @@ function paginate(json: Page, url: URL, options: RequestOptions) {
     return page;
 }
 
+interface Message {
+    headers: HeadersInit,
+    body: BodyInit | null,
+}
 
-const createHeaders = (includeAuthorization?: boolean) => {
-    const headers: Record<string, string> = {'Content-type': 'application/json; charset=UTF-8'};
-    const {session} = identification;
-    if (includeAuthorization && session) {
-        headers.Authorization = `Bearer ${session.token}`;
+const createMessage = (
+    headersRaw?: Record<string, string>,
+    bodyRaw?: Record<string, unknown>,
+    includeAuthorization?: boolean,
+    authorization?: string,
+): Message => {
+    const headers = Object.assign({}, headersRaw);
+    let body = null;
+    if (isBrowser() && bodyRaw instanceof FormData) {
+        body = bodyRaw;
+    } else if (bodyRaw) {
+        headers['Content-type'] = 'application/json; charset=UTF-8';
+        body = JSON.stringify(bodyRaw);
     }
-    if (includeAuthorization && config.tokenOverride) {
-        if (config.tokenOverride.startsWith('Basic ')) {
-            headers.Authorization = config.tokenOverride;
-        } else {
-            headers.Authorization = `Bearer ${config.tokenOverride}`;
-        }
-    }
-    return headers;
-};
 
-const createBody = (headers, body) => {
-    if (body instanceof FormData) {
-        delete headers['Content-type'];
-        return body;
+    if (!includeAuthorization) {
+        delete headers.Authorization;
+        return { headers, body };
     }
-    return body ? JSON.stringify(body) : null;
+
+    const { session } = identification;
+    if (!headers.Authorization) {                                               // Headers option first
+        if (session) headers.Authorization = `Bearer ${session.token}`;         // Session token second
+        if (authorization) headers.Authorization = authorization;               // Router fallback third
+        if (config.authOverride) headers.Authorization = config.authOverride; // Config fallback last
+    }
+    return { headers, body };
 };
 
 const NO_CONTENT = 204;
-
-async function request(url: URL, options: RequestOptions): Promise<Result> {
-    const {method, body, includeAuthorization, inert, paginated} = options;
-    const headers = createHeaders(includeAuthorization);
-    const payload = createBody(headers, body);
+const BAD_REQUEST = 400;
+const OK = 200;
+async function request(
+    url: URL,
+    options: RequestOptions,
+): Promise<Result> {
+    const { method, headers, body, includeAuthorization, inert, paginated, authorization } = options;
+    const message = createMessage(
+        headers,
+        body,
+        includeAuthorization,
+        authorization,
+    );
     const response = await fetch(url.toString(), {
-        method: method,
+        method,
         cache: 'no-cache',
-        headers: headers,
         redirect: 'follow',
-        body: payload,
+        headers: message.headers,
+        body: message.body,
     });
 
     if (response.status === NO_CONTENT) {
@@ -143,7 +138,7 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
     }
 
     const json = await response.json();
-    if ((response.status >= 200) && (response.status < 400)) {
+    if ((response.status >= OK) && (response.status < BAD_REQUEST)) {
         const result = new Result(
             paginated ? paginate(json, url, options) : json,
             response
@@ -160,52 +155,61 @@ async function request(url: URL, options: RequestOptions): Promise<Result> {
         url,
         ...retryOptions,
     };
-    return errorManager.handle(fault, retry);
+    return errorManager.handle<Result>(fault, retry);
 }
+
+
+type Version = number | undefined;
+type Server = string | undefined;
+type AccountShortName = string | undefined;
+type ProjectShortName = string | undefined;
+type Authorization = string | undefined;
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 /**
  * Used to make the network calls in all API adapters
  */
 export default class Router {
-    _searchParams: URLSearchParams | undefined = undefined
-    _server: string | undefined = undefined
-    _version: number | undefined = undefined
-    _accountShortName: string | undefined = undefined;
-    _projectShortName: string | undefined = undefined;
+    _version: Version = undefined
+    _server: Server = undefined
+    _accountShortName: AccountShortName = undefined;
+    _projectShortName: ProjectShortName = undefined;
+    _authorization: Authorization = undefined;
+    _searchParams = new URLSearchParams();
+
+    /**
+     * The version of the Epicenter APIs being invoked; expected to stay at `3`
+     */
+    get version(): Version {
+        return this._version;
+    }
+
+    set version(value: Version) {
+        this._version = value;
+    }
 
     /**
      * The root path used for the call, essentially protocol + hostname
      * @type {string}
      */
-    get server() {
+    get server(): Server {
         return this._server;
     }
 
-    set server(value) {
+    set server(value: Server) {
         this._server = value;
-    }
-
-    /**
-     * The version of the Epicenter APIs being invoked; expected to stay at `3`
-     * @type {number}
-     */
-    get version() {
-        return this._version;
-    }
-
-    set version(value) {
-        this._version = value;
     }
 
     /**
      * Name of the account; for administrative use, this value should be set to 'epicenter'
      * @type {string}
      */
-    get accountShortName() {
+    get accountShortName(): AccountShortName {
         return this._accountShortName;
     }
 
-    set accountShortName(value) {
+    set accountShortName(value: AccountShortName) {
         this._accountShortName = value;
     }
 
@@ -213,12 +217,24 @@ export default class Router {
      * Name of the project; for administrative use, this value should be set to 'manager'
      * @type {string}
      */
-    get projectShortName() {
+    get projectShortName(): ProjectShortName {
         return this._projectShortName;
     }
 
-    set projectShortName(value) {
+    set projectShortName(value: ProjectShortName) {
         this._projectShortName = value;
+    }
+
+    /**
+     * Auth header; looks like `Bearer TOKEN` or `Basic TOKEN`
+     * @type {string}
+     */
+    get authorization(): Authorization {
+        return this._authorization;
+    }
+
+    set authorization(value: Authorization) {
+        this._authorization = value;
     }
 
     /**
@@ -248,11 +264,11 @@ export default class Router {
      *
      * @param {object|array|string|URLSearchParams} query   Value used to set the search parameters
      */
-    get searchParams() {
+    get searchParams(): SearchParams {
         return this._searchParams;
     }
 
-    set searchParams(query: any) {
+    set searchParams(query: SearchParams) {
         if (query.constructor === URLSearchParams) {
             this._searchParams = query;
             return;
@@ -260,30 +276,20 @@ export default class Router {
 
         /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
         if (typeof query === 'object' && query.constructor === Object) {
-            query = Object.entries(query).reduce<[string, unknown][]>((arr, [key, value]) => {
+            query = Object.entries(query).reduce((arr, [key, value]) => {
                 if (Array.isArray(value)) {
                     /* Special case for arrayed param values: use duplicated params here */
-                    return [...arr, ...value.map<[string, unknown]>((v) => [key, v])];
+                    return [...arr, ...value.map((v) => [key, v])];
                 }
                 if (value === undefined || value === null) {
                     /* Skip nullish values */
                     return arr;
                 }
-                arr.push([key, value]);
+                arr.push([key, value.toString()]);
                 return arr;
-            }, []);
+            }, [] as string[][]);
         }
-        this._searchParams = new URLSearchParams(query);
-    }
-
-    /**
-     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
-     * @param {string} [server] Root path to use
-     * @returns {Router}        The Router instance
-     */
-    withServer(server?: string) {
-        if (typeof server !== 'undefined') this.server = server;
-        return this;
+        this._searchParams = new URLSearchParams(query as string | string[][] | URLSearchParams);
     }
 
     /**
@@ -291,8 +297,18 @@ export default class Router {
      * @param {string} [version]    Version to use
      * @returns {Router}            The Router instance
      */
-    withVersion(version?: number) {
+    withVersion(version?: Version): Router {
         if (typeof version !== 'undefined') this.version = version;
+        return this;
+    }
+
+    /**
+     * Sets the root path. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [server] Root path to use
+     * @returns {Router}        The Router instance
+     */
+    withServer(server?: Server): Router {
+        if (typeof server !== 'undefined') this.server = server;
         return this;
     }
 
@@ -301,7 +317,7 @@ export default class Router {
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
      */
-    withAccountShortName(accountShortName?: string) {
+    withAccountShortName(accountShortName?: AccountShortName): Router {
         if (typeof accountShortName !== 'undefined') this.accountShortName = accountShortName;
         return this;
     }
@@ -311,8 +327,18 @@ export default class Router {
      * @param {string} [projectShortName]   Project name to use
      * @returns {Router}                    The Router instance
      */
-    withProjectShortName(projectShortName?: string) {
+    withProjectShortName(projectShortName?: ProjectShortName): Router {
         if (typeof projectShortName !== 'undefined') this.projectShortName = projectShortName;
+        return this;
+    }
+
+    /**
+     * Sets the project. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [projectShortName]   Project name to use
+     * @returns {Router}                    The Router instance
+     */
+    withAuthorization(authorization?: Authorization): Router {
+        if (typeof authorization !== 'undefined') this.authorization = authorization;
         return this;
     }
 
@@ -321,12 +347,12 @@ export default class Router {
      * @param {string|array|object|URLSearchParams} [searchParams]  Search parameters to use, utilizes the same setter as [searchParams](#Router-searchParams)
      * @returns {Router}                                            The Router instance
      */
-    withSearchParams(searchParams?: string | string[] | Object | URLSearchParams) {
+    withSearchParams(searchParams?: SearchParams): Router {
         if (typeof searchParams !== 'undefined') this.searchParams = searchParams;
         return this;
     }
 
-    getURL(uriComponent: string) {
+    getURL(uriComponent: string): URL {
         const server = this.server ?? `${config.apiProtocol}://${config.apiHost}`;
         const accountShortName = this.accountShortName ?? config.accountShortName;
         const projectShortName = this.projectShortName ?? config.projectShortName;
@@ -334,28 +360,33 @@ export default class Router {
 
         const url = new URL(`${server}`);
         url.pathname = `api/v${version}/${accountShortName}/${projectShortName}${prefix('/', uriComponent)}`;
-        url.search = this.searchParams ?? new URLSearchParams();
+        url.search = (this.searchParams ?? new URLSearchParams()).toString();
         return url;
     }
 
     //Network Requests
-    async get(uriComponent: string, options = {}) {
+    async get(uriComponent: string, options = {}): Promise<Result> {
         const url = this.getURL(uriComponent);
 
         /* Handle sufficiently large GET requests with POST calls instead */
         if (url.href.length > MAX_URL_LENGTH) {
-            const entries = Array.from(this.searchParams.entries()) as Array<[string, string]>;
+            const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
+            const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
             const searchObject = entries.reduce((searchObject, [key, value]) => {
-
+                // Store values that only occur once as the value itself
                 if (!searchObject[key]) {
                     searchObject[key] = value;
                     return searchObject;
                 }
-                if (!Array.isArray(searchObject[key])) searchObject[key] = [searchObject[key] as string];
-                Array.prototype.push.call(searchObject[key], value);
-                // searchObject[key].push(value);
+                // Store values that that appear more than once in an array
+                if (!Array.isArray(searchObject[key])) {
+                    // Make existing value an array
+                    searchObject[key] = [searchObject[key] as string];
+                }
+                (searchObject[key] as string[]).push(value);
+
                 return searchObject;
-            }, {} as Record<string, string | number | string[] | number[]>);
+            }, {} as Record<string, string | string[]>);
             this.searchParams = '';
             return this.post(uriComponent, {
                 ...options,
@@ -367,6 +398,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'GET',
+            authorization: this.authorization,
         });
     }
 
@@ -376,6 +408,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'DELETE',
+            authorization: this.authorization,
         });
     }
 
@@ -385,6 +418,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'PATCH',
+            authorization: this.authorization,
         });
     }
 
@@ -394,6 +428,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'POST',
+            authorization: this.authorization,
         });
     }
 
@@ -403,6 +438,7 @@ export default class Router {
             includeAuthorization: true,
             ...options,
             method: 'PUT',
+            authorization: this.authorization,
         });
     }
 }

@@ -1,9 +1,16 @@
-import cookies from 'utils/cookies';
+import cookies from './cookies';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
+type NodeMap = Record<any, any>
+type JavaScriptObject = Record<string, any>;
+/* eslint-enable @typescript-eslint/no-explicit-any */
+
+type EpicenterStore = NodeMap | Storage;
+
 
 class Store {
-    _store;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    constructor(store: any) {
+    _store: EpicenterStore;
+    constructor(store: EpicenterStore) {
         this._store = store;
     }
     clear() {
@@ -22,13 +29,13 @@ export class NodeStore extends Store {
     constructor() {
         super(nodeMap);
     }
-    getItem(key: string): Record<string, unknown> {
+    getItem(key: string): NodeMap {
         return super.store.get(key);
     }
-    setItem(key: string, value: Record<string, unknown>) {
+    setItem(key: string, value: JavaScriptObject): NodeMap {
         return super.store.set(key, value);
     }
-    removeItem(key: string) {
+    removeItem(key: string): boolean {
         return super.store.delete(key);
     }
 }
@@ -37,13 +44,13 @@ export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
-    getItem(key: string): Record<string, unknown> {
+    getItem(key: string): JavaScriptObject {
         return JSON.parse(super.store.getItem(key));
     }
-    setItem(key: string, value: Record<string, unknown>) {
+    setItem(key: string, value: JavaScriptObject): void {
         return super.store.setItem(key, JSON.stringify(value));
     }
-    removeItem(key: string) {
+    removeItem(key: string): void {
         return super.store.removeItem(key);
     }
 }
@@ -59,17 +66,17 @@ export class CookieStore {
             { path: '/' };
         this.options = { ...defaults, ...options };
     }
-    getItem(key: string): Record<string, unknown> {
+    getItem(key: string): JavaScriptObject {
         const item = cookies.getItem(key);
         return item ? JSON.parse(item) : null;
     }
-    setItem(key: string, value: Record<string, unknown>): boolean {
+    setItem(key: string, value: JavaScriptObject): boolean {
         return cookies.setItem(key, JSON.stringify(value), this.options);
     }
-    removeItem(key: string) {
+    removeItem(key: string): boolean {
         return cookies.removeItem(key, this.options);
     }
-    clear() {
+    clear(): string[] {
         return cookies.clear();
     }
 }
