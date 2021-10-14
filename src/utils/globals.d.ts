@@ -59,15 +59,6 @@ interface GenericScope {
     scopeKey: string,
 }
 
-// will be NIU -- replaced by RoutingOptions
-interface GenericAdapterOptions {
-    server?: Server,
-    accountShortName?: AccountShortName,
-    projectShortName?: ProjectShortName,
-    authorization?: Authorization,
-    query?: SearchParams,
-}
-
 interface GenericSearchOptions {
     filter?: string[],
     sort?: string[],
@@ -90,13 +81,18 @@ interface Permit {
     writeLock: keyof typeof ROLE,
 }
 
-interface RoutingOptions extends GenericAdapterOptions {
+interface RoutingOptions {
+    authorization?: Authorization,
+    server?: Server,
+    accountShortName?: AccountShortName,
+    projectShortName?: ProjectShortName,
+    query?: SearchParams,
     headers?: Record<string, string>,
-    body?: Record<string, unknown>,
+    body?: unknown,
     includeAuthorization?: boolean,
     inert?: boolean,
     paginated?: boolean,
-    parsePage?: <Values, ParsedValues>(values: Array<Values>) => Array<Values | ParsedValues>,
+    parsePage?: (values: any[]) => any[],
 }
 
 interface RequestOptions extends RoutingOptions {

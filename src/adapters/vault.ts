@@ -45,12 +45,12 @@ export async function update(
     } = optionals;
 
     return await new Router()
+        .withSearchParams({ MutationKey: mutationKey })
         .put(`/vault/${vaultKey}`, {
             body: {
                 set: items.set ?? {},
                 push: items.push ?? {},
             },
-            query: { MutationKey: mutationKey },
             ...routingOptions,
         }).then(({ body }) => body);
 }
@@ -103,8 +103,8 @@ export async function byName(
     } = optionals;
 
     return await new Router()
+        .withSearchParams({ userKey, includeEpisodes })
         .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
-            query: { userKey, includeEpisodes },
             ...routingOptions,
         })
         .then(({ body }) => body);
@@ -119,10 +119,8 @@ export async function remove(
         ...routingOptions
     } = optionals;
     return await new Router()
-        .delete(`/vault/${vaultKey}`, {
-            query: { MutationKey: mutationKey },
-            ...routingOptions,
-        })
+        .withSearchParams({ MutationKey: mutationKey })
+        .delete(`/vault/${vaultKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
