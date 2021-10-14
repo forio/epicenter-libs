@@ -79,7 +79,7 @@ interface Message {
 
 const createMessage = (
     headersRaw?: Record<string, string>,
-    bodyRaw?: Record<string, unknown>,
+    bodyRaw?: unknown,
     includeAuthorization?: boolean,
     authorization?: string,
 ): Message => {
