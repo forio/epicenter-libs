@@ -49,13 +49,10 @@ export async function connect(): Promise<void> {
  */
 export async function forGroup(
     groupKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Presence[]> {
-    const { accountShortName, projectShortName } = optionals;
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/presence/group/${groupKey}`)
+        .get(`/presence/group/${groupKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -78,13 +75,10 @@ export async function forGroup(
  */
 export async function forWorld(
     worldKey: string,
-    optionals: GenericAdapterOptions = {},
+    optionals: RoutingOptions = {},
 ): Promise<Presence[]> {
-    const { accountShortName, projectShortName } = optionals;
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/presence/world/${worldKey}`)
+        .get(`/presence/world/${worldKey}`, optionals)
         .then(({ body }) => body);
 }
 

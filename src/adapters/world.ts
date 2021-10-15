@@ -67,17 +67,14 @@ interface World {
 export async function update(
     worldKey: string,
     update: { name?: string, runKey?: string },
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<World> {
     const { name, runKey } = update;
-    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch(`/world/${worldKey}`, {
             body: { name, runKey },
+            ...optionals,
         })
         .then(({ body }) => body);
 }
@@ -101,14 +98,11 @@ export async function update(
  */
 export async function destroy(
     worldKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<void> {
-    const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/world/${worldKey}`)
+        .delete(`/world/${worldKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -138,18 +132,17 @@ export async function create(
         name?: string,
         groupName?: string,
         episodeName?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World> {
     const {
         name, groupName, episodeName,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { name },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -176,17 +169,15 @@ export async function get(
     optionals: {
         groupName?: string,
         episodeName?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .get(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -196,17 +187,15 @@ export async function getAssignments(
     optionals: {
         groupName?: string,
         episodeName?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/world/assignment/for/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .get(`/world/assignment/for/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -236,18 +225,17 @@ export async function selfAssign(
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/world/selfassign/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { role, objective },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -284,18 +272,17 @@ export async function autoAssignUsers(
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
         requireAllAssignments?: boolean,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { assignments, objective, requireAllAssignments },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -308,19 +295,17 @@ export async function editAssignments(
         objective?: keyof typeof OBJECTIVE,
         keepEmptyWorlds?: boolean,
         requireAllAssignments?: boolean,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<World[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { assignments, objective, requireAllAssignments, keepEmptyWorlds },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -345,14 +330,11 @@ export async function editAssignments(
  */
 export async function getAssignmentsByKey(
     worldKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { accountShortName, projectShortName } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/world/assignment/${worldKey}`)
+        .get(`/world/assignment/${worldKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -381,18 +363,16 @@ export async function removeUsers(
         groupName?: string,
         episodeName?: string,
         keepEmptyWorlds?: boolean,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<void> {
     const {
         groupName, episodeName, keepEmptyWorlds,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams({ userKey: userKeys, keepEmptyWorlds: Boolean(keepEmptyWorlds) })
-        .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`)
+        .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -422,19 +402,17 @@ export async function removeUsers(
 export async function setPersonas(
     personas: Persona[],
     scope: GenericScope,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
-    const { accountShortName, projectShortName } = optionals;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
     const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         /* We will at some point remove the need to explicitly lower case this */
         .put(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
             body: personas,
+            ...optionals,
         })
         .then(({ body }) => body);
 }
@@ -461,16 +439,13 @@ export async function setPersonas(
 export async function assignRun(
     worldKey: string,
     runKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch(`/world/run/${worldKey}`, {
             body: { runKey },
+            ...optionals,
         })
         .then(({ body }) => body);
 }

@@ -28,17 +28,14 @@ export async function create(
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
         userKey?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        server, accountShortName, projectShortName,
         userKey, readLock, writeLock, ttlSeconds,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/asset', {
             body: {
                 file,
@@ -53,6 +50,7 @@ export async function create(
                 },
                 ttlSeconds,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -64,17 +62,14 @@ export async function update(
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
         userKey?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        server, accountShortName, projectShortName,
         userKey, readLock, writeLock, ttlSeconds,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch('/asset', {
             body: {
                 file,
@@ -89,43 +84,37 @@ export async function update(
                 },
                 ttlSeconds,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 export async function remove(
     assetKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<void> {
-    const { server, accountShortName, projectShortName } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/asset/${assetKey}`)
+        .delete(`/asset/${assetKey}`, optionals)
         .then(({ body }) => body);
 }
 
 export async function removeFromScope(
     scope: GenericScope,
-    optionals: { userKey?: string } & GenericAdapterOptions = {}
+    optionals: { userKey?: string } & RoutingOptions = {}
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         userKey,
-        server, accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}`)
+        .delete(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function get(
     assetKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Asset> {
     const { server, accountShortName, projectShortName } = optionals;
     return await new Router()
@@ -141,51 +130,41 @@ export async function list(
     optionals: {
         userKey?: string,
         filter?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Asset[]> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         userKey, filter,
-        server, accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}/${filter ?? '*'}`)
+        .get(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}/${filter ?? '*'}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function getURL(
     assetKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<string> {
-    const { server, accountShortName, projectShortName } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/asset/url/${assetKey}`)
+        .get(`/asset/url/${assetKey}`, optionals)
         .then(({ body }) => body);
 }
 
 export async function getURLWithScope(
     file: string,
     scope: GenericScope,
-    optionals: { userKey?: string } & GenericAdapterOptions = {}
+    optionals: { userKey?: string } & RoutingOptions = {}
 ): Promise<string> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         userKey,
-        server, accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`)
+        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -200,7 +179,7 @@ export async function store(
         overwrite?: boolean,
         fileName?: string,
         userKey?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;
     const name = fileName ?? file.name;

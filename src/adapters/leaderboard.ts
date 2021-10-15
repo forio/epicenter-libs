@@ -37,18 +37,15 @@ export async function update(
     optionals: {
         tags?: Tag[],
         userKey?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Leaderboard> {
     const {
         tags, userKey,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const { scopeBoundary, scopeKey } = scope;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/leaderboard', {
             body: {
                 scope: {
@@ -59,6 +56,7 @@ export async function update(
                 collection,
                 scores, tags,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -84,13 +82,11 @@ export async function update(
 export async function get(
     collection: string,
     scope: GenericScope,
-    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
 ): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
-    const {
-        filter = [], sort = [], first, max,
-        accountShortName, projectShortName, server,
-    } = optionals;
+    const { filter = [], sort = [], first, max } = searchOptions;
     const searchParams = {
         filter: filter.join(';') || undefined,
         sort: sort.join(';') || undefined,
@@ -98,10 +94,7 @@ export async function get(
     };
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`)
+        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`, optionals)
         .then(({ body }) => body);
 }
