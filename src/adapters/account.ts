@@ -9,6 +9,7 @@ type Account = FIXME;
 
 export async function createAccount(
     account: Account,
+    optionals: RoutingOptions = {},
 ): Promise<Account> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
@@ -21,12 +22,13 @@ export async function createAccount(
                 subscriptionPlan,
                 billingInterval,
             },
+            ...optionals,
         }).then(({ body }) => body);
 }
 
-// TODO -- just a copy-paste of create adapter ATM; need to figuure out how to actually use
 export async function updateAccount(
     account: Account,
+    optionals: RoutingOptions = {},
 ): Promise<Account> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
@@ -39,6 +41,7 @@ export async function updateAccount(
                 subscriptionPlan,
                 billingInterval,
             },
+            ...optionals,
         }).then(({ body }) => body);
 }
 
@@ -58,21 +61,20 @@ export async function teamForAdmin(
         filter?: string,
         first?: number,
         max?: number,
-    } & GenericAdapterOptions = {},
+    } & RoutingOptions = {},
 ): Promise<Account[]> {
     const {
         includeAllMembers, filter, first, max,
-        server,
+        ...routingOptions
     } = optionals;
     const searchParams = {
         includeAllMembers, filter, first, max,
     };
 
     return await new Router()
-        .withServer(server)
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .withSearchParams(searchParams)
-        .get(`/account/team/for/${adminKey}`)
+        .get(`/account/team/for/${adminKey}`, routingOptions)
         .then(({body}) => body);
 }

@@ -31,21 +31,19 @@ export async function logout(): Promise<void> {
 
 export async function login(
     credentials: Credentials,
-    optionals: { objectType?: string } & GenericAdapterOptions = {}
+    optionals: { objectType?: string } & RoutingOptions = {}
 ): Promise<Session> {
     const { handle, password, groupKey } = credentials;
     const {
         objectType = 'user',
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/authentication', {
             inert: true,
             includeAuthorization: false,
             body: { objectType, handle, password, groupKey: groupKey || undefined },
+            ...routingOptions,
         }).then(({ body }) => body);
     await logout();
     identification.session = session;
@@ -64,24 +62,26 @@ export async function regenerate(
     groupOrAccount: string,
     optionals: {
         objectType?: string,
-        inert?: boolean,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Session> {
     const {
-        objectType = 'user', inert,
-        accountShortName, projectShortName, server,
+        objectType = 'user',
+        accountShortName,
+        ...routingOptions
     } = optionals;
 
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(objectType === 'admin' ? groupOrAccount : accountShortName)
-        .withProjectShortName(projectShortName)
         .patch('/authentication', {
-            inert,
+            accountShortName: objectType === 'admin' ?
+                groupOrAccount :
+                accountShortName,
             body: {
                 objectType,
-                groupKey: objectType === 'user' ? groupOrAccount : undefined,
+                groupKey: objectType === 'user' ?
+                    groupOrAccount :
+                    undefined,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 
     await logout();
@@ -90,15 +90,10 @@ export async function regenerate(
 }
 
 export async function sso(
-    optionals: GenericAdapterOptions = {},
+    optionals: RoutingOptions = {},
 ): Promise<Session> {
-    const { accountShortName, projectShortName, server } = optionals;
-
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get('/registration/sso')
+        .get('/registration/sso', optionals)
         .then(({ body }) => body);
 
     identification.session = session;
@@ -143,18 +138,16 @@ export async function resetPassword(
     optionals: {
         redirectURL?: string,
         subject?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<void> {
     const {
         redirectURL, subject,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/authentication/password/user/${handle}`, {
+            ...routingOptions,
             body: {
                 redirectUrl: redirectURL,
                 subject,

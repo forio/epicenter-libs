@@ -32,17 +32,15 @@ export async function create(
     optionals: {
         draft?: boolean,
         runLimit?: number,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<Episode> {
     const {
         draft, runLimit,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/episode/${groupName}`, {
+            ...routingOptions,
             body: { name, draft, runLimit },
         }).then(({ body }) => body);
 }
@@ -63,14 +61,10 @@ export async function create(
  */
 export async function get(
     episodeKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Episode> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/episode/${episodeKey}`)
+        .get(`/episode/${episodeKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -90,24 +84,22 @@ export async function get(
  * @returns {object}                    Something meaningful about returns
  */
 export async function query(
-    optionals: GenericQueryOptions & GenericAdapterOptions = {}
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
 ): Promise<Page<Episode>> {
     const DEFAULT_MAX = 100;
-    const {
-        accountShortName, projectShortName, server,
-        filter = [], sort = [], first = 0, max = DEFAULT_MAX,
-    } = optionals;
+    const { filter = [], sort = [], first = 0, max = DEFAULT_MAX } = searchOptions;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams({
             filter: filter.join(';'),
             sort: sort.join(';'),
             first, max,
         })
-        .get('/episode/search', { paginated: true })
+        .get('/episode/search', {
+            paginated: true,
+            ...optionals,
+        })
         .then(({ body }) => body);
 }
 
@@ -127,14 +119,10 @@ export async function query(
  */
 export async function forGroup(
     groupKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Episode[]> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/episode/in/${groupKey}`)
+        .get(`/episode/in/${groupKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -156,17 +144,14 @@ export async function forGroup(
  */
 export async function withName(
     name: string,
-    optionals: { groupName?: string } & GenericAdapterOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {}
 ): Promise<Episode> {
     const {
         groupName,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/episode/with/${groupName ?? identification.session?.groupName}/${name}`)
+        .get(`/episode/with/${groupName ?? identification.session?.groupName}/${name}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -187,13 +172,9 @@ export async function withName(
  */
 export async function remove(
     episodeKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<void> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/episode/${episodeKey}`)
+        .delete(`/episode/${episodeKey}`, optionals)
         .then(({ body }) => body);
 }

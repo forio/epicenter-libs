@@ -5,6 +5,7 @@ export interface Secret {
 }
 
 export interface AdminCreateView {
+    [key: string]: unknown,
     handle: string;
     email: string;
     givenName?: string;
@@ -28,10 +29,8 @@ export async function createAdmin(view: AdminCreateView) {
         }).then(({body}) => body);
 }
 
-export async function getWithHandle(handle: string, optionals: GenericAdapterOptions = {}) {
-    const {server} = optionals;
+export async function getWithHandle(handle: string, optionals: RoutingOptions = {}) {
     return await new Router()
-        .withServer(server)
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .get(`/admin/with/${handle}`, optionals)

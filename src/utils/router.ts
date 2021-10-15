@@ -79,7 +79,7 @@ interface Message {
 
 const createMessage = (
     headersRaw?: Record<string, string>,
-    bodyRaw?: Record<string, unknown>,
+    bodyRaw?: unknown,
     includeAuthorization?: boolean,
     authorization?: string,
 ): Message => {
@@ -98,10 +98,10 @@ const createMessage = (
     }
 
     const { session } = identification;
-    if (!headers.Authorization) {                                               // Headers option first
-        if (session) headers.Authorization = `Bearer ${session.token}`;         // Session token second
+    if (!headers.Authorization) {                                               // "headers" option first
+        if (session) headers.Authorization = `Bearer ${session.token}`;         // session token second
         if (authorization) headers.Authorization = authorization;               // Router fallback third
-        if (config.authOverride) headers.Authorization = config.authOverride; // Config fallback last
+        if (config.authOverride) headers.Authorization = config.authOverride;   // config fallback last
     }
     return { headers, body };
 };
@@ -157,15 +157,6 @@ async function request(
     };
     return errorManager.handle<Result>(fault, retry);
 }
-
-
-type Version = number | undefined;
-type Server = string | undefined;
-type AccountShortName = string | undefined;
-type ProjectShortName = string | undefined;
-type Authorization = string | undefined;
-type QueryObject = Record<string, unknown>;
-type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 /**
  * Used to make the network calls in all API adapters
@@ -365,7 +356,18 @@ export default class Router {
     }
 
     //Network Requests
-    async get(uriComponent: string, options = {}): Promise<Result> {
+    async get(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
+        const {
+            accountShortName, projectShortName, authorization, server, query,
+            headers, includeAuthorization, inert, paginated,
+        } = options;
+
+        this.withAuthorization(authorization)
+            .withServer(server)
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .withSearchParams(query);
+
         const url = this.getURL(uriComponent);
 
         /* Handle sufficiently large GET requests with POST calls instead */
@@ -395,50 +397,107 @@ export default class Router {
         }
 
         return request(url, {
-            includeAuthorization: true,
-            ...options,
             method: 'GET',
+            headers,
+            includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
+            inert,
+            paginated,
         });
     }
 
-    async delete(uriComponent: string, options = {}): Promise<Result> {
+    async delete(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
+        const {
+            accountShortName, projectShortName, authorization, server, query,
+            headers, includeAuthorization, inert, paginated,
+        } = options;
+
+        this.withAuthorization(authorization)
+            .withServer(server)
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .withSearchParams(query);
+
         const url = this.getURL(uriComponent);
         return request(url, {
-            includeAuthorization: true,
-            ...options,
             method: 'DELETE',
+            headers,
+            includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
+            inert,
+            paginated,
         });
     }
 
-    async patch(uriComponent: string, options = {}): Promise<Result> {
+    async patch(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
+        const {
+            accountShortName, projectShortName, authorization, server, query,
+            headers, body, includeAuthorization, inert, paginated,
+        } = options;
+
+        this.withAuthorization(authorization)
+            .withServer(server)
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .withSearchParams(query);
+
         const url = this.getURL(uriComponent);
         return request(url, {
-            includeAuthorization: true,
-            ...options,
             method: 'PATCH',
+            headers,
+            body,
+            includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
+            inert,
+            paginated,
         });
     }
 
-    async post(uriComponent: string, options = {}): Promise<Result> {
+    async post(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
+        const {
+            accountShortName, projectShortName, authorization, server, query,
+            headers, body, includeAuthorization, inert, paginated,
+        } = options;
+
+        this.withAuthorization(authorization)
+            .withServer(server)
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .withSearchParams(query);
+
         const url = this.getURL(uriComponent);
         return request(url, {
-            includeAuthorization: true,
-            ...options,
             method: 'POST',
+            headers,
+            body,
+            includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
+            inert,
+            paginated,
         });
     }
 
-    async put(uriComponent: string, options = {}): Promise<Result> {
+    async put(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
+        const {
+            accountShortName, projectShortName, authorization, server, query,
+            headers, body, includeAuthorization, inert, paginated,
+        } = options;
+
+        this.withAuthorization(authorization)
+            .withServer(server)
+            .withAccountShortName(accountShortName)
+            .withProjectShortName(projectShortName)
+            .withSearchParams(query);
+
         const url = this.getURL(uriComponent);
         return request(url, {
-            includeAuthorization: true,
-            ...options,
             method: 'PUT',
+            headers,
+            body,
+            includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
+            inert,
+            paginated,
         });
     }
 }
