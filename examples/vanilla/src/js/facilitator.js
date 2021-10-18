@@ -112,6 +112,22 @@ const initialize = () => {
         };
         emailAdapter.sendEmail(session.groupKey, session.userKey, 'This is a test email from with replyTo!', 'this is the <a href="https://forio.com"> test </a> body!', optionals);
     });
+
+    document.getElementById('sendEmailAdmin').addEventListener('click', () => {
+        const pngBase64 = {
+            encoding: 'BASE_64',
+            name: 'testPic',
+            contentType: 'image/png',
+            data: 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIxJREFUWEdjZBhgwDjA9jMQ5YAvzmb/efaewquWGDXYPDvqgNEQGA2B0RAYGiFAy+KaqBAYdcDICgFQtQryMaHql1qhgjURklu3IzuKWDNwOoCSUCAlFHFmQ2J9gB4VpFgO0kvVZhaplhPlAJgPCSVKciwn6ACY5TDD8aV8Qg7EpXe0KB4NgdEQGA0BAF7VgCFTeobfAAAAAElFTkSuQmCC',
+        };
+        const pngCopy = {...pngBase64, name: 'test 2'};
+        const optionals = {
+            familyNameFirst: true,
+            html: true,
+            attachments: [pngBase64, pngCopy],
+        };
+        emailAdapter.sendEmailToAdmin('1234', 'This is a test admin email!', 'this is the <a href="https://forio.com"> test </a> body!', optionals);
+    });
 };
 
 if (!session) {
