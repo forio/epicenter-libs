@@ -105,9 +105,12 @@ const initialize = () => {
         const optionals = {
             familyNameFirst: true,
             html: true,
+            from: 'jpremo+sender@forio.com',
+            replyTo: 'jpremo+receiver@forio.com',
+            fromUserKey: '0000017c95575aedc3526d2e7bdc52e974e4',
             attachments: [pngBase64, pngCopy],
         };
-        emailAdapter.sendEmail(session.groupKey, session.userKey, 'This is a test email!', 'this is the <a href="https://forio.com"> test </a> body!', optionals);
+        emailAdapter.sendEmail(session.groupKey, session.userKey, 'This is a test email from with replyTo!', 'this is the <a href="https://forio.com"> test </a> body!', optionals);
     });
 };
 

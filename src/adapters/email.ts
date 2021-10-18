@@ -12,7 +12,11 @@ enum ENCRYPTION {
 /**
  * Sends an email to an individual user; available to participants
  *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}`
+ * Base URLs: 
+ * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}`
+ * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{toPseudonymKey}/as/{fromPseudonymKey}/`
+ * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}/from/{from}`
+ * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}/from/{from}/{replyTo}`
  *
  * @memberof emailAdapter
  * @example
@@ -31,7 +35,7 @@ enum ENCRYPTION {
  * epicenter.emailAdapter.sendEmail(groupKey, pseudonymKey, subject, emailBody, optionals);
  *
  * @param {object}  groupKey                        The groupKey in which the email target user exists
- * @param {string}  pseudonymKey                    The unique userKey for the email target user
+ * @param {string}  userKey                    The unique userKey for the email target user
  * @param {string}  subject                         The subject line for the email.
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
@@ -39,6 +43,9 @@ enum ENCRYPTION {
  * @param {boolean}  [optionals.familyNameFirst]    Specifies whether email target's family name will come before their given name. Defaults to false.
  * @param {boolean}  [optionals.html]               Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
  * @param {string}  [optionals.body]                The content of the email.
+ * @param {string}  [optionals.from]                The email address from which the message will appear to have been sent from. Will be overriden by fromUserKey.
+ * @param {string}  [optionals.replyTo]             The email address that will be replyed to by the recipient. Must be used in conjunction with optionals.from.
+ * @param {string}  [optionals.fromUserKey]         The userKey from which the email will appear to have been sent. The default response address will also be this email.
  * @param {Array}  [optionals.attachments]          An array of (binary) objects to include as attachments. All four properties must be included.
  *      @param {string}  [binaryObject.encoding]             A string specifying the encoding method. See ENCODING for possible values.
  *      @param {string}  [binaryObject.data]                 A string containing the data for the attachment.
@@ -48,13 +55,16 @@ enum ENCRYPTION {
  */
 export async function sendEmail(
     groupKey: string,
-    pseudonymKey: string,
+    userKey: string,
     subject: string,
     emailBody: string,
     optionals: {
         familyNameFirst?: string, 
         html?: boolean, 
         body?: string, 
+        from?: string,
+        replyTo?: string,
+        fromUserKey?: string,
         attachments?: {
             encoding: keyof typeof ENCODING,
             data: string,
@@ -64,13 +74,24 @@ export async function sendEmail(
         }
     } & GenericAdapterOptions = {}
 ) {
-    const { accountShortName, projectShortName, server, familyNameFirst, html, attachments } =
+    const { accountShortName, projectShortName, server, familyNameFirst, html, attachments, from, replyTo, fromUserKey } =
         optionals;
+
+    let fromString = '';
+    if (fromUserKey) {
+        fromString += `/as/${fromUserKey}`;
+    } else if (from) {
+        fromString += `/from/${from}`;
+        if (replyTo) {
+            fromString += `/${replyTo}`;
+        }
+    }
+
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/email/user/${groupKey}/${pseudonymKey}`, {
+        .post(`/email/user/${groupKey}/${userKey}${fromString}`, {
             body: {
                 subject,
                 body: emailBody,
