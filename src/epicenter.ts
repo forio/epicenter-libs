@@ -18,6 +18,7 @@ export {
     authAdapter,
     assetAdapter,
     // consensusAdapter,
+    emailAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
