@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 
 declare enum ROLE {
     SYSTEM = 'SYSTEM',
@@ -43,22 +45,35 @@ declare enum PUSH_CATEGORY {
     SYSTEM = 'SYSTEM',
 }
 
+type Version = number | undefined;
+type Server = string | undefined;
+type AccountShortName = string | undefined;
+type ProjectShortName = string | undefined;
+type Authorization = string | undefined;
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
+
+
 interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY,
     scopeKey: string,
 }
 
-interface GenericAdapterOptions {
-    server?: string,
-    accountShortName?: string,
-    projectShortName?: string,
-}
-
-interface GenericAdapterQueryOptions extends GenericAdapterOptions {
+interface GenericSearchOptions {
     filter?: string[],
     sort?: string[],
     first?: number,
     max?: number,
+}
+
+interface Page<Item> {
+    firstResult: number,
+    maxResults: number,
+    totalResults: number,
+    values: Item[],
+    prev: () => Promise<Item[]>,
+    next: () => Promise<Item[]>,
+    all: (first?: number, allValues?: Item[]) => Promise<Item[]>,
 }
 
 interface Permit {
@@ -66,6 +81,80 @@ interface Permit {
     writeLock: keyof typeof ROLE,
 }
 
-interface FIXME {
-
+interface RoutingOptions {
+    authorization?: Authorization,
+    server?: Server,
+    accountShortName?: AccountShortName,
+    projectShortName?: ProjectShortName,
+    query?: SearchParams,
+    headers?: Record<string, string>,
+    body?: unknown,
+    includeAuthorization?: boolean,
+    inert?: boolean,
+    paginated?: boolean,
+    parsePage?: (values: any[]) => any[],
 }
+
+interface RequestOptions extends RoutingOptions {
+    method: string,
+}
+
+interface RetryFunction<Output> {
+    (): Promise<Output>,
+    requestArguments?: { url: URL } & RequestOptions,
+}
+
+type UserDetails = Record<string, unknown>;
+
+
+interface User {
+    lastUpdated: string,
+    displayName: string,
+    created: string,
+    detail: UserDetails,
+    userId: number,
+    userKey: string,
+}
+
+interface Admin {
+    lastUpdated: string,
+    lastLogin: string,
+    created: string,
+    familyName: string,
+    givenName: string,
+    verified: boolean,
+    handle: string,
+    active: boolean,
+    adminKey: string,
+    email: string,
+    objectType: 'external' | 'native',
+}
+
+interface ChannelScope extends GenericScope {
+    pushCategory: string,
+}
+
+declare class Channel {
+    constructor(scope: ChannelScope);
+
+    path: string;
+}
+
+interface Session {
+    token: string,
+    groupName?: string,
+    userKey: string,
+    groupKey: string,
+    accountShortName: string,
+    projectShortName: string,
+    objectType: string,
+    loginMethod: {
+        objectType: string,
+    },
+}
+
+interface SubscriptionHandle {
+    channel: string,
+}
+
+type FIXME = any;

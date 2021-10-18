@@ -523,6 +523,6 @@ describe('Group API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        groupAdapter.should.have.all.keys(...testedMethods);
+        expect(groupAdapter).to.have.all.keys(...testedMethods);
     });
 });

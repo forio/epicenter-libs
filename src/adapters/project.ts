@@ -121,25 +121,17 @@ type Project =
  * @returns {Promise}                               Promise resolving true/false whether or not the project supports the use of push channels
  */
 export async function channelsEnabled(
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<boolean> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get('/project/channel/isEnabled')
+        .get('/project/channel/isEnabled', optionals)
         .then(({ body }) => body);
 }
 
 export async function get(
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Project> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get('/project')
+        .get('/project', optionals)
         .then(({ body }) => body);
 }

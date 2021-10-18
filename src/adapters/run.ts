@@ -1,4 +1,4 @@
-import { EpicenterError, Router, identification } from 'utils/index';
+import { Router, identification } from 'utils/index';
 import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
 
 /**
@@ -7,44 +7,15 @@ import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
  */
 
 interface ModelContext {
-
+    version: string,
 }
 interface ExecutionContext {
+    version: string,
+}
 
-}
-interface CreateOptions extends GenericAdapterOptions {
-    readLock?: keyof typeof ROLE,
-    writeLock?: keyof typeof ROLE,
-    userKey?: string,
-    ephemeral?: boolean,
-    trackingKey?: string,
-    modelContext?: ModelContext,
-    executionContext?: ExecutionContext,
-}
-interface GetOptions extends GenericAdapterOptions {
-    timeout?: number,
-    ritual?: keyof typeof RITUAL,
-}
-interface UpdateOptions {
-    readLock?: string,
-    writeLock?: string,
-    trackingKey?: string,
-    marked?: boolean, /* analogous to v2's 'saved' */
-    hidden?: boolean, /* analogous to v2's 'trashed' */
-    closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
-}
-interface QueryOptions extends GenericAdapterQueryOptions {
-    timeout?: number,
-    variables?: string[],
-    metadata?: string[],
-    scope?: GenericScope,
-    groupName?: string,
-    episodeName?: string,
-    includeEpisodes?: boolean,
-}
 interface ProcAction {
     name: string,
-    arguments?: any[],
+    arguments?: unknown[],
     objectType: 'execute',
 }
 interface GetAction {
@@ -53,13 +24,18 @@ interface GetAction {
 }
 interface SetAction {
     name: string,
-    value: any,
+    value: unknown,
     objectType: 'set',
 }
 type Action =
     | ProcAction
     | GetAction
     | SetAction;
+
+interface Run {
+    runKey: string,
+    variables?: Record<string, unknown>,
+}
 
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
@@ -93,13 +69,21 @@ type Action =
 export async function create(
     model: string,
     scope: GenericScope,
-    optionals: CreateOptions = {}
-):Promise<Run> {
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        userKey?: string,
+        ephemeral?: boolean,
+        trackingKey?: string,
+        modelContext?: ModelContext,
+        executionContext?: ExecutionContext,
+    } & RoutingOptions = {}
+): Promise<Run> {
     const { scopeBoundary, scopeKey } = scope;
     const {
         readLock, writeLock, userKey, ephemeral,
         trackingKey, modelContext, executionContext,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
@@ -107,9 +91,6 @@ export async function create(
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/run', {
             body: {
                 scope: {
@@ -117,7 +98,7 @@ export async function create(
                     scopeKey,
                     userKey: scopeBoundary === WORLD ?
                         undefined :
-                        userKey ?? identification.session.userKey,
+                        userKey ?? identification.session?.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
@@ -130,6 +111,7 @@ export async function create(
                 executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
                 ephemeral,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -141,15 +123,20 @@ export async function create(
  * @param {object}  [optionals={}]  Object for all optional fields
  * @returns {object}                Response with the run in the "body"
  */
-export async function clone(runKey: string, optionals: CreateOptions = {}):Promise<Run> {
+export async function clone(
+    runKey: string,
+    optionals: {
+        ephemeral?: boolean,
+        trackingKey?: string,
+        modelContext?: ModelContext,
+        executionContext?: ExecutionContext,
+    } & RoutingOptions = {}
+): Promise<Run> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/run/clone/${runKey}`, {
             body: {
                 trackingKey,
@@ -157,73 +144,84 @@ export async function clone(runKey: string, optionals: CreateOptions = {}):Promi
                 executionContext,
                 ephemeral,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
-export async function restore(runKey: string, optionals: CreateOptions = {}) {
+export async function restore(
+    runKey: string,
+    optionals: {
+        ephemeral?: boolean,
+        modelContext?: ModelContext,
+        executionContext?: ExecutionContext,
+    } & RoutingOptions = {}
+): Promise<Run> {
     const {
         ephemeral, modelContext = {}, executionContext = {},
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/run/restore/${runKey}`, {
             body: {
                 modelContext,
                 executionContext,
                 ephemeral,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 export async function rewind(
     runKey: string,
     steps: number,
-    optionals: CreateOptions = {}
-) {
+    optionals: {
+        ephemeral?: boolean,
+        modelContext?: ModelContext,
+    } & RoutingOptions = {}
+): Promise<Run> {
     const {
         ephemeral, modelContext = {},
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/run/rewind/${runKey}`, {
             body: {
                 rewindCount: steps,
                 modelContext,
                 ephemeral,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 export async function update(
     runKey: string,
-    update: UpdateOptions,
-    optionals: GenericAdapterOptions = {}
-) {
+    update: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        trackingKey?: string,
+        marked?: boolean, /* analogous to v2's 'saved' */
+        hidden?: boolean, /* analogous to v2's 'trashed' */
+        closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
+    },
+    optionals: RoutingOptions = {}
+): Promise<Run> {
     const { readLock, writeLock, trackingKey, marked, hidden, closed } = update;
-    const { accountShortName, projectShortName, server } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
+    const permit = (readLock || writeLock) ? { readLock, writeLock } : undefined;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(hasMultiple ? { runKey } : '')
         .patch(`/run${uriComponent}`, {
             body: {
-                readLock,
-                writeLock,
+                permit,
                 trackingKey,
                 marked,
                 hidden,
                 closed,
             },
+            ...optionals,
         }).then(({ body }) => body);
 }
 
@@ -244,23 +242,21 @@ export async function update(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                TODO
  */
-export async function remove(runKey: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function remove(
+    runKey: string,
+    optionals: RoutingOptions = {}
+): Promise<void> {
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/run/${runKey}`)
+        .delete(`/run/${runKey}`, optionals)
         .then(({ body }) => body);
 }
 
-export async function get(runKey: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function get(
+    runKey: string,
+    optionals: RoutingOptions = {}
+): Promise<Run> {
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/run/${runKey}`)
+        .get(`/run/${runKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -308,12 +304,21 @@ export async function get(runKey: string, optionals: GenericAdapterOptions = {})
  */
 export async function query(
     model: string,
-    optionals: QueryOptions = {}
-): Promise<Page> {
+    searchOptions: {
+        timeout?: number,
+        variables?: string[],
+        metadata?: string[],
+        scope?: GenericScope,
+        groupName?: string,
+        episodeName?: string,
+        includeEpisodes?: boolean,
+    } & GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<Page<Run>> {
     const {
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
-        accountShortName, projectShortName, server, scope, groupName, episodeName, includeEpisodes,
-    } = optionals;
+        scope, groupName, episodeName, includeEpisodes,
+    } = searchOptions;
 
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
@@ -328,46 +333,46 @@ export async function query(
     };
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
         .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
-            parsePage: (values: any[]) => {
+            parsePage: (values) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
                         // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'
                         variableMap[key] = run.variables?.[index];
                         return variableMap;
-                    }, {} as Record<string, any>);
+                    }, {} as Record<string, unknown>);
                     return run;
                 });
             },
+            ...optionals,
         })
         .then(({ body }) => body);
 }
 
-export async function introspect(model: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function introspect(
+    model: string,
+    optionals: RoutingOptions = {}
+): Promise<Record<string, unknown>> {
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/run/introspect/${model}`)
+        .get(`/run/introspect/${model}`, optionals)
         .then(({ body }) => body);
 }
 
 export async function operation(
     runKey: string | string[],
     name: string,
-    args: any[] = [],
-    optionals: GetOptions = {}
-) {
+    args: unknown[] = [],
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<unknown> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
@@ -378,9 +383,6 @@ export async function operation(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
         .post(`/run/operation${uriComponent}`, {
             body: {
@@ -388,17 +390,21 @@ export async function operation(
                 arguments: args,
                 objectType: 'execute', // TODO: remove this when platform fixes this so that it's not manually required
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 export async function getVariables(
     runKey: string | string[],
     variables: string[],
-    optionals: GetOptions = {}
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
 ): Promise<Record<string, unknown> | Record<string, unknown>[]> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -415,11 +421,8 @@ export async function getVariables(
     }, {} as Record<string, unknown>);
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/variable${uriComponent}`)
+        .get(`/run/variable${uriComponent}`, routingOptions)
         .then(({ body }) => {
             return (!hasMultiple ?
                 mappify(body) :
@@ -434,11 +437,14 @@ export async function getVariables(
 export async function getVariable(
     runKey: string | string[],
     variable: string | string[],
-    optionals: GetOptions = {}
-) {
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<unknown> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
@@ -447,11 +453,8 @@ export async function getVariable(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams({ timeout, ritual })
-        .get(`/run/variable/${runKey}/${variable}`)
+        .get(`/run/variable/${runKey}/${variable}`, routingOptions)
         .then(({ body }) => body);
 
 }
@@ -466,12 +469,15 @@ export async function getVariable(
  */
 export async function updateVariables(
     runKey: string | string[],
-    update: UpdateOptions ,
-    optionals: GetOptions = {}
-) {
+    update: Record<string, unknown>,
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
@@ -482,11 +488,11 @@ export async function updateVariables(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .patch(`/run/variable${uriComponent}`, { body: update })
+        .patch(`/run/variable${uriComponent}`, {
+            body: update,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 
 }
@@ -494,11 +500,14 @@ export async function updateVariables(
 export async function getMetadata(
     runKey: string | string[],
     metadata: string[],
-    optionals: GetOptions = {}
-) {
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const include = metadata.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -510,22 +519,22 @@ export async function getMetadata(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/run/meta${uriComponent}`)
+        .get(`/run/meta${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function updateMetadata(
     runKey: string | string[],
-    update: Record<string, any>,
-    optionals: GetOptions = {}
-) {
+    update: Record<string, unknown>,
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
@@ -536,22 +545,25 @@ export async function updateMetadata(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .patch(`/run/meta${uriComponent}`, { body: update })
+        .patch(`/run/meta${uriComponent}`, {
+            body: update,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
 export async function action(
     runKey: string | string[],
     actionList: Action[],
-    optionals: GetOptions = {}
-) {
+    optionals: {
+        timeout?: number,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
@@ -562,13 +574,12 @@ export async function action(
     }
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .post(`/run/action${uriComponent}`, { body: actionList })
+        .post(`/run/action${uriComponent}`, {
+            body: actionList,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
-
 }
 
 /**
@@ -600,19 +611,24 @@ export async function action(
 export async function retrieveFromWorld(
     worldKey: string,
     model: string,
-    optionals: CreateOptions = {}
-): Promise<unknown> {
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        userKey?: string,
+        ephemeral?: boolean,
+        trackingKey?: string,
+        modelContext?: ModelContext,
+        executionContext?: ExecutionContext,
+    } & RoutingOptions = {}
+): Promise<Run> {
     const {
         readLock, writeLock, ephemeral, trackingKey,
         modelContext, executionContext,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const { PARTICIPANT } = ROLE;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/run/world/${worldKey}`, {
             body: {
                 permit: {
@@ -626,6 +642,7 @@ export async function retrieveFromWorld(
                 executionContext: executionContext || {},
                 ephemeral,
             },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -649,14 +666,13 @@ export async function retrieveFromWorld(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Run retrieved from the world
  */
-export async function removeFromWorld(worldKey: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function removeFromWorld(
+    worldKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/run/world/${worldKey}`)
+        .delete(`/run/world/${worldKey}`, optionals)
         .then(({ body }) => body);
 }
 

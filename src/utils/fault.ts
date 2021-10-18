@@ -1,12 +1,22 @@
 
+interface ErrorBody {
+    message: string,
+    information?: {
+        code: string,
+    },
+    cause?: unknown,
+}
+
+
 /* For failed network calls */
 export default class Fault extends Error {
-    status;
-    code;
-    information;
-    cause;
+    status?: number;
+    code?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    information?: Record<string, any>;
+    cause?: unknown;
 
-    constructor(body: any, response: any = {}) {
+    constructor(body: ErrorBody, response: Response) {
 
         super();
         const { status } = response;
@@ -20,7 +30,7 @@ export default class Fault extends Error {
             this.information = rest;
         }
         if (cause) {
-            this.cause = new Fault(cause);
+            this.cause = cause;
         }
     }
 }

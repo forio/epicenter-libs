@@ -1,5 +1,41 @@
-/* Main file; defines public APIs & load order */
-const version = '__VERSION__';
+import 'regenerator-runtime/runtime';
+
+/* yes, this string template literal is weird;
+ * it's cause rollup's replace does not recogize __VERSION__ as an individual token otherwise */
+const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
+
+import { authAdapter } from 'adapters/index';
+import { errorManager, identification, isBrowser, Fault } from 'utils/index';
+
+const UNAUTHORIZED = 401;
+errorManager.registerHandler(
+    (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
+    async<T>(error: Fault, retry: RetryFunction<T>) => {
+        if (isBrowser() && retry.requestArguments) {
+            const { url, method } = retry.requestArguments;
+            if (url.toString().includes('/authentication') && method === 'POST') {
+                // eslint-disable-next-line no-alert
+                alert('This group has expired. Try logging into a different group');
+            }
+        }
+        throw error;
+    },
+);
+errorManager.registerHandler(
+    (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
+    async<T>(error: Fault, retry: RetryFunction<T>) => {
+        try {
+            const groupKey = identification.session?.groupKey ?? '';
+            await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
+            return await retry();
+        } catch (e) {
+            await authAdapter.logout();
+            throw error;
+        }
+    }
+);
+
+
 export { version };
 export {
     SCOPE_BOUNDARY,
@@ -7,11 +43,13 @@ export {
     PUSH_CATEGORY,
     ROLE,
 } from 'utils/constants';
+
 export {
     config,
     errorManager,
     Router,
 } from 'utils/index';
+
 export {
     accountAdapter,
     adminAdapter,
