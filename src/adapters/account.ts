@@ -5,31 +5,49 @@ import {Router} from 'utils/index';
  * @namespace accountAdapter
  */
 
-interface Account {
-    name: string,
-    objectType: string
-}
+type Account = FIXME;
 
-export async function createAccount(optionals = {}) {
-    const {objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval} = optionals;
-    const response = await new Router()
-        .post('/account', {
-            body: {objectType, name, shortName, adminKey, subscriptionPlan, billingInterval},
-        }).then(({body}) => body);
-    return response;
-}
-
-// TODO -- just a copy-paste of create ATM; need to figuure out how to actually use
-export async function updateAccount(optionals = {}) {
-    const {objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval} = optionals;
-    const response = await new Router()
+export async function createAccount(
+    account: Account,
+    optionals: RoutingOptions = {},
+): Promise<Account> {
+    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
+    return await new Router()
         .patch('/account', {
-            body: {objectType, name, shortName, adminKey, subscriptionPlan, billingInterval},
-        }).then(({body}) => body);
-    return response;
+            body: {
+                objectType,
+                name,
+                shortName,
+                adminKey,
+                subscriptionPlan,
+                billingInterval,
+            },
+            ...optionals,
+        }).then(({ body }) => body);
 }
 
-export async function removeAccount(accountShortName) {
+export async function updateAccount(
+    account: Account,
+    optionals: RoutingOptions = {},
+): Promise<Account> {
+    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
+    return await new Router()
+        .patch('/account', {
+            body: {
+                objectType,
+                name,
+                shortName,
+                adminKey,
+                subscriptionPlan,
+                billingInterval,
+            },
+            ...optionals,
+        }).then(({ body }) => body);
+}
+
+export async function removeAccount(
+    accountShortName: string
+): Promise<void> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .delete('/account')
@@ -42,22 +60,21 @@ export async function teamForAdmin(
         includeAllMembers?: boolean,
         filter?: string,
         first?: number,
-        max?: number
-    } & GenericAdapterOptions = {},
+        max?: number,
+    } & RoutingOptions = {},
 ): Promise<Account[]> {
     const {
         includeAllMembers, filter, first, max,
-        server,
+        ...routingOptions
     } = optionals;
     const searchParams = {
         includeAllMembers, filter, first, max,
     };
 
     return await new Router()
-        .withServer(server)
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .withSearchParams(searchParams)
-        .get(`/account/team/for/${adminKey}`)
+        .get(`/account/team/for/${adminKey}`, routingOptions)
         .then(({body}) => body);
 }

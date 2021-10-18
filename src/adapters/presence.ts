@@ -1,5 +1,5 @@
-import { Router } from 'utils';
-import { cometdAdapter } from 'adapters';
+import { Router } from 'utils/index';
+import cometdAdapter from './cometd';
 
 
 /**
@@ -8,7 +8,10 @@ import { cometdAdapter } from 'adapters';
  */
 
 interface Presence {
-
+    lastUpdated: number,
+    ttlSeconds: number,
+    groupRole: 'FACILITATOR' | 'REVIEWER' | 'LEADER' | 'PARTICIPANT',
+    user: User,
 }
 
 
@@ -22,8 +25,9 @@ interface Presence {
  *
  * @returns {Promise}   Promise indicating whether or not the connection was successful
  */
-export async function connect() {
-    return cometdAdapter.handshake();
+export async function connect(): Promise<void> {
+    await cometdAdapter.handshake();
+    return;
 }
 
 
@@ -45,13 +49,10 @@ export async function connect() {
  */
 export async function forGroup(
     groupKey: string,
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ): Promise<Presence[]> {
-    const { accountShortName, projectShortName } = optionals;
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/presence/group/${groupKey}`)
+        .get(`/presence/group/${groupKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -72,12 +73,12 @@ export async function forGroup(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                List of users online
  */
-export async function forWorld(worldKey, optionals = {}) {
-    const { accountShortName, projectShortName } = optionals;
+export async function forWorld(
+    worldKey: string,
+    optionals: RoutingOptions = {},
+): Promise<Presence[]> {
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/presence/world/${worldKey}`)
+        .get(`/presence/world/${worldKey}`, optionals)
         .then(({ body }) => body);
 }
 

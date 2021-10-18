@@ -5,6 +5,7 @@ module.exports = {
     globals: {
         'epicenter': true
     },
+    ignorePatterns: ['**/dist/**', '*.cjs'],
     parser: '@typescript-eslint/parser',
     plugins: [
       '@typescript-eslint',
