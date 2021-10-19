@@ -4,8 +4,8 @@ import 'regenerator-runtime/runtime';
  * it's cause rollup's replace does not recogize __VERSION__ as an individual token otherwise */
 const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
 
-import { authAdapter } from 'adapters/index';
-import { errorManager, identification, isBrowser, Fault } from 'utils/index';
+import { authAdapter } from './adapters/index';
+import { errorManager, identification, isBrowser, Fault } from './utils/index';
 
 const UNAUTHORIZED = 401;
 errorManager.registerHandler(
@@ -42,13 +42,13 @@ export {
     RITUAL,
     PUSH_CATEGORY,
     ROLE,
-} from 'utils/constants';
+} from './utils/constants';
 
 export {
     config,
     errorManager,
     Router,
-} from 'utils/index';
+} from './utils/index';
 
 export {
     accountAdapter,
@@ -68,4 +68,4 @@ export {
     vaultAdapter,
     worldAdapter,
     Channel,
-} from 'adapters/index';
+} from './adapters/index';
