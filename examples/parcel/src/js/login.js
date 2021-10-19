@@ -25,7 +25,7 @@ if (query.error) {
     errorEl.classList.add('visible');
 }
 
-document.getElementById('submit').onclick = async (e) => {
+document.getElementById('submit').onclick = async(e) => {
     e.preventDefault();
     if (e.target.innerText !== 'Submit') return;
 
