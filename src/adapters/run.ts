@@ -1,5 +1,10 @@
-import { Router, identification } from 'utils/index';
-import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
+import type { GenericScope } from 'utils/constants';
+import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
+
+import {
+    Router, identification,
+    ROLE, SCOPE_BOUNDARY, RITUAL,
+} from '../utils';
 
 /**
  * Run API adapters -- use this to create, update, delete, and manage your runs
@@ -336,7 +341,7 @@ export async function query(
         .withSearchParams(searchParams)
         .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
-            parsePage: (values) => {
+            parsePage: (values: Run[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
                         // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'

@@ -1,8 +1,8 @@
-import Fault from './fault';
+import type { RetryFunction } from './router';
+import type Fault from './fault';
 
 
 type Identifier = (error: Fault) => boolean
-
 type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<T>
 
 interface Handler {

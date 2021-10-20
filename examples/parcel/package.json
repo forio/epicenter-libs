@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "cleanup": "rm -rf .cache dist",
-    "start": "parcel ./src/html/*.html --port 3913"
+    "start": "parcel ./src/html/index.html --port 3913"
   },
   "author": "Forio",
   "license": "ISC",
