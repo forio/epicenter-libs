@@ -21,6 +21,18 @@
         <h1>Chat</h1>
         <a href="index.html"><< Back</a>
         <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+
+        <h2>Create a chatroom</h2>
+        <p>Be warned! There is currently no way to retrieve chatrooms after they are created. This means the you will need a separate way to keep track of chat keys if you'd like to revisit</p>
+        <section>
+            <label for="chatroom-name">Room name</label>
+            <input id="chatroom-name" type="text" value="" />
+            <button id="chat-create">Create</button>
+        </section>
+        <ul id="chatroom-listings"></ul>
+        <section id="chatroom">
+
+        </section>
     </main>
 </body>
 <script src="../js/chat.js"></script>

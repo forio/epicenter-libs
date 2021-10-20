@@ -1,5 +1,7 @@
-import { Router, EpicenterError, identification } from 'utils/index';
-import { ROLE } from 'utils/constants';
+import type { RoutingOptions, Page, GenericSearchOptions } from '../utils/router';
+import type { User } from './user';
+
+import { Router, EpicenterError, identification, ROLE } from '../utils';
 
 /**
  * Group API adapters -- handles groups and group memberships

@@ -1,5 +1,12 @@
-import { Router, identification } from 'utils/index';
-import { SCOPE_BOUNDARY } from 'utils/constants';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
+import type { User } from './user';
+
+import {
+    Router, identification,
+    SCOPE_BOUNDARY,
+} from '../utils';
+
 
 enum OBJECTIVE {
     MINIMUM = 'MINIMUM',

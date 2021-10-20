@@ -1,4 +1,5 @@
-import { ROLE, Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import { ROLE, Router } from '../utils';
 
 enum ACCESS_TYPE {
     PUBLIC = 'PUBLIC',

@@ -1,4 +1,7 @@
-import { identification, Router } from 'utils/index';
+import type { RoutingOptions, GenericSearchOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
+
+import { identification, Router } from '../utils';
 
 /**
  * Leaderboard API adapter
