@@ -208,3 +208,13 @@ export enum ROLE {
      */
     ANONYMOUS = 'ANONYMOUS',
 }
+
+export interface GenericScope {
+    scopeBoundary: keyof typeof SCOPE_BOUNDARY,
+    scopeKey: string,
+}
+
+export interface Permit {
+    readLock: keyof typeof ROLE,
+    writeLock: keyof typeof ROLE,
+}

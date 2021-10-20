@@ -6,6 +6,20 @@ import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
+export interface Session {
+    token: string,
+    userKey: string,
+    groupKey: string,
+    groupName?: string,
+    multipleGroups?: boolean,
+    accountShortName: string,
+    projectShortName: string,
+    objectType: string,
+    loginMethod: {
+        objectType: string,
+    },
+}
+
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
 class Identification {

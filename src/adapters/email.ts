@@ -1,3 +1,4 @@
+import type { RoutingOptions } from '../utils/router';
 import { Router } from 'utils/index';
 
 enum ENCODING {
@@ -67,8 +68,8 @@ export async function sendEmail(
             name: string,
             contentType: string,
         }
-    } & GenericAdapterOptions = {}
-) {
+    } & RoutingOptions = {}
+): Promise<void> {
     const { accountShortName, projectShortName, server, familyNameFirst, html, attachments, from, replyTo, fromUserKey } =
         optionals;
 
@@ -137,8 +138,8 @@ export async function sendEmailToAdmin(
             name: string,
             contentType: string,
         }
-    } & GenericAdapterOptions = {}
-) {
+    } & RoutingOptions = {}
+): Promise<void> {
     const { accountShortName, projectShortName, server, familyNameFirst, html, attachments } =
         optionals;
 

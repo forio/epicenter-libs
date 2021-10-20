@@ -4,12 +4,14 @@ import 'regenerator-runtime/runtime';
  * it's cause rollup's replace does not recogize __VERSION__ as an individual token otherwise */
 const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
 
-import { authAdapter } from 'adapters/index';
-import { errorManager, identification, isBrowser, Fault } from 'utils/index';
+
+import type { RetryFunction } from './utils/router';
+import { authAdapter } from './adapters';
+import { errorManager, identification, isBrowser, Fault } from './utils';
 
 const UNAUTHORIZED = 401;
 errorManager.registerHandler(
-    (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
+    (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         if (isBrowser() && retry.requestArguments) {
             const { url, method } = retry.requestArguments;
@@ -42,21 +44,22 @@ export {
     RITUAL,
     PUSH_CATEGORY,
     ROLE,
-} from 'utils/constants';
+} from './utils/constants';
 
 export {
     config,
     errorManager,
     Router,
-} from 'utils/index';
+} from './utils';
 
 export {
     accountAdapter,
     adminAdapter,
-    authAdapter,
     assetAdapter,
     // consensusAdapter,
     emailAdapter,
+    authAdapter,
+    chatAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
@@ -69,4 +72,4 @@ export {
     vaultAdapter,
     worldAdapter,
     Channel,
-} from 'adapters/index';
+} from './adapters';

@@ -1,28 +1,15 @@
 import type { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
-import { EpicenterError, identification, isBrowser, errorManager, config } from 'utils/index';
-import { channelsEnabled } from 'adapters/project';
+import type Channel from './channel';
+
+import { EpicenterError, Fault, identification, isBrowser, errorManager, config } from '../utils';
+import { channelsEnabled } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 
 const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
+const UNAUTHORIZED = 401;
 
-
-class CometdError extends Error {
-    status?: number
-    information?: Message
-    message: string
-
-    constructor(reply: Message) {
-        super();
-        const { error = '', successful } = reply;
-        if (error && error.includes('403') && !successful) {
-            this.status = 401;
-        }
-        this.information = reply;
-        this.message = error;
-    }
-}
 
 interface ChannelUpdate {
     data: string | Record<string, unknown>,
@@ -118,7 +105,15 @@ class CometdAdapter {
                 return;
             }
 
-            const error = new CometdError(handshakeReply);
+            const errorMessage = handshakeReply.error ?? '';
+            const error = new Fault({
+                status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                message: errorMessage,
+                information: {
+                    code: 'COMETD_ERROR',
+                    ...handshakeReply,
+                },
+            });
 
             if (options.inert) {
                 reject(error);
@@ -181,7 +176,15 @@ class CometdAdapter {
                     return;
                 }
 
-                const error = new CometdError(subscribeReply);
+                const errorMessage = subscribeReply.error ?? '';
+                const error = new Fault({
+                    status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                    message: errorMessage,
+                    information: {
+                        code: 'COMETD_ERROR',
+                        ...subscribeReply,
+                    },
+                });
 
                 if (options.inert) {
                     reject(error);
@@ -226,7 +229,15 @@ class CometdAdapter {
                     return;
                 }
 
-                const error = new CometdError(publishReply);
+                const errorMessage = publishReply.error ?? '';
+                const error = new Fault({
+                    status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                    message: errorMessage,
+                    information: {
+                        code: 'COMETD_ERROR',
+                        ...publishReply,
+                    },
+                });
 
                 if (options.inert) {
                     reject(error);
@@ -255,7 +266,15 @@ class CometdAdapter {
             if (unsubscribeReply.successful) {
                 resolve(unsubscribeReply);
             }
-            const error = new CometdError(unsubscribeReply);
+            const errorMessage = unsubscribeReply.error ?? '';
+            const error = new Fault({
+                status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                message: errorMessage,
+                information: {
+                    code: 'COMETD_ERROR',
+                    ...unsubscribeReply,
+                },
+            });
             reject(error);
             /* Not using error handling here yet -- should we? */
         }));

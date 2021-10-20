@@ -1,4 +1,14 @@
-import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import Router from '../utils/router';
+
+export interface User {
+    lastUpdated: string,
+    displayName: string,
+    created: string,
+    detail: Record<string, unknown>,
+    userId: number,
+    userKey: string,
+}
 
 interface UploadOptions extends RoutingOptions {
     groupKey?: string,
