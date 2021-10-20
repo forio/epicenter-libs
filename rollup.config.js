@@ -71,7 +71,7 @@ export default [{
     ],
     output: [{
         // Intended for apps that use bundlers like webpack
-        dir: pkg.browser,
+        dir: path.dirname(pkg.browser),
         format: 'esm',
     }, {
         // Intended for apps that use the <script> tag
@@ -150,11 +150,11 @@ export default [{
     output: [{
         // For more recent versions of nodejs supporting usage of esm
         // I.e., nodejs v13.2.0 or higher if we want to drop the experimental flags
-        dir: pkg.module,
+        dir: path.dirname(pkg.module),
         format: 'esm',
     }, {
         // For older versions of node, using cjs
-        dir: pkg.main,
+        dir: path.dirname(pkg.main),
         format: 'cjs',
     }],
 }];

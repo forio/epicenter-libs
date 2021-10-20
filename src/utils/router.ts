@@ -8,10 +8,55 @@ import config from './config';
 import { prefix, isBrowser } from './helpers';
 
 
-// const DEFAULT_ACCOUNT_SHORT_NAME = 'epicenter';
-// const DEFAULT_PROJECT_SHORT_NAME = 'manager';
-const MAX_URL_LENGTH = 2048;
+type Version = number | undefined;
+type Server = string | undefined;
+type AccountShortName = string | undefined;
+type ProjectShortName = string | undefined;
+type Authorization = string | undefined;
+type QueryObject = Record<string, unknown>;
+type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
+export interface RoutingOptions {
+    authorization?: Authorization,
+    server?: Server,
+    accountShortName?: AccountShortName,
+    projectShortName?: ProjectShortName,
+    query?: SearchParams,
+    headers?: Record<string, string>,
+    body?: unknown,
+    includeAuthorization?: boolean,
+    inert?: boolean,
+    paginated?: boolean,
+    parsePage?: (values: any[]) => any[],
+}
+
+interface RequestOptions extends RoutingOptions {
+    method: string,
+}
+
+export interface RetryFunction<Output> {
+    (): Promise<Output>,
+    requestArguments?: { url: URL } & RequestOptions,
+}
+
+export interface Page<Item> {
+    firstResult: number,
+    maxResults: number,
+    totalResults: number,
+    values: Item[],
+    prev: () => Promise<Item[]>,
+    next: () => Promise<Item[]>,
+    all: (first?: number, allValues?: Item[]) => Promise<Item[]>,
+}
+
+export interface GenericSearchOptions {
+    filter?: string[],
+    sort?: string[],
+    first?: number,
+    max?: number,
+}
+
+const MAX_URL_LENGTH = 2048;
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = {...json, values: parsePage(json.values)};
@@ -53,7 +98,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     };
 
     const initialTotal = json.totalResults;
-    const all = async function(first = 0, allValues: unknown[] = []):Promise<unknown[]> {
+    const all = async function(first = 0, allValues: unknown[] = []): Promise<unknown[]> {
         if (first >= initialTotal) return allValues;
 
         const searchParams = new URLSearchParams(url.search);
@@ -120,6 +165,7 @@ async function request(
         includeAuthorization,
         authorization,
     );
+
     const response = await fetch(url.toString(), {
         method,
         cache: 'no-cache',

@@ -1,5 +1,10 @@
-import { identification, Router } from 'utils/index';
-import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope, Permit } from '../utils/constants';
+
+import {
+    identification, Router,
+    ROLE, SCOPE_BOUNDARY,
+} from '../utils';
 
 
 interface Vault {
