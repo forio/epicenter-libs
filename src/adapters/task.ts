@@ -3,7 +3,6 @@ import type { RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
 import { SCOPE_BOUNDARY } from 'utils/constants';
 
-
 enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
     RESCHEDULE = 'RESCHEDULE', //If the task fails retry at the next scheduled time point
@@ -13,8 +12,8 @@ enum RETRY_POLICY {
  * Creates a task; requires support level authentication
  *
  * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{name}`
- * Base URL with pseudonym: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{pseudonymKey}/{name}`
- * 
+ * Base URL with pseudonym: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{userKey}/{name}`
+ *
  * @memberof taskAdapter
  * @example
  * const scope = {
@@ -30,7 +29,7 @@ enum RETRY_POLICY {
  *   value: '0 7 15 * * ?', //triggers on day 15 7am of each month
  *   objectType: 'cron',
  * }
- * 
+ *
  * epicenter.taskAdapter.create(scope, name, payload, trigger);
  *
  * @param {object}  scope                           Scope associated with your run
@@ -41,59 +40,77 @@ enum RETRY_POLICY {
  * @param {string}  [payload.url]                   The url the HTTP request will be sent to; MUST be on the forio.com domain
  * @param {object}  [payload.body]                  The body of the HTTP request. This is optional
  * @param {object}  [payload.headers]               Headers to send along with the HTTP request. Write as key-value pairs like you would with fetch. This is optional
- * 
+ *
  * @param {object}  trigger                         One of three types of objects that determine when to run the task
- * 
+ *
  * trigger option 1, Cron Object:                   Specifies a task that will execute once a set amount of time passes. This is the ONLY trigger that can be repeated
  * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (i.e. '0 7 * * * ?' => trigger at 7am UTC everyday) https://en.wikipedia.org/wiki/Cron
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'cron'
- * 
+ *
  * trigger option 2, Offset Object:                 Specifies a task that will execute ONCE after the specified offset time has passed
  * @param {number}  [trigger.minutes]               Number of minutes until the task triggers
  * @param {number}  [trigger.hours]                 Number of hours until the task triggers
  * @param {number}  [trigger.days]                  Number of days until the task triggers
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'offset'
- * 
+ *
  * trigger option 3, Date Object:                   Specifies a singular date for the task to be carried out; will execute ONCE
  * @param {string}  [trigger.value]                 A string in ISO-8601 date-time format (i.e. 2023-11-05T08:15:30-04:00 => November 5, 2023, 8:15:30 am, US EDT)
  * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'date'
- * 
+ *
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.pseudonymKey]        Key associated with the user
+ * @param {string}  [optionals.userKey]        Key associated with the user
  * @param {string}  [optionals.retryPolicy]         Specifies what to do should the task fail; see RETRY_POLICY
  * @param {string}  [optionals.failSafeTermination] The ISO-8601 date-time when the task will be deleted regardless of any tiggers; defaults to null
  * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function create(
-    scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope, 
+    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY } & GenericScope,
     name: string,
     payload: {
-        method: string,
-        url: string,
-        body?: Record<string, unknown>,
-        headers?: Record<string, unknown>,
+        method: string;
+        url: string;
+        body?: Record<string, unknown>;
+        headers?: Record<string, unknown>;
     },
     trigger: Record<string, unknown>,
-    optionals: {retryPolicy?: keyof typeof RETRY_POLICY, failSafeTermination?: number, ttlSeconds?: number, pseudonymKey?: string} & RoutingOptions = {}) {
-    const { accountShortName, projectShortName, server,
-        retryPolicy, failSafeTermination, ttlSeconds, pseudonymKey } = optionals;
+    optionals: {
+        retryPolicy?: keyof typeof RETRY_POLICY;
+        failSafeTermination?: number;
+        ttlSeconds?: number;
+        userKey?: string;
+    } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
+    const {
+        accountShortName,
+        projectShortName,
+        server,
+        retryPolicy,
+        failSafeTermination,
+        ttlSeconds,
+        userKey,
+    } = optionals;
     const { scopeBoundary, scopeKey } = scope;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .post(`/task/${scopeBoundary}/${scopeKey}${pseudonymKey ? `/${pseudonymKey}` : ''}/${name}`, {
-            body: {
-                payload: {objectType: 'http', ...payload},
-                trigger,
-                retryPolicy,
-                failSafeTermination,
-                ttlSeconds,
-            },
-        })
+        .post(
+            `/task/${scopeBoundary}/${scopeKey}${
+                userKey ? `/${userKey}` : ''
+            }/${name}`,
+            {
+                body: {
+                    payload: { objectType: 'http', ...payload },
+                    trigger,
+                    retryPolicy,
+                    failSafeTermination,
+                    ttlSeconds,
+                },
+            }
+        )
         .then(({ body }) => body);
 }
 
@@ -111,11 +128,9 @@ export async function create(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}                             
+ * @returns {undefined}
  */
-export async function destroy(
-    taskKey: string, 
-    optionals: RoutingOptions = {}) {
+export async function destroy(taskKey: string, optionals: RoutingOptions = {}):Promise<void> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -138,11 +153,9 @@ export async function destroy(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a task object including the taskKey 
+ * @returns {taskObject}                            Returns a task object including the taskKey
  */
-export async function get(
-    taskKey: string, 
-    optionals: RoutingOptions = {}) {
+export async function get(taskKey: string, optionals: RoutingOptions = {}): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -165,11 +178,12 @@ export async function get(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a task object including the taskKey 
+ * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function getHistory(
-    taskKey: string, 
-    optionals: RoutingOptions = {}) {
+    taskKey: string,
+    optionals: RoutingOptions = {}
+): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -182,7 +196,7 @@ export async function getHistory(
 /**
  * Gets most recent 100 tasks related to the selected scope; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
- * Base URL with pseudonymKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{pseudonymKey}`
+ * Base URL with userKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{userKey}`
  * Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping
  * @memberof taskAdapter
  * @example
@@ -199,19 +213,23 @@ export async function getHistory(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.pseudonymKey]        Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
- * @returns {taskObject}                            Returns a task object including the taskKey 
+ * @param {string}  [optionals.userKey]        Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
+ * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function getTaskIn(
-    scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope,
-    optionals: {pseudonymKey?: string} & RoutingOptions = {}) {
-    const { accountShortName, projectShortName, server,
-        pseudonymKey } = optionals;
+    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY } & GenericScope,
+    optionals: { userKey?: string } & RoutingOptions = {}
+): Promise<Record<string, unknown>> {
+    const { accountShortName, projectShortName, server, userKey } = optionals;
     const { scopeBoundary, scopeKey } = scope;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
-        .get(`/task/in/${scopeBoundary}/${scopeKey}${pseudonymKey ? `/${pseudonymKey}` : ''}`)
+        .get(
+            `/task/in/${scopeBoundary}/${scopeKey}${
+                userKey ? `/${userKey}` : ''
+            }`
+        )
         .then(({ body }) => body);
 }
