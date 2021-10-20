@@ -1,5 +1,7 @@
-import { Router, EpicenterError, identification } from 'utils/index';
-import { ROLE } from 'utils/constants';
+import type { RoutingOptions, Page, GenericSearchOptions } from '../utils/router';
+import type { User } from './user';
+
+import { Router, EpicenterError, identification, ROLE } from '../utils';
 
 /**
  * Group API adapters -- handles groups and group memberships
@@ -8,15 +10,6 @@ import { ROLE } from 'utils/constants';
 enum AUGMENT {
     MEMBERS = 'MEMBERS',
     QUANTIZED = 'QUANTIZED',
-}
-
-interface GetOptions extends GenericAdapterOptions {
-    augment?: keyof typeof AUGMENT,
-    groupKey?: string,
-}
-
-interface GatherOptions extends GenericAdapterOptions {
-    includeExpired?: boolean,
 }
 
 interface Pricing {
@@ -44,22 +37,9 @@ interface GroupUpdate {
 
 interface Group extends GroupUpdate {
     name: string,
+    groupKey: string,
 }
 
-interface QueryOptions extends GenericAdapterQueryOptions {
-    quantized?: boolean
-}
-
-interface GroupOptions extends GenericAdapterOptions {
-    includeAllMembers?: boolean,
-    includeExpired?: boolean,
-    role?: string | string[],
-}
-
-interface UserOptions extends GenericAdapterOptions {
-    role?: string,
-    available?: boolean,
-}
 
 /**
  * Provides information on a particular Epicenter group.
@@ -81,21 +61,21 @@ interface UserOptions extends GenericAdapterOptions {
  *
  */
 export async function get(
-    optionals: GetOptions = {}
+    optionals: {
+        augment?: keyof typeof AUGMENT,
+        groupKey?: string,
+    } & RoutingOptions = {}
 ): Promise<Group> {
     const {
-        groupKey, server, augment,
-        accountShortName, projectShortName,
+        groupKey, augment,
+        ...routingOptions
     } = optionals;
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
     if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/group${uriComponent}/${groupKey ?? identification.session?.groupKey}`)
+        .get(`/group${uriComponent}/${groupKey ?? identification.session?.groupKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -116,14 +96,13 @@ export async function get(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function destroy(groupKey: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function destroy(
+    groupKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/group/${groupKey}`)
+        .delete(`/group/${groupKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -144,15 +123,17 @@ export async function destroy(groupKey: string, optionals: GenericAdapterOptions
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                              List of groups
  */
-export async function gather(optionals: GatherOptions = {}) {
-    const { accountShortName, projectShortName, server, includeExpired } = optionals;
+export async function gather(
+    optionals: { includeExpired?: boolean } & RoutingOptions = {}
+): Promise<Group[]> {
+    const {
+        includeExpired,
+        ...routingOptions
+    } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams({ includeExpired })
-        .get('/group')
+        .get('/group', routingOptions)
         .then(({ body }) => body);
 }
 
@@ -188,24 +169,25 @@ export async function gather(optionals: GatherOptions = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Group with updated attributes
  */
-export async function update(groupKey: string, update: GroupUpdate, optionals: GenericAdapterOptions = {}) {
+export async function update(
+    groupKey: string,
+    update: GroupUpdate,
+    optionals: RoutingOptions = {}
+): Promise<Group> {
     const {
         runLimit, organization, allowSelfRegistration, flightRecorder,
         event, allowMembershipChanges, pricing,
         startDate, expirationDate, capacity,
     } = update;
-    const { accountShortName, projectShortName, server } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch(`/group/${groupKey}`, {
             body: {
                 runLimit, organization, allowSelfRegistration, flightRecorder,
                 event, allowMembershipChanges, pricing,
                 startDate, expirationDate, capacity,
             },
+            ...optionals,
         })
         .then(({ body }) => body);
 }
@@ -244,24 +226,24 @@ export async function update(groupKey: string, update: GroupUpdate, optionals: G
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Newly created group
  */
-export async function create(group: Group, optionals: GenericAdapterOptions = {}) {
+export async function create(
+    group: Group,
+    optionals: RoutingOptions = {}
+): Promise<Group> {
     const {
         name, runLimit, organization, allowSelfRegistration,
         flightRecorder, event, allowMembershipChanges, pricing,
         startDate, expirationDate, capacity,
     } = group;
-    const { accountShortName, projectShortName, server } = optionals;
     if (!name) throw new EpicenterError('Cannot create a group with no name');
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/group', {
             body: {
                 name, runLimit, organization, allowSelfRegistration,
                 flightRecorder, event, allowMembershipChanges, pricing,
                 startDate, expirationDate, capacity,
             },
+            ...optionals,
         })
         .then(({ body }) => body);
 }
@@ -292,10 +274,12 @@ export async function create(group: Group, optionals: GenericAdapterOptions = {}
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                    Group object
  */
-export async function search(optionals: QueryOptions = {}) {
+export async function search(
+    optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {}
+): Promise<Page<Group>> {
     const {
         filter = [], sort = [], first, max, quantized,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     const searchParams = {
@@ -305,11 +289,11 @@ export async function search(optionals: QueryOptions = {}) {
     };
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/group${quantized ? '/quantized' : ''}/search`, { paginated: true })
+        .get(`/group${quantized ? '/quantized' : ''}/search`, {
+            paginated: true,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
@@ -330,14 +314,13 @@ export async function search(optionals: QueryOptions = {}) {
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                Group Object
  */
-export async function withGroupName(name: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function withGroupName(
+    name: string,
+    optionals: RoutingOptions = {}
+): Promise<Group> {
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/group/with/${name}`)
+        .get(`/group/with/${name}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -370,11 +353,11 @@ export async function forUser(
         includeAllMembers?: boolean,
         includeExpired?: boolean,
         role?: string | string[],
-    } & GenericAdapterOptions = {},
+    } & RoutingOptions = {},
 ): Promise<Group[]> {
     const {
         includeExpired, includeAllMembers, role,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
     const roleList = isMultiple ? role : [role];
@@ -385,11 +368,8 @@ export async function forUser(
     };
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/group/member/for/${userKey}`)
+        .get(`/group/member/for/${userKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -416,11 +396,11 @@ export async function getSessionGroups(
         includeAllMembers?: boolean,
         includeExpired?: boolean,
         role?: string | string[],
-    } & GenericAdapterOptions = {},
+    } & RoutingOptions = {},
 ): Promise<Group[]> {
     const {
         includeExpired, role,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
     const roleList = isMultiple ? role : [role];
@@ -430,11 +410,8 @@ export async function getSessionGroups(
     };
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get('/group/member')
+        .get('/group/member', routingOptions)
         .then(({ body }) => body);
 }
 
@@ -455,14 +432,13 @@ export async function getSessionGroups(
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object[]}                                      List of groups
  */
-export async function register(groupKey: string, optionals: GenericAdapterOptions = {}) {
-    const { accountShortName, projectShortName, server } = optionals;
+export async function register(
+    groupKey: string,
+    optionals: RoutingOptions = {}
+): Promise<Group> {
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .post(`/group/selfRegistration/${groupKey}`)
+        .post(`/group/selfRegistration/${groupKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -491,19 +467,13 @@ type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available
 
 export async function addUser(
     usersInput: UserInput | UserInput[],
-    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {}
 ):Promise<Group> {
-    const {
-        groupKey,
-        accountShortName, projectShortName, server,
-    } = optionals;
+    const { groupKey, ...routingOptions } = optionals;
 
     const users = Array.isArray(usersInput) ? usersInput : [usersInput];
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/group/member/${groupKey ?? identification.session?.groupKey}`, {
             body: users.map((u) => {
                 const userKey = typeof u === 'string' ? u : u.userKey;
@@ -517,6 +487,7 @@ export async function addUser(
                     available: available ?? true,
                 };
             }),
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -544,24 +515,19 @@ export async function addUser(
 export async function updateUser(
     userKey: string,
     update: { role?: keyof typeof ROLE, available?: boolean },
-    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {}
 ):Promise<User> {
     const { role, available } = update;
-    const {
-        groupKey,
-        accountShortName, projectShortName, server,
-    } = optionals;
+    const { groupKey, ...routingOptions } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch(`/group/member/${groupKey ?? identification.session?.groupKey}/${userKey}`, {
             body: {
                 objectType: 'group',
                 role,
                 available,
             },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
@@ -585,22 +551,18 @@ export async function updateUser(
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-// TODO -- make this consistent w/ the groupAdapter.addUsers
 export async function removeUser(
     userKey: string | string[],
-    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {}
 ): Promise<void> {
-    const { groupKey, accountShortName, projectShortName, server } = optionals;
+    const { groupKey, ...routingOptions } = optionals;
     const hasMultiple = Array.isArray(userKey) && userKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${userKey.length === 1 ? userKey[0] : userKey}`;
     const searchParams = hasMultiple ? { userKey } : undefined;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .delete(`/group/member/${groupKey ?? identification.session?.groupKey}${uriComponent}`)
+        .delete(`/group/member/${groupKey ?? identification.session?.groupKey}${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -608,15 +570,13 @@ export async function removeUser(
 export async function statusUpdate(
     code: string,
     message: string,
-    optionals: { groupKey?: string } & GenericAdapterOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {}
 ): Promise<Group> {
-    const { groupKey, accountShortName, projectShortName, server } = optionals;
+    const { groupKey, ...routingOptions } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .patch(`/group/status/${groupKey ?? identification.session?.groupKey}`, {
             body: { code, message },
+            ...routingOptions,
         }).then(({ body }) => body);
 }

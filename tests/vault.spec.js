@@ -287,6 +287,6 @@ describe('Vault API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        vaultAdapter.should.have.all.keys(...testedMethods);
+        expect(vaultAdapter).to.have.all.keys(...testedMethods);
     });
 });

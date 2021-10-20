@@ -31,3 +31,9 @@ export const GENERIC_OPTIONS = {
     accountShortName: 'myaccount',
     projectShortName: 'myproject',
 };
+
+if (module.hot) {
+    module.hot.accept(function() {
+        window.location.reload();
+    });
+}
