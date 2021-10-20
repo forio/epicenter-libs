@@ -1,17 +1,30 @@
+import EpicenterError from './error';
+
+interface ErrorBody {
+    status?: number,
+    message: string,
+    information?: {
+        code: string,
+        [key: string]: unknown,
+    },
+    cause?: unknown,
+}
+
 
 /* For failed network calls */
-export default class Fault extends Error {
-    status;
-    code;
-    information;
-    cause;
+export default class Fault extends EpicenterError {
+    status?: number;
+    information?: Record<string, unknown>;
+    cause?: unknown;
 
-    constructor(body: any, response: any = {}) {
+    constructor(body: ErrorBody, response?: Response) {
+        super(
+            body.message,
+            body.information?.code
+        );
 
-        super();
-        const { status } = response;
-        const { information, message, cause } = body;
-        this.status = status;
+        const { information, message, cause, status } = body;
+        this.status = status ?? response?.status;
         this.message = message;
 
         if (information) {
@@ -20,7 +33,7 @@ export default class Fault extends Error {
             this.information = rest;
         }
         if (cause) {
-            this.cause = new Fault(cause);
+            this.cause = cause;
         }
     }
 }

@@ -1,5 +1,8 @@
 import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
 import { SCOPE_BOUNDARY } from 'utils/constants';
+
 
 enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
@@ -67,9 +70,14 @@ enum RETRY_POLICY {
 export async function create(
     scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope, 
     name: string,
-    payload: object,
-    trigger: object,
-    optionals: {retryPolicy?: keyof typeof RETRY_POLICY, failSafeTermination?: number, ttlSeconds?: number, pseudonymKey?: string} & GenericAdapterOptions = {}) {
+    payload: {
+        method: string,
+        url: string,
+        body?: Record<string, unknown>,
+        headers?: Record<string, unknown>,
+    },
+    trigger: Record<string, unknown>,
+    optionals: {retryPolicy?: keyof typeof RETRY_POLICY, failSafeTermination?: number, ttlSeconds?: number, pseudonymKey?: string} & RoutingOptions = {}) {
     const { accountShortName, projectShortName, server,
         retryPolicy, failSafeTermination, ttlSeconds, pseudonymKey } = optionals;
     const { scopeBoundary, scopeKey } = scope;
@@ -107,7 +115,7 @@ export async function create(
  */
 export async function destroy(
     taskKey: string, 
-    optionals: GenericAdapterOptions = {}) {
+    optionals: RoutingOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -134,7 +142,7 @@ export async function destroy(
  */
 export async function get(
     taskKey: string, 
-    optionals: GenericAdapterOptions = {}) {
+    optionals: RoutingOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -161,7 +169,7 @@ export async function get(
  */
 export async function getHistory(
     taskKey: string, 
-    optionals: GenericAdapterOptions = {}) {
+    optionals: RoutingOptions = {}) {
     const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
         .withServer(server)
@@ -196,7 +204,7 @@ export async function getHistory(
  */
 export async function getTaskIn(
     scope: {scopeBoundary: keyof typeof SCOPE_BOUNDARY} & GenericScope,
-    optionals: {pseudonymKey?: string} & GenericAdapterOptions = {}) {
+    optionals: {pseudonymKey?: string} & RoutingOptions = {}) {
     const { accountShortName, projectShortName, server,
         pseudonymKey } = optionals;
     const { scopeBoundary, scopeKey } = scope;

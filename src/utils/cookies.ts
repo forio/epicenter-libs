@@ -1,5 +1,9 @@
+
+
+type End = number | string | Date | undefined;
+
 // Modified version of https://github.com/madmurphy/cookies.js
-const getExpiration = (vEnd: any) => {
+const getExpiration = (vEnd: End) => {
     if (!vEnd) return '';
     switch (vEnd.constructor) {
         case Number: return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : `; max-age=${vEnd}`;
@@ -13,7 +17,7 @@ const getExpiration = (vEnd: any) => {
             case Number: return vEnd === Infinity ? '; expires=Fri, 31 Dec 9999 23:59:59 GMT' : `; expires=${(new Date(vEnd * 1e3 + Date.now())).toUTCString()}`;
         */
         case String: return `; expires=${vEnd}`;
-        case Date: return `; expires=${vEnd.toUTCString()}`;
+        case Date: return `; expires=${new Date(vEnd).toUTCString()}`;
         default: return '';
     }
 };
@@ -21,7 +25,7 @@ const getExpiration = (vEnd: any) => {
 interface EditCookieOptions {
     path?: string,
     domain?: string,
-    end?: any,
+    end?: End,
     secure?: boolean,
     samesite?: boolean,
 }
@@ -29,10 +33,10 @@ interface EditCookieOptions {
 export default {
     getItem(key: string): null | string {
         if (!key) return null;
-        return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
+        return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${encodeURIComponent(key).replace(/[-.+*]/g, '\\$&')}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
     },
     setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}): boolean {
-        if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
+        if (!key || (/^(?:expires|max-age|path|domain|secure)$/i).test(key)) return false;
         const { path, domain, end, secure, samesite } = options;
         const expireStr = getExpiration(end);
         const domainStr = domain ? `; domain=${domain}` : '';
@@ -52,12 +56,12 @@ export default {
         return true;
     },
     hasItem(key: string): boolean {
-        if (!key || (/^(?:expires|max\-age|path|domain|secure)$/i).test(key)) return false;
+        if (!key || (/^(?:expires|max-age|path|domain|secure)$/i).test(key)) return false;
 
-        return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[\-\.\+\*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);
+        return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[-.+*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);
     },
-    clear() {
-        const aKeys = document.cookie.replace(/((?:^|\s*;)[^\=]+)(?=;|$)|^\s*|\s*(?:\=[^;]*)?(?:\1|$)/g, '').split(/\s*(?:\=[^;]*)?;\s*/);
+    clear(): string[] {
+        const aKeys = document.cookie.replace(/((?:^|\s*;)[^=]+)(?=;|$)|^\s*|\s*(?:=[^;]*)?(?:\1|$)/g, '').split(/\s*(?:=[^;]*)?;\s*/);
         for (let nLen = aKeys.length, nIdx = 0; nIdx < nLen; nIdx++) {
             aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);
             this.removeItem(aKeys[nIdx]);
