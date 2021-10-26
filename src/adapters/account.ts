@@ -31,13 +31,18 @@ interface TeamAccountCreateView extends AccountCreateView {
 }
 
 interface AccountUpdateView {
-    name: string;
-    workerPartition: string,
-    active: boolean
+    name?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountUpdateView extends AccountUpdateView {
+    objectType: 'personal';
 }
 
 interface TeamAccountUpdateView extends AccountUpdateView {
-    billingInterval: string
+    objectType: 'team';
+    billingInterval?: string;
 }
 
 export async function getAccount(accountShortName: string): Promise<AccountReadView> {
