@@ -227,6 +227,16 @@ describe('Run API Service', () => {
             hidden: true,
             closed: false,
         };
+        const PARSED_UPDATE = {
+            trackingKey: 'trackingkey',
+            permit: {
+                readLock: ROLE.AUTHOR,
+                writeLock: ROLE.AUTHOR,
+            },
+            marked: true,
+            hidden: true,
+            closed: false,
+        };
         const RUN_KEY = 'runkey';
         it('Should do a PATCH', async() => {
             await runAdapter.update(RUN_KEY, UPDATE);
@@ -249,18 +259,18 @@ describe('Run API Service', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
-        it('Should pass the update to the request body', async() => {
+        it('Should pass the update to the request body in the appropriate format', async() => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
-            body.should.deep.equal(UPDATE);
+            body.should.deep.equal(PARSED_UPDATE);
         });
         it('Should properly omit options that aren\'t passed in', async() => {
             await runAdapter.update(RUN_KEY, { marked: true });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.marked.should.equal(true);
-            body.should.not.have.any.keys('readLock', 'writeLock', 'trackingKey', 'hidden', 'closed');
+            body.should.not.have.any.keys('permit', 'trackingKey', 'hidden', 'closed');
         });
         testedMethods.push('update');
     });
@@ -330,23 +340,23 @@ describe('Run API Service', () => {
             metadata: ['meta1', 'meta2'],
         };
         it('Should do a GET', async() => {
-            await runAdapter.query(MODEL);
+            await runAdapter.query(MODEL, OPTIONS);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await runAdapter.query(MODEL);
+            await runAdapter.query(MODEL, OPTIONS);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the run/in/groupName[/episodeName]/modelFile URL', async() => {
             const EPISODE_NAME = 'myepisodename';
-            await runAdapter.query(MODEL);
+            await runAdapter.query(MODEL, OPTIONS);
             const req1 = fakeServer.requests.pop();
-            req1.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
+            req1.url.should.include(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
             await runAdapter.query(MODEL, { episodeName: EPISODE_NAME });
             const req2 = fakeServer.requests.pop();
-            req2.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
+            req2.url.should.include(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
         });
         it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
             await runAdapter.query(MODEL, { scope: SCOPE });
@@ -355,10 +365,10 @@ describe('Run API Service', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
         });
         it('Should support generic URL options', async() => {
-            await runAdapter.query(MODEL, GENERIC_OPTIONS);
+            await runAdapter.query(MODEL, OPTIONS, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
+            req.url.should.include(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
         });
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
             await runAdapter.query(MODEL, OPTIONS);
@@ -889,6 +899,6 @@ describe('Run API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        runAdapter.should.have.all.keys(...testedMethods);
+        expect(runAdapter).to.have.all.keys(...testedMethods);
     });
 });

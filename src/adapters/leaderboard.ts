@@ -1,4 +1,7 @@
-import { identification, Router } from 'utils/index';
+import type { RoutingOptions, GenericSearchOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
+
+import { identification, Router } from '../utils';
 
 /**
  * Leaderboard API adapter
@@ -9,13 +12,14 @@ interface Score {
     name: string,
     quantity: number,
 }
+
 interface Tag {
     label: string,
     content: string,
 }
-interface UpdateOptions extends GenericAdapterOptions {
-    tags?: Tag[],
-    userKey?: string,
+
+interface Leaderboard {
+    lastUpdated: Date,
 }
 
 /**
@@ -31,26 +35,31 @@ interface UpdateOptions extends GenericAdapterOptions {
  */
 export async function update(
     collection: string,
-    scores: Array<Score>,
+    scores: Score[],
     scope: GenericScope,
-    optionals: UpdateOptions = {}
-) {
-    const { accountShortName, projectShortName, tags, userKey } = optionals;
+    optionals: {
+        tags?: Tag[],
+        userKey?: string,
+    } & RoutingOptions = {}
+): Promise<Leaderboard> {
+    const {
+        tags, userKey,
+        ...routingOptions
+    } = optionals;
     const { scopeBoundary, scopeKey } = scope;
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/leaderboard', {
             body: {
                 scope: {
                     scopeBoundary,
                     scopeKey,
-                    userKey: userKey ?? identification.session.userKey,
+                    userKey: userKey ?? identification.session?.userKey,
                 },
                 collection,
                 scores, tags,
             },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -76,13 +85,11 @@ export async function update(
 export async function get(
     collection: string,
     scope: GenericScope,
-    optionals: GenericAdapterQueryOptions = {}
-) {
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
-    const {
-        filter = [], sort = [], first, max,
-        accountShortName, projectShortName,
-    } = optionals;
+    const { filter = [], sort = [], first, max } = searchOptions;
     const searchParams = {
         filter: filter.join(';') || undefined,
         sort: sort.join(';') || undefined,
@@ -90,9 +97,7 @@ export async function get(
     };
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams(searchParams)
-        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`)
+        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`, optionals)
         .then(({ body }) => body);
 }

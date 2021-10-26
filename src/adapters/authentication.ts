@@ -1,5 +1,9 @@
-import {identification, Router} from 'utils/index';
-import {cometdAdapter} from 'adapters/index';
+import type { RoutingOptions } from '../utils/router';
+import type { Session } from '../utils/identification';
+
+
+import { Router, identification } from '../utils';
+import cometdAdapter from './cometd';
 
 
 interface Credentials {
@@ -7,20 +11,6 @@ interface Credentials {
     password: string,
     groupKey?: string,
 }
-
-interface LoginOptions extends GenericAdapterOptions {
-    objectType?: string,
-}
-
-interface UpgradeOptions extends GenericAdapterOptions {
-    objectType?: string,
-    inert?: boolean,
-}
-
-interface Session {
-
-}
-
 
 /**
  * Authentication API adapters -- for authentication
@@ -38,29 +28,27 @@ interface Session {
  *
  * @returns {Promise}   Promise resolving to successful logout
  */
-export async function logout() {
+export async function logout(): Promise<void> {
     identification.session = undefined;
     await cometdAdapter.disconnect();
 }
 
 export async function login(
     credentials: Credentials,
-    optionals: LoginOptions = {}
-) {
-    const {handle, password, groupKey} = credentials;
+    optionals: { objectType?: string } & RoutingOptions = {}
+): Promise<Session> {
+    const { handle, password, groupKey } = credentials;
     const {
         objectType = 'user',
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post('/authentication', {
             inert: true,
             includeAuthorization: false,
-            body: {objectType, handle, password, groupKey: groupKey || undefined},
-        }).then(({body}) => body);
+            body: { objectType, handle, password, groupKey: groupKey || undefined },
+            ...routingOptions,
+        }).then(({ body }) => body);
     await logout();
     identification.session = session;
     return session;
@@ -76,66 +64,57 @@ export async function login(
  */
 export async function regenerate(
     groupOrAccount: string,
-    optionals: UpgradeOptions = {}
-) {
+    optionals: {
+        objectType?: string,
+    } & RoutingOptions = {}
+): Promise<Session> {
     const {
-        objectType = 'user', inert,
-        accountShortName, projectShortName, server,
+        objectType = 'user',
+        accountShortName,
+        ...routingOptions
     } = optionals;
 
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(objectType === 'admin' ? groupOrAccount : accountShortName)
-        .withProjectShortName(projectShortName)
         .patch('/authentication', {
-            inert,
+            accountShortName: objectType === 'admin' ?
+                groupOrAccount :
+                accountShortName,
             body: {
                 objectType,
-                groupKey: objectType === 'user' ? groupOrAccount : undefined,
+                groupKey: objectType === 'user' ?
+                    groupOrAccount :
+                    undefined,
             },
-        }).then(({body}) => body);
+            ...routingOptions,
+        }).then(({ body }) => body);
 
     await logout();
     identification.session = session;
     return session;
 }
 
-export async function sso(optionals: GenericAdapterOptions = {}) {
-    const {accountShortName, projectShortName, server} = optionals;
-
+export async function sso(
+    optionals: RoutingOptions = {},
+): Promise<Session> {
     const session = await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get('/registration/sso')
-        .then(({body}) => body);
+        .get('/registration/sso', optionals)
+        .then(({ body }) => body);
 
     identification.session = session;
     return session;
 }
 
-export async function sendVerificationEmail(handle, subject, redirectUrl) {
-
-    return await new Router()
-        .withAccountShortName('epicenter')
-        .withProjectShortName('manager')
-        .post(`/authentication/verify/${handle}`, {
-            body: {subject: subject, redirectUrl: redirectUrl},
-        }).then(({body}) => body);
-}
-
-export async function getSession() {
-    const {body} = await new Router().get('/authentication');
-
-    identification.session = body;``
+export async function getSession(): Promise<Session> {
+    const { body } = await new Router().get('/authentication');
+    identification.session = body;
     return body;
 }
 
-export function getLocalSession() {
+export function getLocalSession(): Session | undefined {
     return identification.session;
 }
 
-export function setLocalSession(session: Session) {
+export function setLocalSession(session: Session): Session {
     return identification.session = session;
 }
 
@@ -163,18 +142,16 @@ export async function resetPassword(
     optionals: {
         redirectURL?: string,
         subject?: string,
-    } & GenericAdapterOptions = {}
+    } & RoutingOptions = {}
 ): Promise<void> {
     const {
         redirectURL, subject,
-        accountShortName, projectShortName, server,
+        ...routingOptions
     } = optionals;
 
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(`/authentication/password/user/${handle}`, {
+            ...routingOptions,
             body: {
                 redirectUrl: redirectURL,
                 subject,

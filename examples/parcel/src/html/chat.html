@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>v3 Vanilla</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../css/common.scss">
+    <!-- <link rel="stylesheet" href="../css/chat.scss"> -->
+</head>
+<body>
+    <main>
+        <h1>Chat</h1>
+        <a href="index.html"><< Back</a>
+        <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+
+        <h2>Create a chatroom</h2>
+        <p>Be warned! There is currently no way to retrieve chatrooms after they are created. This means the you will need a separate way to keep track of chat keys if you'd like to revisit</p>
+        <section>
+            <label for="chatroom-name">Room name</label>
+            <input id="chatroom-name" type="text" value="" />
+            <button id="chat-create">Create</button>
+        </section>
+        <ul id="chatroom-listings"></ul>
+        <section id="chatroom">
+
+        </section>
+    </main>
+</body>
+<script src="../js/chat.js"></script>
+</html>

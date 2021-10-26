@@ -1,31 +1,29 @@
 {
   "name": "epicenter-libs",
-  "version": "3.7.1-dberkman",
-  "type": "module",
-  "main": "dist/epicenter.js",
-  "module": "dist/epicenter.esm.js",
-  "browser": "dist/epicenter.iife.js",
-  "types": "dist/types/index.d.ts",
+  "version": "3.7.1",
+  "main": "dist/cjs/epicenter.js",
+  "module": "dist/module/epicenter.js",
+  "browser": "dist/browser/epicenter.js",
+  "types": "dist/types/epicenter.d.ts",
+  "files": ["dist/"],
   "scripts": {
-    "start": "npm run build-web:dev",
-    "build": "npm run build-web:prod",
-    "build-web": "npm run build-web:dev",
-    "build-node": "npm run build-node:dev",
-    "build-web:dev": "webpack --config webpack.web.dev.cjs",
-    "build-web:prod": "webpack --config webpack.web.prod.cjs",
-    "build-node:dev": "webpack --config webpack.node.dev.cjs",
-    "build-node:prod": "webpack --config webpack.node.prod.cjs",
     "test": "karma start --browsers ChromeHeadless karma.conf.cjs",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.cjs --single-run",
     "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "changelog:all": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "type-check": "tsc --noEmit",
     "type-check:watch": "npm run type-check -- --watch",
-    "rollup:build:types": "tsc --emitDeclarationOnly",
-    "rollup:build:js": "rollup -c -m",
-    "rollup:build": "npm run rollup:build:types && npm run rollup:build:js",
-    "rollup:start": "rollup -c -m inline -w"
+    "build:clean": "rimraf dist",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:js": "rollup -c -m",
+    "build": "npm run build:clean && npm run build:types && npm run build:js",
+    "start": "rollup -c rollup.config.dev.js -m inline -w"
   },
+  "browserslist": [
+    "defaults",
+    "not IE 11",
+    "maintained node versions"
+  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
@@ -42,8 +40,9 @@
     }
   },
   "dependencies": {
-    "@babel/runtime": "^7.12.5",
+    "@babel/runtime": "^7.15.3",
     "cometd": "^4.0.9",
+    "core-js": "^3.8.2",
     "cross-fetch": "^3.0.6"
   },
   "devDependencies": {
@@ -54,7 +53,7 @@
     "@babel/plugin-proposal-numeric-separator": "^7.12.7",
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/plugin-proposal-private-methods": "^7.12.1",
-    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/plugin-transform-runtime": "^7.15.0",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-typescript": "^7.12.7",
     "@commitlint/cli": "^11.0.0",
@@ -89,6 +88,7 @@
     "rollup-plugin-visualizer": "^4.2.0",
     "sinon": "^7.2.2",
     "sinon-chai": "^3.5.0",
+    "typedoc": "^0.21.9",
     "typescript": "^4.1.3",
     "webpack": "^4.46.0",
     "webpack-bundle-analyzer": "^3.9.0",

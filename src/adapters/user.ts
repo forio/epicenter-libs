@@ -1,6 +1,16 @@
-import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import Router from '../utils/router';
 
-interface UploadOptions extends GenericAdapterOptions {
+export interface User {
+    lastUpdated: string,
+    displayName: string,
+    created: string,
+    detail: Record<string, unknown>,
+    userId: number,
+    userKey: string,
+}
+
+interface UploadOptions extends RoutingOptions {
     groupKey?: string,
     overwrite?: boolean,
 }
@@ -11,16 +21,17 @@ export async function uploadCSV(
 ): Promise<void> {
     const {
         overwrite,
-        accountShortName, projectShortName,
+        ...routingOptions
     } = optionals;
 
     const formdata = new FormData();
     formdata.append('file', file);
 
     return await new Router()
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .withSearchParams({ overwrite })
-        .post('/user/upload', { body: formdata })
+        .post('/user/upload', {
+            body: formdata,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
