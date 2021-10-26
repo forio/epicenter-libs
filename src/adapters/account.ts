@@ -6,7 +6,7 @@ import Router from '../utils/router';
  * @namespace accountAdapter
  */
 
-interface Account {
+interface AccountReadView {
     name: string;
     objectType: string;
 }
@@ -30,14 +30,14 @@ interface TeamAccountCreateView extends AccountCreateView {
     subscriptionPlan: string;
 }
 
-export async function getAccount(accountShortName) {
+export async function getAccount(accountShortName): Promise<AccountReadView> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .get('/account')
         .then(({body}) => body);
 }
 
-export async function createAccount(view: AccountCreateView) {
+export async function createAccount(view: AccountCreateView): Promise<AccountReadView> {
 
     return await new Router()
         .withAccountShortName('epicenter')
@@ -50,7 +50,7 @@ export async function createAccount(view: AccountCreateView) {
 export async function updateAccount(
     account: Account,
     optionals: RoutingOptions = {},
-): Promise<Account> {
+): Promise<AccountReadView> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
         .patch('/account', {
