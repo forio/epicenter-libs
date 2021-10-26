@@ -1,4 +1,5 @@
-import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import Router from '../utils/router';
 
 /**
  * Time API adapter -- handles getting the current server time
@@ -24,14 +25,10 @@ import { Router } from 'utils/index';
 
 const NOT_FOUND = 404;
 export async function get(
-    optionals: GenericAdapterOptions = {}
+    optionals: RoutingOptions = {}
 ):Promise<void | string> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get('/time')
+        .get('/time', optionals)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);

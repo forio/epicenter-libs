@@ -13,14 +13,16 @@ import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
 import * as worldAdapter from './world';
 import * as timeAdapter from './time';
-import {default as cometdAdapter} from './cometd';
-import {default as Channel} from './channel';
+import * as chatAdapter from './chat';
+import { default as cometdAdapter } from './cometd';
+import { default as Channel } from './channel';
 
 export {
     accountAdapter,
     adminAdapter,
     authAdapter,
     assetAdapter,
+    chatAdapter,
     cometdAdapter,
     episodeAdapter,
     groupAdapter,

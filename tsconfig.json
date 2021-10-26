@@ -13,12 +13,12 @@
     "target": "esnext",
     "module": "esnext",
     "strict": true,
-    "baseUrl": ".",
-    "paths": {
-      "~/*": ["src/*"],
-      "adapters/*": ["src/adapters/*"],
-      "utils/*": ["src/utils/*"]
-    }
+    "baseUrl": "src",
+  },
+  "typedocOptions": {
+    "entryPoints": ["src/epicenter.ts"],
+    "out": "docs",
+    "json": "docs/output.json"
   },
   "include": [
     "src/**/*"

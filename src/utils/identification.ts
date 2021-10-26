@@ -6,10 +6,15 @@ import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
-interface Session {
-    groupName?: string,
+export interface Session {
+    token: string,
     userKey: string,
     groupKey: string,
+    groupName?: string,
+    multipleGroups?: boolean,
+    accountShortName: string,
+    projectShortName: string,
+    objectType: string,
     loginMethod: {
         objectType: string,
     },
@@ -31,12 +36,12 @@ class Identification {
         const Store = this.getStore();
         return new Store().getItem(SESSION_KEY) as Session;
     }
-    set session(session) {
+    set session(session: Session | undefined) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session);
 
         if (session) {
-            new Store(options).setItem(SESSION_KEY, session as JSON);
+            new Store(options).setItem(SESSION_KEY, session as Session);
         } else if (this.session) {
             new Store(options).removeItem(SESSION_KEY);
         }
@@ -50,7 +55,7 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getStoreOptions(session?: FIXME) {
+    getStoreOptions(session?: Session) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 

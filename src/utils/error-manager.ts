@@ -1,57 +1,17 @@
-import { authAdapter } from 'adapters/index';
-import identification from './identification';
-import { isBrowser } from './helpers';
-import Fault from './fault';
-import Result from './result';
+import type { RetryFunction } from './router';
+import type Fault from './fault';
 
 
 type Identifier = (error: Fault) => boolean
-interface RetryFunction {
-    (): Promise<Result>;
-    requestArguments: {
-        url: URL,
-        method: string,
-        body?: Record<string, unknown>,
-        includeAuthorization?: boolean,
-        inert?: boolean,
-        paginated?: boolean,
-        parsePage?: <T, V>(values: Array<T>) => Array<T|V>,
-    };
-}
-type HandleFunction = (error: Fault, retry: RetryFunction) => Promise<Result>
+type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<T>
 
 interface Handler {
     identifier: Identifier,
     handle: HandleFunction,
 }
 
-const UNAUTHORIZED = 401;
 class ErrorManager {
-    _handlers: Handler[] = [
-        {
-            identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
-            handle: async(error: Fault, retry: RetryFunction) => {
-                try {
-                    const groupKey = identification.session?.groupKey ?? '';
-                    await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
-                    return await retry();
-                } catch (e) {
-                    await authAdapter.logout();
-                    throw error;
-                }
-            },
-        }, {
-            identifier: (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
-            handle: async(error: Fault, retry: RetryFunction) => {
-                const { url, method } = retry.requestArguments;
-                if (url.toString().includes('/authentication') && method === 'POST') {
-                    // eslint-disable-next-line no-alert
-                    if (isBrowser()) alert('This group has expired. Try logging into a different group');
-                }
-                throw error;
-            },
-        },
-    ];
+    _handlers: Handler[] = [];
 
     get handlers() {
         return this._handlers;
@@ -71,11 +31,11 @@ class ErrorManager {
         });
     }
 
-    async handle(
+    async handle<Output>(
         error: Fault,
-        retryFn: RetryFunction,
+        retryFn: RetryFunction<Output>,
         handlers?: Handler[]
-    ): Promise<Result> {
+    ): Promise<Output> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
         const handler = handlers[index];
