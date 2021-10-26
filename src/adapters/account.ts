@@ -47,7 +47,7 @@ export async function getAccount(accountShortName: string): Promise<AccountReadV
         .then(({body}) => body);
 }
 
-export async function createAccount(view: AccountCreateView): Promise<AccountReadView> {
+export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
 
     return await new Router()
         .withAccountShortName('epicenter')
