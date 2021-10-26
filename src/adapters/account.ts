@@ -1,4 +1,4 @@
-import type { RoutingOptions } from '../utils/router';
+import type {RoutingOptions} from '../utils/router';
 import Router from '../utils/router';
 
 /**
@@ -30,14 +30,29 @@ interface TeamAccountCreateView extends AccountCreateView {
     subscriptionPlan: string;
 }
 
-export async function getAccount(accountShortName): Promise<AccountReadView> {
+interface AccountUpdateView {
+    name?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountUpdateView extends AccountUpdateView {
+    objectType: 'personal';
+}
+
+interface TeamAccountUpdateView extends AccountUpdateView {
+    objectType: 'team';
+    billingInterval?: string;
+}
+
+export async function getAccount(accountShortName: string): Promise<AccountReadView> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .get('/account')
         .then(({body}) => body);
 }
 
-export async function createAccount(view: AccountCreateView): Promise<AccountReadView> {
+export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
 
     return await new Router()
         .withAccountShortName('epicenter')
@@ -48,22 +63,14 @@ export async function createAccount(view: AccountCreateView): Promise<AccountRea
 }
 
 export async function updateAccount(
-    account: Account,
+    view:  PersonalAccountUpdateView | TeamAccountUpdateView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadView> {
-    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
         .patch('/account', {
-            body: {
-                objectType,
-                name,
-                shortName,
-                adminKey,
-                subscriptionPlan,
-                billingInterval,
-            },
+            body: view,
             ...optionals,
-        }).then(({ body }) => body);
+        }).then(({body}) => body);
 }
 
 export async function removeAccount(
@@ -83,7 +90,7 @@ export async function teamForAdmin(
         first?: number,
         max?: number,
     } & RoutingOptions = {},
-): Promise<Account[]> {
+): Promise<AccountReadView[]> {
     const {
         includeAllMembers, filter, first, max,
         ...routingOptions
