@@ -48,7 +48,7 @@ export async function createAccount(view: AccountCreateView): Promise<AccountRea
 }
 
 export async function updateAccount(
-    account: Account,
+    account: AccountReadView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadView> {
     const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
@@ -83,7 +83,7 @@ export async function teamForAdmin(
         first?: number,
         max?: number,
     } & RoutingOptions = {},
-): Promise<Account[]> {
+): Promise<AccountReadView[]> {
     const {
         includeAllMembers, filter, first, max,
         ...routingOptions
