@@ -6,25 +6,45 @@ import Router from '../utils/router';
  * @namespace accountAdapter
  */
 
-type Account = FIXME;
+interface Account {
+    name: string;
+    objectType: string;
+}
 
-export async function createAccount(
-    account: Account,
-    optionals: RoutingOptions = {},
-): Promise<Account> {
-    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
+interface AccountCreateView {
+    adminKey: string;
+    name: string;
+    shortName: string;
+    sharedSecret?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountCreateView extends AccountCreateView {
+    objectType: 'personal';
+}
+
+interface TeamAccountCreateView extends AccountCreateView {
+    objectType: 'team';
+    billingInterval: string;
+    subscriptionPlan: string;
+}
+
+export async function getAccount(accountShortName) {
     return await new Router()
-        .patch('/account', {
-            body: {
-                objectType,
-                name,
-                shortName,
-                adminKey,
-                subscriptionPlan,
-                billingInterval,
-            },
-            ...optionals,
-        }).then(({ body }) => body);
+        .withAccountShortName(accountShortName)
+        .get('/account')
+        .then(({body}) => body);
+}
+
+export async function createAccount(view: AccountCreateView) {
+
+    return await new Router()
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
+        .post('/account', {
+            body: view,
+        }).then(({body}) => body);
 }
 
 export async function updateAccount(
