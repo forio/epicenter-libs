@@ -37,7 +37,7 @@ enum RETRY_POLICY {
  * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {object}  payload                         An HTTP task object that will be executed when the task is triggered
  * @param {string}  [payload.method]                Type of method to use with the HTTP request (i.e. 'GET', 'POST', 'PATCH', etc.)
- * @param {string}  [payload.url]                   The url the HTTP request will be sent to; MUST be on the forio.com domain
+ * @param {string}  [payload.url]                   The url the HTTP request will be sent to; Will follow format <host>/app/<account>/<project>/url. host, account, and project are automatically entered
  * @param {object}  [payload.body]                  The body of the HTTP request. This is optional
  * @param {object}  [payload.headers]               Headers to send along with the HTTP request. Write as key-value pairs like you would with fetch. This is optional
  *
