@@ -63,7 +63,7 @@ export async function createAccount(view: PersonalAccountCreateView | TeamAccoun
 }
 
 export async function updateAccount(
-    view: AccountUpdateView,
+    view:  PersonalAccountUpdateView | TeamAccountUpdateView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadView> {
     return await new Router()
