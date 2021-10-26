@@ -40,7 +40,7 @@ interface TeamAccountUpdateView extends AccountUpdateView {
     billingInterval: string
 }
 
-export async function getAccount(accountShortName): Promise<AccountReadView> {
+export async function getAccount(accountShortName: string): Promise<AccountReadView> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .get('/account')
