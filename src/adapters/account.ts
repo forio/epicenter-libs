@@ -1,4 +1,4 @@
-import type { RoutingOptions } from '../utils/router';
+import type {RoutingOptions} from '../utils/router';
 import Router from '../utils/router';
 
 /**
@@ -30,6 +30,16 @@ interface TeamAccountCreateView extends AccountCreateView {
     subscriptionPlan: string;
 }
 
+interface AccountUpdateView {
+    name: string;
+    workerPartition: string,
+    active: boolean
+}
+
+interface TeamAccountUpdateView extends AccountUpdateView {
+    billingInterval: string
+}
+
 export async function getAccount(accountShortName): Promise<AccountReadView> {
     return await new Router()
         .withAccountShortName(accountShortName)
@@ -48,22 +58,14 @@ export async function createAccount(view: AccountCreateView): Promise<AccountRea
 }
 
 export async function updateAccount(
-    account: AccountReadView,
+    view: AccountUpdateView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadView> {
-    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
     return await new Router()
         .patch('/account', {
-            body: {
-                objectType,
-                name,
-                shortName,
-                adminKey,
-                subscriptionPlan,
-                billingInterval,
-            },
+            body: view,
             ...optionals,
-        }).then(({ body }) => body);
+        }).then(({body}) => body);
 }
 
 export async function removeAccount(
