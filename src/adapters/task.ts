@@ -11,7 +11,7 @@ enum RETRY_POLICY {
 /**
  * Creates a task; requires support level authentication
  *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{name}`
+ * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task`
  * Base URL with pseudonym: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{userKey}/{name}`
  *
  * @memberof taskAdapter
@@ -60,7 +60,6 @@ enum RETRY_POLICY {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.userKey]        Key associated with the user
  * @param {string}  [optionals.retryPolicy]         Specifies what to do should the task fail; see RETRY_POLICY
  * @param {string}  [optionals.failSafeTermination] The ISO-8601 date-time when the task will be deleted regardless of any tiggers; defaults to null
  * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
@@ -80,7 +79,6 @@ export async function create(
         retryPolicy?: keyof typeof RETRY_POLICY;
         failSafeTermination?: number;
         ttlSeconds?: number;
-        userKey?: string;
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
@@ -90,17 +88,13 @@ export async function create(
         retryPolicy,
         failSafeTermination,
         ttlSeconds,
-        userKey,
     } = optionals;
-    const { scopeBoundary, scopeKey } = scope;
     return await new Router()
         .withServer(server)
         .withAccountShortName(accountShortName)
         .withProjectShortName(projectShortName)
         .post(
-            `/task/${scopeBoundary}/${scopeKey}${
-                userKey ? `/${userKey}` : ''
-            }/${name}`,
+            '/task/',
             {
                 body: {
                     payload: { objectType: 'http', ...payload },
@@ -108,6 +102,8 @@ export async function create(
                     retryPolicy,
                     failSafeTermination,
                     ttlSeconds,
+                    scope,
+                    name,
                 },
             }
         )

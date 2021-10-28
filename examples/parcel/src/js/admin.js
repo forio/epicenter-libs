@@ -33,7 +33,7 @@ document.getElementById('create-task').addEventListener('click', (event) => {
         objectType: 'cron',
     };
     const dateTrigger = {
-        value: '2021-09-29T13:30:30-04:00',
+        value: '2021-11-29T13:30:30-04:00',
         objectType: 'date',
     };
     const optionals = {
