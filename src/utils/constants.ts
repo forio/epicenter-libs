@@ -11,7 +11,7 @@ export enum BROWSER_STORAGE_TYPE {
  * Three parts -- boundary: level of hierarchy (ontology) that a piece of data belongs to. Specifically, a run, an asset, or a vault data
  * Boundary in which a piece of data (run, asset, vault) is ID-ed to (see scopeKey).
  *
- * psuedonymKey, goes in tandem w/ permit (lock types) --
+ * pseudonymKey, goes in tandem w/ permit (lock types) --
  * Data lives and dies with scope, delete the scope, you lose the data and associated scopes
  * @enum {string}
  */

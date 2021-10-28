@@ -13,6 +13,7 @@ import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
 import * as worldAdapter from './world';
 import * as timeAdapter from './time';
+import * as taskAdapter from './task';
 import * as chatAdapter from './chat';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
@@ -35,5 +36,6 @@ export {
     userAdapter,
     vaultAdapter,
     worldAdapter,
+    taskAdapter,
     Channel,
 };
