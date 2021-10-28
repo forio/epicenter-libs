@@ -5,7 +5,9 @@
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
   "types": "dist/types/epicenter.d.ts",
-  "files": ["dist/"],
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "test": "karma start --browsers ChromeHeadless karma.conf.cjs",
     "single-test": "karma start --browsers ChromeHeadless karma.conf.cjs --single-run",

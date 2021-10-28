@@ -65,6 +65,7 @@ export {
     projectAdapter,
     recaptchaAdapter,
     runAdapter,
+    taskAdapter,
     timeAdapter,
     userAdapter,
     vaultAdapter,
