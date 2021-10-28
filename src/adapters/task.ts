@@ -35,6 +35,7 @@ enum RETRY_POLICY {
  * @param {object}  scope                           Scope associated with your run
  * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {string}  scope.userKey                   Key associated with the user. Optional
  * @param {object}  payload                         An HTTP task object that will be executed when the task is triggered
  * @param {string}  [payload.method]                Type of method to use with the HTTP request (i.e. 'GET', 'POST', 'PATCH', etc.)
  * @param {string}  [payload.url]                   The url the HTTP request will be sent to; Will follow format <host>/app/<account>/<project>/url. host, account, and project are automatically entered
@@ -66,7 +67,7 @@ enum RETRY_POLICY {
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function create(
-    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY } & GenericScope,
+    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY, userKey?: string } & GenericScope,
     name: string,
     payload: {
         method: string;
