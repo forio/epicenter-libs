@@ -56,6 +56,8 @@ export {
     accountAdapter,
     adminAdapter,
     assetAdapter,
+    // consensusAdapter,
+    emailAdapter,
     authAdapter,
     chatAdapter,
     episodeAdapter,
