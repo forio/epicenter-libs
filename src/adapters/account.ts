@@ -1,4 +1,5 @@
-import {Router} from 'utils/index';
+import type { RoutingOptions } from 'utils/router';
+import Router from 'utils/router';
 
 /**
  * Account API adapters -- account stuff TODO

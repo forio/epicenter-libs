@@ -1,10 +1,41 @@
 import EpicenterError from './error';
 import cookies from './cookies';
 import { NodeStore, SessionStore, CookieStore } from './store';
-import { BROWSER_STORAGE_TYPE } from './constants';
+import { BROWSER_STORAGE_TYPE, ROLE } from './constants';
 import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
+
+export interface UserSession {
+    token: string,
+    userKey: string,
+    groupKey?: string,
+    groupName?: string,
+    groupRole?: string,
+    multipleGroups?: boolean,
+    accountShortName: string,
+    projectShortName: string,
+    displayName: string,
+    objectType: 'user',
+    loginMethod: {
+        objectType: string,
+    },
+}
+
+export interface AdminSession {
+    adminHandle: string,
+    adminKey: string,
+    expires: boolean,
+    multipleAccounts: boolean,
+    objectType: 'admin'
+    teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT,
+    teamAccountShortName: string,
+    timeoutMinutes: number,
+    token: string,
+}
+
+export type Session = UserSession | AdminSession;
+
 
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
@@ -45,12 +76,13 @@ class Identification {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 
-        const { accountShortName, projectShortName, objectType } = mySession;
+        const { objectType } = mySession;
         const isLocal = config.isLocal();
         const base = { samesite: isLocal ? 'lax' : 'none', secure: !isLocal };
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
-        if (objectType === 'user' && accountShortName && projectShortName && isEpicenterDomain) {
+        if (objectType === 'user' && isEpicenterDomain) {
+            const { accountShortName, projectShortName } = mySession;
             return { ...base, path: `/app/${accountShortName}/${projectShortName}` };
         }
         /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */

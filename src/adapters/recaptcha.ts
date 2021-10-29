@@ -5,7 +5,7 @@ export async function google(humanKey: string) {
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .post('/recaptcha/google', {
-            body: {humanKey: humanKey}
+            body: {humanKey: humanKey},
         })
         .then(({body}) => body);
 }

@@ -1,4 +1,7 @@
-import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import type { User } from './user';
+
+import Router from '../utils/router';
 import cometdAdapter from './cometd';
 
 

@@ -1,5 +1,11 @@
-import { identification, Router } from 'utils/index';
-import { ROLE, SCOPE_BOUNDARY } from 'utils/constants';
+import type { UserSession } from 'utils/identification';
+import type { RoutingOptions } from 'utils/router';
+import type { GenericScope, Permit } from 'utils/constants';
+
+import {
+    identification, Router,
+    ROLE, SCOPE_BOUNDARY,
+} from 'utils';
 
 
 interface Vault {
@@ -7,7 +13,7 @@ interface Vault {
     lastUpdated: string,
     mutationKey: string,
     address: unknown,
-    scope: { userKey: string } & GenericScope,
+    scope: { userKey?: string } & GenericScope,
     name: string,
     permit: Permit,
     vaultKey: string,
@@ -101,10 +107,10 @@ export async function byName(
         groupName, episodeName, userKey, includeEpisodes,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .withSearchParams({ userKey, includeEpisodes })
-        .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
+        .get(`/vault/in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
             ...routingOptions,
         })
         .then(({ body }) => body);
