@@ -1,8 +1,12 @@
 import type { Callback, SubscriptionHandle, Message } from 'cometd';
-import { EpicenterError } from 'utils/index';
-import { SCOPE_BOUNDARY, PUSH_CATEGORY } from 'utils/constants';
+import type { GenericScope } from '../utils/constants';
+
+import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
+interface ChannelScope extends GenericScope {
+    pushCategory: string,
+}
 
 const validateScope = (scope: ChannelScope) => {
     if (!scope) throw new EpicenterError('No scope found where one was required');

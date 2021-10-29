@@ -1,6 +1,8 @@
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
+
 import fetch from 'cross-fetch';
-import { Fault, Router } from 'utils/index';
-import { ROLE } from 'utils/constants';
+import { Fault, Router, ROLE } from '../utils';
 
 
 interface Asset {

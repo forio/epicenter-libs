@@ -1,5 +1,13 @@
-import { Router, identification } from 'utils/index';
-import { SCOPE_BOUNDARY } from 'utils/constants';
+import type { UserSession } from 'utils/identification';
+import type { RoutingOptions } from 'utils/router';
+import type { GenericScope } from 'utils/constants';
+import type { User } from './user';
+
+import {
+    Router, identification,
+    SCOPE_BOUNDARY,
+} from 'utils';
+
 
 enum OBJECTIVE {
     MINIMUM = 'MINIMUM',
@@ -138,9 +146,9 @@ export async function create(
         name, groupName, episodeName,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .post(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+        .post(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { name },
             ...routingOptions,
         }).then(({ body }) => body);
@@ -169,15 +177,17 @@ export async function get(
     optionals: {
         groupName?: string,
         episodeName?: string,
+        mine?: boolean,
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        groupName, episodeName,
+        groupName, episodeName, mine,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .get(`/world/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
+        .withSearchParams({ mine })
+        .get(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -187,15 +197,25 @@ export async function getAssignments(
     optionals: {
         groupName?: string,
         episodeName?: string,
+        mine?: boolean,
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        groupName, episodeName,
+        groupName, episodeName, mine,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .get(`/world/assignment/for/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
+        .withSearchParams({ mine })
+        .get(`/world/assignment/for/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
+        .then(({ body }) => body);
+}
+
+export async function getSessionWorlds(
+    optionals: RoutingOptions = {}
+): Promise<World> {
+    return await new Router()
+        .get('/world/assignment', optionals)
         .then(({ body }) => body);
 }
 
@@ -231,9 +251,9 @@ export async function selfAssign(
         groupName, episodeName, objective = OBJECTIVE.MINIMUM,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .post(`/world/selfassign/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+        .post(`/world/selfassign/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { role, objective },
             ...routingOptions,
         })
@@ -278,9 +298,9 @@ export async function autoAssignUsers(
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .post(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+        .post(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { assignments, objective, requireAllAssignments },
             ...routingOptions,
         })
@@ -301,9 +321,9 @@ export async function editAssignments(
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .put(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
+        .put(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
             body: { assignments, objective, requireAllAssignments, keepEmptyWorlds },
             ...routingOptions,
         })
@@ -369,10 +389,10 @@ export async function removeUsers(
         groupName, episodeName, keepEmptyWorlds,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .withSearchParams({ userKey: userKeys, keepEmptyWorlds: Boolean(keepEmptyWorlds) })
-        .delete(`/world/assignment/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
+        .delete(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 

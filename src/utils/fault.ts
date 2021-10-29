@@ -1,27 +1,30 @@
+import EpicenterError from './error';
 
 interface ErrorBody {
+    status?: number,
     message: string,
     information?: {
         code: string,
+        [key: string]: unknown,
     },
     cause?: unknown,
 }
 
 
 /* For failed network calls */
-export default class Fault extends Error {
+export default class Fault extends EpicenterError {
     status?: number;
-    code?: string;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    information?: Record<string, any>;
+    information?: Record<string, unknown>;
     cause?: unknown;
 
-    constructor(body: ErrorBody, response: Response) {
+    constructor(body: ErrorBody, response?: Response) {
+        super(
+            body.message,
+            body.information?.code
+        );
 
-        super();
-        const { status } = response;
-        const { information, message, cause } = body;
-        this.status = status;
+        const { information, message, cause, status } = body;
+        this.status = status ?? response?.status;
         this.message = message;
 
         if (information) {

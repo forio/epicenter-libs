@@ -1,5 +1,11 @@
-import { Router, identification } from 'utils/index';
-import { ROLE, SCOPE_BOUNDARY, RITUAL } from 'utils/constants';
+import type { UserSession } from 'utils/identification';
+import type { GenericScope } from 'utils/constants';
+import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
+
+import {
+    Router, identification,
+    ROLE, SCOPE_BOUNDARY, RITUAL,
+} from 'utils';
 
 /**
  * Run API adapters -- use this to create, update, delete, and manage your runs
@@ -89,7 +95,7 @@ export async function create(
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .post('/run', {
             body: {
@@ -98,7 +104,7 @@ export async function create(
                     scopeKey,
                     userKey: scopeBoundary === WORLD ?
                         undefined :
-                        userKey ?? identification.session?.userKey,
+                        userKey ?? session?.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
@@ -319,10 +325,10 @@ export async function query(
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
         scope, groupName, episodeName, includeEpisodes,
     } = searchOptions;
-
+    const session = identification.session as UserSession;
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
-        `in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
+        `in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
 
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -336,7 +342,7 @@ export async function query(
         .withSearchParams(searchParams)
         .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
-            parsePage: (values) => {
+            parsePage: (values: Run[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
                         // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'

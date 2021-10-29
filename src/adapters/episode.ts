@@ -1,4 +1,6 @@
-import { identification, Router } from 'utils/index';
+import type { UserSession } from 'utils/identification';
+import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
+import { identification, Router } from 'utils';
 
 /**
  * Episode API adapters -- use this to create, update, delete, and manage your episodes
@@ -40,8 +42,8 @@ export async function create(
     } = optionals;
     return await new Router()
         .post(`/episode/${groupName}`, {
-            ...routingOptions,
             body: { name, draft, runLimit },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
@@ -87,13 +89,12 @@ export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {}
 ): Promise<Page<Episode>> {
-    const DEFAULT_MAX = 100;
-    const { filter = [], sort = [], first = 0, max = DEFAULT_MAX } = searchOptions;
+    const { filter = [], sort = [], first = 0, max } = searchOptions;
 
     return await new Router()
         .withSearchParams({
-            filter: filter.join(';'),
-            sort: sort.join(';'),
+            filter: filter.join(';') || undefined,
+            sort: sort.join(';') || undefined,
             first, max,
         })
         .get('/episode/search', {
@@ -150,8 +151,10 @@ export async function withName(
         groupName,
         ...routingOptions
     } = optionals;
+
+    const session = identification.session as UserSession;
     return await new Router()
-        .get(`/episode/with/${groupName ?? identification.session?.groupName}/${name}`, routingOptions)
+        .get(`/episode/with/${groupName ?? session?.groupName}/${name}`, routingOptions)
         .then(({ body }) => body);
 }
 
