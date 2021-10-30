@@ -82,17 +82,17 @@ describe('Vault API Service', () => {
     describe('vaultAdapter.get', () => {
         const VAULT_KEY = 'MOCK_VAULT_KEY';
         it('Should do a GET', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the vault/vaultKey URL', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${VAULT_KEY}`);
         });
@@ -124,7 +124,7 @@ describe('Vault API Service', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${NAME}`);
         });
         it('Should use insert userKey into URL when provided', async() => {
-            await vaultAdapter.withScope(NAME, SCOPE, { userKey: USER_KEY });
+            await vaultAdapter.withScope(NAME, { ...SCOPE, userKey: USER_KEY });
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${USER_KEY}/${NAME}`);
         });
@@ -164,7 +164,7 @@ describe('Vault API Service', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/in/${GROUP_NAME}/${NAME}`);
         });
         it('Should pass the userKey and includeEpisodes to the search params if provided', async() => {
-            const USER_KEY = 'myuserkey'
+            const USER_KEY = 'myuserkey';
             const RANDOM_THING = { something: 'random' };
             await vaultAdapter.byName(NAME, {
                 userKey: USER_KEY,
@@ -220,7 +220,7 @@ describe('Vault API Service', () => {
         testedMethods.push('remove');
     });
     describe('vaultAdapter.create', () => {
-        const NAME = 'myvaultname'
+        const NAME = 'myvaultname';
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const ITEMS = { set: { foo: 'bar' } };
@@ -270,8 +270,7 @@ describe('Vault API Service', () => {
             const TTL_SECONDS = 20;
             const MUTATION_KEY = 'mymutationkey';
             const RANDOM_THING = { something: 'random' };
-            await vaultAdapter.create(NAME, WORLD_SCOPE, ITEMS, {
-                userKey: USER_KEY,
+            await vaultAdapter.create(NAME, { ...WORLD_SCOPE, userKey: USER_KEY }, ITEMS, {
                 ttlSeconds: TTL_SECONDS,
                 mutationKey: MUTATION_KEY,
                 ...RANDOM_THING,
@@ -287,6 +286,6 @@ describe('Vault API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        expect(vaultAdapter).to.have.all.keys(...testedMethods);
+        chai.expect(vaultAdapter).to.have.all.keys(...testedMethods);
     });
 });

@@ -230,7 +230,7 @@ describe('Group API Service', () => {
         });
         testedMethods.push('create');
     });
-    describe('groupAdapter.search', () => {
+    describe('groupAdapter.query', () => {
         const OPTIONS = {
             filter: [
                 'group.name|=group1|group2',
@@ -242,36 +242,36 @@ describe('Group API Service', () => {
             max: 100,
         };
         it('Should do a GET', async() => {
-            await groupAdapter.search(OPTIONS);
+            await groupAdapter.query(OPTIONS);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.search(OPTIONS);
+            await groupAdapter.query(OPTIONS);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the group URL', async() => {
-            await groupAdapter.search(OPTIONS);
+            await groupAdapter.query(OPTIONS);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/search`);
         });
         it('Should support generic URL options', async() => {
-            await groupAdapter.search({ ...OPTIONS, ...GENERIC_OPTIONS });
+            await groupAdapter.query(OPTIONS, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/search`);
         });
         it('Should modify URL to contain \'quantized\' when the option is provided', async() => {
-            await groupAdapter.search({ ...OPTIONS, quantized: true });
+            await groupAdapter.query({ ...OPTIONS, quantized: true });
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/search`);
         });
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
-            await groupAdapter.search(OPTIONS);
+            await groupAdapter.query(OPTIONS);
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
@@ -280,8 +280,12 @@ describe('Group API Service', () => {
             searchParams.get('first').should.equal(OPTIONS.first.toString());
             searchParams.get('max').should.equal(OPTIONS.max.toString());
         });
-        testedMethods.push('search');
+        testedMethods.push('query');
 
+    });
+    describe('groupAdapter.search', () => {
+        // TODO -- remove this as groupAdapter.search is DEPRECATED
+        testedMethods.push('search');
     });
     describe('groupAdapter.withGroupName', () => {
         const GROUP_NAME = 'groupname';
@@ -523,6 +527,6 @@ describe('Group API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        expect(groupAdapter).to.have.all.keys(...testedMethods);
+        chai.expect(groupAdapter).to.have.all.keys(...testedMethods);
     });
 });

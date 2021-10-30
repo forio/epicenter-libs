@@ -1,5 +1,5 @@
-import type { RoutingOptions } from '../utils/router';
-import Router from '../utils/router';
+import type { RoutingOptions } from 'utils/router';
+import Router from 'utils/router';
 
 export interface User {
     lastUpdated: string,

@@ -1,15 +1,28 @@
 import 'regenerator-runtime/runtime';
 
 /* yes, this string template literal is weird;
- * it's cause rollup's replace does not recogize __VERSION__ as an individual token otherwise */
+ * it's cause rollup does not recogize __VERSION__ as an individual token otherwise */
 const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
-
 
 import type { RetryFunction } from './utils/router';
 import { authAdapter } from './adapters';
-import { errorManager, identification, isBrowser, Fault } from './utils';
+import { errorManager, identification, isBrowser, Fault, EpicenterError } from './utils';
 
 const UNAUTHORIZED = 401;
+errorManager.registerHandler(
+    (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
+    async<T>(error: Fault, retry: RetryFunction<T>) => {
+        if (isBrowser() && retry.requestArguments) {
+            const { url, method } = retry.requestArguments;
+            if (url.toString().includes('/authentication') && method === 'POST') {
+                await authAdapter.logout();
+                // eslint-disable-next-line no-alert
+                alert('Session token has expired, try logging in again.');
+            }
+        }
+        throw error;
+    },
+);
 errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
@@ -27,7 +40,11 @@ errorManager.registerHandler(
     (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         try {
-            const groupKey = identification.session?.groupKey ?? '';
+            const session = identification.session;
+            if (session?.objectType === 'admin') {
+                throw new EpicenterError('Unhandled error: admin session was somehow invalidated');
+            }
+            const groupKey = session?.groupKey ?? '';
             await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
             return await retry();
         } catch (e) {
@@ -37,21 +54,25 @@ errorManager.registerHandler(
     }
 );
 
-
 export { version };
+
+/* Interfaces & Types */
+export type { Session, UserSession, AdminSession } from './utils/identification';
+export type { Group } from './adapters/group';
+/* Constants */
 export {
     SCOPE_BOUNDARY,
     RITUAL,
     PUSH_CATEGORY,
     ROLE,
 } from './utils/constants';
-
+/* Utilities */
 export {
     config,
     errorManager,
     Router,
 } from './utils';
-
+/* Adapters */
 export {
     accountAdapter,
     adminAdapter,
