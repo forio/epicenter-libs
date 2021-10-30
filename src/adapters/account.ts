@@ -6,44 +6,71 @@ import Router from 'utils/router';
  * @namespace accountAdapter
  */
 
-type Account = FIXME;
+interface AccountReadView {
+    name: string;
+    objectType: string;
+}
 
-export async function createAccount(
-    account: Account,
-    optionals: RoutingOptions = {},
-): Promise<Account> {
-    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
+interface AccountCreateView {
+    adminKey: string;
+    name: string;
+    shortName: string;
+    sharedSecret?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountCreateView extends AccountCreateView {
+    objectType: 'personal';
+}
+
+interface TeamAccountCreateView extends AccountCreateView {
+    objectType: 'team';
+    billingInterval: string;
+    subscriptionPlan: string;
+}
+
+interface AccountUpdateView {
+    name?: string;
+    workerPartition?: string;
+    active?: boolean;
+}
+
+interface PersonalAccountUpdateView extends AccountUpdateView {
+    objectType: 'personal';
+}
+
+interface TeamAccountUpdateView extends AccountUpdateView {
+    objectType: 'team';
+    billingInterval?: string;
+}
+
+export async function getAccount(accountShortName: string): Promise<AccountReadView> {
     return await new Router()
-        .patch('/account', {
-            body: {
-                objectType,
-                name,
-                shortName,
-                adminKey,
-                subscriptionPlan,
-                billingInterval,
-            },
-            ...optionals,
-        }).then(({ body }) => body);
+        .withAccountShortName(accountShortName)
+        .get('/account')
+        .then(({body}) => body);
+}
+
+export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
+
+    return await new Router()
+        .withAccountShortName('epicenter')
+        .withProjectShortName('manager')
+        .post('/account', {
+            body: view,
+        }).then(({body}) => body);
 }
 
 export async function updateAccount(
-    account: Account,
+    view:  PersonalAccountUpdateView | TeamAccountUpdateView,
     optionals: RoutingOptions = {},
-): Promise<Account> {
-    const { objectType = 'personal', name, shortName, adminKey, subscriptionPlan, billingInterval } = account;
+): Promise<AccountReadView> {
     return await new Router()
         .patch('/account', {
-            body: {
-                objectType,
-                name,
-                shortName,
-                adminKey,
-                subscriptionPlan,
-                billingInterval,
-            },
+            body: view,
             ...optionals,
-        }).then(({ body }) => body);
+        }).then(({body}) => body);
 }
 
 export async function removeAccount(
@@ -63,7 +90,7 @@ export async function teamForAdmin(
         first?: number,
         max?: number,
     } & RoutingOptions = {},
-): Promise<Account[]> {
+): Promise<AccountReadView[]> {
     const {
         includeAllMembers, filter, first, max,
         ...routingOptions
