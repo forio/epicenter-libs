@@ -2,6 +2,7 @@ import * as accountAdapter from './account';
 import * as adminAdapter from './admin';
 import * as authAdapter from './authentication';
 import * as assetAdapter from './asset';
+import * as emailAdapter from './email';
 import * as episodeAdapter from './episode';
 import * as groupAdapter from './group';
 import * as leaderboardAdapter from './leaderboard';
@@ -13,6 +14,7 @@ import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
 import * as worldAdapter from './world';
 import * as timeAdapter from './time';
+import * as taskAdapter from './task';
 import * as chatAdapter from './chat';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
@@ -24,6 +26,7 @@ export {
     assetAdapter,
     chatAdapter,
     cometdAdapter,
+    emailAdapter,
     episodeAdapter,
     groupAdapter,
     leaderboardAdapter,
@@ -35,5 +38,6 @@ export {
     userAdapter,
     vaultAdapter,
     worldAdapter,
+    taskAdapter,
     Channel,
 };

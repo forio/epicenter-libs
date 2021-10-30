@@ -173,7 +173,6 @@ const initialize = () => {
     /* Attach event listeners */
     chatCreateEl.onclick = async() => {
         showLoading();
-
         const permit = {
             readLock: ROLE.PARTICIPANT,
             writeLock: ROLE.PARTICIPANT,

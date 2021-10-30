@@ -15,6 +15,7 @@ interface Chat {
     chatKey: string,
     messages: ChatMessage[],
     room: string,
+
     scope: GenericScope,
 }
 
