@@ -64,7 +64,6 @@ interface Run {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.readLock]            Role (character type)
  * @param {string}  [optionals.writeLock]           Role (chracter type)
- * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
  * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param {string}  [optionals.trackingKey]         Tracking key
  * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
@@ -75,20 +74,19 @@ interface Run {
  */
 export async function create(
     model: string,
-    scope: GenericScope,
+    scope: { userKey?: string } & GenericScope,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        userKey?: string,
         ephemeral?: boolean,
         trackingKey?: string,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
     } & RoutingOptions = {}
 ): Promise<Run> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, userKey, ephemeral,
+        readLock, writeLock, ephemeral,
         trackingKey, modelContext, executionContext,
         ...routingOptions
     } = optionals;
@@ -621,7 +619,6 @@ export async function retrieveFromWorld(
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        userKey?: string,
         ephemeral?: boolean,
         trackingKey?: string,
         modelContext?: ModelContext,
