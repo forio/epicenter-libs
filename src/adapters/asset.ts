@@ -4,6 +4,9 @@ import type { GenericScope } from '../utils/constants';
 import fetch from 'cross-fetch';
 import { Fault, Router, ROLE } from '../utils';
 
+interface AssetScope extends GenericScope {
+    userKey?: string,
+}
 
 interface Asset {
     file: string,
@@ -14,7 +17,7 @@ interface Asset {
         worldKey: string,
         episodeName: string,
     },
-    scope: GenericScope,
+    scope: AssetScope,
 }
 
 interface AssetTicket {
@@ -24,17 +27,16 @@ interface AssetTicket {
 
 export async function create(
     file: string,
-    scope: GenericScope,
+    scope: AssetScope,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
-        userKey?: string,
     } & RoutingOptions = {}
 ): Promise<AssetTicket> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        userKey, readLock, writeLock, ttlSeconds,
+        readLock, writeLock, ttlSeconds,
         ...routingOptions
     } = optionals;
     return await new Router()
@@ -58,17 +60,16 @@ export async function create(
 
 export async function update(
     file: string,
-    scope: GenericScope,
+    scope: AssetScope,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
-        userKey?: string,
     } & RoutingOptions = {}
 ): Promise<AssetTicket> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        userKey, readLock, writeLock, ttlSeconds,
+        readLock, writeLock, ttlSeconds,
         ...routingOptions
     } = optionals;
     return await new Router()
@@ -100,17 +101,13 @@ export async function remove(
 }
 
 export async function removeFromScope(
-    scope: GenericScope,
-    optionals: { userKey?: string } & RoutingOptions = {}
+    scope: AssetScope,
+    optionals: RoutingOptions = {}
 ): Promise<void> {
-    const { scopeBoundary, scopeKey } = scope;
-    const {
-        userKey,
-        ...routingOptions
-    } = optionals;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .delete(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}`, routingOptions)
+        .delete(`/asset/in/${scopeBoundary}/${scopeKey}${uriComponent}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -128,15 +125,14 @@ export async function get(
 }
 
 export async function list(
-    scope: GenericScope,
+    scope: AssetScope,
     optionals: {
-        userKey?: string,
         filter?: string,
     } & RoutingOptions = {}
 ): Promise<Asset[]> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        userKey, filter,
+        filter,
         ...routingOptions
     } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -156,31 +152,26 @@ export async function getURL(
 
 export async function getURLWithScope(
     file: string,
-    scope: GenericScope,
-    optionals: { userKey?: string } & RoutingOptions = {}
+    scope: AssetScope,
+    optionals: RoutingOptions = {}
 ): Promise<string> {
-    const { scopeBoundary, scopeKey } = scope;
-    const {
-        userKey,
-        ...routingOptions
-    } = optionals;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, routingOptions)
+        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, optionals)
         .then(({ body }) => body);
 }
 
 const CONFLICT = 409;
 export async function store(
     file: File,
-    scope: GenericScope,
+    scope: AssetScope,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
         overwrite?: boolean,
         fileName?: string,
-        userKey?: string,
     } & RoutingOptions = {}
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;

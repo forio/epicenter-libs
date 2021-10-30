@@ -23,6 +23,7 @@ interface Leaderboard {
     lastUpdated: Date,
 }
 
+
 /**
  * Updates leaderboard information
  *
@@ -37,17 +38,14 @@ interface Leaderboard {
 export async function update(
     collection: string,
     scores: Score[],
-    scope: GenericScope,
+    scope: { userKey?: string } & GenericScope,
     optionals: {
         tags?: Tag[],
         userKey?: string,
     } & RoutingOptions = {}
 ): Promise<Leaderboard> {
-    const {
-        tags, userKey,
-        ...routingOptions
-    } = optionals;
-    const { scopeBoundary, scopeKey } = scope;
+    const { tags, ...routingOptions } = optionals;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const session = identification.session as UserSession;
     return await new Router()
         .post('/leaderboard', {

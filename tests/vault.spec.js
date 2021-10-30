@@ -82,17 +82,17 @@ describe('Vault API Service', () => {
     describe('vaultAdapter.get', () => {
         const VAULT_KEY = 'MOCK_VAULT_KEY';
         it('Should do a GET', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the vault/vaultKey URL', async() => {
-            await vaultAdapter.get(VAULT_KEY, );
+            await vaultAdapter.get(VAULT_KEY);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${VAULT_KEY}`);
         });

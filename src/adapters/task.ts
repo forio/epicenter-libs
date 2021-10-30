@@ -1,7 +1,6 @@
+import type { RoutingOptions } from 'utils/router';
+import type { GenericScope } from 'utils/constants';
 import { Router } from 'utils/index';
-import type { RoutingOptions } from '../utils/router';
-import type { GenericScope } from '../utils/constants';
-import { SCOPE_BOUNDARY } from 'utils/constants';
 
 enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
@@ -67,7 +66,7 @@ enum RETRY_POLICY {
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function create(
-    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY, userKey?: string } & GenericScope,
+    scope: { userKey?: string } & GenericScope,
     name: string,
     payload: {
         method: string;
@@ -83,17 +82,12 @@ export async function create(
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
-        accountShortName,
-        projectShortName,
-        server,
         retryPolicy,
         failSafeTermination,
         ttlSeconds,
+        ...routingOptions
     } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .post(
             '/task/',
             {
@@ -106,6 +100,7 @@ export async function create(
                     scope,
                     name,
                 },
+                ...routingOptions,
             }
         )
         .then(({ body }) => body);
@@ -128,12 +123,8 @@ export async function create(
  * @returns {undefined}
  */
 export async function destroy(taskKey: string, optionals: RoutingOptions = {}):Promise<void> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .delete(`/task/${taskKey}`)
+        .delete(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -153,12 +144,8 @@ export async function destroy(taskKey: string, optionals: RoutingOptions = {}):P
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function get(taskKey: string, optionals: RoutingOptions = {}): Promise<Record<string, unknown>> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/task/${taskKey}`)
+        .get(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -181,12 +168,8 @@ export async function getHistory(
     taskKey: string,
     optionals: RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
-    const { accountShortName, projectShortName, server } = optionals;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
-        .get(`/task/history/${taskKey}`)
+        .get(`/task/history/${taskKey}`, optionals)
         .then(({ body }) => body);
 }
 
@@ -210,23 +193,20 @@ export async function getHistory(
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.userKey]        Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
+ * @param {string}  [optionals.userKey]             Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
  * @returns {taskObject}                            Returns a task object including the taskKey
  */
 export async function getTaskIn(
-    scope: { scopeBoundary: keyof typeof SCOPE_BOUNDARY } & GenericScope,
-    optionals: { userKey?: string } & RoutingOptions = {}
+    scope: { userKey?: string } & GenericScope,
+    optionals: RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
-    const { accountShortName, projectShortName, server, userKey } = optionals;
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     return await new Router()
-        .withServer(server)
-        .withAccountShortName(accountShortName)
-        .withProjectShortName(projectShortName)
         .get(
             `/task/in/${scopeBoundary}/${scopeKey}${
                 userKey ? `/${userKey}` : ''
-            }`
+            }`,
+            optionals
         )
         .then(({ body }) => body);
 }
