@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.7.1",
+  "version": "3.8.0-breaking",
   "main": "dist/cjs/epicenter.js",
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
