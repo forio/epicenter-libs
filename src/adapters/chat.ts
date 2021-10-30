@@ -15,12 +15,12 @@ interface Chat {
     chatKey: string,
     messages: ChatMessage[],
     room: string,
-
     scope: GenericScope,
 }
 
 /**
  * Updates the permissions of a chat
+ * PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat/{CHAT_KEY}`
  * @param chatKey   Key associated with the chat
  * @param permit    Permit object with the updated permissions
  * @param optionals Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
@@ -40,6 +40,7 @@ export async function updatePermit(
 
 /**
  * Creates a chat
+ * POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat`
  * @param room      Name of the chat
  * @param scope     Scope of the chat; will not accept user scope
  * @param permit    Permissions for the chat
@@ -54,7 +55,6 @@ export async function create(
 ): Promise<Chat> {
     return new Router()
         .post('/chat', {
-            ...optionals,
             body: {
                 scope: {
                     scopeBoundary: scope.scopeBoundary,
@@ -63,12 +63,14 @@ export async function create(
                 permit,
                 room,
             },
+            ...optionals,
         }).then(({ body }) => body);
 }
 
 
 /**
  * Gets a chat
+ * GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat/{CHAT_KEY}`
  * @param chatKey   Key of the associated chat
  * @param optionals Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @returns The chat corresponding with the provided key
@@ -85,6 +87,7 @@ export async function get(
 
 /**
  * Open search for chats, returns a page
+ * GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat`
  * @param searchOptions Search options -- for more on Epicenter search options go [here](NOOP link)
  * @param optionals     Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @returns             A page for the list of chats found
@@ -110,6 +113,7 @@ export async function query(
 
 /**
  * Sends a message to a chat
+ * PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat/message/{CHAT_KEY}/[USER_KEY]`
  * @param chatKey           Key associated with the chat
  * @param message           Message text to send
  * @param optionals         Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
@@ -125,13 +129,14 @@ export async function sendMessage(
     const uriComponent = userKey ? `/${userKey}` : '';
     return new Router()
         .put(`/chat/message/${chatKey}${uriComponent}`, {
-            ...routingOptions,
             body: { message },
+            ...routingOptions,
         }).then(({ body }) => body);
 }
 
 /**
  * Retrieves messages from for a given chat
+ * GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/chat/message/{CHAT_KEY}`
  * @param chatKey               Key associated with the chat
  * @param optionals             Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param optionals.maxRecords  Maximum number of messages to get
