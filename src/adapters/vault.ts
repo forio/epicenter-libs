@@ -1,10 +1,11 @@
-import type { RoutingOptions } from '../utils/router';
-import type { GenericScope, Permit } from '../utils/constants';
+import type { UserSession } from 'utils/identification';
+import type { RoutingOptions } from 'utils/router';
+import type { GenericScope, Permit } from 'utils/constants';
 
 import {
     identification, Router,
     ROLE, SCOPE_BOUNDARY,
-} from '../utils';
+} from 'utils';
 
 
 interface Vault {
@@ -12,7 +13,7 @@ interface Vault {
     lastUpdated: string,
     mutationKey: string,
     address: unknown,
-    scope: { userKey: string } & GenericScope,
+    scope: { userKey?: string } & GenericScope,
     name: string,
     permit: Permit,
     vaultKey: string,
@@ -76,17 +77,13 @@ export async function get(
 
 export async function withScope(
     name: string,
-    scope: GenericScope,
-    optionals: { userKey?: string } & RoutingOptions = {}
+    scope: { userKey?: string } & GenericScope,
+    optionals: RoutingOptions = {}
 ): Promise<Vault> {
-    const { scopeBoundary, scopeKey } = scope;
-    const {
-        userKey,
-        ...routingOptions
-    } = optionals;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`, routingOptions)
+        .get(`/vault/with/${scopeBoundary}/${scopeKey}${uriComponent}/${name}`, optionals)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
@@ -106,10 +103,10 @@ export async function byName(
         groupName, episodeName, userKey, includeEpisodes,
         ...routingOptions
     } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .withSearchParams({ userKey, includeEpisodes })
-        .get(`/vault/in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
+        .get(`/vault/in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
             ...routingOptions,
         })
         .then(({ body }) => body);
@@ -163,20 +160,19 @@ export async function remove(
  */
 export async function create(
     name: string,
-    scope: GenericScope,
+    scope: { userKey?: string } & GenericScope,
     items: Record<string, unknown>,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        userKey?: string,
         ttlSeconds?: string,
         mutationKey?: string,
     } & RoutingOptions = {}
 ): Promise<Vault> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
         readLock, writeLock,
-        userKey, ttlSeconds, mutationKey,
+        ttlSeconds, mutationKey,
         ...routingOptions
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;

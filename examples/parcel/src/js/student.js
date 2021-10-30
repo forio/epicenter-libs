@@ -2,7 +2,7 @@ import './config';
 import { showLoading, hideLoading } from './common';
 import {
     groupAdapter, authAdapter, presenceAdapter, timeAdapter, leaderboardAdapter,
-    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY,
+    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, worldAdapter,
 } from 'epicenter';
 
 const session = authAdapter.getLocalSession();
@@ -19,11 +19,37 @@ const leaderboardEl = document.getElementById('leaderboard');
 const chatInputEl = document.getElementById('text-box');
 const submitEl = document.getElementById('submit');
 const timeEl = document.getElementById('time');
+const worldInformationEl = document.getElementById('world-information');
+
+const renderLeaderboard = (entries) => {
+    // Empty leaderboard
+    while (leaderboardEl.firstChild) {
+        leaderboardEl.firstChild.remove();
+    }
+    // Repopulate
+    entries.forEach((entry) => {
+        const LAST_FOUR = -4;
+        const user = document.createElement('td');
+        user.append(entry.scope.userKey.slice(LAST_FOUR));
+
+        const points = document.createElement('td');
+        points.append(entry.scores.find((score) => score.name === 'points')?.quantity ?? '');
+
+        const marketShare = document.createElement('td');
+        marketShare.append(entry.scores.find((score) => score.name === 'market-share')?.quantity ?? '');
+
+        const tags = document.createElement('td');
+        tags.append((entry.tags ?? []).reduce((t, { content }) => `${t} ${content}`, ''));
+
+        const row = document.createElement('tr');
+        row.append(user, points, marketShare, tags);
+        leaderboardEl.append(row);
+    });
+};
 
 const initialize = () => {
     groupAdapter.search({
         filter: [
-            // `group.name|=${'wallace-dev-1-oct-2020'}|${'wallace-dev-2-oct-2020'}`,
             'permission.role=PARTICIPANT',
             `user.userKey=${session.userKey}`,
         ],
@@ -31,6 +57,9 @@ const initialize = () => {
         first: 0,
         max: 2,
     });
+
+    worldAdapter.getAssignments();
+    worldAdapter.getSessionWorlds();
     presenceAdapter.connect();
     let waiting = false;
     chatFormEl.onsubmit = (e) => {
@@ -49,11 +78,12 @@ const initialize = () => {
         chatInputEl.value = '';
         submitEl.disabled = true;
         submitEl.innerText = 'Sent';
+        const DELAY = 100;
         setTimeout(() => {
             submitEl.disabled = false;
             submitEl.innerText = 'Send';
             waiting = false;
-        }, 10);
+        }, DELAY);
     };
     timeEl.onclick = (e) => {
         e.preventDefault();
@@ -93,31 +123,6 @@ const initialize = () => {
             hideLoading();
         }
     };
-    const renderLeaderboard = (entries) => {
-        // Empty leaderboard
-        while (leaderboardEl.firstChild) {
-            leaderboardEl.firstChild.remove();
-        }
-        // Repopulate
-        entries.forEach((entry) => {
-            const LAST_FOUR = -4;
-            const user = document.createElement('td');
-            user.append(entry.scope.userKey.slice(LAST_FOUR));
-
-            const points = document.createElement('td');
-            points.append(entry.scores.find((score) => score.name === 'points')?.quantity ?? '');
-
-            const marketShare = document.createElement('td');
-            marketShare.append(entry.scores.find((score) => score.name === 'market-share')?.quantity ?? '');
-
-            const tags = document.createElement('td');
-            tags.append((entry.tags ?? []).reduce((t, { content }) => `${t} ${content}`, ''));
-
-            const row = document.createElement('tr');
-            row.append(user, points, marketShare, tags);
-            leaderboardEl.append(row);
-        });
-    };
 
     getLeaderboardEl.onsubmit = async(e) => {
         e.preventDefault();
@@ -142,6 +147,7 @@ const initialize = () => {
             hideLoading();
         }
     };
+
 };
 
 if (!session) {

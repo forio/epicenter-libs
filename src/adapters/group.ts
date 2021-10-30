@@ -1,3 +1,4 @@
+import type { UserSession } from '../utils/identification';
 import type { RoutingOptions, Page, GenericSearchOptions } from '../utils/router';
 import type { User } from './user';
 
@@ -35,9 +36,17 @@ interface GroupUpdate {
     capacity?: number,
 }
 
-interface Group extends GroupUpdate {
+interface Member {
+    available: boolean,
+    objectType: 'group',
+    role: keyof typeof ROLE,
+    user: User,
+}
+
+export interface Group extends GroupUpdate {
     name: string,
     groupKey: string,
+    members?: Member[],
 }
 
 
@@ -73,9 +82,9 @@ export async function get(
     let uriComponent = '';
     if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
     if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .get(`/group${uriComponent}/${groupKey ?? identification.session?.groupKey}`, routingOptions)
+        .get(`/group${uriComponent}/${groupKey ?? session?.groupKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -258,7 +267,7 @@ export async function create(
  * @example
  *
  * import { groupAdapter } from 'epicenter';
- * groupAdapter.search({
+ * groupAdapter.query({
  *      filter: [
  *          'group.name|=group1|group2',    // look for groups whose name is 'group1' or 'group2'
  *          'permission.role=FACILITATOR',  // where there exists at least one facilitator user
@@ -274,9 +283,31 @@ export async function create(
  * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {object}                                    Group object
  */
+export async function query(
+    searchOptions: { quantized?: boolean } & GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<Page<Group>> {
+    const { filter = [], sort = [], first, max, quantized } = searchOptions;
+
+    const searchParams = {
+        filter: filter.join(';') || undefined,
+        sort: sort.join(';') || undefined,
+        first, max,
+    };
+
+    return await new Router()
+        .withSearchParams(searchParams)
+        .get(`/group${quantized ? '/quantized' : ''}/search`, {
+            paginated: true,
+            ...optionals,
+        })
+        .then(({ body }) => body);
+}
+
 export async function search(
     optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {}
 ): Promise<Page<Group>> {
+    console.warn('DEPRECATION WARNING: groupAdapter.search is deprecated and will be removed with the next release. Use groupAdapter.query instead.');
     const {
         filter = [], sort = [], first, max, quantized,
         ...routingOptions
@@ -385,7 +416,7 @@ export async function forUser(
  * const groups = await epicenter.groupAdapter.getSessionGroups();
  *
  * @param {object}          [optionals={}]                  Optional parameters
- * @param {boolean}         [optionals.includeExpired]             Indicates whether to include expired groups in the query (defaults to false)
+ * @param {boolean}         [optionals.includeExpired]      Indicates whether to include expired groups in the query (defaults to false)
  * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
  * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
@@ -472,9 +503,9 @@ export async function addUser(
     const { groupKey, ...routingOptions } = optionals;
 
     const users = Array.isArray(usersInput) ? usersInput : [usersInput];
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .post(`/group/member/${groupKey ?? identification.session?.groupKey}`, {
+        .post(`/group/member/${groupKey ?? session?.groupKey}`, {
             body: users.map((u) => {
                 const userKey = typeof u === 'string' ? u : u.userKey;
                 const role = typeof u === 'string' ? ROLE.PARTICIPANT : u.role;
@@ -519,9 +550,9 @@ export async function updateUser(
 ):Promise<User> {
     const { role, available } = update;
     const { groupKey, ...routingOptions } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .patch(`/group/member/${groupKey ?? identification.session?.groupKey}/${userKey}`, {
+        .patch(`/group/member/${groupKey ?? session?.groupKey}/${userKey}`, {
             body: {
                 objectType: 'group',
                 role,
@@ -559,10 +590,10 @@ export async function removeUser(
     const hasMultiple = Array.isArray(userKey) && userKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${userKey.length === 1 ? userKey[0] : userKey}`;
     const searchParams = hasMultiple ? { userKey } : undefined;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .withSearchParams(searchParams)
-        .delete(`/group/member/${groupKey ?? identification.session?.groupKey}${uriComponent}`, routingOptions)
+        .delete(`/group/member/${groupKey ?? session?.groupKey}${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -573,9 +604,9 @@ export async function statusUpdate(
     optionals: { groupKey?: string } & RoutingOptions = {}
 ): Promise<Group> {
     const { groupKey, ...routingOptions } = optionals;
-
+    const session = identification.session as UserSession;
     return await new Router()
-        .patch(`/group/status/${groupKey ?? identification.session?.groupKey}`, {
+        .patch(`/group/status/${groupKey ?? session?.groupKey}`, {
             body: { code, message },
             ...routingOptions,
         }).then(({ body }) => body);
