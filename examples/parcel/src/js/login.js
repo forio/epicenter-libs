@@ -25,7 +25,7 @@ if (query.error) {
     errorEl.classList.add('visible');
 }
 
-document.getElementById('submit').onclick = async (e) => {
+document.getElementById('submit').onclick = async(e) => {
     e.preventDefault();
     if (e.target.innerText !== 'Submit') return;
 
@@ -55,6 +55,7 @@ document.getElementById('submit').onclick = async (e) => {
         });
     } else {
         window.location.href = '/index.html';
+        // console.log('%c i have logged in?', 'font-size: 20px; color: #FB15B9FF;', session);
     }
 };
 

@@ -164,7 +164,7 @@ describe('Vault API Service', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/in/${GROUP_NAME}/${NAME}`);
         });
         it('Should pass the userKey and includeEpisodes to the search params if provided', async() => {
-            const USER_KEY = 'myuserkey'
+            const USER_KEY = 'myuserkey';
             const RANDOM_THING = { something: 'random' };
             await vaultAdapter.byName(NAME, {
                 userKey: USER_KEY,
@@ -220,7 +220,7 @@ describe('Vault API Service', () => {
         testedMethods.push('remove');
     });
     describe('vaultAdapter.create', () => {
-        const NAME = 'myvaultname'
+        const NAME = 'myvaultname';
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const ITEMS = { set: { foo: 'bar' } };
@@ -287,6 +287,6 @@ describe('Vault API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        expect(vaultAdapter).to.have.all.keys(...testedMethods);
+        chai.expect(vaultAdapter).to.have.all.keys(...testedMethods);
     });
 });

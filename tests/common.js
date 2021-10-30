@@ -6,9 +6,8 @@ export const ACCOUNT = 'forio-dev';
 export const PROJECT = 'epi-v3';
 
 export const SESSION_KEY = 'com.forio.epicenter.session';
-// TODO -- clean this up before you're able to publish
 export const SESSION = {
-    token: '***REMOVED***',
+    token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJncmVldGluZ3MiOiJ0aGlzIGlzIGEgZHVtbXkgdGVzdCB0b2tlbiBmb3IgRXBpY2VudGVyIEpTIGxpYnMifQ.5B8wdwycKfuRpFkHMLUajUdO6jpYt6mC_uTGJJ6ftK4',
     expires: true,
     timeoutMinutes: 240,
     groupRole: 'PARTICIPANT',
@@ -16,13 +15,12 @@ export const SESSION = {
     assignedWorldKeys: [],
     assignedWorldRoles: [],
     userHandle: 'myhandle',
-    userKey: '0000015ffe4b5399ddcfcf72545a54c808ed',
+    userKey: 'myuserkey',
     displayName: 'My Display Name',
     accountShortName: 'acme',
     projectShortName: 'simulations',
     groupName: 'mygroupname',
-    groupKey: '00000163228dee7ddc347d0a5d6156d4a143',
-    session: '***REMOVED***',
+    groupKey: 'mygroupkey',
     objectType: 'user',
 };
 

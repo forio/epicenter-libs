@@ -13,7 +13,7 @@ describe('Global Configuration', () => {
         config.apiProtocol.should.not.be.equal('anything else');
     });
     it('Should ignore sets for apiVersion', () => {
-        config.apiVersion = 4;
-        config.apiVersion.should.not.be.equal(4);
+        config.apiVersion = 100;
+        config.apiVersion.should.not.be.equal(100);
     });
 });
