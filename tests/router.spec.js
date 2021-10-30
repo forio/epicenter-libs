@@ -326,12 +326,13 @@ describe('Router (Fetch/Request Wrapper)', () => {
             ]);
         });
         it('Should return all values after an index, if one is provided in .all', async() => {
+            const MAX = 3;
             const page = await router
-                .withSearchParams({ first: 0, max: 3 })
+                .withSearchParams({ first: 0, max: MAX })
                 .get('/pagination', { paginated: true })
                 .then(({ body }) => body);
 
-            const allValues = await page.all(3);
+            const allValues = await page.all(MAX);
             allValues.should.be.deep.equal([
                 'four', 'five', 'six',
                 'seven', 'eight', 'nine',
@@ -339,12 +340,13 @@ describe('Router (Fetch/Request Wrapper)', () => {
             ]);
         });
         it('Should append to an array if one is provided', async() => {
+            const MAX = 3;
             const page = await router
-                .withSearchParams({ first: 0, max: 3 })
+                .withSearchParams({ first: 0, max: MAX })
                 .get('/pagination', { paginated: true })
                 .then(({ body }) => body);
 
-            const allValues = await page.all(3, ['foo', 'bar', 'baz']);
+            const allValues = await page.all(MAX, ['foo', 'bar', 'baz']);
             allValues.should.be.deep.equal([
                 'foo', 'bar', 'baz',
                 'four', 'five', 'six',

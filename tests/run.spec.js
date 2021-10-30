@@ -3,6 +3,7 @@ import chai from 'chai';
 import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './common';
 chai.use(require('sinon-chai'));
 
+
 describe('Run API Service', () => {
     const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
     let fakeServer;
@@ -899,6 +900,6 @@ describe('Run API Service', () => {
     });
 
     it('Should not have any untested methods', () => {
-        expect(runAdapter).to.have.all.keys(...testedMethods);
+        chai.expect(runAdapter).to.have.all.keys(...testedMethods);
     });
 });

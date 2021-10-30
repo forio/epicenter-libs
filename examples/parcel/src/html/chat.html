@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>v3 Vanilla</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../css/chat.scss">
+</head>
+<body>
+    <main>
+        <h1>Chat</h1>
+        <a href="index.html"><< Back</a>
+        <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+        <section class="content-container">
+            <section>
+                <h2>Create a chatroom</h2>
+                <section>
+                    <label for="chatroom-name">Room name</label>
+                    <input id="chatroom-name" type="text" value=""  autocomplete="off" />
+                    <button id="chat-create">Create</button>
+                </section>
+                <p>Be warned! There is currently no way to retrieve chatrooms after they are created. This means the you will need a separate way to keep track of chat keys if you'd like to revisit old rooms.</p>
+                <p>For this reason, I have hard-coded some available rooms I've made previously below.</p>
+                <h2>Add exisiting chatroom</h2>
+                <section>
+                    <label for="chat-key">Chat key</label>
+                    <input id="chat-key" type="text" value="" />
+                    <button id="add-listing">Add</button>
+                </section>
+                <h3>Available Chatrooms</h3>
+                <ul id="chatroom-listings">None found.</ul>
+                <h2>Query for rooms</h2>
+                <section>
+                    <label for="room-query">Room name</label>
+                    <input id="room-query" type="text" value="" />
+                    <button id="find-room">Query</button>
+                </section>
+                <h3>Findings</h3>
+                <ul id="chatroom-findings">None found.</ul>
+            </section>
+            <section>
+                <h2>Chatroom</h2>
+                <div id="chatroom"></div>
+                <form id="message-form" autocomplete="off">
+                    <label for="message">Message</label>
+                    <input id="message" type="text" value="" />
+                    <button type="submit">Send</button>
+                </form>
+                <hr></hr>
+                <form id="whisper-form" autocomplete="off">
+                    <label for="whisper-user">User</label>
+                    <select id="whisper-user"></select>
+                    <label for="whisper">Whisper</label>
+                    <input id="whisper" type="text" value="" />
+                    <button type="submit">Send</button>
+                </form>
+            </section>
+        </section>
+    </main>
+</body>
+<script src="../js/chat.js"></script>
+</html>
