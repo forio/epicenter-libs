@@ -1,3 +1,12 @@
+## [3.8.1](https://github.com/forio/epicenter-libs/compare/v3.8.0-breaking...v3.8.1) (2021-11-02)
+
+
+### Bug Fixes
+
+* users w/ multiple groups unable to log in ([46de1ce](https://github.com/forio/epicenter-libs/commit/46de1ce92b22cb05ae6045203212666336898eea))
+
+
+
 # [3.8.0-breaking](https://github.com/forio/epicenter-libs/compare/v3.7.1...v3.8.0-breaking) (2021-10-30)
 
 
