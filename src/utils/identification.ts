@@ -14,7 +14,7 @@ export interface UserSession {
     groupRole?: string,
     multipleGroups?: boolean,
     accountShortName: string,
-    projectShortName: string,
+    projectShortName?: string, // undefined when multipleGroups: true
     displayName: string,
     objectType: 'user',
     loginMethod: {
@@ -83,7 +83,9 @@ class Identification {
         const isEpicenterDomain = !isLocal && !isCustomDomain;
         if (objectType === 'user' && isEpicenterDomain) {
             const { accountShortName, projectShortName } = mySession;
-            return { ...base, path: `/app/${accountShortName}/${projectShortName}` };
+            const account = accountShortName ? `/${accountShortName}` : '';
+            const project = account && projectShortName ? `/${projectShortName}` : '';
+            return { ...base, path: `/app${account}${project}` };
         }
         /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
         return { ...base, path: '/' };
@@ -110,8 +112,10 @@ class Identification {
 
         if (session) {
             const { accountShortName, projectShortName } = session;
+            const account = accountShortName ? `/${accountShortName}` : '';
+            const project = account && projectShortName ? `/${projectShortName}` : '';
             this.session = session;
-            cookies.removeItem(EPI_SSO_KEY, { domain: `.${window.location.hostname}`, path: `/app/${accountShortName}/${projectShortName}` });
+            cookies.removeItem(EPI_SSO_KEY, { domain: `.${window.location.hostname}`, path: `/app${account}${project}` });
         }
     }
 }
