@@ -41,8 +41,11 @@ class CometdAdapter {
         const ReloadExtension = (await import('cometd/ReloadExtension')).default;
 
         this.cometd = new CometD();
-        const { apiProtocol, apiHost, apiVersion } = config;
-        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
+        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
+        const accountProject = (accountShortName && projectShortName) ?
+            `/${accountShortName}/${projectShortName}` :
+            '/epicenter/manager';
+        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/cometd`;
 
         this.cometd.registerExtension('ack', new AckExtension());
         if (isBrowser()) {
