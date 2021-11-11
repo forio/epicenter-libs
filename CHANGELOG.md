@@ -1,3 +1,7 @@
+## [3.8.2](https://github.com/forio/epicenter-libs/compare/v3.8.1...v3.8.2) (2021-11-11)
+
+
+
 ## [3.8.1](https://github.com/forio/epicenter-libs/compare/v3.8.0-breaking...v3.8.1) (2021-11-02)
 
 
