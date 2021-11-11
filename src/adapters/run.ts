@@ -5,6 +5,7 @@ import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
 import {
     Router, identification,
     ROLE, SCOPE_BOUNDARY, RITUAL,
+    EpicenterError,
 } from 'utils';
 
 
@@ -44,6 +45,21 @@ interface Run {
     variables?: Record<string, unknown>,
 }
 
+type RunCreateOptions = {
+    readLock?: keyof typeof ROLE,
+    writeLock?: keyof typeof ROLE,
+    ephemeral?: boolean,
+    trackingKey?: string,
+    modelContext?: ModelContext,
+    executionContext?: ExecutionContext,
+} & RoutingOptions;
+
+type RunStrategy =
+    | 'reuse-across-sessions'
+    | 'reuse-never'
+    | 'reuse-by-tracking-key'
+    | 'multiplayer'
+
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
  *
@@ -75,14 +91,7 @@ interface Run {
 export async function create(
     model: string,
     scope: { userKey?: string } & GenericScope,
-    optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ephemeral?: boolean,
-        trackingKey?: string,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
-    } & RoutingOptions = {}
+    optionals: RunCreateOptions = {},
 ): Promise<Run> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -313,7 +322,7 @@ export async function query(
         timeout?: number,
         variables?: string[],
         metadata?: string[],
-        scope?: GenericScope,
+        scope?: { userKey?: string } & GenericScope,
         groupName?: string,
         episodeName?: string,
         includeEpisodes?: boolean,
@@ -328,6 +337,7 @@ export async function query(
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
         `in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
+    if (scope?.userKey) filter.push(`run.userKey=${scope.userKey}`);
 
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -693,26 +703,73 @@ export async function removeFromWorld(
 //     }, Promise.resolve());
 // }
 
-// export async function getWithStrategy(strategy, model, scope, optionals = {}) {
-//     const { initOperations = [] } = optionals;
-//     if (strategy === 'reuse-across-sessions') {
-//         const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
-//         if (runs.length) {
-//             return runs[0];
-//         }
-//         const newRun = await create(model, scope, optionals = {});
-//         await serial(newRun.runKey, initOperations, optionals = {});
-//         return newRun;
-//     } else if (strategy === 'reuse-never') {
-//         const newRun = await create(model, scope, optionals = {});
-//         await serial(newRun.runKey, initOperations, optionals = {});
-//         return newRun;
-//     } else if (strategy === 'reuse-by-tracking-key') {
-//         //TBD write out if needed
-//         //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
-//     } else if (strategy === 'multiplayer') {
-//         //TODO when multiplayer API is ready
-//         //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
-//     }
-//     throw new EpicenterError('Invalid run strategy.');
-// }
+/**
+ * Queries for and/or creates a run, depending on the strategy provided.
+ *
+ * 'reuse-across-sessions'
+ * GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?&sort=-run.created&max=1`
+ * ...if no run found,
+ * POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
+ *
+ * 'reuse-never'
+ * POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
+ *
+ * @memberof runAdapter
+ * @example
+ *
+ * import { runAdapter } from 'epicenter';
+ * runAdapter.getWithStrategy(
+ *     'reuse-across-sessions',
+ *     'model.py',
+ *     {
+ *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *         scopeKey: '123456789',
+ *     },
+ * );
+ *
+ * @param {string}      strategy                        Strategy to use when retrieving the run
+ * @param {string}      model                           Name of your model file
+ * @param {object}      scope                           Scope associated with your run
+ * @param {string}      scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param {string}      scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param {object}      [optionals={}]                  Optional parameters
+
+ * @returns {object}                                    'reuse-across-sessions': Most recent run in scope OR new run if no recent found
+ *                                                      'reuse-never': A new run
+ */
+
+export async function getWithStrategy(
+    strategy: RunStrategy,
+    model: string,
+    scope: GenericScope,
+    optionals: {
+        // initOperations?: Array<string | { name: string, params?: unknown[]}>,
+    } & RunCreateOptions = {}
+): Promise<Run> {
+    // const { initOperations = [] } = optionals;
+    if (strategy === 'reuse-across-sessions') {
+        const searchOptions = {
+            scope,
+            sort: ['-run.created'],
+            max: 1,
+        };
+        const { values: [lastRun] } = await query(model, searchOptions);
+        if (!lastRun) {
+            const newRun = await create(model, scope, optionals);
+            // await serial(newRun.runKey, initOperations, optionals = {});
+            return newRun;
+        }
+        return lastRun;
+    } else if (strategy === 'reuse-never') {
+        const newRun = await create(model, scope, optionals);
+        // await serial(newRun.runKey, initOperations, optionals = {});
+        return newRun;
+    } else if (strategy === 'reuse-by-tracking-key') {
+        //TBD write out if needed
+        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+    } else if (strategy === 'multiplayer') {
+        //TODO when multiplayer API is ready
+        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+    }
+    throw new EpicenterError('Invalid run strategy.');
+}
