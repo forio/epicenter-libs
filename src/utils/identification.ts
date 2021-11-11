@@ -1,24 +1,41 @@
 import EpicenterError from './error';
 import cookies from './cookies';
 import { NodeStore, SessionStore, CookieStore } from './store';
-import { BROWSER_STORAGE_TYPE } from './constants';
+import { BROWSER_STORAGE_TYPE, ROLE } from './constants';
 import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
-export interface Session {
+export interface UserSession {
     token: string,
     userKey: string,
-    groupKey: string,
+    groupKey?: string,
     groupName?: string,
+    groupRole?: string,
     multipleGroups?: boolean,
     accountShortName: string,
-    projectShortName: string,
-    objectType: string,
+    projectShortName?: string, // undefined when multipleGroups: true
+    displayName: string,
+    objectType: 'user',
     loginMethod: {
         objectType: string,
     },
 }
+
+export interface AdminSession {
+    adminHandle: string,
+    adminKey: string,
+    expires: boolean,
+    multipleAccounts: boolean,
+    objectType: 'admin'
+    teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT,
+    teamAccountShortName: string,
+    timeoutMinutes: number,
+    token: string,
+}
+
+export type Session = UserSession | AdminSession;
+
 
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
@@ -59,13 +76,16 @@ class Identification {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 
-        const { accountShortName, projectShortName, objectType } = mySession;
+        const { objectType } = mySession;
         const isLocal = config.isLocal();
         const base = { samesite: isLocal ? 'lax' : 'none', secure: !isLocal };
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
-        if (objectType === 'user' && accountShortName && projectShortName && isEpicenterDomain) {
-            return { ...base, path: `/app/${accountShortName}/${projectShortName}` };
+        if (objectType === 'user' && isEpicenterDomain) {
+            const { accountShortName, projectShortName } = mySession;
+            const account = accountShortName ? `/${accountShortName}` : '';
+            const project = account && projectShortName ? `/${projectShortName}` : '';
+            return { ...base, path: `/app${account}${project}` };
         }
         /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
         return { ...base, path: '/' };
@@ -92,8 +112,10 @@ class Identification {
 
         if (session) {
             const { accountShortName, projectShortName } = session;
+            const account = accountShortName ? `/${accountShortName}` : '';
+            const project = account && projectShortName ? `/${projectShortName}` : '';
             this.session = session;
-            cookies.removeItem(EPI_SSO_KEY, { domain: `.${window.location.hostname}`, path: `/app/${accountShortName}/${projectShortName}` });
+            cookies.removeItem(EPI_SSO_KEY, { domain: `.${window.location.hostname}`, path: `/app${account}${project}` });
         }
     }
 }

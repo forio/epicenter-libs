@@ -1,10 +1,12 @@
+import type { UserSession } from 'utils/identification';
 import type { GenericScope } from 'utils/constants';
 import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
 
 import {
     Router, identification,
     ROLE, SCOPE_BOUNDARY, RITUAL,
-} from '../utils';
+} from 'utils';
+
 
 /**
  * Run API adapters -- use this to create, update, delete, and manage your runs
@@ -62,7 +64,6 @@ interface Run {
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.readLock]            Role (character type)
  * @param {string}  [optionals.writeLock]           Role (chracter type)
- * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
  * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param {string}  [optionals.trackingKey]         Tracking key
  * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
@@ -73,20 +74,19 @@ interface Run {
  */
 export async function create(
     model: string,
-    scope: GenericScope,
+    scope: { userKey?: string } & GenericScope,
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        userKey?: string,
         ephemeral?: boolean,
         trackingKey?: string,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
     } & RoutingOptions = {}
 ): Promise<Run> {
-    const { scopeBoundary, scopeKey } = scope;
+    const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, userKey, ephemeral,
+        readLock, writeLock, ephemeral,
         trackingKey, modelContext, executionContext,
         ...routingOptions
     } = optionals;
@@ -94,7 +94,7 @@ export async function create(
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
-
+    const session = identification.session as UserSession;
     return await new Router()
         .post('/run', {
             body: {
@@ -103,7 +103,7 @@ export async function create(
                     scopeKey,
                     userKey: scopeBoundary === WORLD ?
                         undefined :
-                        userKey ?? identification.session?.userKey,
+                        userKey ?? session?.userKey,
                 },
                 permit: {
                     readLock: readLock || defaultLock,
@@ -324,10 +324,10 @@ export async function query(
         filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
         scope, groupName, episodeName, includeEpisodes,
     } = searchOptions;
-
+    const session = identification.session as UserSession;
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
-        `in/${groupName ?? identification.session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
+        `in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
 
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -619,7 +619,6 @@ export async function retrieveFromWorld(
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        userKey?: string,
         ephemeral?: boolean,
         trackingKey?: string,
         modelContext?: ModelContext,

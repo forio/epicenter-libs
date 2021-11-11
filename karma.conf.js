@@ -10,7 +10,7 @@ module.exports = function(config) {
             },
         },
         files: [
-            { pattern: 'dist/epicenter.js', watched: false, included: true, served: true},
+            { pattern: 'dist/epicenter.min.js', watched: false, included: true, served: true },
             { pattern: 'tests/config.spec.js', watched: false },
             { pattern: 'tests/router.spec.js', watched: false },
             { pattern: 'tests/*.spec.js', watched: false },
@@ -28,17 +28,17 @@ module.exports = function(config) {
         autoWatch: true,
         // singleRun: false, // Karma captures browsers, runs the tests and exits
         concurrency: Infinity,
-        preprocessors: {
-            'tests/*.spec.js': ['webpack'],
-        },
         basePath: '',
-        // browsers: ['Chrome'],
         hostname: 'local.forio.com',
+        // browsers: ['Chrome'],
         reporters: ['mocha'],
         mochaReporter: {
             showDiff: 'unified',
             ignoreSkipped: true,
             output: 'minimal',
+        },
+        preprocessors: {
+            'tests/*.spec.js': ['webpack'],
         },
         webpackMiddleware: {
             noInfo: false,
@@ -54,5 +54,25 @@ module.exports = function(config) {
             stats: 'errors-only',
             devtool: 'eval',
         },
+        /* NIU & NOOP -- but leaving as a remainder to not try this;
+         * webpack definitely wins out on this one
+         * ===================================================*/
+        // preprocessors: {
+        //     'tests/**/*.spec.js': ['rollup'],
+        // },
+        // rollupPreprocessor: {
+        //     plugins:[
+        //         // Allows node_modules resolution
+        //         nodeResolve({ extensions: ['.js', '.jsx', '.ts', '.tsx'], browser: true }),
+
+        //         // Allow bundling cjs modules. Rollup doesn't understand cjs
+        //         commonjs(),
+        //     ],
+        //     output: {
+        //         format: 'iife', // Helps prevent naming collisions.
+        //         name: 'epicenter', // Required for 'iife' format.
+        //         sourcemap: 'inline', // Sensible for testing.
+        //     },
+        // },
     });
 };

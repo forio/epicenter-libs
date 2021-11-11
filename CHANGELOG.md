@@ -1,3 +1,59 @@
+## [3.8.2](https://github.com/forio/epicenter-libs/compare/v3.8.1...v3.8.2) (2021-11-11)
+
+
+
+## [3.8.1](https://github.com/forio/epicenter-libs/compare/v3.8.0-breaking...v3.8.1) (2021-11-02)
+
+
+### Bug Fixes
+
+* users w/ multiple groups unable to log in ([46de1ce](https://github.com/forio/epicenter-libs/commit/46de1ce92b22cb05ae6045203212666336898eea))
+
+
+
+# [3.8.0-breaking](https://github.com/forio/epicenter-libs/compare/v3.7.1...v3.8.0-breaking) (2021-10-30)
+
+
+### Bug Fixes
+
+* added to documentation ([d90507c](https://github.com/forio/epicenter-libs/commit/d90507c089cac3bf22eb37bf46f7e7a0dd3ec0f8))
+* altered cron documentation ([f92be61](https://github.com/forio/epicenter-libs/commit/f92be61434e621d43dfa84c66967043ec0ddbe80))
+* fixed bug due to tokenOverride ([b1da99d](https://github.com/forio/epicenter-libs/commit/b1da99d2809d9b613fef34b35b0c95a1104e1d1e))
+* fixed group adapter test name changes ([780666d](https://github.com/forio/epicenter-libs/commit/780666dc7f1c826072c5f3c0f12553790e9d5926))
+* typo that broke request() ([adcf7b6](https://github.com/forio/epicenter-libs/commit/adcf7b65d72c4d019b81b082f7780aab626bf555))
+* updated documentation ([4471966](https://github.com/forio/epicenter-libs/commit/4471966f0a7a3ea07156b6e970030a7bfb4eb0f4))
+* updated email documentation ([a9c2d97](https://github.com/forio/epicenter-libs/commit/a9c2d97a26619237c49b419b47ae86828cb05d19))
+
+
+### Code Refactoring
+
+* handle resource scopes consistent to Epicenter ([10a227b](https://github.com/forio/epicenter-libs/commit/10a227b44bc98cbabdb8a2c44a8d5d05dd64d770))
+
+
+### Features
+
+* add chatAdapter ([854127a](https://github.com/forio/epicenter-libs/commit/854127a92d795cf970504b64abf92f7e48784da9))
+* add support for auth overrides (EPILIBS-79) ([7773913](https://github.com/forio/epicenter-libs/commit/7773913a9bb4e928e71416ce2acc82591f85e5b7))
+* added additional email endpoint support ([3d6127c](https://github.com/forio/epicenter-libs/commit/3d6127cdebb273c314e84f2301f5a89a1b79529c))
+* added get task adapter ([08b8d7e](https://github.com/forio/epicenter-libs/commit/08b8d7ed0289763d582a254f89d8b59baf1412c4))
+* added remaining task adapter GETs ([2bae7b0](https://github.com/forio/epicenter-libs/commit/2bae7b0026caabec3d4c06424a4e46082dd0c792))
+* added resetPassword ([716e9c7](https://github.com/forio/epicenter-libs/commit/716e9c717568b66f6444c68d53e02354aaa1d36c))
+* added sendEmailToAdmin adapter ([7900bd8](https://github.com/forio/epicenter-libs/commit/7900bd81939082336012833ecfd8f5687a5cd932))
+* create and destroy tasks ([7d22d59](https://github.com/forio/epicenter-libs/commit/7d22d591248df590566ade7dc9d1a189d3f5454d))
+* email route ([c75a917](https://github.com/forio/epicenter-libs/commit/c75a917570fd8ab9f778e9811802d08b6760c238))
+
+
+### Performance Improvements
+
+* code-split cometd ([d53a3ab](https://github.com/forio/epicenter-libs/commit/d53a3ab486baa14b8108d84f25d85a49213dd1e4))
+
+
+### BREAKING CHANGES
+
+* optionals.userKey for scopes is no longer supported
+
+
+
 ## [3.7.1](https://github.com/forio/epicenter-libs/compare/v3.7.0...v3.7.1) (2021-09-27)
 
 
