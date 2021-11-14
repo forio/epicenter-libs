@@ -56,8 +56,11 @@ class CometdAdapter {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
 
-        const { apiProtocol, apiHost, apiVersion } = config;
-        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}/cometd`;
+        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
+        const accountProject = (accountShortName && projectShortName) ?
+            `/${accountShortName}/${projectShortName}` :
+            '/epicenter/manager';
+        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/cometd`;
 
         cometdInstance = new CometD();
         if (!this.cometd) return false; /* This should never happen since this.cometd IS the cometdInstance */
