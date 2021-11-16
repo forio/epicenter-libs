@@ -664,11 +664,11 @@ export async function retrieveFromWorld(
  * const run = await runAdapter.removeFromWorld(worldKey);
  *
  *
- * @param {object}  worldKey                        Key associated with the world
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Run retrieved from the world
+ * @param worldKey                        Key associated with the world
+ * @param [optionals={}]                  Optional parameters
+ * @param [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
+ * @returns                               Run retrieved from the world
  */
 export async function removeFromWorld(
     worldKey: string,

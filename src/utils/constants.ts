@@ -138,6 +138,95 @@ export enum PUSH_CATEGORY {
     SYSTEM = 'SYSTEM',
 }
 
+export enum INTERNAL_ROLE {
+        /**
+     * System -- Epicenter Manager
+     * @constant
+     * @type {string}
+     */
+    SYSTEM = 'SYSTEM',
+    /**
+     * System minus -- read-only system access, write for certain accounts; think Geromel
+     * @constant
+     * @type {string}
+     */
+    MONITOR = 'MONITOR',
+    /**
+     * Author -- Team Members (and node server API keys)
+     * tied to one account (personal + current account)
+     * @constant
+     * @type {string}
+     */
+}
+
+export enum ACCOUNT_ROLE {
+    /**
+     * Author -- Team Members (and node server API keys)
+     * tied to one account (personal + current account)
+     * @constant
+     * @type {string}
+     */
+    AUTHOR = 'AUTHOR',
+    /**
+     * Author minus
+     * @constant
+     * @type {string}
+     */
+    SUPPORT = 'SUPPORT',
+}
+
+export enum PROJECT_ROLE {
+    /**
+     * Intended role for admin users who should only have access to a specific project
+     * @constant
+     * @type {string}
+     */
+    ASSOCIATE = 'ASSOCIATE',
+}
+
+export enum GROUP_ROLE {
+    /**
+     * Facilitators
+     * @constant
+     * @type {string}
+     */
+    FACILITATOR = 'FACILITATOR',
+    /**
+     * Reviewers (weaker facilitator)
+     * Facilitator minus
+     * @constant
+     * @type {string}
+     */
+    REVIEWER = 'REVIEWER',
+    /**
+     * Users -- psuedonymKey (userKey) required in scope
+     * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
+     * @constant
+     * @type {string}
+     */
+    USER = 'USER',
+    /**
+     * Leader
+     * Participant plus
+     * @constant
+     * @type {string}
+     */
+    LEADER = 'LEADER',
+    /**
+     * Participant
+     * @constant
+     * @type {string}
+     */
+    PARTICIPANT = 'PARTICIPANT',
+    /**
+     * Anonymous
+     * @constant
+     * @type {string}
+     */
+    ANONYMOUS = 'ANONYMOUS',
+}
+
+
 /**
  * Roles are used to define permissions on resources in Epicenter.
  * @enum {string}
@@ -208,6 +297,21 @@ export enum ROLE {
      */
     ANONYMOUS = 'ANONYMOUS',
 }
+
+
+// /**
+//  * Roles are used to define permissions on resources in Epicenter.
+//  * @enum {string}
+//  */
+//  export const ROLE = {
+//     ...INTERNAL_ROLE,
+//     ...ACCOUNT_ROLE,
+//     ...PROJECT_ROLE,
+//     ...GROUP_ROLE,
+// };
+
+// export type ROLE = INTERNAL_ROLE | ACCOUNT_ROLE | PROJECT_ROLE | GROUP_ROLE;
+
 
 export interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY,
