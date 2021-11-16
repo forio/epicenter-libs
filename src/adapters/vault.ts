@@ -8,7 +8,7 @@ import {
 } from 'utils';
 
 
-interface Vault {
+export interface Vault<Items> {
     created: string,
     lastUpdated: string,
     mutationKey: string,
@@ -18,7 +18,7 @@ interface Vault {
     permit: Permit,
     vaultKey: string,
     expiration: string,
-    items: Record<string, unknown>,
+    items: Items,
     changed?: boolean
 }
 
@@ -44,7 +44,7 @@ export async function update(
         push?: Record<string, unknown>,
     },
     optionals: { mutationKey?: string } & RoutingOptions = {}
-): Promise<Vault> {
+): Promise<Vault<unknown>> {
     const {
         mutationKey,
         ...routingOptions
@@ -65,7 +65,7 @@ const NOT_FOUND = 404;
 export async function get(
     vaultKey: string,
     optionals: RoutingOptions = {}
-): Promise<Vault> {
+): Promise<Vault<unknown>> {
     return await new Router()
         .get(`/vault/${vaultKey}`, optionals)
         .catch((error) => {
@@ -79,7 +79,7 @@ export async function withScope(
     name: string,
     scope: { userKey?: string } & GenericScope,
     optionals: RoutingOptions = {}
-): Promise<Vault> {
+): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
@@ -98,7 +98,7 @@ export async function byName(
         userKey?: string,
         includeEpisodes?: boolean,
     } & RoutingOptions = {}
-): Promise<Vault[]> {
+): Promise<Vault<unknown>[]> {
     const {
         groupName, episodeName, userKey, includeEpisodes,
         ...routingOptions
@@ -168,7 +168,7 @@ export async function create(
         ttlSeconds?: string,
         mutationKey?: string,
     } & RoutingOptions = {}
-): Promise<Vault> {
+): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
         readLock, writeLock,

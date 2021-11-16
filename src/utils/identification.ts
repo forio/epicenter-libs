@@ -30,6 +30,8 @@ export interface AdminSession {
     objectType: 'admin'
     teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT,
     teamAccountShortName: string,
+    projectShortName?:string,
+    projectKey?: string,
     timeoutMinutes: number,
     token: string,
 }
