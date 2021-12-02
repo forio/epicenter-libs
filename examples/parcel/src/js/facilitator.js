@@ -1,7 +1,7 @@
 import './config';
 import {
     authAdapter, presenceAdapter, episodeAdapter, runAdapter,
-    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter,
+    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter, userAdapter
 } from 'epicenter';
 
 const session = authAdapter.getLocalSession();
@@ -17,6 +17,12 @@ const episodeListEl = document.getElementById('episode-list');
 const episodeSaveEl = document.getElementById('episode-save');
 const episodeLoadEl = document.getElementById('episode-load');
 const runQueryEl = document.getElementById('run-query');
+const handleEl = document.getElementById('handle');
+const familyNameEl = document.getElementById('family-name');
+const displayNameEl = document.getElementById('display-name');
+const givenNameEl = document.getElementById('given-name');
+const passwordEl = document.getElementById('password');
+const createUserEl = document.getElementById('create-user');
 
 const initialize = () => {
     /* Subscriptions */
@@ -128,6 +134,17 @@ const initialize = () => {
         };
         emailAdapter.sendEmailToAdmin('1234', 'This is a test admin email!', 'this is the <a href="https://forio.com"> test </a> body!', optionals);
     });
+
+    /* Create a user */
+    createUserEl.onclick = (e) => {
+        const handle = handleEl.value;
+        const familyName = familyNameEl.value;
+        const givenName = givenNameEl.value;
+        const displayName = displayNameEl.value;
+        const password = passwordEl.value;
+        userAdapter.createUser({ handle, familyName, givenName, displayName, secret: { password }, objectType: 'native' })
+            .then((user) => console.log('%c Created a user', 'font-size: 20px; color: #FB15B9FF;', user));
+    };
 };
 
 if (!session) {
