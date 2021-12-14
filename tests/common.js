@@ -15,12 +15,12 @@ export const SESSION = {
     assignedWorldKeys: [],
     assignedWorldRoles: [],
     userHandle: 'myhandle',
-    userKey: 'myuserkey',
+    userKey: '00000168bad586135710e2d9104c12846820',
     displayName: 'My Display Name',
     accountShortName: 'acme',
     projectShortName: 'simulations',
     groupName: 'mygroupname',
-    groupKey: 'mygroupkey',
+    groupKey: '00000165ad4e6a3cd22b993340b963820239',
     objectType: 'user',
 };
 
