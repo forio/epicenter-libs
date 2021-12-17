@@ -1,5 +1,5 @@
 import type { UserSession } from 'utils/identification';
-import type { RoutingOptions } from 'utils/router';
+import type { RoutingOptions } from '../utils/router'; // needs to be relative b/c TS hates me
 import type { GenericScope, Permit } from 'utils/constants';
 
 import {
@@ -18,8 +18,14 @@ export interface Vault<Items> {
     permit: Permit,
     vaultKey: string,
     expiration: string,
-    items: Items,
+    items?: Items,
     changed?: boolean
+}
+
+interface Items {
+    set?: Record<string, unknown>,
+    push?: Record<string, unknown>,
+    pop?: Record<string, unknown>,
 }
 
 /**
@@ -34,16 +40,13 @@ export interface Vault<Items> {
  *
  * @param {string}  vaultKey            Vault key
  * @param {object}  items               Object with a set/push field to update the vault with
- * @param {object}  [optionals={}]      Something meaningful about optionals
+ * @param [optionals={}]                Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns
  */
 export async function update(
     vaultKey: string,
-    items: {
-        set?: Record<string, unknown>,
-        push?: Record<string, unknown>,
-    },
-    optionals: { mutationKey?: string } & RoutingOptions = {}
+    items: Items,
+    optionals: { mutationKey?: string } & RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     const {
         mutationKey,
@@ -56,6 +59,7 @@ export async function update(
             body: {
                 set: items.set ?? {},
                 push: items.push ?? {},
+                pop: items.pop ?? {},
             },
             ...routingOptions,
         }).then(({ body }) => body);
@@ -126,43 +130,37 @@ export async function remove(
         .then(({ body }) => body);
 }
 
-
 /**
- * Creates a vault. Vault names are unique to within their scope.
- * If the vault already exists, it will not error -- instead, it will modify the existing vault.
- * TODO -- either rename this function to better match behavior or talk to David to change behavior
- * to better match the function name.
- *
+ * Defines vault properties, used to create or modify a vault. Vault names are unique to within their scope.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
  *
- * @memberof runAdapter
  * @example
- *
- * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
- * runAdapter.create('model.py', {
+ * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter';
+ * vaultAdapter.define('my-vault-name', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
+ *      scopeKey: 'GROUP_KEY'
  * });
- * @param {string}  name                            Name of the vault
- * @param {object}  scope                           Scope associated with your run
- * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}  items                           Defines the contents in the
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.readLock]            Role (character type)
- * @param {string}  [optionals.writeLock]           Role (chracter type)
- * @param {string}  [optionals.userKey]             Key of the user creating the run, should be `undefined` if it's a world run
- * @param {number}  [optionals.ttlSeconds]          Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
- * @param {string}  [optionals.mutationKey]         Initial mutation key
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Newly created run
- */
-export async function create(
+ *
+ * @param name                      Name of the vault
+ * @param scope                     Scope associated with your run
+ * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]           Optional key to scope the vault to a user
+ * @param [optionals={}]            Optional parameters
+ * @param [optionals.items]         Optional items parameter for updating vault contents
+ * @param [optionals.items.set]     Sets a field in the vault, where `[name]: [value]`, send `[name]: null` to delete
+ * @param [optionals.items.push]    Adds an item to a list in the vault, it the list does not exist it will create one
+ * @param [optionals.items.pop]     Use to remove items lists in a vault; TODO: how to use is unclear, elucidate
+ * @param [optionals.readLock]      Role allowed to read
+ * @param [optionals.writeLock]     Role allowed to write
+ * @param [optionals.ttlSeconds]    Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
+ * @param [optionals.mutationKey]   Setting a mutation key ensures that the platform will try to find the vault w/ the making scope, name, and mutation key. If one does not exist, it will try to create a vault with the same scope and name, erroring if one already exists. If the mutation key is omitted, it will simply search by scope and name; updating if it exists, creating if not.
+ * @returns the vault (created or modified) */
+export async function define(
     name: string,
     scope: { userKey?: string } & GenericScope,
-    items: Record<string, unknown>,
     optionals: {
+        items?: Items,
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: string,
@@ -171,7 +169,7 @@ export async function create(
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock,
+        readLock, writeLock, items,
         ttlSeconds, mutationKey,
         ...routingOptions
     } = optionals;
@@ -197,6 +195,22 @@ export async function create(
             },
             ...routingOptions,
         }).then(({ body }) => body);
+}
+
+
+export async function create(
+    name: string,
+    scope: { userKey?: string } & GenericScope,
+    items: Items,
+    optionals: {
+        readLock?: keyof typeof ROLE,
+        writeLock?: keyof typeof ROLE,
+        ttlSeconds?: string,
+        mutationKey?: string,
+    } & RoutingOptions = {}
+): Promise<Vault<unknown>> {
+    console.warn('DEPRECATION WARNING: vaultAdapter.create is deprecated and will be removed with the next release. Use vaultAdapter.define instead.');
+    return await define(name, scope, { items, ...optionals });
 }
 
 

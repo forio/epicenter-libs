@@ -219,47 +219,47 @@ describe('Vault API Service', () => {
         });
         testedMethods.push('remove');
     });
-    describe('vaultAdapter.create', () => {
+    describe('vaultAdapter.define', () => {
         const NAME = 'myvaultname';
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const ITEMS = { set: { foo: 'bar' } };
         it('Should do a POST', async() => {
-            await vaultAdapter.create(NAME, GROUP_SCOPE, ITEMS);
+            await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
-            await vaultAdapter.create(NAME, GROUP_SCOPE, ITEMS);
+            await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the vault URL', async() => {
-            await vaultAdapter.create(NAME, GROUP_SCOPE, ITEMS);
+            await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${NAME}`);
         });
         it('Should support generic URL options', async() => {
-            await vaultAdapter.create(NAME, GROUP_SCOPE, ITEMS, GENERIC_OPTIONS);
+            await vaultAdapter.define(NAME, GROUP_SCOPE, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${NAME}`);
         });
         it('Should pass the scope and items to the body', async() => {
-            await vaultAdapter.create(NAME, GROUP_SCOPE, ITEMS);
+            await vaultAdapter.define(NAME, GROUP_SCOPE, { items: ITEMS });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.items.should.be.deep.equal(ITEMS);
             body.scope.should.be.deep.equal(GROUP_SCOPE);
         });
         it('Should default the readLock to ‘participant’ when provided world scope', async() => {
-            await vaultAdapter.create(NAME, WORLD_SCOPE, ITEMS);
+            await vaultAdapter.define(NAME, WORLD_SCOPE);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.permit.readLock.should.equal(ROLE.PARTICIPANT);
         });
         it('Should use readLock and writeLock when explicitly provided', async() => {
-            await vaultAdapter.create(NAME, WORLD_SCOPE, ITEMS, { readLock: ROLE.ANONYMOUS, writeLock: ROLE.ANONYMOUS });
+            await vaultAdapter.define(NAME, WORLD_SCOPE, { readLock: ROLE.ANONYMOUS, writeLock: ROLE.ANONYMOUS });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.permit.readLock.should.equal(ROLE.ANONYMOUS);
@@ -270,7 +270,7 @@ describe('Vault API Service', () => {
             const TTL_SECONDS = 20;
             const MUTATION_KEY = 'mymutationkey';
             const RANDOM_THING = { something: 'random' };
-            await vaultAdapter.create(NAME, { ...WORLD_SCOPE, userKey: USER_KEY }, ITEMS, {
+            await vaultAdapter.define(NAME, { ...WORLD_SCOPE, userKey: USER_KEY }, {
                 ttlSeconds: TTL_SECONDS,
                 mutationKey: MUTATION_KEY,
                 ...RANDOM_THING,
@@ -282,6 +282,11 @@ describe('Vault API Service', () => {
             body.mutationKey.should.equal(MUTATION_KEY);
             body.should.not.include(RANDOM_THING);
         });
+        testedMethods.push('define');
+    });
+
+    describe('vaultAdapter.create', () => {
+        // TODO -- remove this as vaultAdapter.create is DEPRECATED
         testedMethods.push('create');
     });
 
