@@ -58,8 +58,9 @@ export { version };
 
 /* Interfaces & Types */
 export type { Session, UserSession, AdminSession } from './utils/identification';
-export type { Group } from './adapters/group';
+export type { Group, Member } from './adapters/group';
 export type { Vault } from './adapters/vault';
+
 /* Constants */
 export {
     SCOPE_BOUNDARY,
