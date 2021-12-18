@@ -1,5 +1,5 @@
 import type { UserSession } from 'utils/identification';
-import type { RoutingOptions } from '../utils/router'; // needs to be relative b/c TS hates me
+import type { GenericSearchOptions, RoutingOptions } from '../utils/router'; // needs to be relative b/c TS hates me
 import type { GenericScope, Permit } from 'utils/constants';
 
 import {
@@ -104,12 +104,19 @@ export async function byName(
     } & RoutingOptions = {}
 ): Promise<Vault<unknown>[]> {
     const {
-        groupName, episodeName, userKey, includeEpisodes,
+        groupName, episodeName,
+        userKey, includeEpisodes,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
+
+    const searchParams = {
+        userKey,
+        includeEpisodes,
+    };
+
     return await new Router()
-        .withSearchParams({ userKey, includeEpisodes })
+        .withSearchParams(searchParams)
         .get(`/vault/in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}/${name}`, {
             ...routingOptions,
         })
@@ -213,4 +220,18 @@ export async function create(
     return await define(name, scope, { items, ...optionals });
 }
 
+export async function list(
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<Vault<unknown>[]> {
+    const { first, filter = [], max } = searchOptions;
+    const searchParams = {
+        filter: filter.join(';') || undefined,
+        first, max,
+    };
 
+    return new Router()
+        .withSearchParams(searchParams)
+        .get('/vault/search', optionals)
+        .then(({ body }) => body);
+}
