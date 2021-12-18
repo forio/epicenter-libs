@@ -47,6 +47,7 @@ describe('Vault API Service', () => {
     describe('vaultAdapter.update', () => {
         const VAULT_KEY = 'MOCK_VAULT_KEY';
         const UPDATE = {
+            pop: {},
             set: { foo: 'bar' },
             push: {},
         };
@@ -288,6 +289,10 @@ describe('Vault API Service', () => {
     describe('vaultAdapter.create', () => {
         // TODO -- remove this as vaultAdapter.create is DEPRECATED
         testedMethods.push('create');
+    });
+    describe('vaultAdapter.list', () => {
+        // TODO -- flesh this out when you get the chance
+        testedMethods.push('list');
     });
 
     it('Should not have any untested methods', () => {
