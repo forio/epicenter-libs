@@ -8,6 +8,7 @@ import { identification, Router } from 'utils';
  */
 
 interface Episode {
+    name: string,
     episodeKey: string,
 }
 

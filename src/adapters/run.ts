@@ -296,7 +296,7 @@ export async function get(
  * @param {string}      [optionals.scope.scopeBoundary] Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param {string}      [optionals.scope.scopeKey]      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param {string[]}    [optionals.filter]              List of conditionals to filter for
- * @param {string[]}    [optionals.sort]                List of values to sort by
+ * @param {string[]}    [optionals.sort]                List of values to sort by (applies only to run attributes)
  * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
  * @param {string[]}    [optionals.metadata]            List of metadata to include with the runs found
  * @param {number}      [optionals.first]               The index from which we collect our runs from
