@@ -6,10 +6,13 @@ import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
 
 
-interface Credentials {
+interface UserCredentials {
     handle: string,
     password: string,
     groupKey?: string,
+}
+interface AppCredentials {
+    secretKey: string,
 }
 
 /**
@@ -34,19 +37,24 @@ export async function logout(): Promise<void> {
 }
 
 export async function login(
-    credentials: Credentials,
+    credentials: UserCredentials | AppCredentials,
     optionals: { objectType?: string } & RoutingOptions = {}
 ): Promise<Session> {
-    const { handle, password, groupKey } = credentials;
-    const {
-        objectType = 'user',
-        ...routingOptions
-    } = optionals;
+    const { objectType, ...routingOptions } = optionals;
+    let payload;
+    if (Object.prototype.hasOwnProperty.call(credentials, 'handle')) {
+        const { handle, password, groupKey } = credentials as UserCredentials;
+        payload = { objectType: objectType ?? 'user', handle, password, groupKey: groupKey || undefined };
+    }
+    if (Object.prototype.hasOwnProperty.call(credentials, 'secretKey')) {
+        const { secretKey } = credentials as AppCredentials;
+        payload = { objectType: objectType ?? 'account', secretKey };
+    }
     const session = await new Router()
         .post('/authentication', {
             inert: true,
             includeAuthorization: false,
-            body: { objectType, handle, password, groupKey: groupKey || undefined },
+            body: payload,
             ...routingOptions,
         }).then(({ body }) => body);
     await logout();
