@@ -89,7 +89,7 @@ export async function create(
     } = optionals;
     return await new Router()
         .post(
-            '/task/',
+            '/task',
             {
                 body: {
                     payload: { objectType: 'http', ...payload },
@@ -174,6 +174,8 @@ export async function getHistory(
 }
 
 /**
+ * TODO: fix this; this call seems to be paginated, but isn't somehow?
+ *
  * Gets most recent 100 tasks related to the selected scope; requires support level authentication
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
  * Base URL with userKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{userKey}`

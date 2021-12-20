@@ -354,6 +354,17 @@ describe('Router (Fetch/Request Wrapper)', () => {
                 'ten',
             ]);
         });
+        it('Should use the parsePage function if one is provided', async() => {
+            const page = await router
+                .withSearchParams({ first: 0, max: 3 })
+                .get('/pagination', {
+                    paginated: true,
+                    parsePage: (strings) => strings.map((s) => s.length),
+                })
+                .then(({ body }) => body);
+
+            page.values.should.be.deep.equal(['one'.length, 'two'.length, 'three'.length]);
+        });
     });
     describe('Inert Requests', () => {
         it('Should call the errorManager to handle non-inert requests', async() => {

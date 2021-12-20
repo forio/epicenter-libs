@@ -10,7 +10,6 @@ const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
 const UNAUTHORIZED = 401;
 
-
 interface ChannelUpdate {
     data: string | Record<string, unknown>,
 }
