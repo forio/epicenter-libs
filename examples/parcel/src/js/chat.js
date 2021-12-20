@@ -230,6 +230,7 @@ const initialize = () => {
         if (!room) return;
         showLoading();
         const rooms = await chatAdapter.query({ filter: [`room=${room}`]});
+        // await chatAdapter.query({ filter: [`groupName=${groupName}`, `episodeName=${episodeName}`]});
         hideLoading();
     };
 

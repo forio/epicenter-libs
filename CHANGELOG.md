@@ -1,3 +1,21 @@
+# [3.9.0](https://github.com/forio/epicenter-libs/compare/v3.8.3...v3.9.0) (2021-12-02)
+
+
+### Features
+
+* add createUser function ([d892996](https://github.com/forio/epicenter-libs/commit/d8929968344ad49bd8618536976582269159f5cc))
+
+
+
+## [3.8.3](https://github.com/forio/epicenter-libs/compare/v3.8.2...v3.8.3) (2021-11-16)
+
+
+### Bug Fixes
+
+* fixed an issue w/ runAdapter.query returning variables in an array ([f544cbf](https://github.com/forio/epicenter-libs/commit/f544cbf628ed397834e3f71cf74c37ef7f61ade7))
+
+
+
 ## [3.8.2](https://github.com/forio/epicenter-libs/compare/v3.8.1...v3.8.2) (2021-11-11)
 
 

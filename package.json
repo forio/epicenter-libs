@@ -1,6 +1,6 @@
 {
   "name": "epicenter-libs",
-  "version": "3.8.2",
+  "version": "3.9.0",
   "main": "dist/cjs/epicenter.js",
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
@@ -29,7 +29,10 @@
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
-    ]
+    ],
+    "rules": {
+      "header-max-length": [2, "always", 72]
+    }
   },
   "pre-push": {
     "run": [

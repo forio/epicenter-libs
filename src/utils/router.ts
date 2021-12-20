@@ -27,6 +27,7 @@ export interface RoutingOptions {
     includeAuthorization?: boolean,
     inert?: boolean,
     paginated?: boolean,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parsePage?: (values: any[]) => any[],
 }
 
@@ -405,7 +406,7 @@ export default class Router {
     async get(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query,
-            headers, includeAuthorization, inert, paginated,
+            headers, includeAuthorization, inert, paginated, parsePage,
         } = options;
 
         this.withAuthorization(authorization)
@@ -449,13 +450,14 @@ export default class Router {
             authorization: this.authorization,
             inert,
             paginated,
+            parsePage,
         });
     }
 
     async delete(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query,
-            headers, includeAuthorization, inert, paginated,
+            headers, includeAuthorization, inert,
         } = options;
 
         this.withAuthorization(authorization)
@@ -471,14 +473,13 @@ export default class Router {
             includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
             inert,
-            paginated,
         });
     }
 
     async patch(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query,
-            headers, body, includeAuthorization, inert, paginated,
+            headers, body, includeAuthorization, inert,
         } = options;
 
         this.withAuthorization(authorization)
@@ -495,14 +496,13 @@ export default class Router {
             includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
             inert,
-            paginated,
         });
     }
 
     async post(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query,
-            headers, body, includeAuthorization, inert, paginated,
+            headers, body, includeAuthorization, inert,
         } = options;
 
         this.withAuthorization(authorization)
@@ -519,14 +519,13 @@ export default class Router {
             includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
             inert,
-            paginated,
         });
     }
 
     async put(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query,
-            headers, body, includeAuthorization, inert, paginated,
+            headers, body, includeAuthorization, inert,
         } = options;
 
         this.withAuthorization(authorization)
@@ -543,7 +542,6 @@ export default class Router {
             includeAuthorization: includeAuthorization ?? true,
             authorization: this.authorization,
             inert,
-            paginated,
         });
     }
 }
