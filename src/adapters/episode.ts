@@ -8,6 +8,7 @@ import { identification, Router } from 'utils';
  */
 
 interface Episode {
+    name: string,
     episodeKey: string,
 }
 
@@ -78,9 +79,6 @@ export async function get(
  * @example
  *
  * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.get();
- * episodeAdapter.get({ episodeKey: 12321 });
- * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
  *
  * @param {object}  [optionals={}]      Something meaningful about optionals
  * @returns {object}                    Something meaningful about returns

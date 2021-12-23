@@ -63,7 +63,7 @@ export async function update(
 }
 
 /**
- * Gathers leaderboard information; not pageable
+ * Gathers leaderboard information; not pageable (hence named 'list' and not 'query')
  *
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{COLLECTION}`
  *
@@ -108,16 +108,5 @@ export async function get(
     optionals: RoutingOptions = {}
 ): Promise<Leaderboard[]> {
     console.warn('DEPRECATION WARNING: leaderboardAdapter.get is deprecated and will be removed with the next release. Use leaderboardAdapter.list instead.');
-    const { scopeBoundary, scopeKey } = scope;
-    const { filter = [], sort = [], first, max } = searchOptions;
-    const searchParams = {
-        filter: filter.join(';') || undefined,
-        sort: sort.join(';') || undefined,
-        first, max,
-    };
-
-    return await new Router()
-        .withSearchParams(searchParams)
-        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`, optionals)
-        .then(({ body }) => body);
+    return await list(collection, scope, searchOptions, optionals);
 }

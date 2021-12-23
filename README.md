@@ -1,10 +1,15 @@
 Epicenter JavaScript Libs (v3)
 ---
+The Epicenter JS libs is Forio's JavaScript library for interacting with the Epicenter platform. Similar to its' [predecessor](https://github.com/forio/epicenter-js-libs), it is comprised of a set of adapters meant to help streamline your work with the underlying Epicenter APIs.
 
-Prequisite Node version: 12+
+If you are comfortable with JavaScript, the epicenter.js library is an easy way to connect your project's model, data, and user interface.
+
+Questions? Contact us at support@forio.com or file an issue on github!
 
 JIRA: https://issues.forio.com/projects/EPILIBS/issues
 
+Table of Contents
+---
 - [Transition Guide (v2 &rarr; v3)](#transition-guide-v2--v3)
   - [New Features In v3](#new-features-in-v3)
   - [Some Things Were Renamed](#some-things-were-renamed)
@@ -69,6 +74,8 @@ A user's presence is now determined by their connection to the CometD server. Un
 * Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API REST call (**this includes the one that might show up before a search query**)
 
 # How to Contribute
+Prequisite Node version: 12+
+
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
 3. Create a [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) describing your changes
@@ -91,7 +98,7 @@ A user's presence is now determined by their connection to the CometD server. Un
 E.g., `3.10.9-breaking` indicates a breaking change to `3.9.x`. **Beware of these changes when incrementing versions; do not jump minor versions without looking at the tags in between.** You can utilize the CHANGELOG.md to review what has changed between versions and tags.
 
 # How to Build Documentation
-
+TBD; planning on utilizing TypeDoc for this. Expecting to expand the scripts in the package.json to official support this.
 
 # How to Test
 Tests are written to preserve behavior across releases. These are unit tests and are not intended for testing Epicenter features themselves.

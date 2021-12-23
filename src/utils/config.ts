@@ -127,7 +127,7 @@ class Config {
     /**
      * Use to determines whether or not the environment is local.
      * @memberof config
-     * @return {Boolean} whether or not environment is local.
+     * @return whether or not environment is local.
      */
     isLocal() {
         if (!isBrowser()) return false;

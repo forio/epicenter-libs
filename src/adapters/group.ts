@@ -36,7 +36,7 @@ interface GroupUpdate {
     capacity?: number,
 }
 
-interface Member {
+export interface Member {
     available: boolean,
     objectType: 'group',
     role: keyof typeof ROLE,
@@ -308,24 +308,9 @@ export async function search(
     optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {}
 ): Promise<Page<Group>> {
     console.warn('DEPRECATION WARNING: groupAdapter.search is deprecated and will be removed with the next release. Use groupAdapter.query instead.');
-    const {
-        filter = [], sort = [], first, max, quantized,
-        ...routingOptions
-    } = optionals;
-
-    const searchParams = {
-        filter: filter.join(';') || undefined,
-        sort: sort.join(';') || undefined,
-        first, max,
-    };
-
-    return await new Router()
-        .withSearchParams(searchParams)
-        .get(`/group${quantized ? '/quantized' : ''}/search`, {
-            paginated: true,
-            ...routingOptions,
-        })
-        .then(({ body }) => body);
+    const { filter = [], sort = [], first, max, quantized, ...routingOptions } = optionals;
+    const searchOptions = { filter, sort, first, max, quantized };
+    return await query(searchOptions, routingOptions);
 }
 
 
@@ -482,7 +467,7 @@ export async function register(
  * @memberof groupAdapter
  * @example
  *
- * epicenter.groupAdapter.addUser(group.groupKey);
+ * epicenter.groupAdapter.addUser();
  *
  * @param {string}          groupKey                        Key associated with group
  * @param {string}          usersOfUserKeys                 Key associated with group

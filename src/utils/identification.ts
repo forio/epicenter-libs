@@ -15,6 +15,7 @@ export interface UserSession {
     multipleGroups?: boolean,
     accountShortName: string,
     projectShortName?: string, // undefined when multipleGroups: true
+    projectKey?: string,
     displayName: string,
     objectType: 'user',
     loginMethod: {
