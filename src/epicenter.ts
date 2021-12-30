@@ -60,6 +60,8 @@ export { version };
 export type { Session, UserSession, AdminSession } from './utils/identification';
 export type { Group, Member } from './adapters/group';
 export type { Vault } from './adapters/vault';
+export type { GenericScope } from './utils/constants';
+
 
 /* Constants */
 export {
@@ -73,6 +75,7 @@ export {
     config,
     errorManager,
     Router,
+    Fault,
 } from './utils';
 /* Adapters */
 export {
