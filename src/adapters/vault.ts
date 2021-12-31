@@ -1,6 +1,6 @@
-import type { UserSession } from 'utils/identification';
+import type { UserSession } from '../utils/identification';
 import type { GenericSearchOptions, RoutingOptions } from '../utils/router'; // needs to be relative b/c TS hates me
-import type { GenericScope, Permit } from 'utils/constants';
+import type { GenericScope, Permit } from '../utils/constants';
 
 import {
     identification, Router,
