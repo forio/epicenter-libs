@@ -167,3 +167,15 @@ export async function resetPassword(
         })
         .then(({ body }) => body);
 }
+
+export async function verify(
+    token: string,
+    optionals: RoutingOptions = {},
+): Promise<Session> {
+    return await new Router()
+        .get('/verification', {
+            authorization: `Bearer ${token}`,
+            ...optionals,
+        })
+        .then(({ body }) => body);
+}
