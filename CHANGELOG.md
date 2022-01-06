@@ -1,3 +1,17 @@
+# [3.10.0-breaking](https://github.com/forio/epicenter-libs/compare/v3.9.0...v3.10.0-breaking) (2022-01-06)
+
+
+### Features
+
+* many new features & cleanup; explanation in commit desc ([331f4f7](https://github.com/forio/epicenter-libs/commit/331f4f7ca80d321edbfb892fb49aac62419fff2f))
+
+
+### BREAKING CHANGES
+
+* leaderboardAdapter.update arguments re-ordered
+
+
+
 # [3.9.0](https://github.com/forio/epicenter-libs/compare/v3.8.3...v3.9.0) (2021-12-02)
 
 

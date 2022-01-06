@@ -1,12 +1,13 @@
 {
   "name": "epicenter-libs",
-  "version": "3.9.0",
+  "version": "3.10.0-breaking",
   "main": "dist/cjs/epicenter.js",
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
   "types": "dist/types/epicenter.d.ts",
   "files": [
-    "dist/"
+    "dist/",
+    "src/"
   ],
   "scripts": {
     "test": "karma start --browsers ChromeHeadless karma.conf.js",

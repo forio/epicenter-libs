@@ -95,7 +95,7 @@ Prequisite Node version: 12+
 
 \*The web development team isn't planning on incrementing the number that correlates to the major version, that space is reserved for major platform changes (i.e., Epicenter v4 and beyond). Instead, starting in `v3.8.0` -- we will opt to track breaking changes with a suffix `-breaking` and increment the minor number instead.
 
-E.g., `3.10.9-breaking` indicates a breaking change to `3.9.x`. **Beware of these changes when incrementing versions; do not jump minor versions without looking at the tags in between.** You can utilize the CHANGELOG.md to review what has changed between versions and tags.
+E.g., `3.10.0-breaking` indicates a breaking change to `3.9.x`. **Beware of these changes when incrementing versions; do not jump minor versions without looking at the tags in between.** You can utilize the CHANGELOG.md to review what has changed between versions and tags.
 
 # How to Test
 Tests are written to preserve behavior across releases. These are unit tests and are not intended for testing Epicenter features themselves.
