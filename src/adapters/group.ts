@@ -4,10 +4,6 @@ import type { User } from './user';
 
 import { Router, EpicenterError, identification, ROLE } from '../utils';
 
-/**
- * Group API adapters -- handles groups and group memberships
- * @namespace groupAdapter
- */
 enum AUGMENT {
     MEMBERS = 'MEMBERS',
     QUANTIZED = 'QUANTIZED',
@@ -36,10 +32,13 @@ interface GroupUpdate {
     capacity?: number,
 }
 
-interface Member {
+interface GroupPermission {
     available: boolean,
     objectType: 'group',
     role: keyof typeof ROLE,
+}
+
+export interface Member extends GroupPermission {
     user: User,
 }
 
@@ -52,22 +51,17 @@ export interface Group extends GroupUpdate {
 
 /**
  * Provides information on a particular Epicenter group.
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group[/(member|quantized)]/{GROUP_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
  * import { authAdapter, groupAdapter } from 'epicenter';
  * const session = authAdapter.getLocalSession();
- * const group = await groupAdapter.get(session.groupKey, {
- *      augment: 'MEMBERS'      // include members of the group in the response
- * });
- *
- * const group = await groupAdapter.get(session.groupKey, {
- *      augment: 'QUANTIZED'    // include metrics relating to the group in the response
- * });
- *
+ * // include members of the group in the response
+ * const group = await groupAdapter.get(session.groupKey, { augment: 'MEMBERS' });
+ * // include metrics relating to the group in the response
+ * const group = await groupAdapter.get(session.groupKey, { augment: 'QUANTIZED' });
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.augment]   Specifies which additional information you'd like returned with the group
+ * @param [optionals.groupKey]  Group key, if omitted will attempt to use the group associated with the current session
+ * @returns promise that resolves to a group
  */
 export async function get(
     optionals: {
@@ -91,19 +85,11 @@ export async function get(
 
 /**
  * Deletes the group; available only to Epicenter admins
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.destroy(group.groupKey);
- *
- * @param {string}  groupKey                        Key associated with group
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * epicenter.groupAdapter.destroy('0000017dd3bf540e5ada5b1e058f08f20461');
+ * @param groupKey      Key associated with group
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to undefined if successful
  */
 export async function destroy(
     groupKey: string,
@@ -118,19 +104,11 @@ export async function destroy(
 
 /**
  * Provides information on for all groups in the project
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group?includeExpired={BOOLEAN}`
- *
- * @memberof groupAdapter
  * @example
- *
  * const groups = await epicenter.groupAdapter.gather();
- *
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {boolean} [optionals.includeExpired]             Indicates whether to include expired groups in the query
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object[]}                              List of groups
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
+ * @returns promise that resolves to a list of groups
  */
 export async function gather(
     optionals: { includeExpired?: boolean } & RoutingOptions = {}
@@ -149,34 +127,26 @@ export async function gather(
 
 /**
  * Updates fields for a particular group; available only to Epicenter admins.
- *
- * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.update(groupKey, { event: 'Orientation Day' });
- *
- * @param {string}  groupKey                        Key associated with group
- * @param {object}  update                          Attributes you wish to update
- * @param {number}  update.runLimit                 Defines the upper limit of runs allowed in the group
- * @param {string}  update.organization             Name of the organization owning the group
- * @param {boolean} update.allowSelfRegistration    TODO
- * @param {object}  update.flightRecorder           Diagnostic tool for loggin http requests for the server
- * @param {number}  update.flightRecorder.start     Start time (epoch time)
- * @param {number}  update.flightRecorder.stop      End time (epoch time)
- * @param {boolean} update.flightRecorder.enabled   TODO
- * @param {string}  update.event                    Name of the event the group is playing for
- * @param {boolean} update.allowMembershipChanges   TODO
- * @param {object}  update.pricing                  TODO
- * @param {number}  update.pricing.number           TODO
- * @param {object}  update.startDate                TODO
- * @param {object}  update.expirationDate           TODO
- * @param {object}  update.capacity                 Defines the upper limit on the number of users allowed in the group
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Group with updated attributes
+ * epicenter.groupAdapter.update('0000017dd3bf540e5ada5b1e058f08f20461', { event: 'Orientation Day' });
+ * @param groupKey                          Key associated with group
+ * @param update                            Attributes you wish to update
+ * @param [update.runLimit]                 Defines the upper limit of runs allowed in the group
+ * @param [update.organization]             Name of the organization owning the group
+ * @param [update.allowSelfRegistration]    TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.flightRecorder]           Diagnostic tool for logging http requests for the server
+ * @param [update.flightRecorder].start     Start time (epoch time)
+ * @param [update.flightRecorder].stop      End time (epoch time)
+ * @param [update.flightRecorder].enabled   Enabled flag for the flight recorder
+ * @param [update.event]                    Name of the event the group is playing for
+ * @param [update.allowMembershipChanges]   TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.pricing]                  TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.pricing].number           TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.startDate]                TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.expirationDate]           Date the group expires
+ * @param [update.capacity]                 Defines the upper limit on the number of users allowed in the group
+ * @param [optionals]                       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the updated group
  */
 export async function update(
     groupKey: string,
@@ -204,36 +174,28 @@ export async function update(
 
 /**
  * Creates a new group; available only to Epicenter admins
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group`
- *
- * @memberof groupAdapter
  * @example
- *
  * epicenter.groupAdapter.create({
  *      runLimit: 10,
  *      name: 'my-group-name',
  * });
- *
- * @param {object}  group                           Group object
- * @param {string}  group.name                      Group name (required)
- * @param {number}  group.runLimit                  Defines the upper limit on the number of runs allowed in the group
- * @param {string}  group.organization              Name of the organization owning the group
- * @param {string}  group.allowSelfRegistration     TODO
- * @param {object}  group.flightRecorder            Diagnostic tool for loggin http requests for the server
- * @param {number}  group.flightRecorder.start      Start time (epoch time)
- * @param {number}  group.flightRecorder.stop       End time (epoch time)
- * @param {boolean} group.flightRecorder.enabled    TODO
- * @param {string}  group.event                     Name of the event the group is playing for
- * @param {boolean} group.allowMembershipChanges    TODO
- * @param {object}  group.pricing                   TODO
- * @param {object}  group.startDate                 TODO
- * @param {object}  group.expirationDate            TODO
- * @param {object}  group.capacity                  Defines the upper limit on the number of users allowed in the group
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Newly created group
+ * @param group                             Group object
+ * @param group.name                        Group name (required)
+ * @param [group.runLimit]                  Defines the upper limit on the number of runs allowed in the group
+ * @param [group.organization]              Name of the organization owning the group
+ * @param [group.allowSelfRegistration]     TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.flightRecorder]            Diagnostic tool for loggin http requests for the server
+ * @param [group.flightRecorder.start]      Start time (epoch time)
+ * @param [group.flightRecorder.stop]       End time (epoch time)
+ * @param [group.flightRecorder.enabled]    Enabled flag for the flight recorder
+ * @param [group.event]                     Name of the event the group is playing for
+ * @param [group.allowMembershipChanges]    TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.pricing]                   TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.startDate]                 TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.expirationDate]            Date the group expires
+ * @param [group.capacity]                  Defines the upper limit on the number of users allowed in the group
+ * @param [optionals]                       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the newly created group
  */
 export async function create(
     group: Group,
@@ -260,28 +222,30 @@ export async function create(
 
 /**
  * Queries for groups
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/search?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
- *
- * @memberof groupAdapter
  * @example
- *
  * import { groupAdapter } from 'epicenter';
+ * const filter = [
+ *      'name|=group1|group2',                              // look for groups whose name is 'group1' or 'group2'
+ *      'groupKey=0000017dd3bf540e5ada5b1e058f08f20461',    // look for groups with the specific group key
+ *      'approximateMemberCount>30',                        // look for groups larger than 30
+ *      'startDate<2022-01-03T20:30:53.054Z',               // look for groups with start date before Jan 3rd 2022
+ *      'expirationDate<2022-01-03T20:30:53.054Z',          // look for groups with expiration date before Jan 3rd 2022
+ *      // 'account.shortName=acme',                        // specifies account, intended for admin use
+ *      // 'project.shortName=simulations',                 // specifies project, intended for admin use
+ * ];
  * groupAdapter.query({
- *      filter: [
- *          'group.name|=group1|group2',    // look for groups whose name is 'group1' or 'group2'
- *          'permission.role=FACILITATOR',  // where there exists at least one facilitator user
- *          'user.userKey=0123',            // whose userKey is '0123'
- *      },
- *      sort: ['+group.name']               // sort all findings by group name ascending (lexigraphically)
+ *      filter,
+ *      sort: ['+group.name']   // sort all findings by group name ascending (lexigraphically)
+ *      first: 3,               // page should start with the 4th item found (will default to 0)
+ *      max: 10,                // page should only include the first 10 items
  * });
- *
- * @param {object}      [optionals={}]                  Optional parameters
- * @param {string[]}    [optionals.filter]              List of conditionals to filter for
- * @param {string[]}    [optionals.sort]                List of values to sort by
- * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                    Group object
+ * @param searchOptions             Search options for the query
+ * @param [searchOptions.filter]    Filters for searching
+ * @param [searchOptions.sort]      Sorting criteria
+ * @param [searchOptions.first]     The starting index of the page returned
+ * @param [searchOptions.max]       The number of entries per page
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a page of groups
  */
 export async function query(
     searchOptions: { quantized?: boolean } & GenericSearchOptions,
@@ -303,47 +267,24 @@ export async function query(
         })
         .then(({ body }) => body);
 }
-
+/** DEPRECATED -- use groupAdapter.query instead */
 export async function search(
     optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {}
 ): Promise<Page<Group>> {
     console.warn('DEPRECATION WARNING: groupAdapter.search is deprecated and will be removed with the next release. Use groupAdapter.query instead.');
-    const {
-        filter = [], sort = [], first, max, quantized,
-        ...routingOptions
-    } = optionals;
-
-    const searchParams = {
-        filter: filter.join(';') || undefined,
-        sort: sort.join(';') || undefined,
-        first, max,
-    };
-
-    return await new Router()
-        .withSearchParams(searchParams)
-        .get(`/group${quantized ? '/quantized' : ''}/search`, {
-            paginated: true,
-            ...routingOptions,
-        })
-        .then(({ body }) => body);
+    const { filter = [], sort = [], first, max, quantized, ...routingOptions } = optionals;
+    const searchOptions = { filter, sort, first, max, quantized };
+    return await query(searchOptions, routingOptions);
 }
 
 
 /**
  * Retrieves a group with given group name
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/with/{GROUP_NAME}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.withGroupName(group.groupKey)
- *
- * @param {string}  name                            Name associated with the group
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Group Object
+ * epicenter.groupAdapter.withGroupName('my-group-name');
+ * @param name          Name associated with the group
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a group
  */
 export async function withGroupName(
     name: string,
@@ -358,25 +299,17 @@ export async function withGroupName(
 
 /**
  * Retrieves the list of groups a particular user is in; intended for admin use
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/for/{USER_KEY}[?includeExpired={BOOLEAN}&all={BOOLEAN}&role={ROLE}&role={ROLE}...]`
- *
- * @memberof groupAdapter
  * @example
- *
  * epicenter.groupAdapter.forUser(
- *      user.userKey,               // get groups where this user is a member of
- *      { role: ['FACILITATOR'] }   // where this user is a facilitator in the group
+ *      '000001796733eef0842f4d6d960997018a3b', // get groups where this user is a member of
+ *      { role: ['FACILITATOR'] }               // where this user is a facilitator in the group
  * );
- *
- * @param {string}          userKey                         Name associated with the group
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {boolean}         [optionals.includeExpired]             Indicates whether to include expired groups in the query
- * @param {boolean}         [optionals.includeAllMembers]                 Indicates whether to include the other members in the group (by default, only the requested user appears)
- * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object[]}                                      List of groups
+ * @param userKey                       Name associated with the group
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
+ * @param [optionals.includeAllMembers] Indicates whether to include the other members in the group (by default, only the requested user appears)
+ * @param [optionals.role]              Role or list of possible roles the user holds in the group
+ * @returns promise that resolves to a list of groups
  */
 export async function forUser(
     userKey: string,
@@ -407,20 +340,13 @@ export async function forUser(
 
 /**
  * Retrieves the list of groups particular to the current session
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member[?includeExpired={BOOLEAN}&role={ROLE}&role={ROLE}...]`
- *
- * @memberof groupAdapter
  * @example
- *
  * const groups = await epicenter.groupAdapter.getSessionGroups();
- *
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {boolean}         [optionals.includeExpired]      Indicates whether to include expired groups in the query (defaults to false)
- * @param {string|string[]} [optionals.role]                Role or list of possible roles the user holds in the group
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object[]}                                      List of groups
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
+ * @param [optionals.includeAllMembers] Indicates whether to include the other members in the group (by default, only the requested user appears)
+ * @param [optionals.role]              Role or list of possible roles the user holds in the group
+ * @returns promise that resolves to a list of groups
  */
 export async function getSessionGroups(
     optionals: {
@@ -449,19 +375,11 @@ export async function getSessionGroups(
 
 /**
  * Self-application for membership in a group; will only work if the group has the self-registration setting turned on.
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/selfRegistration/{GROUP_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.register(group.groupKey);
- *
- * @param {string}          groupKey                        Key associated with group
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object[]}                                      List of groups
+ * epicenter.groupAdapter.register('0000017dd3bf540e5ada5b1e058f08f20461');
+ * @param groupKey      Key associated with group
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves in a group
  */
 export async function register(
     groupKey: string,
@@ -474,28 +392,24 @@ export async function register(
 }
 
 
+type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available?: boolean };
 /**
  * Adds user(s) to the group
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.addUser(group.groupKey);
- *
- * @param {string}          groupKey                        Key associated with group
- * @param {string}          usersOfUserKeys                 Key associated with group
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
- * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                        Group the user was added to
+ * epicenter.groupAdapter.addUser('000001796733eef0842f4d6d960997018a3b');
+ * epicenter.groupAdapter.addUser([{
+ *      userKey: '000001796733eef0842f4d6d960997018a3b',
+ *      role: 'REVIEWER',
+ *      available: false,
+ * }]);
+ * @param usersInput                List of user keys or user input objects (properties defined below)
+ * @param usersInput[].userKey      User key
+ * @param [usersInput[].role]       User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
+ * @param [usersInput[].available]  Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupKey]      Group key to do indicate the group; will default to the group key associated with the current session
+ * @returns promise that resolves to the group the user was added to
  */
-
-type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available?: boolean };
-
 export async function addUser(
     usersInput: UserInput | UserInput[],
     optionals: { groupKey?: string } & RoutingOptions = {}
@@ -526,28 +440,20 @@ export async function addUser(
 
 /**
  * Updates a user's group membership information
- *
- * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}/{USER_KEY}`
- *
- * @memberof groupAdapter
  * @example
- *
- * epicenter.groupAdapter.updateUser(group.groupKey);
- *
- * @param {string}          groupKey                        Key associated with group
- * @param {string}          userKey                         Key associated with group
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.role]                User's role; See [ROLE](#ROLE) for all types
- * @param {string}          [optionals.available]           Indicates whether or not the user is 'active' (for semantic labeling)
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                        Group the user was added to
+ * epicenter.groupAdapter.updateUser('000001796733eef0842f4d6d960997018a3b', { role: 'LEADER' });
+ * @param userKey               User key
+ * @param update                Object containing the updates to a user's group membership information
+ * @param [update.role]         User's role; See [ROLE](#ROLE) for all types
+ * @param [update.available]    Indicates whether or not the user is 'active' (for semantic labeling)
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the membership information that was updated
  */
 export async function updateUser(
     userKey: string,
     update: { role?: keyof typeof ROLE, available?: boolean },
     optionals: { groupKey?: string } & RoutingOptions = {}
-):Promise<User> {
+):Promise<GroupPermission> {
     const { role, available } = update;
     const { groupKey, ...routingOptions } = optionals;
     const session = identification.session as UserSession;
@@ -566,21 +472,13 @@ export async function updateUser(
 
 /**
  * Removes user(s) from the group
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}[/{USER_KEY}][?userKey={USER_KEY}&userKey=...]`
- *
- * @memberof groupAdapter
  * @example
- *
  * const userKeys = members.map(({ userKey }) => userKey);
- * epicenter.groupAdapter.removeUsers(group.groupKey, userKeys)
- *
- * @param {string}          groupKey                        Key associated with the group
- * @param {string|string[]} userKey                         Key associated with the user or an array of user keys to remove from group
- * @param {object}          [optionals={}]                  Optional parameters
- * @param {string}          [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}          [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * epicenter.groupAdapter.removeUsers(userKeys)
+ * @param userKey               Key associated with the user or an array of user keys to remove from group
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupKey]  Group key for the group you want to remove from; defaults to the group in the current session
+ * @returns promise that resolves to undefined when successful
  */
 export async function removeUser(
     userKey: string | string[],

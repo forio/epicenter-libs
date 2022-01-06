@@ -12,3 +12,6 @@ examples/**/dist/
 
 # Rollup
 stats.html
+
+
+env.json*

@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, UNAUTHORIZED_CODE } from './common';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, UNAUTHORIZED_CODE } from './constants';
 chai.use(require('sinon-chai'));
 
 describe('Router (Fetch/Request Wrapper)', () => {

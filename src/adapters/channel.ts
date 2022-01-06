@@ -18,7 +18,9 @@ const validateScope = (scope: ChannelScope) => {
     if (!Object.prototype.hasOwnProperty.call(PUSH_CATEGORY, pushCategory)) throw new EpicenterError(`Invalid push category: ${pushCategory}`);
 };
 
-/** Channel thingy */
+/**
+ * Used to subscribe to CometD channels. Pass in a channel scope to instantiate, if a subscription to that scope already exists it will use it.
+ * */
 export default class Channel {
 
     path: string;
@@ -26,8 +28,8 @@ export default class Channel {
     subscription: SubscriptionHandle | null = null;
 
     /**
-     * Make a new channel
-     * @param {*} scope wordsd here
+     * Channel constructor
+     * @param scope object with the scope boundary, scope key, and push category. Defines the namespace for the channel
      */
     constructor(scope: ChannelScope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
@@ -38,14 +40,25 @@ export default class Channel {
         }
     }
 
-    /** This is the publis cahh
-     * @param content someom
-     * @returns {Promise} something here
-     */
     publish(content: FIXME): Promise<Message | Message[]> {
         return cometdAdapter.publish(this, content);
     }
 
+    /**
+     * Subscribes to the CometD channel, attaching a handler for any channel updates. If a subscription already exists it will first unsubscribe, ensuring that only one subscription is ever attached to the channel.
+     * @example
+     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
+     * const session = authAdapter.getLocalSession();
+     * const channel = new Channel({
+     *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+     *     scopeKey: session.groupKey,
+     *     pushCategory: PUSH_CATEGORY.CHAT,
+     * }).subscribe((data) => {
+     *      console.log(data.content);
+     * })
+     * @param update function that is called whenever a channel update occurs.
+     * @returns the subscription object returned by CometD after a sucessful subscribe.
+     */
     async subscribe(
         update: (data: unknown) => unknown,
         options: { inert?: boolean } = {},

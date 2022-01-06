@@ -1,10 +1,15 @@
 Epicenter JavaScript Libs (v3)
 ---
+The Epicenter JS libs is Forio's JavaScript library for interacting with the Epicenter platform. Similar to its' [predecessor](https://github.com/forio/epicenter-js-libs), it is comprised of a set of adapters meant to help streamline your work with the underlying Epicenter APIs.
 
-Prequisite Node version: 12+
+If you are comfortable with JavaScript, the epicenter.js library is an easy way to connect your project's model, data, and user interface.
 
-JIRA: https://issues.forio.com/projects/EPILIBS/issues
+Questions? Contact us at support@forio.com or file an issue on github!
 
+JIRA (Forio internal): https://issues.forio.com/projects/EPILIBS/issues
+
+Table of Contents
+---
 - [Transition Guide (v2 &rarr; v3)](#transition-guide-v2--v3)
   - [New Features In v3](#new-features-in-v3)
   - [Some Things Were Renamed](#some-things-were-renamed)
@@ -16,11 +21,11 @@ JIRA: https://issues.forio.com/projects/EPILIBS/issues
 - [Tenets for Development](#tenets-for-development)
 - [How to Contribute](#how-to-contribute)
 - [How to Prepare a Release](#how-to-prepare-a-release)
-- [How to Build Documentation](#how-to-build-documentation)
 - [How to Test](#how-to-test)
 - [How to Use Examples (Local)](#how-to-use-examples-local)
   - [Vanilla JavaScript](#vanilla-javascript)
   - [Node Server](#node-server)
+- [Documentation](#documentation)
 
 
 # Transition Guide (v2 &rarr; v3)
@@ -69,6 +74,8 @@ A user's presence is now determined by their connection to the CometD server. Un
 * Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API REST call (**this includes the one that might show up before a search query**)
 
 # How to Contribute
+Prequisite Node version: 12+
+
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
 3. Create a [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) describing your changes
@@ -89,9 +96,6 @@ A user's presence is now determined by their connection to the CometD server. Un
 \*The web development team isn't planning on incrementing the number that correlates to the major version, that space is reserved for major platform changes (i.e., Epicenter v4 and beyond). Instead, starting in `v3.8.0` -- we will opt to track breaking changes with a suffix `-breaking` and increment the minor number instead.
 
 E.g., `3.10.9-breaking` indicates a breaking change to `3.9.x`. **Beware of these changes when incrementing versions; do not jump minor versions without looking at the tags in between.** You can utilize the CHANGELOG.md to review what has changed between versions and tags.
-
-# How to Build Documentation
-
 
 # How to Test
 Tests are written to preserve behavior across releases. These are unit tests and are not intended for testing Epicenter features themselves.
@@ -120,8 +124,11 @@ npm start               # Serves example locally at local.forio.com:3913
 ## Node Server
 ```
 npm install             # Installs dependencies for libs
-npm run build-node      # Builds libs (node version) to dist/ folder
+npm run build           # Builds libs to dist/ folder
 cd examples/node
 npm install             # Install dependencies for example
 npm start
 ```
+
+# Documentation
+Documentation is currently limited. For the time being, please refer to the comments in code. Hoping to support this in a more official capacity at some point, possibly having them generated automatically with tools like [TypeDoc](https://typedoc.org/).

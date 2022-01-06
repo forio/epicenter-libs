@@ -1,10 +1,6 @@
 import type { RoutingOptions } from 'utils/router';
 import Router from 'utils/router';
 
-/**
- * Account API adapters -- account stuff TODO
- * @namespace accountAdapter
- */
 
 interface AccountReadView {
     name: string;
@@ -63,7 +59,7 @@ export async function createAccount(view: PersonalAccountCreateView | TeamAccoun
 }
 
 export async function updateAccount(
-    view:  PersonalAccountUpdateView | TeamAccountUpdateView,
+    view: PersonalAccountUpdateView | TeamAccountUpdateView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadView> {
     return await new Router()

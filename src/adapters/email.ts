@@ -8,47 +8,43 @@ enum ENCODING {
 
 /**
  * Sends an email to an individual user; available to participants
- *
- * Base URLs: 
- * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}`
- * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{toPseudonymKey}/as/{fromPseudonymKey}/`
- * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}/from/{from}`
- * POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/user/{groupKey}/{pseudonymKey}/from/{from}/{replyTo}`
- *
- * @memberof emailAdapter
  * @example
  * //Sends an email with a smiley face png attachment
+ * const groupKey = epicenter.authAdapter.getLocalSession().groupKey;
  * const subject = "check out this drawing!"
- * const emailBody = "I hope you enjoy this smiley face!"
- * const optionals = {
- *      attachments: [{
- *           encoding: 'BASE_64',
- *           name: 'testPic',
- *           contentType: 'image/png',
- *           data: 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIxJREFUWEdjZBhgwDjA9jMQ5YAvzmb/efaewquWGDXYPDvqgNEQGA2B0RAYGiFAy+KaqBAYdcDICgFQtQryMaHql1qhgjURklu3IzuKWDNwOoCSUCAlFHFmQ2J9gB4VpFgO0kvVZhaplhPlAJgPCSVKciwn6ACY5TDD8aV8Qg7EpXe0KB4NgdEQGA0BAF7VgCFTeobfAAAAAElFTkSuQmCC',
- *      }]
- * }
- * 
- * epicenter.emailAdapter.sendEmail(groupKey, pseudonymKey, subject, emailBody, optionals);
+ * const body = "I hope you enjoy this smiley face!"
+ * const attachements = [{
+ *      encoding: 'BASE_64',
+ *      name: 'testPic',
+ *      contentType: 'image/png',
+ *      data: 'iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAIxJREFUWEdjZBhgwDjA9jMQ5YAvzmb/efaewquWGDXYPDvqgNEQGA2B0RAYGiFAy+KaqBAYdcDICgFQtQryMaHql1qhgjURklu3IzuKWDNwOoCSUCAlFHFmQ2J9gB4VpFgO0kvVZhaplhPlAJgPCSVKciwn6ACY5TDD8aV8Qg7EpXe0KB4NgdEQGA0BAF7VgCFTeobfAAAAAElFTkSuQmCC',
+ * }];
  *
- * @param {object}  groupKey                        The groupKey in which the email target user exists
- * @param {string}  userKey                    The unique userKey for the email target user
- * @param {string}  subject                         The subject line for the email.
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {boolean}  [optionals.familyNameFirst]    Specifies whether email target's family name will come before their given name. Defaults to false.
- * @param {boolean}  [optionals.html]               Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
- * @param {string}  [optionals.body]                The content of the email.
- * @param {string}  [optionals.from]                The email address from which the message will appear to have been sent from. Will be overriden by fromUserKey.
- * @param {string}  [optionals.replyTo]             The email address that will be replyed to by the recipient. Must be used in conjunction with optionals.from.
- * @param {string}  [optionals.fromUserKey]         The userKey from which the email will appear to have been sent. The default response address will also be this email.
- * @param {Array}  [optionals.attachments]          An array of (binary) objects to include as attachments. All four properties must be included.
- *      @param {string}  [binaryObject.encoding]             A string specifying the encoding method. See ENCODING for possible values.
- *      @param {string}  [binaryObject.data]                 A string containing the data for the attachment.
- *      @param {string}  [binaryObject.name]                 A string containing the name of the attachment.
- *      @param {string}  [binaryObject.contentType]          A string specifying the attachment MIME Type. 
- * @returns {undefined}                             Returns a 204 for successfully sending the email or a 400 for an invalid request
+ * // Sends an email to the address associated with the provided user key, sender will be seen as "System"
+ * epicenter.emailAdapter.sendEmail(groupKey, '000001796733eef0842f4d6d960997018a3b', subject, body, { attachments });
+ * // Sends an email to the address associated with the provided user key, sender will be seen as be the address provided by the "from" field
+ * epicenter.emailAdapter.sendEmail(groupKey, '000001796733eef0842f4d6d960997018a3b', subject, body, { attachments, from: 'sender@test.com' });
+ * // Sends an email to the address defined at "replyTo", sender will be seen as be the address provided by the "from" field
+ * epicenter.emailAdapter.sendEmail(groupKey, '000001796733eef0842f4d6d960997018a3b', subject, body, { attachments, from: 'sender@test.com', replyTo: 'receiver@test.com' });
+ * // Sends an email to the address associated with the provided user key, sender will be seen as the user associated with the "fromUserKey"
+ * epicenter.emailAdapter.sendEmail(groupKey, '000001796733eef0842f4d6d960997018a3b', subject, body, { attachments, fromUserKey: '000001796733eef0842f4d6d960997018a33' });
+ * @param groupKey                              The groupKey in which the email target user exists
+ * @param userKey                               The unique userKey for the email target user
+ * @param subject                               The subject line for the email.
+ * @param emailBody                             The body for the email
+ * @param [optionals]                           Optional parameters
+ * @param [optionals.familyNameFirst]           Specifies whether email target's family name will come before their given name. Defaults to false.
+ * @param [optionals.html]                      Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
+ * @param [optionals.body]                      The content of the email.
+ * @param [optionals.from]                      The email address from which the message will appear to have been sent from. Will be overriden by fromUserKey.
+ * @param [optionals.replyTo]                   The email address that will be replyed to by the recipient. Must be used in conjunction with optionals.from.
+ * @param [optionals.fromUserKey]               The userKey from which the email will appear to have been sent. The default response address will also be this email.
+ * @param [optionals.attachments]               An array of (binary) objects to include as attachments. All four properties must be included.
+ * @param [optionals.attachments[].encoding]    A string specifying the encoding method. See ENCODING for possible values.
+ * @param [optionals.attachments[].data]        A string containing the data for the attachment.
+ * @param [optionals.attachments[].name]        A string containing the name of the attachment.
+ * @param [optionals.attachments[].contentType] A string specifying the attachment MIME Type.
+ * @returns undefined indicating success
  */
 export async function sendEmail(
     groupKey: string,
@@ -56,9 +52,9 @@ export async function sendEmail(
     subject: string,
     emailBody: string,
     optionals: {
-        familyNameFirst?: string, 
-        html?: boolean, 
-        body?: string, 
+        familyNameFirst?: string,
+        html?: boolean,
+        body?: string,
         from?: string,
         replyTo?: string,
         fromUserKey?: string,
@@ -67,7 +63,7 @@ export async function sendEmail(
             data: string,
             name: string,
             contentType: string,
-        }
+        }[]
     } & RoutingOptions = {}
 ): Promise<void> {
     const { accountShortName, projectShortName, server, familyNameFirst, html, attachments, from, replyTo, fromUserKey } =
@@ -101,37 +97,27 @@ export async function sendEmail(
 
 /**
  * Sends an email to an individual admin (someone with epicenter account); Requires support level authentication
- *
- * Base URLs: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/email/admin/{adminKey}`
- *
- * @memberof emailAdapter
- * @example
- * 
- * epicenter.emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody, optionals);
- *
- * @param {string}  adminKey                        The unique adminKey for the email target
- * @param {string}  subject                         The subject line for the email.
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {boolean}  [optionals.familyNameFirst]    Specifies whether email target's family name will come before their given name. Defaults to false.
- * @param {boolean}  [optionals.html]               Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
- * @param {string}  [optionals.body]                The content of the email.
- * @param {Array}  [optionals.attachments]          An array of (binary) objects to include as attachments. All four properties must be included.
- *      @param {string}  [binaryObject.encoding]             A string specifying the encoding method. See ENCODING for possible values.
- *      @param {string}  [binaryObject.data]                 A string containing the data for the attachment.
- *      @param {string}  [binaryObject.name]                 A string containing the name of the attachment.
- *      @param {string}  [binaryObject.contentType]          A string specifying the attachment MIME Type. 
- * @returns {undefined}                             Returns a 204 for successfully sending the email or a 400 for an invalid request
+ * @param adminKey                              The unique adminKey for the email target
+ * @param subject                               The subject line for the email.
+ * @param [optionals]                           Optional parameter
+ * @param [optionals.familyNameFirst]           Specifies whether email target's family name will come before their given name. Defaults to false.
+ * @param [optionals.html]                      Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
+ * @param [optionals.body]                      The content of the email.
+ * @param [optionals.attachments]               An array of (binary) objects to include as attachments. All four properties must be included.
+ * @param [optionals.attachments[].encoding]    A string specifying the encoding method. See ENCODING for possible values.
+ * @param [optionals.attachments[].data]        A string containing the data for the attachment.
+ * @param [optionals.attachments[].name]        A string containing the name of the attachment.
+ * @param [optionals.attachments[].contentType] A string specifying the attachment MIME Type.
+ * @returns undefined indicating success
  */
 export async function sendEmailToAdmin(
     adminKey: string,
     subject: string,
     emailBody: string,
     optionals: {
-        familyNameFirst?: string, 
-        html?: boolean, 
-        body?: string, 
+        familyNameFirst?: string,
+        html?: boolean,
+        body?: string,
         attachments?: {
             encoding: keyof typeof ENCODING,
             data: string,

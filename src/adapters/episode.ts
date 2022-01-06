@@ -2,31 +2,25 @@ import type { UserSession } from 'utils/identification';
 import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
 import { identification, Router } from 'utils';
 
-/**
- * Episode API adapters -- use this to create, update, delete, and manage your episodes
- * @namespace episodeAdapter
- */
 
 interface Episode {
+    name: string,
     episodeKey: string,
 }
 
 /**
  * Create an episode.
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
  * @example
- *
- * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.create('myEpisode', 'myGroupName', {
+ * epicenter.episodeAdapter.create('myEpisode', 'myGroupName', {
  *      runLimit: 20,
  *      draft: true,
  * });
- * @param {string}  name                Episode name
- * @param {object}  groupName           Group to make the episode under
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * @param name                  Episode name
+ * @param groupName             Group to make the episode under
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.draft]     Flag to indicate the episode is a draft (intended when used for settings scoping)
+ * @param [optionals.runLimit]  Optional argument to define the number of runs that can be made using this episode as the scope
+ * @returns promise that resolves to the newly created episode
  */
 export async function create(
     name: string,
@@ -48,18 +42,13 @@ export async function create(
 }
 
 /**
- * Gets episodes.
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
+ * Gets a specific episode.
  * @example
+ * epicenter.episodeAdapter.get('000001796733eef0842f4d6d960997018a37');
  *
- * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.get('123124141241);
- *
- * @param {string}  episodeKey          The episode key
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * @param episodeKey    The episode key
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to an episode
  */
 export async function get(
     episodeKey: string,
@@ -72,18 +61,29 @@ export async function get(
 
 /**
  * Gets episodes.
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
  * @example
- *
- * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.get();
- * episodeAdapter.get({ episodeKey: 12321 });
- * episodeAdapter.get({ groupName: 'myGroupName', episodeName: 'myEpisodeName' });
- *
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * const filter = [
+ *      'name|=one|two',                                            // searches only for episodes named 'one' or 'two'
+ *      'draft=false',                                              // searches only for episodes that aren't drafts
+ *      'created>=2022-01-03T20:30:53.054Z',                        // looks for any episodes created after Jan 3rd 2022
+ *      // 'account.shortName=acme'                                 // specifies the account, intended for admin use
+ *      // 'project.shortName=simulations'                          // specifies the project, intended for admin use
+ *      // 'group.name=my-group-name',                              // specifies a group name, intended for admin use
+ *      // 'group.groupKey=0000017dd3bf540e5ada5b1e058f08f20461',   // specifies a group key, intended for admin use
+ * ];
+ * epicenter.episodeAdapter.query({
+ *      filter,
+ *      sort: ['+episode.created'],     // sort all findings by the 'created' field (ascending)
+ *      first: 3,                       // page should start with the 4th item found (will default to 0)
+ *      max: 10,                        // page should only include the first 10 items
+ * });
+ * @param searchOptions             Search options for the query
+ * @param [searchOptions.filter]    Filters for searching
+ * @param [searchOptions.sort]      Sorting criteria
+ * @param [searchOptions.first]     The starting index of the page returned
+ * @param [searchOptions.max]       The number of entries per page
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a page of episodes
  */
 export async function query(
     searchOptions: GenericSearchOptions,
@@ -105,18 +105,13 @@ export async function query(
 }
 
 /**
- * Gets episodes.
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
+ * Gets episodes based on a group key
  * @example
+ * epicenter.episodeAdapter.withGroup('0000017dd3bf540e5ada5b1e058f08f20461');
  *
- * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.withGroup('1231241342345');
- *
- * @param {string}  groupKey            The group key
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * @param groupKey      The group key
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise resolving to a list of episodes
  */
 export async function forGroup(
     groupKey: string,
@@ -129,19 +124,12 @@ export async function forGroup(
 
 /**
  * Gets episode based on group name and episode name
- * Unsure where this would see use...
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
  * @example
- *
- * import { episodeAdapter } from 'epicenter';
- * episodeAdapter.withName('myGroupName', 'myEpisodeName');
- *
- * @param {string}  groupName           The group name
- * @param {string}  episodeName         The episode name
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * epicenter.episodeAdapter.withName('myEpisodeName');
+ * @param name                  The episode name
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupName] Name of the group, if omitted will use the group name associated with the current session
+ * @returns promise that resolves to an episode
  */
 export async function withName(
     name: string,
@@ -160,18 +148,10 @@ export async function withName(
 
 /**
  * Deletes an episode
- *
- * TODO -- add meaningful text here
- * @memberof episodeAdapter
  * @example
- *
- * import { episodeAdapter } from 'epicenter';
- * const episodeKey = 1234;
- * episodeAdapter.remove(episodeKey);
- *
- * @param {string}  episodeKey          Something meaningful about optionals
- * @param {object}  [optionals={}]      Something meaningful about optionals
- * @returns {object}                    Something meaningful about returns
+ * epicenter.episodeAdapter.remove('000001796733eef0842f4d6d960997018a3b');
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to undefined if successful
  */
 export async function remove(
     episodeKey: string,

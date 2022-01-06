@@ -5,13 +5,9 @@ import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
 import {
     Router, identification,
     ROLE, SCOPE_BOUNDARY, RITUAL,
+    EpicenterError,
 } from 'utils';
 
-
-/**
- * Run API adapters -- use this to create, update, delete, and manage your runs
- * @namespace runAdapter
- */
 
 interface ModelContext {
     version: string,
@@ -44,45 +40,46 @@ interface Run {
     variables?: Record<string, unknown>,
 }
 
+type RunCreateOptions = {
+    readLock?: keyof typeof ROLE,
+    writeLock?: keyof typeof ROLE,
+    ephemeral?: boolean,
+    trackingKey?: string,
+    modelContext?: ModelContext,
+    executionContext?: ExecutionContext,
+} & RoutingOptions;
+
+type RunStrategy =
+    | 'reuse-across-sessions'
+    | 'reuse-never'
+    | 'reuse-by-tracking-key'
+    | 'multiplayer'
+
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
- *
- * @memberof runAdapter
  * @example
- *
  * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
  * runAdapter.create('model.py', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '000001713a246b0b34b5b5d274c057a5b2a7'
+ *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
- * @param {string}  model                           Name of your model file
- * @param {object}  scope                           Scope associated with your run
- * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.readLock]            Role (character type)
- * @param {string}  [optionals.writeLock]           Role (chracter type)
- * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
- * @param {string}  [optionals.trackingKey]         Tracking key
- * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
- * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Newly created run
+ * @param model                         Name of your model file
+ * @param scope                         Scope associated with your run
+ * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.trackingKey]       Tracking key
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to the newly created run
  */
 export async function create(
     model: string,
     scope: { userKey?: string } & GenericScope,
-    optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ephemeral?: boolean,
-        trackingKey?: string,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
-    } & RoutingOptions = {}
+    optionals: RunCreateOptions = {},
 ): Promise<Run> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -122,11 +119,13 @@ export async function create(
 
 /**
  * Clone a run
- * @memberof runAdapter
- *
- * @param {string}  runKey          Run's key
- * @param {object}  [optionals={}]  Object for all optional fields
- * @returns {object}                Response with the run in the "body"
+ * @param runKey                        Run key for the run you want to clone
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.trackingKey]       Tracking key
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to the cloned run
  */
 export async function clone(
     runKey: string,
@@ -233,19 +232,11 @@ export async function update(
 
 /**
  * *Does not actually delete the run*. The run is instead removed from memory. This can be used as a means of preserving server CPUs, and should be used when you do not expect to perform any addtional actions that would bring the run back into memory. (TODO: see David for details; is it just operations that bring the run into memory? what about clone... etc.)
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
- *
- * @memberof runAdapter
  * @example
- *
- * epicenter.runAdapter.remove(run.runKey);
- *
- * @param {string}  runKey                          Key associated with the run
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                TODO
+ * epicenter.runAdapter.remove('00000173078afb05b4ae4c726637167a1a9e');
+ * @param runKey        Key associated with the run
+ * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @returns promise that resolve to undefined if successful
  */
 export async function remove(
     runKey: string,
@@ -268,14 +259,7 @@ export async function get(
 
 /**
  * Queries for runs.
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL_FILE}?filter={FILTER}&sort={SORT}&first={FIRST}&max={MAX}`
- *
- * `filters` take in an array of strings that are serialized as a JSON object on the backend using the JSONiq (JSON query language). See their docs for addtional info
- *
- * @memberof runAdapter
  * @example
- *
  * import { runAdapter } from 'epicenter';
  * runAdapter.query({
  *      filter: [
@@ -286,26 +270,25 @@ export async function get(
  *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
  *          'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
  *      ],
- *      sort: ['+run.created']              // sort all findings by the 'created' field
+ *      sort: ['+run.created']              // sort all findings by the 'created' field (ascending)
  *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
  *      metadata: ['classification']        // include the run metadata for 'classification' in the response
  * });
- *
- * @param {string}      model                           Name of your model file
- * @param {object}      [optionals={}]                  Optional parameters
- * @param {string}      [optionals.scope.scopeBoundary] Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}      [optionals.scope.scopeKey]      Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {string[]}    [optionals.filter]              List of conditionals to filter for
- * @param {string[]}    [optionals.sort]                List of values to sort by
- * @param {string[]}    [optionals.variables]           List of variables to include with the runs found
- * @param {string[]}    [optionals.metadata]            List of metadata to include with the runs found
- * @param {number}      [optionals.first]               The index from which we collect our runs from
- * @param {number}      [optionals.max]                 The maximum number of runs to return (upper limit: 200)
- * @param {number}      [optionals.timeout]             Number of seconds we're willing to wait for the response from the server
- * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}      [optionals.includeEpisodes]     Only used for the `run/in/groupName` endpoint
- * @returns {object}                                    TODO
+ * @param model                                 Name of your model file
+ * @param searchOptions                         Search options
+ * @param [searchOptions.scope.scopeBoundary]   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param [searchOptions.scope.scopeKey]        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [searchOptions.scope.userKey]         User attached to scope if necessary
+ * @param [searchOptions.filter]                List of conditionals to filter for
+ * @param [searchOptions.sort]                  List of values to sort by (applies only to run attributes)
+ * @param [searchOptions.variables]             List of variables to include with the runs found
+ * @param [searchOptions.metadata]              List of metadata to include with the runs found
+ * @param [searchOptions.first]                 The index from which we collect our runs from
+ * @param [searchOptions.max]                   The maximum number of runs to return (upper limit: 200)
+ * @param [searchOptions.timeout]               Number of seconds we're willing to wait for the response from the server
+ * @param [searchOptions.includeEpisodes]       Only used for the `run/in/groupName` endpoint
+ * @param [optionals]                           Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a page of runs
  */
 export async function query(
     model: string,
@@ -313,7 +296,7 @@ export async function query(
         timeout?: number,
         variables?: string[],
         metadata?: string[],
-        scope?: GenericScope,
+        scope?: { userKey?: string } & GenericScope,
         groupName?: string,
         episodeName?: string,
         includeEpisodes?: boolean,
@@ -328,6 +311,7 @@ export async function query(
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
         `in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
+    if (scope?.userKey) filter.push(`run.userKey=${scope.userKey}`);
 
     const searchParams = {
         filter: filter.join(';') || undefined,
@@ -465,12 +449,12 @@ export async function getVariable(
 }
 /**
  * Updates model variables for the run
- * @memberof runAdapter
- *
- * @param {string}  runKey      Identifier for your run
- * @param {object}  update      Object with the key-value pairs you would like to update in the model
- * @param {object}  optionals   Something meaningful about optionals
- * @returns {object}            Object with the variables & new values that were updated
+ * @param runKey                Identifier for your run
+ * @param update                Object with the key-value pairs you would like to update in the model
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [optionals.ritual]    TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @returns promise that resolve to an object with the variables & new values that were updated
  */
 export async function updateVariables(
     runKey: string | string[],
@@ -589,29 +573,19 @@ export async function action(
 
 /**
  * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
- *
- * @memberof runAdapter
  * @example
- *
- * import { runAdapter, authAdapter } from 'epicenter';
- * const worldKey = authAdapter.getLocalSession().worldKey
- * const run = await runAdapter.retrieveFromWorld(worldKey, 'model.py');
- *
- *
- * @param {object}  worldKey                        Key associated with the world you'd like a run from
- * @param {string}  model                           Name of model file you'd use to create the run if needed
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.readLock]            Role (character type)
- * @param {string}  [optionals.writeLock]           Role (chracter type)
- * @param {boolean} [optionals.ephemeral]           Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
- * @param {string}  [optionals.trackingKey]         Tracking key
- * @param {object}  [optionals.modelContext]        .ctx2 file overrides, this is not tracked by clone operations
- * @param {object}  [optionals.executionContext]    Carries arguments for model file worker on model initialization. This is tracked by clone operations.
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                Run retrieved from the world
+ * import { runAdapter } from 'epicenter';
+ * const run = await runAdapter.retrieveFromWorld('0000017a445032dc38cb2cecd5fc13708314', 'model.py');
+ * @param worldKey                      Key associated with the world you'd like a run from
+ * @param model                         Name of model file you'd use to create the run if needed
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.trackingKey]       Tracking key
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to the run retrieved from, or created for the world
  */
 export async function retrieveFromWorld(
     worldKey: string,
@@ -652,23 +626,12 @@ export async function retrieveFromWorld(
 }
 
 /**
- * Deletes the run associated with the given world key
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
- *
- * @memberof runAdapter
+ * Removes the run associated with the given world key
  * @example
- *
- * import { runAdapter, authAdapter } from 'epicenter';
- * const worldKey = authAdapter.getLocalSession().worldKey
- * const run = await runAdapter.removeFromWorld(worldKey);
- *
- *
- * @param worldKey                        Key associated with the world
- * @param [optionals={}]                  Optional parameters
- * @param [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns                               Run retrieved from the world
+ * epicenter.runAdapter.removeFromWorld('0000017a445032dc38cb2cecd5fc13708314');
+ * @param worldKey      Key associated with the world
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to undefined when successful
  */
 export async function removeFromWorld(
     worldKey: string,
@@ -693,26 +656,71 @@ export async function removeFromWorld(
 //     }, Promise.resolve());
 // }
 
-// export async function getWithStrategy(strategy, model, scope, optionals = {}) {
-//     const { initOperations = [] } = optionals;
-//     if (strategy === 'reuse-across-sessions') {
-//         const runs = await query(model, scope, { ...optionals, sort: ['-created'] });
-//         if (runs.length) {
-//             return runs[0];
-//         }
-//         const newRun = await create(model, scope, optionals = {});
-//         await serial(newRun.runKey, initOperations, optionals = {});
-//         return newRun;
-//     } else if (strategy === 'reuse-never') {
-//         const newRun = await create(model, scope, optionals = {});
-//         await serial(newRun.runKey, initOperations, optionals = {});
-//         return newRun;
-//     } else if (strategy === 'reuse-by-tracking-key') {
-//         //TBD write out if needed
-//         //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
-//     } else if (strategy === 'multiplayer') {
-//         //TODO when multiplayer API is ready
-//         //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
-//     }
-//     throw new EpicenterError('Invalid run strategy.');
-// }
+/**
+ * Queries for and/or creates a run, depending on the strategy provided.
+ *
+ * 'reuse-across-sessions' -- will get the most recent run for the given scope, creating it if it does not exist
+ * 'reuse-never' -- will create a new run every time
+ *
+ * @example
+ *
+ * import { runAdapter } from 'epicenter';
+ * runAdapter.getWithStrategy(
+ *     'reuse-across-sessions',
+ *     'model.py',
+ *     {
+ *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *         scopeKey: '123456789',
+ *     },
+ * );
+ *
+ * @param strategy                      Strategy to use when retrieving the run
+ * @param model                         Name of your model file
+ * @param scope                         Scope associated with your run
+ * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.trackingKey]       Tracking key
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to a run
+ */
+
+export async function getWithStrategy(
+    strategy: RunStrategy,
+    model: string,
+    scope: GenericScope,
+    optionals: {
+        // initOperations?: Array<string | { name: string, params?: unknown[]}>,
+    } & RunCreateOptions = {}
+): Promise<Run> {
+    // const { initOperations = [] } = optionals;
+    if (strategy === 'reuse-across-sessions') {
+        const searchOptions = {
+            scope,
+            sort: ['-run.created'],
+            max: 1,
+        };
+        const { values: [lastRun] } = await query(model, searchOptions);
+        if (!lastRun) {
+            const newRun = await create(model, scope, optionals);
+            // await serial(newRun.runKey, initOperations, optionals = {});
+            return newRun;
+        }
+        return lastRun;
+    } else if (strategy === 'reuse-never') {
+        const newRun = await create(model, scope, optionals);
+        // await serial(newRun.runKey, initOperations, optionals = {});
+        return newRun;
+    } else if (strategy === 'reuse-by-tracking-key') {
+        //TBD write out if needed
+        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+    } else if (strategy === 'multiplayer') {
+        //TODO when multiplayer API is ready
+        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+    }
+    throw new EpicenterError('Invalid run strategy.');
+}

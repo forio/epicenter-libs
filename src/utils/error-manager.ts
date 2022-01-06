@@ -1,5 +1,5 @@
 import type { RetryFunction } from './router';
-import type Fault from './fault';
+import Fault from './fault';
 
 
 type Identifier = (error: Fault) => boolean
@@ -39,7 +39,6 @@ class ErrorManager {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));
         const handler = handlers[index];
-        const remainingHandlers = index > 0 ? handlers.slice(index + 1) : [];
         if (!handler) throw error;
         let promise;
         try {
@@ -50,7 +49,10 @@ class ErrorManager {
             });
         } catch (e) {
             console.error('Handler failed due to error', e);
-            promise = await this.handle(error, retryFn, remainingHandlers);
+            const remainingHandlers = index > -1 ? [...handlers.slice(0, index), ...handlers.slice(index + 1)] : [];
+            // Try to handle the new error with the remaining handlers, otherwise keep trying to handle the original error
+            const handleableError = e instanceof Fault ? e : error;
+            promise = await this.handle(handleableError, retryFn, remainingHandlers);
         }
         return promise;
     }

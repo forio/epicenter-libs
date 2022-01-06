@@ -4,10 +4,6 @@ import type { GenericScope } from 'utils/constants';
 
 import { identification, Router } from 'utils';
 
-/**
- * Leaderboard API adapter
- * @namespace leaderboardAdapter
- */
 
 interface Score {
     name: string,
@@ -25,24 +21,32 @@ interface Leaderboard {
 
 
 /**
- * Updates leaderboard information
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard`
- *
- * @memberof leaderboardAdapter
+ * Creates a leaderboard entry.
  * @example
- *
  * import { leaderboardAdapter } from 'epicenter';
- * const leaderboard = await leaderboardAdapter.post();
+ * const leaderboard = await leaderboardAdapter.post(
+ *      'class-23-leaderboard',
+ *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
+ *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461' },
+ *      { tags: [{ label: 'role', content: 'doctor' }] }
+ * );
+ * @param collection            Name of the leaderboard
+ * @param scope                 Scope attached to the leaderboard entry; allows for scoping
+ * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey        Key of the resource defined by the scope boundary
+ * @param scope.userKey         User key for the user creating the entry, if omitted will use the one in current session
+ * @param scores                List of score objects
+ * @param scores[].name         Name of the score
+ * @param scores[].quantity     Value of the score
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @params [optionals.tags]     Tags for the leaderboard entry, helps to provide another layer of scope if needed
+ * @returns promise that resolves to the leaderboard entry created
  */
 export async function update(
     collection: string,
-    scores: Score[],
     scope: { userKey?: string } & GenericScope,
-    optionals: {
-        tags?: Tag[],
-        userKey?: string,
-    } & RoutingOptions = {}
+    scores: Score[],
+    optionals: { tags?: Tag[] } & RoutingOptions = {}
 ): Promise<Leaderboard> {
     const { tags, ...routingOptions } = optionals;
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -63,13 +67,8 @@ export async function update(
 }
 
 /**
- * Gathers leaderboard information; not pageable
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{COLLECTION}`
- *
- * @memberof leaderboardAdapter
+ * Gathers leaderboard information; not paginable (hence named 'list' and not 'query'). Technically there is no leader
  * @example
- *
  * import { leaderboardAdapter } from 'epicenter';
  * const leaderboard = await leaderboardAdapter.list('myLeaderboard', scope, {
  *      filter: [
@@ -80,6 +79,17 @@ export async function update(
  *      first: 0,
  *      max: 20                 // retrieve only the first 20 entries
  * });
+ * @param collection                Name of the leaderboard
+ * @param scope                     Scope attached to the leaderboard entry; allows for scoping
+ * @param scope.scopeBoundary       Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey            Key of the resource defined by the scope boundary
+ * @param searchOptions             Search options for the query
+ * @param [searchOptions.filter]    Filters for searching
+ * @param [searchOptions.sort]      Sorting criteria
+ * @param [searchOptions.first]     The starting index of the list returned
+ * @param [searchOptions.max]       The maximum number of entries in the list
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to to a list of leaderboard entries
  */
 export async function list(
     collection: string,
@@ -108,16 +118,5 @@ export async function get(
     optionals: RoutingOptions = {}
 ): Promise<Leaderboard[]> {
     console.warn('DEPRECATION WARNING: leaderboardAdapter.get is deprecated and will be removed with the next release. Use leaderboardAdapter.list instead.');
-    const { scopeBoundary, scopeKey } = scope;
-    const { filter = [], sort = [], first, max } = searchOptions;
-    const searchParams = {
-        filter: filter.join(';') || undefined,
-        sort: sort.join(';') || undefined,
-        first, max,
-    };
-
-    return await new Router()
-        .withSearchParams(searchParams)
-        .get(`/leaderboard/${scopeBoundary}/${scopeKey}/${collection}`, optionals)
-        .then(({ body }) => body);
+    return await list(collection, scope, searchOptions, optionals);
 }

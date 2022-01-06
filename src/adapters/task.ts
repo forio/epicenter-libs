@@ -13,7 +13,6 @@ enum RETRY_POLICY {
  * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task`
  * Base URL with pseudonym: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{userKey}/{name}`
  *
- * @memberof taskAdapter
  * @example
  * const scope = {
  *   scopeBoundary: SCOPE_BOUNDARY.GROUP,
@@ -63,7 +62,7 @@ enum RETRY_POLICY {
  * @param {string}  [optionals.retryPolicy]         Specifies what to do should the task fail; see RETRY_POLICY
  * @param {string}  [optionals.failSafeTermination] The ISO-8601 date-time when the task will be deleted regardless of any tiggers; defaults to null
  * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
- * @returns {taskObject}                            Returns a task object including the taskKey
+ * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function create(
     scope: { userKey?: string } & GenericScope,
@@ -141,7 +140,7 @@ export async function destroy(taskKey: string, optionals: RoutingOptions = {}):P
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a task object including the taskKey
+ * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function get(taskKey: string, optionals: RoutingOptions = {}): Promise<Record<string, unknown>> {
     return await new Router()
@@ -162,7 +161,7 @@ export async function get(taskKey: string, optionals: RoutingOptions = {}): Prom
  * @param {object}  [optionals={}]                  Optional parameters
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a task object including the taskKey
+ * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function getHistory(
     taskKey: string,
@@ -196,7 +195,7 @@ export async function getHistory(
  * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @param {string}  [optionals.userKey]             Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
- * @returns {taskObject}                            Returns a task object including the taskKey
+ * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function getTaskIn(
     scope: { userKey?: string } & GenericScope,

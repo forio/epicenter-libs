@@ -46,31 +46,16 @@ interface World {
     runKey: string,
 }
 
-
-/**
- * World API adapters -- handles worlds and user role/assignments
- * @namespace worldAdapter
- */
-
-
 /**
  * Updates fields for a particular world.
- *
- * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{WORLD_KEY}`
- *
- * @memberof worldAdapter
  * @example
- *
- * epicenter.worldAdapter.update(world.worldKey, { name: 'World A1' });
- *
- * @param {string}  worldKey                        Key associated with world
- * @param {object}  update                          Attributes you wish to update
- * @param {string}  [update.name]                   Name of the world
- * @param {string}  [update.runKey]                 Key of the run associated with the world
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                world with updated attributes
+ * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { name: 'World A1' });
+ * @param worldKey          Key associated with world
+ * @param update            Attributes you wish to update
+ * @param [update.name]     Name of the world
+ * @param [update.runKey]   Key for the run you want to attach to the world
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * @returns promise wiworld with updated attributes
  */
 export async function update(
     worldKey: string,
@@ -90,19 +75,11 @@ export async function update(
 
 /**
  * Deletes a world
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{WORLD_KEY}`
- *
- * @memberof worldAdapter
  * @example
- *
- * epicenter.worldAdapter.destroy(world.worldKey);
- *
- * @param {string}  worldKey                        Key associated with world
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * epicenter.worldAdapter.destroy('0000017a445032dc38cb2cecd5fc13708314');
+ * @param worldKey      Key associated with world
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns
  */
 export async function destroy(
     worldKey: string,
@@ -117,23 +94,13 @@ export async function destroy(
 
 /**
  * Creates a world
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
- *
- * @memberof worldAdapter
  * @example
- *
- * import { worldAdapter } from 'epicenter';
- * worldAdapter.create({ name: 'Whole New World' });
- *
- * @param {object}  world                           New world object
- * @param {string}  world.name                      Name of the world
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
- * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * epicenter.worldAdapter.create({ name: 'Whole New World' });
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter
+ * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]   Name of the episode for episode scoping
+ * @returns promise that resolves to the newly created world
  */
 export async function create(
     optionals: {
@@ -157,21 +124,16 @@ export async function create(
 
 /**
  * Fetches the worlds in a group or episode if specified
- *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/{GROUP_NAME}[/{EPISODE_NAME}]`
- *
- * @memberof worldAdapter
  * @example
- *
- * import { worldAdapter } from 'epicenter';
- * const worlds = await worldAdapter.get();
- *
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
- * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object[]}                              List of worlds
+ * // Gets all the worlds in the group attached to the session
+ * epicenter.worldAdapter.get();
+ * // Gets all the worlds in the group attached to the session that the user is assigned to
+ * epicenter.worldAdapter.get({ mine: true });
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]   Name of the episode for episode scoped worlds
+ * @param [optionals.mine]          Flag for indicating to get only the worlds the requesting user is in (based on session token)
+ * @returns promise that resolves to a list of worlds
  */
 export async function get(
     optionals: {
@@ -192,14 +154,24 @@ export async function get(
 }
 
 
-// Fetches the assignments (plus some world info) in a group or episode if specified
+/**
+ * Fetches the assignments (plus some world info) in a group or episode if specified
+ * @example
+ * epicenter.worldAdapter.getAssignments({ mine: true });
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]   Name of the episode for episode scoped worlds
+ * @param [optionals.mine]          Flag for indicating to get only the worlds the requesting user is in (based on session token)
+ * @returns promise that resolves to a list of worlds the user is assigned to
+ *
+ */
 export async function getAssignments(
     optionals: {
         groupName?: string,
         episodeName?: string,
         mine?: boolean,
     } & RoutingOptions = {}
-): Promise<World> {
+): Promise<World[]> {
     const {
         groupName, episodeName, mine,
         ...routingOptions
@@ -220,35 +192,31 @@ export async function getSessionWorlds(
 }
 
 /**
- * Automatically assigns the current session's user to a world
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/selfassign/{GROUP_NAME}[/{EPISODE_NAME}]`
- *
- * @memberof worldAdapter
+ * Automatically assigns the current session's user a world
  * @example
- *
- * import { worldAdapter } from 'epicenter';
- * const myWorld = await worldAdapter.selfAssign('cartographer');
- *
- * @param {string}  role                            Role to assign for, can be undefined
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.groupName]           Name of the group (defaults to name of group associated with session)
- * @param {string}  [optionals.episodeName]         Name of the episode
- * @param {boolean} [optionals.objective]           Allows platform to assign users beyond minimum amount
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {object}                                World users were assigned to
+ * // Assigns user to a group-scoped world
+ * epicenter.worldAdapter.selfAssign();
+ * // Assigns user to a group-scoped world with role "cartographer"
+ * epicenter.worldAdapter.selfAssign({ role: 'cartographer' });
+ * // Assigns user to an episode-scoped world with role "cartographer"
+ * epicenter.worldAdapter.selfAssign({ role: 'cartographer', episodeName: 'my-episode-name' });
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.role]          Role constaint -- will put the user in a world with a role
+ * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]   Name of the episode for episode scoped worlds
+ * @param [optionals.objective]     Allows platform to assign users beyond minimum amount
+ * @returns promise that resolves to the world the user was assigned to
  */
 export async function selfAssign(
-    role: string,
     optionals: {
+        role?: string,
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        groupName, episodeName, objective = OBJECTIVE.MINIMUM,
+        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
@@ -263,27 +231,23 @@ export async function selfAssign(
 
 /**
  * (Auto assign) -- makes worlds given a list of users.
- *
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{GROUP_NAME}[/{EPISODE_NAME}]`
- *
- * @memberof worldAdapter
  * @example
- *
  * import { worldAdapter } from 'epicenter';
  * const worlds = await worldAdapter.assignUsers([
- *      { userKey: '123', role: 'locksmith' },
- *      { userKey: '456' },
+ *      { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
+ *      { userKey: '000001796733eef0842f4d6d960997018a3b' },
  * ]);
  *
- * @param {object[]}    assignments                         List of users to assign where each item contains a `userKey` and optional `role`
- * @param {object}      [optionals={}]                      Optional parameters
- * @param {string}      [optionals.groupName]               Name of the group (defaults to name of group associated with session)
- * @param {string}      [optionals.episodeName]             Name of the episode
- * @param {boolean}     [optionals.objective]               Allows platform to assign users beyond minimum amount
- * @param {boolean}     [optionals.requireAllAssignments]   Will have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
- * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
- * @returns {object[]}                                      List of worlds assigned to
+ * @param assignments                       List of users assignment objects
+ * @param assignments[].userKey             User key
+ * @param [assignments[].role]              Role to assign to the user
+ * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.role]                  Role constaint -- will put the user in a world with a role
+ * @param [optionals.groupName]             Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]           Name of the episode for episode scoped worlds
+ * @param [optionals.objective]             Allows platform to assign users beyond minimum amount
+ * @param [optionals.requireAllAssignments] Have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
+ * @returns promise that resolves to the list of worlds created by the assignment
  */
 export async function autoAssignUsers(
     assignments: UserAssignment[],
@@ -293,7 +257,7 @@ export async function autoAssignUsers(
         objective?: keyof typeof OBJECTIVE,
         requireAllAssignments?: boolean,
     } & RoutingOptions = {}
-): Promise<World> {
+): Promise<World[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
         ...routingOptions
@@ -307,8 +271,9 @@ export async function autoAssignUsers(
         .then(({ body }) => body);
 }
 
+type WorldKey = string;
 export async function editAssignments(
-    assignments: Record<string, UserAssignment[]>,
+    assignments: Record<WorldKey, UserAssignment[]>,
     optionals: {
         groupName?: string,
         episodeName?: string,
@@ -334,19 +299,13 @@ export async function editAssignments(
 /**
  * Retrieves the current assignment information for a given world
  *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment/{WORLD_KEY}`
- *
- * @memberof worldAdapter
  * @example
- *
  * import { worldAdapter } from 'epicenter';
  * const assignments = await worldAdapter.getAssignmentsByKey(world.worldKey);
  *
- * @param {string}      worldKey                            Key associated with the world
- * @param {object}      [optionals={}]                      Optional parameters
- * @param {string}      [optionals.accountShortName]        Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]        Name of project (by default will be the project associated with the session)
- * @returns {object[]}                                      List of assignment objects containing user and role information
+ * @param worldKey      Key associated with the world
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the world containing the assignment object
  */
 export async function getAssignmentsByKey(
     worldKey: string,
@@ -360,22 +319,16 @@ export async function getAssignmentsByKey(
 
 /**
  * Removes a user or list of users the all worlds in a given group or episode. Any worlds that do not contain users within them will be automatically deleted in the process.
- *
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/assignment?userKey={USER_KEY}[&userKey={USER_KEY}&userKey=...]`
- *
- * @memberof worldAdapter
  * @example
- *
  * import { worldAdapter } from 'epicenter';
  * await worldAdapter.removeUser(user.userKey);
  *
- * @param {string[]}    userKeys                        List of keys associated with users to remove from worlds
- * @param {object}      [optionals={}]                  Optional parameters
- * @param {string}      [optionals.groupName]           Name of the group (defaults to name of group associated with session)
- * @param {string}      [optionals.episodeName]         Name of the episode
- * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * @param userKeys                      List of keys associated with users to remove from worlds
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupName]         Name of the group (defaults to name of group associated with session)
+ * @param [optionals.episodeName]       Name of the episode for episode scoped worlds
+ * @param [optionals.keepEmptyWorlds]   If the unassignment results in an empty world, whether to delete it
+ * @returns promise that resolves to undefined when successful
  */
 export async function removeUsers(
     userKeys: string[],
@@ -399,28 +352,25 @@ export async function removeUsers(
 
 /**
  * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
- * null minimum is 0, but null maximum is uncapped
- * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/persona/{SCOPE_BOUNDARY}[/{SCOPE_KEY}]`
+ * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
  *
- * @memberof worldAdapter
  * @example
- *
  * import { worldAdapter } from 'epicenter';
  * await worldAdapter.editPersonas([
- *
+ *      { role: 'leader',  minimum: 1 },
  * ]);
- *
- * @param {object[]}    personas                        List of persona objects containing `role`, `minimum`, and `maximum`
- * @param {object}      [scope={}]                      Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
- * @param {string}      [scope.scopeBoundary]           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}      [scope.scopeKey]                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}      [optionals={}]                  Optional parameters
- * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * @param personas              List of role description objects (personas)
+ * @param personas[].role       Name of the role
+ * @param [personas[].minimum]  The minimum number of users that required for this role
+ * @param [personas[].maximum]  The maximum number of users that can be assigned to this role
+ * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
+ * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves with undefined when successful
  */
 export async function setPersonas(
-    personas: Persona[],
+    personas: { role: string, minimum?: number, maximum?: number }[],
     scope: GenericScope,
     optionals: RoutingOptions = {}
 ): Promise<void> {
@@ -439,22 +389,13 @@ export async function setPersonas(
 
 /**
  * Assigns an existing run to the given world.
- * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/run/{WORLD_KEY}`
- *
- * @memberof worldAdapter
  * @example
- *
  * import { worldAdapter } from 'epicenter';
  * await worldAdapter.assignRun(world.worldKey, { runKey: run.runKey });
- *
- * @param {string}      worldKey                        Key associated with the world
- * @param {string}      runKey                          Key associated with the world
- * @param {object}      [optionals={}]                  Optional parameters
- * @param {string}      [optionals.groupName]           Name of the group (defaults to name of group associated with session)
- * @param {string}      [optionals.episodeName]         Name of the episode
- * @param {string}      [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}      [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns object[]
+ * @param worldKey      Key associated with the world
+ * @param runKey        Key associated with the run
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the newly resolved world
  */
 export async function assignRun(
     worldKey: string,

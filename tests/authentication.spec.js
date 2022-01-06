@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { CREATED_CODE, SESSION, ACCOUNT, PROJECT, GENERIC_OPTIONS } from './common';
+import { CREATED_CODE, SESSION, ACCOUNT, PROJECT, GENERIC_OPTIONS } from './constants';
 chai.use(require('sinon-chai'));
 
 describe('Authentication', () => {

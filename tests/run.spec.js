@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './common';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
 chai.use(require('sinon-chai'));
 
 
@@ -385,6 +385,152 @@ describe('Run API Service', () => {
             searchParams.get('timeout').should.equal(OPTIONS.timeout.toString());
         });
         testedMethods.push('query');
+    });
+    describe('runAdapter.getWithStrategy', () => {
+        const MODEL = 'model.vmf';
+        const SCOPE = { scopeBoundary: 'PROJECT', scopeKey: '123456789' };
+        const OPTIONALS = {};
+
+        const ARGS = [MODEL, SCOPE, OPTIONALS];
+        const STRATEGIES = [
+            'reuse-across-sessions',
+            'reuse-never',
+        ];
+
+        STRATEGIES.forEach((strategy) => {
+            it('Should have authorization', async() => {
+                await runAdapter.getWithStrategy(strategy, ...ARGS);
+                const req = fakeServer.requests.pop();
+                req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            });
+        });
+
+        describe('reuse-across-sessions', () => {
+            before(() => {
+                fakeServer.respondWith('GET', /(.*)\/run/, function(xhr, id) {
+                    const RESPONSE = { values: [{ runKey: 123456789 }] };
+                    xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+                });
+            });
+
+            const STRATEGY = 'reuse-across-sessions';
+
+            it('Should do a GET', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                const res = fakeServer.requests.pop();
+                res.method.toUpperCase().should.equal('GET');
+            });
+
+            it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                const req = fakeServer.requests.pop();
+                const { scopeBoundary, scopeKey } = SCOPE;
+                const url = req.url.split('?')[0];
+                url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+            });
+
+            it('Should query for the most recent run', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                const req = fakeServer.requests.pop();
+                const search = req.url.split('?')[1];
+                const searchParams = new URLSearchParams(search);
+                searchParams.get('sort').should.equal('-run.created');
+                searchParams.get('max').should.equal('1');
+            });
+
+            describe('no existing run in scope', () => {
+                before(() => {
+                    fakeServer.respondWith('GET', /(.*)\/run/, function(xhr, id) {
+                        const RESPONSE = { values: [] };
+                        xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+                    });
+                });
+                it('Should do a GET then a POST', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                    const [get, post] = fakeServer.requests.slice(-2);
+                    get.method.toUpperCase().should.equal('GET');
+                    post.method.toUpperCase().should.equal('POST');
+                });
+                it('Should GET from run/scopeBoundary/scopeKey/modelFile URL, then POST to /run ', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                    const [get, post] = fakeServer.requests.slice(-2);
+                    const { scopeBoundary, scopeKey } = SCOPE;
+                    const queryURL = get.url.split('?')[0];
+                    queryURL.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+                    post.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+                });
+            });
+        });
+
+        describe('reuse-never', () => {
+            const STRATEGY = 'reuse-never';
+            const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
+            const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
+            it('Should do a POST', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                const req = fakeServer.requests.pop();
+                req.method.toUpperCase().should.equal('POST');
+            });
+            it('Should use the run URL', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                const req = fakeServer.requests.pop();
+                req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+            });
+            it('Should support generic URL options', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE, GENERIC_OPTIONS);
+                const req = fakeServer.requests.pop();
+                const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+                req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run`);
+            });
+            it('Should pass the run to the request body', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE, {
+                    readLock: ROLE.AUTHOR,
+                    writeLock: ROLE.AUTHOR,
+                    userKey: 'userkey',
+                    ephemeral: true,
+                    trackingKey: 'trackingkey',
+                });
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.should.have.property('scope');
+                body.scope.scopeBoundary.should.equal(WORLD_SCOPE.scopeBoundary);
+                body.scope.scopeKey.should.equal(WORLD_SCOPE.scopeKey);
+                body.should.have.property('permit');
+                body.permit.readLock.should.equal(ROLE.AUTHOR);
+                body.permit.writeLock.should.equal(ROLE.AUTHOR);
+                body.trackingKey.should.equal('trackingkey');
+                body.modelFile.should.equal(MODEL);
+                body.morphology.should.equal('MANY');
+                body.ephemeral.should.equal(true);
+                body.modelContext.should.be.an('object').that.is.empty;
+                body.executionContext.should.be.an('object').that.is.empty;
+            });
+            it('Should have read lock default to participant when using world scope', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.permit.readLock.should.equal(ROLE.PARTICIPANT);
+            });
+            it('Should not provide a userKey with a world scope', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.scope.should.not.have.property('userKey');
+            });
+            it('Should use a user read lock when creating with a group scope', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.permit.readLock.should.equal(ROLE.USER);
+            });
+            it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
+                await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
+            });
+        });
+        testedMethods.push('getWithStrategy');
     });
     describe('runAdapter.introspect', () => {
         const MODEL = 'test-model.py';
