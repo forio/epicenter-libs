@@ -1,6 +1,6 @@
 Epicenter JavaScript Libs (v3)
 ---
-The Epicenter JS libs is Forio's JavaScript library for interacting with the Epicenter platform. Similar to its' [predecessor](https://github.com/forio/epicenter-js-libs), it is comprised of a set of adapters meant to help streamline your work with the underlying Epicenter APIs.
+The Epicenter JS libs is Forio's JavaScript library for interacting with the Epicenter platform. Similar to its [predecessor](https://github.com/forio/epicenter-js-libs), it is comprised of a set of adapters meant to help streamline your work with the underlying Epicenter APIs.
 
 If you are comfortable with JavaScript, the epicenter.js library is an easy way to connect your project's model, data, and user interface.
 
