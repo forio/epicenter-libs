@@ -144,10 +144,10 @@ const createMessage = (
     }
 
     const { session } = identification;
-    if (!headers.Authorization) {                                               // "headers" option first
-        if (session) headers.Authorization = `Bearer ${session.token}`;         // session token second
-        if (authorization) headers.Authorization = authorization;               // Router fallback third
-        if (config.authOverride) headers.Authorization = config.authOverride;   // config fallback last
+    if (!headers.Authorization) {                                               // "headers" option as primary everything
+        if (session) headers.Authorization = `Bearer ${session.token}`;         // session token should be default
+        if (authorization) headers.Authorization = authorization;               // Router option as tertiary override
+        if (config.authOverride) headers.Authorization = config.authOverride;   // config fallback as secondary override
     }
     return { headers, body };
 };

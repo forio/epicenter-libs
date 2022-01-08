@@ -11,27 +11,21 @@ import { errorManager, identification, isBrowser, Fault, EpicenterError } from '
 const UNAUTHORIZED = 401;
 errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
-    async<T>(error: Fault, retry: RetryFunction<T>) => {
-        if (isBrowser() && retry.requestArguments) {
-            const { url, method } = retry.requestArguments;
-            if (url.toString().includes('/authentication') && method === 'POST') {
-                await authAdapter.logout();
-                // eslint-disable-next-line no-alert
-                alert('Session token has expired, try logging in again.');
-            }
+    async(error: Fault) => {
+        await authAdapter.logout();
+        if (isBrowser()) {
+            // eslint-disable-next-line no-alert
+            alert('Session token has expired, try logging in again.');
         }
         throw error;
     },
 );
 errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
-    async<T>(error: Fault, retry: RetryFunction<T>) => {
-        if (isBrowser() && retry.requestArguments) {
-            const { url, method } = retry.requestArguments;
-            if (url.toString().includes('/authentication') && method === 'POST') {
-                // eslint-disable-next-line no-alert
-                alert('This group has expired. Try logging into a different group');
-            }
+    async(error: Fault) => {
+        if (isBrowser()) {
+            // eslint-disable-next-line no-alert
+            alert('This group has expired. Try logging into a different group');
         }
         throw error;
     },
