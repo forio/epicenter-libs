@@ -103,3 +103,6 @@ export {
 export {
     vonageAPI,
 } from './apis';
+
+/* Utility Functions */
+export * as utils from './utilities';
