@@ -52,7 +52,7 @@ export interface Group extends GroupUpdate {
 /**
  * Provides information on a particular Epicenter group.
  * @example
- * import { authAdapter, groupAdapter } from 'epicenter';
+ * import { authAdapter, groupAdapter } from 'epicenter-libs';
  * const session = authAdapter.getLocalSession();
  * // include members of the group in the response
  * const group = await groupAdapter.get(session.groupKey, { augment: 'MEMBERS' });
@@ -223,7 +223,7 @@ export async function create(
 /**
  * Queries for groups
  * @example
- * import { groupAdapter } from 'epicenter';
+ * import { groupAdapter } from 'epicenter-libs';
  * const filter = [
  *      'name|=group1|group2',                              // look for groups whose name is 'group1' or 'group2'
  *      'groupKey=0000017dd3bf540e5ada5b1e058f08f20461',    // look for groups with the specific group key

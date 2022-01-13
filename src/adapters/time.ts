@@ -14,7 +14,7 @@ import Router from 'utils/router';
  * @memberof timeAdapter
  * @example
  *
- * import { timeAdapter } from 'epicenter';
+ * import { timeAdapter } from 'epicenter-libs';
  * const worlds = await timeAdapter.get();
  *
  * @param {object}  [optionals={}]                  Optional parameters

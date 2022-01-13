@@ -2,7 +2,7 @@ import './config';
 import {
     authAdapter, assetAdapter,
     SCOPE_BOUNDARY,
-} from 'epicenter';
+} from 'epicenter-libs';
 const session = authAdapter.getLocalSession();
 
 /* Define DOM elements */

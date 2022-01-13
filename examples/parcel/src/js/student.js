@@ -3,7 +3,7 @@ import { showLoading, hideLoading } from './common';
 import {
     groupAdapter, authAdapter, presenceAdapter, timeAdapter, leaderboardAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, worldAdapter,
-} from 'epicenter';
+} from 'epicenter-libs';
 
 const session = authAdapter.getLocalSession();
 

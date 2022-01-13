@@ -23,7 +23,7 @@ interface Leaderboard {
 /**
  * Creates a leaderboard entry.
  * @example
- * import { leaderboardAdapter } from 'epicenter';
+ * import { leaderboardAdapter } from 'epicenter-libs';
  * const leaderboard = await leaderboardAdapter.post(
  *      'class-23-leaderboard',
  *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
@@ -69,7 +69,7 @@ export async function update(
 /**
  * Gathers leaderboard information; not paginable (hence named 'list' and not 'query'). Technically there is no leader
  * @example
- * import { leaderboardAdapter } from 'epicenter';
+ * import { leaderboardAdapter } from 'epicenter-libs';
  * const leaderboard = await leaderboardAdapter.list('myLeaderboard', scope, {
  *      filter: [
  *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor

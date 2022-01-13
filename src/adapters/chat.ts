@@ -40,7 +40,7 @@ export async function updatePermit(
 /**
  * Creates a chat
  * @example
- * import { chatAdapter, SCOPE_BOUNDARY, ROLE } from 'epicenter';
+ * import { chatAdapter, SCOPE_BOUNDARY, ROLE } from 'epicenter-libs';
  * chatAdapter.create(
  *      'my-chat-room',
  *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '00000165ad4e6a3cd22b993340b963820239' },

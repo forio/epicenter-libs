@@ -1,5 +1,5 @@
 import './config';
-import { authAdapter } from 'epicenter';
+import { authAdapter } from 'epicenter-libs';
 
 const session = authAdapter.getLocalSession();
 

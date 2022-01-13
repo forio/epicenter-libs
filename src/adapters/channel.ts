@@ -47,7 +47,7 @@ export default class Channel {
     /**
      * Subscribes to the CometD channel, attaching a handler for any channel updates. If a subscription already exists it will first unsubscribe, ensuring that only one subscription is ever attached to the channel.
      * @example
-     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter';
+     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
      * const session = authAdapter.getLocalSession();
      * const channel = new Channel({
      *     scopeBoundary: SCOPE_BOUNDARY.GROUP,

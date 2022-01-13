@@ -232,7 +232,7 @@ export async function selfAssign(
 /**
  * (Auto assign) -- makes worlds given a list of users.
  * @example
- * import { worldAdapter } from 'epicenter';
+ * import { worldAdapter } from 'epicenter-libs';
  * const worlds = await worldAdapter.assignUsers([
  *      { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
  *      { userKey: '000001796733eef0842f4d6d960997018a3b' },
@@ -300,7 +300,7 @@ export async function editAssignments(
  * Retrieves the current assignment information for a given world
  *
  * @example
- * import { worldAdapter } from 'epicenter';
+ * import { worldAdapter } from 'epicenter-libs';
  * const assignments = await worldAdapter.getAssignmentsByKey(world.worldKey);
  *
  * @param worldKey      Key associated with the world
@@ -320,7 +320,7 @@ export async function getAssignmentsByKey(
 /**
  * Removes a user or list of users the all worlds in a given group or episode. Any worlds that do not contain users within them will be automatically deleted in the process.
  * @example
- * import { worldAdapter } from 'epicenter';
+ * import { worldAdapter } from 'epicenter-libs';
  * await worldAdapter.removeUser(user.userKey);
  *
  * @param userKeys                      List of keys associated with users to remove from worlds
@@ -355,7 +355,7 @@ export async function removeUsers(
  * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
  *
  * @example
- * import { worldAdapter } from 'epicenter';
+ * import { worldAdapter } from 'epicenter-libs';
  * await worldAdapter.editPersonas([
  *      { role: 'leader',  minimum: 1 },
  * ]);
@@ -390,7 +390,7 @@ export async function setPersonas(
 /**
  * Assigns an existing run to the given world.
  * @example
- * import { worldAdapter } from 'epicenter';
+ * import { worldAdapter } from 'epicenter-libs';
  * await worldAdapter.assignRun(world.worldKey, { runKey: run.runKey });
  * @param worldKey      Key associated with the world
  * @param runKey        Key associated with the run
