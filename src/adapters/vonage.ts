@@ -1,6 +1,6 @@
 import type { RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
-import type { APIKey, SessionID, Token, ArchiveID, ArchiveStatus } from '../apis/vonage';
+import type { APIKey, SessionID, Token, ArchiveID, VonageArchive, VonageSession } from '../apis/vonage';
 
 import { ROLE } from '../utils/constants';
 import * as vonageAPI from '../apis/vonage';
@@ -24,7 +24,7 @@ import * as vonageAPI from '../apis/vonage';
 export async function getProjectID(
     optionals: RoutingOptions = {}
 ): Promise<APIKey> {
-    return vonageAPI.getAPIKey(optionals);
+    return (await vonageAPI.getInfo(optionals)).apiKey;
 }
 
 /**
@@ -44,7 +44,7 @@ export async function getProjectID(
  */
 export async function createSession(
     optionals: RoutingOptions = {}
-): Promise<SessionID> {
+): Promise<VonageSession> {
     return vonageAPI.getSession(optionals);
 }
 
@@ -62,7 +62,7 @@ export async function generateToken(
     sessionID: SessionID,
     optionals: RoutingOptions = {}
 ): Promise<Token> {
-    return vonageAPI.postToken({ sessionId: sessionID }, optionals);
+    return (await vonageAPI.postToken({ sessionId: sessionID }, optionals)).token;
 }
 
 /**
@@ -95,7 +95,7 @@ export async function startArchive(
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
     } & RoutingOptions = {}
-): Promise<ArchiveID> {
+): Promise<VonageArchive> {
     const { readLock, writeLock, ttlSeconds, ...routingOptions } = optionals;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scope.userKey ? USER : PARTICIPANT;
@@ -124,6 +124,6 @@ export async function startArchive(
 export async function stopArchive(
     archiveID: ArchiveID,
     optionals: RoutingOptions = {}
-): Promise<ArchiveStatus> {
+): Promise<VonageArchive> {
     return vonageAPI.deleteArchiveByID(archiveID, optionals);
 }

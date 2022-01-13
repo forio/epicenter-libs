@@ -8,11 +8,17 @@ export type SessionID = string;
 export type ArchiveID = string;
 export type APIKey = string;
 export type Token = string;
-export type ArchiveStatus = 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired';
+export type VonageSession = {
+    sessionId: SessionID,
+};
+export type VonageArchive = {
+    archiveId: string,
+    status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired',
+}
 
 export async function getSession(
     optionals: RoutingOptions = {},
-): Promise<SessionID> {
+): Promise<{ sessionId: SessionID }> {
     return await new Router()
         .get('/vonage/session', optionals)
         .then(({ body }) => body);
@@ -21,7 +27,7 @@ export async function getSession(
 export async function postToken(
     body: { sessionId: string },
     optionals: RoutingOptions = {},
-): Promise<Token> {
+): Promise<{ token: Token }> {
     return await new Router()
         .post('/vonage/token', { body, ...optionals })
         .then(({ body }) => body);
@@ -36,24 +42,24 @@ export async function postArchive(
         ttlSeconds?: number,
     },
     optionals: RoutingOptions = {},
-): Promise<ArchiveID> {
+): Promise<VonageArchive> {
     return await new Router()
         .post('/vonage/archive', { body, ...optionals })
         .then(({ body }) => body);
 }
 
-export async function getAPIKey(
+export async function getInfo(
     optionals: RoutingOptions = {}
-): Promise<APIKey> {
+): Promise<{ apiKey: APIKey }> {
     return await new Router()
-        .get('/vonage/apiKey', optionals)
+        .get('/vonage/info', optionals)
         .then(({ body }) => body);
 }
 
 export async function deleteArchiveByID(
     archiveID: string,
     optionals: RoutingOptions = {}
-): Promise<ArchiveStatus> {
+): Promise<VonageArchive> {
     return await new Router()
         .delete(`/vonage/archive/${archiveID}`, optionals)
         .then(({ body }) => body);
