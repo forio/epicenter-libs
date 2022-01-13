@@ -12,6 +12,7 @@ import * as recaptchaAdapter from './recaptcha';
 import * as runAdapter from './run';
 import * as userAdapter from './user';
 import * as vaultAdapter from './vault';
+import * as vonageAdapter from './vonage';
 import * as worldAdapter from './world';
 import * as timeAdapter from './time';
 import * as taskAdapter from './task';
@@ -37,6 +38,7 @@ export {
     timeAdapter,
     userAdapter,
     vaultAdapter,
+    vonageAdapter,
     worldAdapter,
     taskAdapter,
     Channel,
