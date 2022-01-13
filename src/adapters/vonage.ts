@@ -40,7 +40,7 @@ export async function getProjectID(
  *
  * const vonageSession = OT.initSession(projectID, sessionID);
  * @param [optionals]   Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to a Vonage session ID
+ * @returns promise that resolves to an object containing the Vonage session ID
  */
 export async function createSession(
     optionals: RoutingOptions = {}
@@ -84,7 +84,7 @@ export async function generateToken(
  * @param [optionals.readLock]      Read permission role; one of the strings defined in epicenter.ROLE
  * @param [optionals.writeLock]     Write permission role; one of the strings defined in epicenter.ROLE
  * @param [optionals.ttlSeconds]    Life span of the archive (how long before it is deleted); defaults to 604,800 (1 week), max of 31,536,000 (1 year)
- * @returns promise that resolves to the ID of the archive created
+ * @returns promise that resolves to an object containing the archive ID and status
  */
 export async function startArchive(
     name: string,
@@ -119,7 +119,7 @@ export async function startArchive(
  * vonageAdapter.stopArchive('004355...ede770e39');
  * @param archiveID ID of the archive to stop
  * @param optionals Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to a string indicating the archive status (expected to be 'stopped')
+ * @returns promise that resolves to an object containing the archive ID and status (which should be "stopped")
  */
 export async function stopArchive(
     archiveID: ArchiveID,
