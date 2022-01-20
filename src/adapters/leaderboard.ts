@@ -1,8 +1,8 @@
-import type { UserSession } from 'utils/identification';
-import type { RoutingOptions, GenericSearchOptions } from 'utils/router';
-import type { GenericScope } from 'utils/constants';
+import type { UserSession } from '../utils/identification';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope, GenericSearchOptions } from '../utils/constants';
 
-import { identification, Router } from 'utils';
+import { identification, Router } from '../utils';
 
 
 interface Score {

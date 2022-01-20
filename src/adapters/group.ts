@@ -1,5 +1,6 @@
 import type { UserSession } from '../utils/identification';
-import type { RoutingOptions, Page, GenericSearchOptions } from '../utils/router';
+import type { RoutingOptions, Page } from '../utils/router';
+import type { GenericSearchOptions } from '../utils/constants';
 import type { User } from './user';
 
 import { Router, EpicenterError, identification, ROLE } from '../utils';

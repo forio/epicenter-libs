@@ -1,6 +1,6 @@
-import type { UserSession } from 'utils/identification';
-import type { GenericScope } from 'utils/constants';
-import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
+import type { UserSession } from '../utils/identification';
+import type { GenericScope, GenericSearchOptions } from '../utils/constants';
+import type { RoutingOptions, Page } from '../utils/router';
 
 import {
     Router, identification,
@@ -261,7 +261,7 @@ export async function get(
  * Queries for runs.
  * @example
  * import { runAdapter } from 'epicenter-libs';
- * runAdapter.query({
+ * runAdapter.query('model.xlsx', {
  *      filter: [
  *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
  *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24

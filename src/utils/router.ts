@@ -50,13 +50,6 @@ export interface Page<Item> {
     all: (first?: number, allValues?: Item[]) => Promise<Item[]>,
 }
 
-export interface GenericSearchOptions {
-    filter?: string[],
-    sort?: string[],
-    first?: number,
-    max?: number,
-}
-
 const MAX_URL_LENGTH = 2048;
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
@@ -117,6 +110,30 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     page.all = all;
     return page;
 }
+
+const parseQuery = (query: SearchParams) => {
+    if (query.constructor === URLSearchParams) {
+        return query;
+    }
+
+    /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
+    if (typeof query === 'object' && query.constructor === Object) {
+        query = Object.entries(query).reduce((arr, [key, value]) => {
+            if (Array.isArray(value)) {
+                /* Special case for arrayed param values: use duplicated params here */
+                return [...arr, ...value.map((v) => [key, v])];
+            }
+            if (value === undefined || value === null) {
+                /* Skip nullish values */
+                return arr;
+            }
+            arr.push([key, value.toString()]);
+            return arr;
+        }, [] as string[][]);
+    }
+    return new URLSearchParams(query as string | string[][] | URLSearchParams);
+};
+
 
 interface Message {
     headers: HeadersInit,
@@ -307,27 +324,7 @@ export default class Router {
     }
 
     set searchParams(query: SearchParams) {
-        if (query.constructor === URLSearchParams) {
-            this._searchParams = query;
-            return;
-        }
-
-        /* 'query' should be either an array, or string. Objects will be coerced into [key, value] arrays */
-        if (typeof query === 'object' && query.constructor === Object) {
-            query = Object.entries(query).reduce((arr, [key, value]) => {
-                if (Array.isArray(value)) {
-                    /* Special case for arrayed param values: use duplicated params here */
-                    return [...arr, ...value.map((v) => [key, v])];
-                }
-                if (value === undefined || value === null) {
-                    /* Skip nullish values */
-                    return arr;
-                }
-                arr.push([key, value.toString()]);
-                return arr;
-            }, [] as string[][]);
-        }
-        this._searchParams = new URLSearchParams(query as string | string[][] | URLSearchParams);
+        this._searchParams = parseQuery(query);
     }
 
     /**
@@ -390,15 +387,37 @@ export default class Router {
         return this;
     }
 
-    getURL(uriComponent: string): URL {
-        const server = this.server ?? `${config.apiProtocol}://${config.apiHost}`;
-        const accountShortName = this.accountShortName ?? config.accountShortName;
-        const projectShortName = this.projectShortName ?? config.projectShortName;
-        const version = this.version ?? config.apiVersion;
+    /**
+     * Creates the URL that would be used for a network request. Should prioritize any overrides provided to it, falling back to any values set local to the Router instance, falling back to values set in the config
+     * @param uriComponent                  The URI component used to generate the URL object
+     * @param [overrides]                   Overrides for generating the URL object
+     * @param [overrides.server]            Override for the root URL string -- composed of the protocol and the hostname; e.g., https://forio.com
+     * @param [overrides.accountShortName]  Override for the account short name
+     * @param [overrides.projectShortName]  Override for the project short name
+     * @param [overrides.version]           Override for the version (NIU, is set by the config)
+     * @param [overrides.query]             Override for the URL search query
+     * @returns URL object
+     */
+    getURL(
+        uriComponent: string,
+        overrides: {
+            server?: string,
+            accountShortName?: string,
+            projectShortName?: string,
+            version?: number
+            query?: SearchParams,
+        } = {}
+    ): URL {
+        const server = overrides.server ?? this.server ?? `${config.apiProtocol}://${config.apiHost}`;
+        const accountShortName = overrides.accountShortName ?? this.accountShortName ?? config.accountShortName;
+        const projectShortName = overrides.projectShortName ?? this.projectShortName ?? config.projectShortName;
+        const version = overrides?.version ?? this.version ?? config.apiVersion;
 
         const url = new URL(`${server}`);
         url.pathname = `api/v${version}/${accountShortName}/${projectShortName}${prefix('/', uriComponent)}`;
-        url.search = (this.searchParams ?? new URLSearchParams()).toString();
+        url.search = overrides.query !== undefined ?
+            parseQuery(overrides.query).toString() :
+            (this.searchParams ?? new URLSearchParams()).toString();
         return url;
     }
 
@@ -409,45 +428,13 @@ export default class Router {
             headers, includeAuthorization, inert, paginated, parsePage,
         } = options;
 
-        this.withAuthorization(authorization)
-            .withServer(server)
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .withSearchParams(query);
-
-        const url = this.getURL(uriComponent);
-
-        /* Handle sufficiently large GET requests with POST calls instead */
-        if (url.href.length > MAX_URL_LENGTH) {
-            const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
-            const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
-            const searchObject = entries.reduce((searchObject, [key, value]) => {
-                // Store values that only occur once as the value itself
-                if (!searchObject[key]) {
-                    searchObject[key] = value;
-                    return searchObject;
-                }
-                // Store values that that appear more than once in an array
-                if (!Array.isArray(searchObject[key])) {
-                    // Make existing value an array
-                    searchObject[key] = [searchObject[key] as string];
-                }
-                (searchObject[key] as string[]).push(value);
-
-                return searchObject;
-            }, {} as Record<string, string | string[]>);
-            this.searchParams = '';
-            return this.post(uriComponent, {
-                ...options,
-                body: searchObject,
-            });
-        }
-
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        if (url.href.length > MAX_URL_LENGTH) throw new Error(`URL length has exceeded the limit: ${url.href}`);
         return request(url, {
             method: 'GET',
             headers,
             includeAuthorization: includeAuthorization ?? true,
-            authorization: this.authorization,
+            authorization: authorization ?? this.authorization,
             inert,
             paginated,
             parsePage,
@@ -460,18 +447,12 @@ export default class Router {
             headers, includeAuthorization, inert,
         } = options;
 
-        this.withAuthorization(authorization)
-            .withServer(server)
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .withSearchParams(query);
-
-        const url = this.getURL(uriComponent);
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
         return request(url, {
             method: 'DELETE',
             headers,
             includeAuthorization: includeAuthorization ?? true,
-            authorization: this.authorization,
+            authorization: authorization ?? this.authorization,
             inert,
         });
     }
@@ -482,19 +463,13 @@ export default class Router {
             headers, body, includeAuthorization, inert,
         } = options;
 
-        this.withAuthorization(authorization)
-            .withServer(server)
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .withSearchParams(query);
-
-        const url = this.getURL(uriComponent);
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
         return request(url, {
             method: 'PATCH',
             headers,
             body,
             includeAuthorization: includeAuthorization ?? true,
-            authorization: this.authorization,
+            authorization: authorization ?? this.authorization,
             inert,
         });
     }
@@ -505,19 +480,13 @@ export default class Router {
             headers, body, includeAuthorization, inert,
         } = options;
 
-        this.withAuthorization(authorization)
-            .withServer(server)
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .withSearchParams(query);
-
-        const url = this.getURL(uriComponent);
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
         return request(url, {
             method: 'POST',
             headers,
             body,
             includeAuthorization: includeAuthorization ?? true,
-            authorization: this.authorization,
+            authorization: authorization ?? this.authorization,
             inert,
         });
     }
@@ -528,19 +497,13 @@ export default class Router {
             headers, body, includeAuthorization, inert,
         } = options;
 
-        this.withAuthorization(authorization)
-            .withServer(server)
-            .withAccountShortName(accountShortName)
-            .withProjectShortName(projectShortName)
-            .withSearchParams(query);
-
-        const url = this.getURL(uriComponent);
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
         return request(url, {
             method: 'PUT',
             headers,
             body,
             includeAuthorization: includeAuthorization ?? true,
-            authorization: this.authorization,
+            authorization: authorization ?? this.authorization,
             inert,
         });
     }

@@ -1,12 +1,12 @@
-import type { UserSession } from 'utils/identification';
-import type { RoutingOptions } from 'utils/router';
-import type { GenericScope } from 'utils/constants';
+import type { UserSession } from '../utils/identification';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
 import type { User } from './user';
 
 import {
     Router, identification,
     SCOPE_BOUNDARY,
-} from 'utils';
+} from '../utils';
 
 
 enum OBJECTIVE {
@@ -157,7 +157,8 @@ export async function get(
 /**
  * Fetches the assignments (plus some world info) in a group or episode if specified
  * @example
- * epicenter.worldAdapter.getAssignments({ mine: true });
+ * import { worldAdapter } from 'epicenter-libs';
+ * worldAdapter.getAssignments({ mine: true });
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
  * @param [optionals.episodeName]   Name of the episode for episode scoped worlds
@@ -356,7 +357,7 @@ export async function removeUsers(
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
- * await worldAdapter.editPersonas([
+ * await worldAdapter.setPersonas([
  *      { role: 'leader',  minimum: 1 },
  * ]);
  * @param personas              List of role description objects (personas)

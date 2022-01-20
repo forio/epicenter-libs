@@ -1,6 +1,7 @@
-import type { GenericScope, Permit } from 'utils/constants';
-import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
-import Router from 'utils/router';
+import type { GenericScope, GenericSearchOptions, Permit } from '../utils/constants';
+import type { RoutingOptions, Page } from '../utils/router';
+
+import Router from '../utils/router';
 
 interface ChatMessage {
     senderKey: string,
