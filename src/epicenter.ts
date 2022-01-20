@@ -94,6 +94,7 @@ export {
     timeAdapter,
     userAdapter,
     vaultAdapter,
+    videoAdapter,
     vonageAdapter,
     worldAdapter,
     Channel,
@@ -101,6 +102,7 @@ export {
 
 /* APIs */
 export {
+    videoAPI,
     vonageAPI,
 } from './apis';
 
