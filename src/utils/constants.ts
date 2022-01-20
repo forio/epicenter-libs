@@ -119,6 +119,13 @@ export enum PUSH_CATEGORY {
      */
     VAULT = 'VAULT',
     /**
+     * Used for the {@link https://github.com/forio Video API}
+     * no pub
+     * @constant
+     * @type {string}
+     */
+    VIDEO = 'VIDEO',
+    /**
      * Used for the {@link https://github.com/forio World API}
      * no pub
      * @constant
