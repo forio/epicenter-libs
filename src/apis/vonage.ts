@@ -40,6 +40,7 @@ export async function postArchive(
         sessionId: SessionID,
         permit?: Permit,
         ttlSeconds?: number,
+        resolution?: string,
     },
     optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {

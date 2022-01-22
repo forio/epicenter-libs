@@ -83,6 +83,7 @@ export async function generateToken(
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.readLock]      Read permission role; one of the strings defined in epicenter.ROLE
  * @param [optionals.writeLock]     Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.resolution]    Video resolution the archive should be recorded at -- string like '1920x1080'
  * @param [optionals.ttlSeconds]    Life span of the archive (how long before it is deleted); defaults to 604,800 (1 week), max of 31,536,000 (1 year)
  * @returns promise that resolves to an object containing the archive ID and status
  */
@@ -93,10 +94,11 @@ export async function startArchive(
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
+        resolution?: string,
         ttlSeconds?: number,
     } & RoutingOptions = {}
 ): Promise<VonageArchive> {
-    const { readLock, writeLock, ttlSeconds, ...routingOptions } = optionals;
+    const { readLock, writeLock, ttlSeconds, resolution, ...routingOptions } = optionals;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scope.userKey ? USER : PARTICIPANT;
 
@@ -109,6 +111,7 @@ export async function startArchive(
             writeLock: writeLock ?? defaultLock,
         },
         ttlSeconds,
+        resolution,
     }, routingOptions);
 }
 
