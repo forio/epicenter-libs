@@ -395,10 +395,10 @@ export async function getVariables(
         timeout, ritual,
         ...routingOptions
     } = optionals;
-    const include = variables.join(';');
+    const include = variables;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
+    const body = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
 
     if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
@@ -410,8 +410,10 @@ export async function getVariables(
     }, {} as Record<string, unknown>);
 
     return await new Router()
-        .withSearchParams(searchParams)
-        .get(`/run/variable${uriComponent}`, routingOptions)
+        .post(`/run/variable${uriComponent}`, {
+            body,
+            ...routingOptions,
+        })
         .then(({ body }) => {
             return (!hasMultiple ?
                 mappify(body) :
