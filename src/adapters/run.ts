@@ -1,6 +1,6 @@
-import type { UserSession } from 'utils/identification';
-import type { GenericScope } from 'utils/constants';
-import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
+import type { UserSession } from '../utils/identification';
+import type { GenericScope, GenericSearchOptions } from '../utils/constants';
+import type { RoutingOptions, Page } from '../utils/router';
 
 import {
     Router, identification,
@@ -58,7 +58,7 @@ type RunStrategy =
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
  * @example
- * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter';
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * runAdapter.create('model.py', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
@@ -260,8 +260,8 @@ export async function get(
 /**
  * Queries for runs.
  * @example
- * import { runAdapter } from 'epicenter';
- * runAdapter.query({
+ * import { runAdapter } from 'epicenter-libs';
+ * runAdapter.query('model.xlsx', {
  *      filter: [
  *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
  *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
@@ -576,7 +576,7 @@ export async function action(
 /**
  * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
  * @example
- * import { runAdapter } from 'epicenter';
+ * import { runAdapter } from 'epicenter-libs';
  * const run = await runAdapter.retrieveFromWorld('0000017a445032dc38cb2cecd5fc13708314', 'model.py');
  * @param worldKey                      Key associated with the world you'd like a run from
  * @param model                         Name of model file you'd use to create the run if needed
@@ -666,7 +666,7 @@ export async function removeFromWorld(
  *
  * @example
  *
- * import { runAdapter } from 'epicenter';
+ * import { runAdapter } from 'epicenter-libs';
  * runAdapter.getWithStrategy(
  *     'reuse-across-sessions',
  *     'model.py',

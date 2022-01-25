@@ -1,5 +1,5 @@
 import './config';
-import { authAdapter, runAdapter, SCOPE_BOUNDARY } from 'epicenter';
+import { authAdapter, runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
 
 const session = authAdapter.getLocalSession();
 

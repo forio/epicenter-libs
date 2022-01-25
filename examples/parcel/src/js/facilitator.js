@@ -2,7 +2,7 @@ import './config';
 import {
     authAdapter, presenceAdapter, episodeAdapter, runAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter, userAdapter
-} from 'epicenter';
+} from 'epicenter-libs';
 
 const session = authAdapter.getLocalSession();
 

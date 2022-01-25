@@ -1,11 +1,11 @@
 import type { UserSession } from '../utils/identification';
-import type { GenericSearchOptions, RoutingOptions } from '../utils/router'; // needs to be relative b/c TS hates me
-import type { GenericScope, Permit } from '../utils/constants';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope, GenericSearchOptions, Permit } from '../utils/constants';
 
 import {
     identification, Router,
     ROLE, SCOPE_BOUNDARY,
-} from 'utils';
+} from '../utils';
 
 
 export interface Vault<Items> {
@@ -137,7 +137,7 @@ export async function remove(
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
  *
  * @example
- * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter';
+ * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * vaultAdapter.define('my-vault-name', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: 'GROUP_KEY'

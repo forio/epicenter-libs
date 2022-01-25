@@ -48,7 +48,6 @@ errorManager.registerHandler(
     }
 );
 
-export { version };
 
 /* Interfaces & Types */
 export type { Session, UserSession, AdminSession } from './utils/identification';
@@ -56,6 +55,8 @@ export type { Group, Member } from './adapters/group';
 export type { Vault } from './adapters/vault';
 export type { GenericScope } from './utils/constants';
 
+/* Version */
+export { version };
 
 /* Constants */
 export {
@@ -64,13 +65,15 @@ export {
     PUSH_CATEGORY,
     ROLE,
 } from './utils/constants';
-/* Utilities */
+
+/* Auxilary Singletons/Classes */
 export {
     config,
     errorManager,
     Router,
     Fault,
 } from './utils';
+
 /* Adapters */
 export {
     accountAdapter,
@@ -91,6 +94,17 @@ export {
     timeAdapter,
     userAdapter,
     vaultAdapter,
+    videoAdapter,
+    vonageAdapter,
     worldAdapter,
     Channel,
 } from './adapters';
+
+/* APIs */
+export {
+    videoAPI,
+    vonageAPI,
+} from './apis';
+
+/* Utility Functions */
+export * as utils from './utilities';

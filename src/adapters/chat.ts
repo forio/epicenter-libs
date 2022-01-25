@@ -1,6 +1,7 @@
-import type { GenericScope, Permit } from 'utils/constants';
-import type { RoutingOptions, Page, GenericSearchOptions } from 'utils/router';
-import Router from 'utils/router';
+import type { GenericScope, GenericSearchOptions, Permit } from '../utils/constants';
+import type { RoutingOptions, Page } from '../utils/router';
+
+import Router from '../utils/router';
 
 interface ChatMessage {
     senderKey: string,
@@ -40,7 +41,7 @@ export async function updatePermit(
 /**
  * Creates a chat
  * @example
- * import { chatAdapter, SCOPE_BOUNDARY, ROLE } from 'epicenter';
+ * import { chatAdapter, SCOPE_BOUNDARY, ROLE } from 'epicenter-libs';
  * chatAdapter.create(
  *      'my-chat-room',
  *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '00000165ad4e6a3cd22b993340b963820239' },

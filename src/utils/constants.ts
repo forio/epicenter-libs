@@ -119,6 +119,13 @@ export enum PUSH_CATEGORY {
      */
     VAULT = 'VAULT',
     /**
+     * Used for the {@link https://github.com/forio Video API}
+     * no pub
+     * @constant
+     * @type {string}
+     */
+    VIDEO = 'VIDEO',
+    /**
      * Used for the {@link https://github.com/forio World API}
      * no pub
      * @constant
@@ -313,12 +320,34 @@ export enum ROLE {
 // export type ROLE = INTERNAL_ROLE | ACCOUNT_ROLE | PROJECT_ROLE | GROUP_ROLE;
 
 
+export interface Permit {
+    readLock: keyof typeof ROLE,
+    writeLock: keyof typeof ROLE,
+}
+
 export interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY,
     scopeKey: string,
 }
 
-export interface Permit {
-    readLock: keyof typeof ROLE,
-    writeLock: keyof typeof ROLE,
+/**
+ * Generic search options for adapter methods. All adapter methods
+ * will take `filter` and `sort` as a list of strings, and join with a ";"
+ */
+export interface GenericSearchOptions {
+    filter?: string[],
+    sort?: string[],
+    first?: number,
+    max?: number,
+}
+
+/**
+ * The query parameters expected by the Epicenter APIs for
+ * any kind of open search on a resource.
+ */
+export interface APISearchOptions {
+    filter?: string,
+    sort?: string,
+    first?: number,
+    max?: number,
 }
