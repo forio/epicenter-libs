@@ -429,7 +429,32 @@ export default class Router {
         } = options;
 
         const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
-        if (url.href.length > MAX_URL_LENGTH) throw new Error(`URL length has exceeded the limit: ${url.href}`);
+
+        if (url.href.length > MAX_URL_LENGTH) {
+            const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
+            const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
+            const searchObject = entries.reduce((searchObject, [key, value]) => {
+                // Store values that only occur once as the value itself
+                if (!searchObject[key]) {
+                    searchObject[key] = value;
+                    return searchObject;
+                }
+                // Store values that that appear more than once in an array
+                if (!Array.isArray(searchObject[key])) {
+                    // Make existing value an array
+                    searchObject[key] = [searchObject[key] as string];
+                }
+                (searchObject[key] as string[]).push(value);
+
+                return searchObject;
+            }, {} as Record<string, string | string[]>);
+            this.searchParams = '';
+            return this.post(uriComponent, {
+                ...options,
+                body: searchObject,
+            });
+        }
+
         return request(url, {
             method: 'GET',
             headers,
