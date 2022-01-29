@@ -1,6 +1,23 @@
 import EpicenterError from './error';
 import { isBrowser, isNode } from './helpers';
 
+interface EpicenterWorkerUtility {
+    getProxyConfig: () => {
+        externalPort: number,
+        accountShortName: string,
+        projectShortName: string,
+        apiHostUrl: string,
+        apiSharedSecret: string,
+    }
+}
+
+declare global {
+    /**
+     * Epicenter JS worker utility only available in node production environments.
+     */
+    const epicenter: EpicenterWorkerUtility | undefined;
+}
+
 
 const API_VERSION = 3;
 class Config {
@@ -139,9 +156,14 @@ class Config {
     }
 
     loadNode() {
-        // TODO -- use process env variables instead here for Node server
         this.apiProtocol = 'https';
         this.apiHost = 'forio.com';
+        if (epicenter) {
+            const proxyConfig = epicenter.getProxyConfig();
+            this.accountShortName = proxyConfig.accountShortName;
+            this.accountShortName = proxyConfig.projectShortName;
+            this.apiHost = proxyConfig.apiHostUrl;
+        }
         return;
     }
 
