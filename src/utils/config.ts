@@ -1,16 +1,6 @@
 import EpicenterError from './error';
 import { isBrowser, isNode } from './helpers';
 
-interface EpicenterWorkerUtility {
-    getProxyConfig: () => {
-        externalPort: number,
-        accountShortName: string,
-        projectShortName: string,
-        apiHostUrl: string,
-        apiSharedSecret: string,
-    }
-}
-
 
 const API_VERSION = 3;
 class Config {
@@ -151,24 +141,6 @@ class Config {
     loadNode() {
         this.apiProtocol = 'https';
         this.apiHost = 'forio.com';
-        let proxyUtils;
-        try {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            proxyUtils = (global as any).epicenter as EpicenterWorkerUtility;
-        } catch (error) {
-            if (error instanceof ReferenceError) {
-                // Looking to catch a ReferenceError indicating 'epicenter' is not in the global scope
-                // If this triggers, this means we're running a local version, in which case, do nothing
-            } else {
-                throw error;
-            }
-        }
-        if (proxyUtils) {
-            const { accountShortName, projectShortName, apiHostUrl } = proxyUtils.getProxyConfig();
-            this.accountShortName = accountShortName;
-            this.accountShortName = projectShortName;
-            this.apiHost = apiHostUrl;
-        }
         return;
     }
 
@@ -184,6 +156,16 @@ class Config {
             this.accountShortName = account;
             this.projectShortName = project;
         }
+    }
+
+    setContext(context: {
+        accountShortName?: string,
+        projectShortName?: string,
+        apiHost?: string,
+    }) {
+        if (context.accountShortName) this.accountShortName = context.accountShortName;
+        if (context.projectShortName) this.projectShortName = context.projectShortName;
+        if (context.apiHost) this.apiHost = context.apiHost;
     }
 }
 
