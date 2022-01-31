@@ -11,13 +11,6 @@ interface EpicenterWorkerUtility {
     }
 }
 
-declare global {
-    /**
-     * Epicenter JS worker utility only available in node production environments.
-     */
-    const epicenter: EpicenterWorkerUtility | undefined;
-}
-
 
 const API_VERSION = 3;
 class Config {
@@ -160,7 +153,8 @@ class Config {
         this.apiHost = 'forio.com';
         let proxyUtils;
         try {
-            proxyUtils = epicenter;
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            proxyUtils = (global as any).epicenter as EpicenterWorkerUtility;
         } catch (error) {
             if (error instanceof ReferenceError) {
                 // Looking to catch a ReferenceError indicating 'epicenter' is not in the global scope
