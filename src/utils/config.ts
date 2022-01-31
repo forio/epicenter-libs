@@ -158,11 +158,22 @@ class Config {
     loadNode() {
         this.apiProtocol = 'https';
         this.apiHost = 'forio.com';
-        if (epicenter) {
-            const proxyConfig = epicenter.getProxyConfig();
-            this.accountShortName = proxyConfig.accountShortName;
-            this.accountShortName = proxyConfig.projectShortName;
-            this.apiHost = proxyConfig.apiHostUrl;
+        let proxyUtils;
+        try {
+            proxyUtils = epicenter;
+        } catch (error) {
+            if (error instanceof ReferenceError) {
+                // Looking to catch a ReferenceError indicating 'epicenter' is not in the global scope
+                // If this triggers, this means we're running a local version, in which case, do nothing
+            } else {
+                throw error;
+            }
+        }
+        if (proxyUtils) {
+            const { accountShortName, projectShortName, apiHostUrl } = proxyUtils.getProxyConfig();
+            this.accountShortName = accountShortName;
+            this.accountShortName = projectShortName;
+            this.apiHost = apiHostUrl;
         }
         return;
     }
