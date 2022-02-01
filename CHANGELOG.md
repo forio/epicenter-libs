@@ -1,3 +1,26 @@
+# [3.12.0](https://github.com/forio/epicenter-libs/compare/v3.11.0...v3.12.0) (2022-02-01)
+
+
+### Bug Fixes
+
+* add projectAdapter.list (was accidentally removed) ([f63e1e4](https://github.com/forio/epicenter-libs/commit/f63e1e432253f7c37c67799704b0aa2368a5171e))
+* libs to handle 'epicenter' global variable in node ([3536451](https://github.com/forio/epicenter-libs/commit/3536451b26ea049cc0b12ed872b36fde572fcdac))
+
+
+### Features
+
+* add config.setContext function for bulk set ([604dfd5](https://github.com/forio/epicenter-libs/commit/604dfd55666fd6c6a8d7702d650458d4d34a172e))
+* add utility function for accessing proxy calls ([75704aa](https://github.com/forio/epicenter-libs/commit/75704aa0cd5155f1f17da59f92f624bea7573d7b))
+* add VIDEO push category ([8950017](https://github.com/forio/epicenter-libs/commit/8950017bf00c40912bba8d1cd129adc331a1abde))
+* add videoAPI and videoAdapter ([995784a](https://github.com/forio/epicenter-libs/commit/995784a6465eb43a07780485c536977541873c54))
+* add vonage REST API methods ([1e89b9e](https://github.com/forio/epicenter-libs/commit/1e89b9e7ca7f7af9def0203da9779fe59ecd0b04))
+* add vonageAdapter ([1fb1536](https://github.com/forio/epicenter-libs/commit/1fb1536392df65fb42bb8a116f13d104b71c3554))
+* config account/project to be set in prod node env ([b8f615c](https://github.com/forio/epicenter-libs/commit/b8f615cf4f32dee060c98ba938ca6a2c20e42f73))
+* config.setContext to configure protocol ([5e445d7](https://github.com/forio/epicenter-libs/commit/5e445d7fc7aa737dd2f929484508f8efb6d88f20))
+* vonageAdapter.startArchive to accept resolution arg ([088dcad](https://github.com/forio/epicenter-libs/commit/088dcadf99d53531eea5dac13669c5914a4b5d65))
+
+
+
 # [3.11.0](https://github.com/forio/epicenter-libs/compare/v3.10.0-breaking...v3.11.0) (2022-01-08)
 
 
