@@ -4,7 +4,7 @@ import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } fro
 chai.use(require('sinon-chai'));
 
 
-describe('Run API Service', () => {
+describe('Run APIs', () => {
     const { config, runAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
     let fakeServer;
     const testedMethods = [];

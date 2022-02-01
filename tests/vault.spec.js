@@ -3,7 +3,7 @@ import chai from 'chai';
 import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
 chai.use(require('sinon-chai'));
 
-describe('Vault API Service', () => {
+describe('Vault APIs', () => {
     const { config, vaultAdapter, authAdapter, ROLE, SCOPE_BOUNDARY } = epicenter;
     let fakeServer;
     const testedMethods = [];

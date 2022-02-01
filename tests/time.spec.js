@@ -3,7 +3,7 @@ import chai from 'chai';
 import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
 chai.use(require('sinon-chai'));
 
-describe('Time API Service', () => {
+describe('Time APIs', () => {
     const { config, authAdapter, timeAdapter } = epicenter;
 
     config.accountShortName = ACCOUNT;

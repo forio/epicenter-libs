@@ -3,7 +3,7 @@ import chai from 'chai';
 import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
 chai.use(require('sinon-chai'));
 
-describe('Group API Service', () => {
+describe('Group APIs', () => {
     const { config, groupAdapter, authAdapter, ROLE } = epicenter;
     let fakeServer;
     const testedMethods = [];
