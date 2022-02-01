@@ -159,13 +159,15 @@ class Config {
     }
 
     setContext(context: {
+        apiProtocol?: string,
+        apiHost?: string,
         accountShortName?: string,
         projectShortName?: string,
-        apiHost?: string,
     }) {
+        if (context.apiProtocol) this.apiProtocol = context.apiProtocol;
+        if (context.apiHost) this.apiHost = context.apiHost;
         if (context.accountShortName) this.accountShortName = context.accountShortName;
         if (context.projectShortName) this.projectShortName = context.projectShortName;
-        if (context.apiHost) this.apiHost = context.apiHost;
     }
 }
 
