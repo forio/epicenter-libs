@@ -21,6 +21,12 @@ Table of Contents
 - [Tenets for Development](#tenets-for-development)
 - [How to Contribute](#how-to-contribute)
 - [How to Prepare a Release](#how-to-prepare-a-release)
+  - [Publishing on NPM](#publishing-on-npm)
+    - [npm publish --dry-run](#npm-publish---dry-run)
+    - [npm publish --tag next](#npm-publish---tag-next)
+    - [npm unpublish epicenter-libs@{{version}}](#npm-unpublish-epicenter-libsversion)
+    - [npm dist-tag add | rm | ls](#npm-dist-tag-add--rm--ls)
+  - [Versioning](#versioning)
 - [How to Test](#how-to-test)
 - [How to Use Examples (Local)](#how-to-use-examples-local)
   - [Vanilla JavaScript](#vanilla-javascript)
@@ -79,23 +85,43 @@ Prequisite Node version: 12+
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
 3. Create a [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) describing your changes
-   * If you feel your change breaks the existing usage of the library be sure to indicate this in the commit message by adding a note in the commit footer starting with: `BREAKING CHANGE: `
+   * If you feel your change breaks the existing usage of the library be sure to indicate this in the commit message by adding a note in the commit footer starting with: `BREAKING CHANGE: `, and this will be automatically reflected in the changelog when it's generated.
 4. Push up your branch and make sure it passes the tests in the pre-push hook
 5. Make a pull request on github, or if you're confident: merge your branch into `master`
 
 # How to Prepare a Release
 1. Build to the `dist/` folder: `npm run build`
 2. Test to make sure there are no breaking changes: `npm run single-test`
-3. Make sure you have the latest tags from master: `git fetch origin`
-4. Update version in the `package.json` file; suffix your version with `-breaking` if it contains a breaking change
-5. Update the change log: `npm run changelog` to generate the diff between versions
-6. Commit `package.json` and `CHANGELOG.md` files to `master`
-7. Tag `master` with the same version you used in step 4 (prefix with 'v')
-8. Visit Jenkins: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
+3. Update the version in the `package.json` to the value you'd like to release
+4. Generate a changelog entry using `conventional-changelog`
+   - Entries are created based on the most recent git tag compared to the the version value in `package.json`
+   - For this reason, make sure sure you have the latest tags: `git fetch origin`
+   - Run: `npm run changelog` -- which will append to the CHANGELOG.md file an automated text translation of the commits created between the most recent git tag, and the current HEAD.
+   - Commit your updated CHANGELOG.md: `git add CHANGELOG.md && git commit -m "chore: update CHANGELOG"`
+5. Tag `master` with the same version you used in step 3 (prefix with 'v')
+6. Visit Jenkins to deploy to `forio.com/tools/js-libs`: https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/
+7. Publish the files in `dist/` folder to NPM: `npm publish`
 
-\*The web development team isn't planning on incrementing the number that correlates to the major version, that space is reserved for major platform changes (i.e., Epicenter v4 and beyond). Instead, starting in `v3.8.0` -- we will opt to track breaking changes with a suffix `-breaking` and increment the minor number instead.
+## Publishing on NPM
+In order to publish to NPM, you have to be logged into the Forio NPM account. To do this, you'll need perform a one-time login with `npm adduser`. You will be prompted for a one-time password, which will be sent to `tech@forio.com`. Afterwhich, you'll be able to run `npm publish`. Below are other helpful commands to consider.
 
-E.g., `3.10.0-breaking` indicates a breaking change to `3.9.x`. **Beware of these changes when incrementing versions; do not jump minor versions without looking at the tags in between.** You can utilize the CHANGELOG.md to review what has changed between versions and tags.
+### npm publish --dry-run
+For doing a test run before actually publishing
+
+### npm publish --tag next
+For when you want to publish an alpha version of the libs for testing. Normal installations will not pick up versions tagged as "next". This way, you can publish on a change you want to test, and then go to an external project and run `npm install -i epicenter-libs@next` to go and play around with your changes.
+
+### npm unpublish epicenter-libs@{{version}}
+For when you accidentally publish an incorrect version (this removes the package version from the registry, as well as deletes its entry, removign the tarball).
+
+### npm dist-tag add | rm | ls
+Manages distribution tags, for when you make a typo spelling "--tag next" and you end up publishing `epicenter-libs@name`.
+
+
+## Versioning
+The web development team isn't planning on incrementing the number that correlates to the major version, that space is reserved for major platform changes (i.e., Epicenter v4 and beyond). Instead, starting in `v3.8.0` -- we will opt to track breaking changes with a suffix `-breaking` and increment the minor number instead.
+
+
 
 # How to Test
 Tests are written to preserve behavior across releases. These are unit tests and are not intended for testing Epicenter features themselves.
