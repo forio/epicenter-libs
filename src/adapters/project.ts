@@ -123,11 +123,12 @@ export async function get(
 }
 
 export async function list(
-    accountShortName: string
+    accountShortName: string,
+    optionals: RoutingOptions = {}
 ): Promise<Project[]> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .withProjectShortName('manager')
-        .get('/project/in')
+        .get('/project/in', optionals)
         .then(({body}) => body);
 }
