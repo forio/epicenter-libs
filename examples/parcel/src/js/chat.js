@@ -1,5 +1,5 @@
 import './config';
-import { authAdapter, chatAdapter, ROLE, SCOPE_BOUNDARY, PUSH_CATEGORY, Channel, groupAdapter } from 'epicenter-libs';
+import { authAdapter, chatAdapter, ROLE, SCOPE_BOUNDARY, PUSH_CATEGORY, Channel, groupAdapter } from 'epicenter';
 import { showLoading, hideLoading } from './common';
 const session = authAdapter.getLocalSession();
 

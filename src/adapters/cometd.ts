@@ -9,6 +9,9 @@ const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
 const UNAUTHORIZED = 401;
+const CONNECT_META_CHANNEL = '/meta/connect';
+const DISCONNECT_META_CHANNEL = '/meta/disconnect';
+const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
 
 interface ChannelUpdate {
     data: string | Record<string, unknown>,
@@ -20,6 +23,7 @@ class CometdAdapter {
     url = '';
     initialization = false;
     subscriptions = new Map();
+    isConnected = false;
 
     get cometd() {
         if (!cometdInstance) {
@@ -72,6 +76,46 @@ class CometdAdapter {
         return true;
     }
 
+    listenToMetaChannels() {
+        const connectListener = new Promise((resolve, reject) => {
+            this.cometd.addListener(CONNECT_META_CHANNEL, (message: Message) => {
+                if (this.cometd.isDisconnected()) {
+                    return;
+                }
+                const wasConnected = this.isConnected;
+                this.isConnected = message.successful;
+                if (!wasConnected && this.isConnected) {
+                    const error = new Fault({
+                        status: undefined,
+                        message: 'Reconnected to CometD',
+                        information: {
+                            code: COMETD_RECONNECTED,
+                        },
+                    });
+                    const retry = () => Promise.resolve();
+
+                    try {
+                        const result = errorManager.handle(error, retry);
+                        resolve(result);
+                    } catch (e) {
+                        reject(e);
+                    }
+                }
+            });
+        });
+
+        const disconnectListener = new Promise((resolve) => {
+            this.cometd.addListener(DISCONNECT_META_CHANNEL, (message: Message) => {
+                if (message.successful) {
+                    this.isConnected = false;
+                }
+                resolve(message);
+            });
+        });
+
+        return Promise.all([connectListener, disconnectListener]);
+    }
+
     async init() {
         if (!this.initialization) {
             this.initialization = await this.startup();
@@ -104,6 +148,7 @@ class CometdAdapter {
         this.cometd.websocketEnabled = true;
         return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
             if (handshakeReply.successful) {
+                this.listenToMetaChannels();
                 resolve(handshakeReply);
                 return;
             }
