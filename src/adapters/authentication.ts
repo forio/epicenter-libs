@@ -111,9 +111,15 @@ export async function sso(
 }
 
 export async function getSession(): Promise<Session> {
-    const { body } = await new Router().get('/authentication');
+    const { body } = await new Router().get('/verification');
     identification.session = body;
     return body;
+}
+
+export async function invalidateSession(): Promise<Session> {
+    return await new Router()
+        .delete('/verification')
+        .then(({ body }) => body);
 }
 
 export function getLocalSession(): Session | undefined {
