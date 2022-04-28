@@ -26,8 +26,12 @@ interface AppCredentials {
  * @returns promise resolving to successful logout
  */
 export async function logout(): Promise<void> {
-    identification.session = undefined;
     await cometdAdapter.disconnect();
+    await new Router()
+        .delete('/verification')
+        .then(({ body }) => body);
+
+    identification.session = undefined;
 }
 
 export async function login(
@@ -114,12 +118,6 @@ export async function getSession(): Promise<Session> {
     const { body } = await new Router().get('/verification');
     identification.session = body;
     return body;
-}
-
-export async function invalidateSession(): Promise<Session> {
-    return await new Router()
-        .delete('/verification')
-        .then(({ body }) => body);
 }
 
 export function getLocalSession(): Session | undefined {
