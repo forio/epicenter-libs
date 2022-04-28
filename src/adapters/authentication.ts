@@ -154,7 +154,7 @@ export async function resetPassword(
     } = optionals;
 
     return await new Router()
-        .post(`/authentication/password/user/${handle}`, {
+        .post(`/verification/password/user/${handle}`, {
             ...routingOptions,
             body: {
                 redirectUrl: redirectURL,
