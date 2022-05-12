@@ -1,3 +1,13 @@
+# [3.13.0](https://github.com/forio/epicenter-libs/compare/v3.12.0...v3.13.0) (2022-05-12)
+
+
+### Features
+
+* add optionals for projectAdapter.list ([a944b1c](https://github.com/forio/epicenter-libs/commit/a944b1cb0c2de7e5b50790a0b1c5ec0935898b8a))
+* listen for cometd disconnect/reconnect ([f857332](https://github.com/forio/epicenter-libs/commit/f857332425ea958bbe42c9baebca7d887c9cf37d))
+
+
+
 # [3.12.0](https://github.com/forio/epicenter-libs/compare/v3.11.0...v3.12.0) (2022-02-01)
 
 
