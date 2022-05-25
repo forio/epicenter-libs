@@ -41,6 +41,8 @@ export interface ExternalUserCreateView extends UserCreateView {
     objectType: 'external';
 }
 
+type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
+
 export async function uploadCSV(
     file: File,
     optionals: UploadOptions = {}
@@ -71,5 +73,18 @@ export async function createUser(
             body: view,
             ...optionals,
         })
+        .then(({ body }) => body);
+}
+
+export async function getWithHandle(
+    handle: string,
+    optionals: {
+        modality?: Modality,
+    } & RoutingOptions = {},
+): Promise<User> {
+    const { modality, ...routingOptions } = optionals;
+    const uriComponent = modality ? `/${modality}` : '';
+    return await new Router()
+        .get(`/user/with/${handle}${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
