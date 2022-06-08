@@ -397,8 +397,7 @@ export async function getVariables(
     } = optionals;
     const include = variables.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
-    const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
+    const searchParams = hasMultiple ? { timeout } : { ritual, timeout };
 
     if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
@@ -409,16 +408,22 @@ export async function getVariables(
         return variableMap;
     }, {} as Record<string, unknown>);
 
+    const runKeyArg = Array.isArray(runKey) ? runKey : [runKey];
     return await new Router()
         .withSearchParams(searchParams)
-        .get(`/run/variable${uriComponent}`, routingOptions)
+        .post('/run/variable', {
+            body: {
+                include,
+                runKey: runKeyArg,
+            },
+        }, ...routingOptions)
         .then(({ body }) => {
-            return (!hasMultiple ?
-                mappify(body) :
-                Object.keys(body).map((runKey) => ({
-                    runKey,
-                    variables: mappify(body[runKey]),
-                }))
+            const resultsByRunKeys = Object.keys(body).map((runKey) => ({
+                runKey,
+                variables: mappify(body[runKey]),
+            }));
+            return (
+                hasMultiple ? resultsByRunKeys : resultsByRunKeys?.[0]?.variables
             );
         });
 }
