@@ -418,12 +418,12 @@ export async function getVariables(
             },
         }, ...routingOptions)
         .then(({ body }) => {
-            const resultsByRunKeys = Object.keys(body).map((runKey) => ({
+            const bodyAsArray = Object.keys(body).map((runKey) => ({
                 runKey,
                 variables: mappify(body[runKey]),
             }));
             return (
-                hasMultiple ? resultsByRunKeys : resultsByRunKeys?.[0]?.variables
+                hasMultiple ? bodyAsArray : bodyAsArray?.[0]?.variables
             );
         });
 }
@@ -505,17 +505,30 @@ export async function getMetadata(
     } = optionals;
     const include = metadata.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
-    const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const searchParams = hasMultiple ? { runKey, timeout, include } : { ritual, timeout, include };
+    const searchParams = hasMultiple ? { timeout } : { ritual, timeout };
 
     if (ritual !== RITUAL.EXORCISE && hasMultiple) {
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
+    const runKeyArg = Array.isArray(runKey) ? runKey : [runKey];
     return await new Router()
         .withSearchParams(searchParams)
-        .get(`/run/meta${uriComponent}`, routingOptions)
-        .then(({ body }) => body);
+        .post('/run/meta', {
+            body: {
+                include,
+                runKey: runKeyArg,
+            },
+        }, ...routingOptions)
+        .then(({ body }) => {
+            const bodyAsArray = Object.keys(body).map((runKey) => ({
+                runKey,
+                data: body[runKey],
+            }));
+            return (
+                hasMultiple ? bodyAsArray : bodyAsArray?.[0]?.data
+            );
+        });
 }
 
 export async function updateMetadata(
