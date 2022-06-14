@@ -26,8 +26,12 @@ interface AppCredentials {
  * @returns promise resolving to successful logout
  */
 export async function logout(): Promise<void> {
-    identification.session = undefined;
     await cometdAdapter.disconnect();
+    await new Router()
+        .delete('/verification')
+        .then(({ body }) => body);
+
+    identification.session = undefined;
 }
 
 export async function login(
@@ -111,7 +115,7 @@ export async function sso(
 }
 
 export async function getSession(): Promise<Session> {
-    const { body } = await new Router().get('/authentication');
+    const { body } = await new Router().get('/verification');
     identification.session = body;
     return body;
 }
@@ -150,7 +154,7 @@ export async function resetPassword(
     } = optionals;
 
     return await new Router()
-        .post(`/authentication/password/user/${handle}`, {
+        .post(`/verification/password/user/${handle}`, {
             ...routingOptions,
             body: {
                 redirectUrl: redirectURL,
