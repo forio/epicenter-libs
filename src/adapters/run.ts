@@ -416,7 +416,8 @@ export async function getVariables(
                 include,
                 runKey: runKeyArg,
             },
-        }, ...routingOptions)
+            ...routingOptions,
+        })
         .then(({ body }) => {
             const bodyAsArray = Object.keys(body).map((runKey) => ({
                 runKey,
@@ -519,7 +520,8 @@ export async function getMetadata(
                 include,
                 runKey: runKeyArg,
             },
-        }, ...routingOptions)
+            ...routingOptions,
+        })
         .then(({ body }) => {
             const bodyAsArray = Object.keys(body).map((runKey) => ({
                 runKey,
