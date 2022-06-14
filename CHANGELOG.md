@@ -1,3 +1,13 @@
+# [3.14.0](https://github.com/forio/epicenter-libs/compare/v3.13.0...v3.14.0) (2022-06-14)
+
+
+### Features
+
+* `userAdapter` GET /user/with/handle ([418a61f](https://github.com/forio/epicenter-libs/commit/418a61fc2b3e790d24bf2b1d10b705d0f11eef4c))
+* runAdapter fix build: routing options was in the wrong place ([d476553](https://github.com/forio/epicenter-libs/commit/d476553aa1c7e362ae9e01c4deeec1d9d0eb8785))
+
+
+
 # [3.13.0](https://github.com/forio/epicenter-libs/compare/v3.12.0...v3.13.0) (2022-05-12)
 
 
