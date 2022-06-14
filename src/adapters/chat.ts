@@ -127,7 +127,7 @@ export async function query(
     };
     return await new Router()
         .withSearchParams(searchParams)
-        .get('/chat/search', {
+        .get('/chat', {
             paginated: true,
             ...optionals,
         })
