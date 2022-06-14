@@ -16,6 +16,9 @@ describe('Authentication', () => {
         fakeServer.respondWith('POST', /(.*)\/authentication/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
+        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
+        });
         fakeServer.respondImmediately = true;
     });
 
@@ -28,22 +31,26 @@ describe('Authentication', () => {
         const CREDENTIALS = { handle: 'joe', password: 'pass', groupKey: 'groupkey' };
         it('Should do a POST', async() => {
             await authAdapter.login(CREDENTIALS);
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         });
         it('Should use the authentication URL', async() => {
             await authAdapter.login(CREDENTIALS);
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/authentication`);
         });
         it('Should support generic URL options', async() => {
             await authAdapter.login(CREDENTIALS, GENERIC_OPTIONS);
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
         });
         it('Should pass login credentials to the request body', async() => {
             await authAdapter.login(CREDENTIALS);
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.should.include(CREDENTIALS);
@@ -54,17 +61,20 @@ describe('Authentication', () => {
         });
         it('Should set objectType as user when one is not provided', async() => {
             await authAdapter.login(CREDENTIALS);
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.should.have.property('objectType', 'user');
         });
     });
     describe('authAdapter.logout', () => {
-        it('Should not make a network request', async() => {
+        it('Should do a DELETE', async() => {
             fakeServer.requests = [];
             await authAdapter.logout();
             Boolean(authAdapter.getLocalSession()).should.equal(false);
-            fakeServer.requests.should.be.empty;
+            const req = fakeServer.requests.pop();
+            fakeServer.requests.pop(); //the final call is a DELETE to logout
+            req.method.toUpperCase().should.equal('DELETE');
         });
     });
 });
