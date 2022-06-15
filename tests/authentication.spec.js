@@ -59,4 +59,12 @@ describe('Authentication', () => {
             body.should.have.property('objectType', 'user');
         });
     });
+    describe('authAdapter.logout', () => {
+        it('Should not make a network request', async() => {
+            fakeServer.requests = [];
+            await authAdapter.logout();
+            Boolean(authAdapter.getLocalSession()).should.equal(false);
+            fakeServer.requests.should.be.empty;
+        });
+    });
 });
