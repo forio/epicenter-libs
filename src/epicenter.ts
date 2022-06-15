@@ -12,7 +12,8 @@ const UNAUTHORIZED = 401;
 errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
     async(error: Fault) => {
-        await authAdapter.logout();
+        const invalidateInServer = false;
+        await authAdapter.logout(invalidateInServer);
         if (isBrowser()) {
             // eslint-disable-next-line no-alert
             alert('Session token has expired, try logging in again.');
@@ -42,7 +43,8 @@ errorManager.registerHandler(
             await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
             return await retry();
         } catch (e) {
-            await authAdapter.logout();
+            const invalidateInServer = false;
+            await authAdapter.logout(invalidateInServer);
             throw error;
         }
     }

@@ -23,15 +23,20 @@ interface AppCredentials {
  * Logs out of current Epicenter session.
  * @example
  * epicenter.authAdapter.logout()
+ * @param invalidateInServer      Optional parameter to skip the DELETE call to /verification in the case that the token is already invalid
  * @returns promise resolving to successful logout
  */
-export async function logout(): Promise<void> {
-    await cometdAdapter.disconnect();
-    await new Router()
-        .delete('/verification')
-        .then(({ body }) => body);
-
+export async function logout(
+    invalidateInServer = true,
+): Promise<void> {
+    if (invalidateInServer) {
+        await new Router()
+            .delete('/verification')
+            .then(({ body }) => body);
+    }
+    
     identification.session = undefined;
+    await cometdAdapter.disconnect();
 }
 
 export async function login(
@@ -55,7 +60,10 @@ export async function login(
             body: payload,
             ...routingOptions,
         }).then(({ body }) => body);
-    await logout();
+    
+    const invalidateInServer = false;
+    await logout(invalidateInServer);
+    
     identification.session = session;
     return session;
 }
@@ -97,8 +105,9 @@ export async function regenerate(
             },
             ...routingOptions,
         }).then(({ body }) => body);
-
-    await logout();
+    
+    const invalidateInServer = false;
+    await logout(invalidateInServer);
     identification.session = session;
     return session;
 }

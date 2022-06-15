@@ -161,6 +161,7 @@ describe('Group APIs', () => {
         it('Should have authorization', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
             const req = fakeServer.requests.pop();
+            // req.url.should.equal('3');
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the group/groupKey URL', async() => {

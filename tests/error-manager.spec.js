@@ -52,16 +52,9 @@ describe('Error Manager', () => {
             } catch (error) {
                 /* Do nothing, it should error here */
             }
-            // const retry = fakeServer.requests.pop();
-            // const upgrade = fakeServer.requests.pop();
-            // const get = fakeServer.requests.pop();
-            
-            //WHY IS IT LOGGING OUT TWICE??
-            fakeServer.requests.pop(); //https://forio.com/api/v4/forio-dev/epi-v3/verification DELETE
-            const retry = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/unauthorized GET
-            const logout = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/verification DELETE
-            const upgrade = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/authentication PATCH
-            const get = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/unauthorized GET
+            const retry = fakeServer.requests.pop();
+            const upgrade = fakeServer.requests.pop();
+            const get = fakeServer.requests.pop();
             
             retry.url.should.equal(get.url);
 
