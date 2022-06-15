@@ -11,7 +11,7 @@ describe('Error Manager', () => {
     config.projectShortName = PROJECT;
 
     before(() => {
-        fakeServer = sinon.fakeServer.create({logger: str => console.log('Fake server', str)});
+        fakeServer = sinon.fakeServer.create({});
 
         /* Mock erroneous calls */
         fakeServer.respondWith('GET', /(.*)\/unauthorized/, function(xhr, id) {
