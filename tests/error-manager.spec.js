@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, UNAUTHORIZED_CODE } from './constants';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, UNAUTHORIZED_CODE, CREATED_CODE } from './constants';
 chai.use(require('sinon-chai'));
 
 describe('Error Manager', () => {
@@ -11,7 +11,7 @@ describe('Error Manager', () => {
     config.projectShortName = PROJECT;
 
     before(() => {
-        fakeServer = sinon.fakeServer.create();
+        fakeServer = sinon.fakeServer.create({logger: str => console.log('Fake server', str)});
 
         /* Mock erroneous calls */
         fakeServer.respondWith('GET', /(.*)\/unauthorized/, function(xhr, id) {
@@ -26,6 +26,9 @@ describe('Error Manager', () => {
              * the subsequent retry will always fail and login via SSO doesn't refresh the page (bad for tests) */
             const RESPONSE = { loginMethod: { objectType: 'sso' } };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+        });
+        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
         });
 
         fakeServer.respondImmediately = true;
@@ -49,10 +52,19 @@ describe('Error Manager', () => {
             } catch (error) {
                 /* Do nothing, it should error here */
             }
-            const retry = fakeServer.requests.pop();
-            const upgrade = fakeServer.requests.pop();
-            const get = fakeServer.requests.pop();
+            // const retry = fakeServer.requests.pop();
+            // const upgrade = fakeServer.requests.pop();
+            // const get = fakeServer.requests.pop();
+            
+            //WHY IS IT LOGGING OUT TWICE??
+            fakeServer.requests.pop(); //https://forio.com/api/v4/forio-dev/epi-v3/verification DELETE
+            const retry = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/unauthorized GET
+            const logout = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/verification DELETE
+            const upgrade = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/authentication PATCH
+            const get = fakeServer.requests.pop(); //https://forio.com/api/v3/forio-dev/epi-v3/unauthorized GET
+            
             retry.url.should.equal(get.url);
+
             retry.method.toUpperCase().should.equal('GET');
             get.method.toUpperCase().should.equal('GET');
             upgrade.method.toUpperCase().should.equal('PATCH');
