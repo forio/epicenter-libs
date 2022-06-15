@@ -30,9 +30,9 @@ export async function logout(
     invalidateInServer = true,
 ): Promise<void> {
     if (invalidateInServer) {
-        await new Router()
-            .delete('/verification')
-            .then(({ body }) => body);
+        // await new Router()
+        //     .delete('/verification')
+        //     .then(({ body }) => body);
     }
     
     identification.session = undefined;
