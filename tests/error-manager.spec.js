@@ -27,9 +27,6 @@ describe('Error Manager', () => {
             const RESPONSE = { loginMethod: { objectType: 'sso' } };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
-        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
-        });
 
         fakeServer.respondImmediately = true;
     });
