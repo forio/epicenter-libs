@@ -24,7 +24,7 @@ describe('Authentication', () => {
 
     after(() => {
         fakeServer.restore();
-        authAdapter.logout();
+        authAdapter.removeLocalSession();
     });
 
     describe('authAdapter.login', () => {
