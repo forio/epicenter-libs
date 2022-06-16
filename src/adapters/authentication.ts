@@ -26,6 +26,31 @@ interface AppCredentials {
  * @returns promise resolving to successful logout
  */
 export async function logout(): Promise<void> {
+    try {
+        await new Router()
+            .delete('/verification');
+    } catch (err) {
+        console.error('Error with DELETE to /verification', err);
+    }
+    identification.session = undefined;
+    await cometdAdapter.disconnect();
+}
+
+export async function getSession(): Promise<Session> {
+    const { body } = await new Router().get('/verification');
+    identification.session = body;
+    return body;
+}
+
+export function getLocalSession(): Session | undefined {
+    return identification.session;
+}
+
+export function setLocalSession(session: Session): Session {
+    return identification.session = session;
+}
+
+export async function removeLocalSession(): Promise<void> {
     identification.session = undefined;
     await cometdAdapter.disconnect();
 }
@@ -52,7 +77,7 @@ export async function login(
             ...routingOptions,
         }).then(({ body }) => body);
     
-    await logout();
+    await removeLocalSession();
     
     identification.session = session;
     return session;
@@ -96,7 +121,7 @@ export async function regenerate(
             ...routingOptions,
         }).then(({ body }) => body);
     
-    await logout();
+    await removeLocalSession();
     identification.session = session;
     return session;
 }
@@ -110,20 +135,6 @@ export async function sso(
 
     identification.session = session;
     return session;
-}
-
-export async function getSession(): Promise<Session> {
-    const { body } = await new Router().get('/verification');
-    identification.session = body;
-    return body;
-}
-
-export function getLocalSession(): Session | undefined {
-    return identification.session;
-}
-
-export function setLocalSession(session: Session): Session {
-    return identification.session = session;
 }
 
 /**

@@ -31,6 +31,9 @@ describe('Group APIs', () => {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
+        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
+        });
 
         fakeServer.respondImmediately = true;
     });

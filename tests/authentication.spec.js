@@ -16,6 +16,9 @@ describe('Authentication', () => {
         fakeServer.respondWith('POST', /(.*)\/authentication/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
+        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
+        });
         fakeServer.respondImmediately = true;
     });
 
@@ -60,11 +63,12 @@ describe('Authentication', () => {
         });
     });
     describe('authAdapter.logout', () => {
-        it('Should not make a network request', async() => {
+        it('Should do a DELETE', async() => {
             fakeServer.requests = [];
             await authAdapter.logout();
             Boolean(authAdapter.getLocalSession()).should.equal(false);
-            fakeServer.requests.should.be.empty;
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('DELETE');
         });
     });
 });
