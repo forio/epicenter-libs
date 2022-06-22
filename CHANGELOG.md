@@ -1,3 +1,27 @@
+# [3.15.0](https://github.com/forio/epicenter-libs/compare/v3.14.0...v3.15.0) (2022-06-22)
+
+
+### Bug Fixes
+
+* add back the previous logout test ([60f0677](https://github.com/forio/epicenter-libs/commit/60f067728d14c08ac8362209c45ae2d2a10a280f))
+* add DELETE to logout ([d3812ff](https://github.com/forio/epicenter-libs/commit/d3812ff9aaf9339470b2b1717c69455b5d77a4a4))
+* avoid invalidating session on server if already invalid token ([a3cab6b](https://github.com/forio/epicenter-libs/commit/a3cab6b7b547d03d4744637535a1ab09a7f8c960))
+* disable problematic code, fix run test ([f88ecae](https://github.com/forio/epicenter-libs/commit/f88ecaefdf618765186ea40615ff6b1ddabb299f))
+* fix metadata tests ([13b9a85](https://github.com/forio/epicenter-libs/commit/13b9a85c86774062d2a3aae8b1ef870fe0c385e9))
+* remove extra logout call from auth spec ([747e528](https://github.com/forio/epicenter-libs/commit/747e528677a98b39abb416fabd69bfb10043800b))
+* remove references to logout DELETE ([16823e9](https://github.com/forio/epicenter-libs/commit/16823e9528fdbd3dcedec815a13d11e8e902831f))
+* revert problematic logout api call ([8a95f3c](https://github.com/forio/epicenter-libs/commit/8a95f3ce6ff5f1b1791a49d4f2b81c60369edb61))
+* revert unused code ([cd690b5](https://github.com/forio/epicenter-libs/commit/cd690b5a6916eb21bd062ec7b0bbdaf08434e0e2))
+
+
+### Features
+
+* fix authentication tests ([3415e80](https://github.com/forio/epicenter-libs/commit/3415e806506d1078854132e516a0b9f2906d2d51))
+* progress on error manager ([00d40fe](https://github.com/forio/epicenter-libs/commit/00d40fe7f02e75a7a120ec6675293f28833b417f))
+* remove deprecated api calls ([0e5e311](https://github.com/forio/epicenter-libs/commit/0e5e311ba5e243ae4e481c1c0cfe0a002ad9f5b2))
+
+
+
 # [3.14.0](https://github.com/forio/epicenter-libs/compare/v3.13.0...v3.14.0) (2022-06-14)
 
 
