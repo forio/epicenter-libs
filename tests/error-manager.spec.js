@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, UNAUTHORIZED_CODE } from './constants';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, UNAUTHORIZED_CODE, CREATED_CODE } from './constants';
 chai.use(require('sinon-chai'));
 
 describe('Error Manager', () => {
@@ -11,7 +11,7 @@ describe('Error Manager', () => {
     config.projectShortName = PROJECT;
 
     before(() => {
-        fakeServer = sinon.fakeServer.create();
+        fakeServer = sinon.fakeServer.create({});
 
         /* Mock erroneous calls */
         fakeServer.respondWith('GET', /(.*)\/unauthorized/, function(xhr, id) {
@@ -52,7 +52,9 @@ describe('Error Manager', () => {
             const retry = fakeServer.requests.pop();
             const upgrade = fakeServer.requests.pop();
             const get = fakeServer.requests.pop();
+            
             retry.url.should.equal(get.url);
+
             retry.method.toUpperCase().should.equal('GET');
             get.method.toUpperCase().should.equal('GET');
             upgrade.method.toUpperCase().should.equal('PATCH');

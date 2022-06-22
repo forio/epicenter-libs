@@ -619,45 +619,42 @@ describe('Run APIs', () => {
     describe('runAdapter.getVariables', () => {
         const RUN_KEY = '123456789';
         const VARIABLES = ['var1', 'var2', 'var3'];
-        it('Should do a GET', async() => {
+        it('Should do a POST', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/variable/runKey URL', async() => {
+        it('Should use the run/variable URL', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
         });
         it('Should support generic URL options', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: 300, ritual: RITUAL.REANIMATE });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('include').should.equal(VARIABLES.join(';'));
             searchParams.get('timeout').should.equal('300');
             searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
         });
-        it('Should handle the use of multiple run keys in the URL search parameters', async() => {
+        it('Should handle the use of multiple run keys in the request body', async() => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES);
             const req = fakeServer.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
-            const searchParams = new URLSearchParams(search);
-            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+            const body = JSON.parse(req.requestBody);
+            body.runKey.should.deep.equal([RUN_KEY, '987654321']);
         });
         it('Should set ritual to undefined when using mutiple run keys', async() => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.REANIMATE });
@@ -702,30 +699,28 @@ describe('Run APIs', () => {
             searchParams.get('timeout').should.equal('300');
             searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
         });
-        it('Should handle multiple run keys in the URL search parameters', async() => {
+        it('Should handle multiple run keys in the request body', async() => {
             await runAdapter.getVariable([RUN_KEY, '987654321'], VARIABLE);
             const req = fakeServer.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
-            const searchParams = new URLSearchParams(search);
-            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+            const body = JSON.parse(req.requestBody);
+            body.runKey.should.deep.equal([RUN_KEY, '987654321']);
         });
-        it('Should handle multiple variables in the URL search parameters', async() => {
+        it('Should handle multiple variables in the request body', async() => {
             await runAdapter.getVariable(RUN_KEY, [VARIABLE, 'var2']);
             const req = fakeServer.requests.pop();
-            const [url, search] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
-            const searchParams = new URLSearchParams(search);
-            searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
+            const [url] = req.url.split('?');
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
+            const body = JSON.parse(req.requestBody);
+            body.include.should.equal([VARIABLE, 'var2'].join(';'));
         });
-        it('Should handle multiple run keys and multiple variables in the URL search parameters', async() => {
+        it('Should handle multiple run keys and multiple variables in the request body', async() => {
             await runAdapter.getVariable([RUN_KEY, '987654321'], [VARIABLE, 'var2']);
             const req = fakeServer.requests.pop();
-            const [url, search] = req.url.split('?');
+            const [url] = req.url.split('?');
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
-            const searchParams = new URLSearchParams(search);
-            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
-            searchParams.get('include').should.equal([VARIABLE, 'var2'].join(';'));
+            const body = JSON.parse(req.requestBody);
+            body.include.should.equal([VARIABLE, 'var2'].join(';'));
+            body.runKey.should.deep.equal([RUN_KEY, '987654321']);
         });
         testedMethods.push('getVariable');
     });
@@ -793,28 +788,28 @@ describe('Run APIs', () => {
     describe('runAdapter.getMetadata', () => {
         const RUN_KEY = '123456789';
         const METADATA = ['meta1', 'meta2', 'meta3'];
-        it('Should do a GET', async() => {
+        it('Should do a POST', async() => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/meta/runKey URL', async() => {
+        it('Should use the run/meta URL', async() => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta/${RUN_KEY}`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
         });
         it('Should support generic URL options', async() => {
             await runAdapter.getMetadata(RUN_KEY, METADATA, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta/${RUN_KEY}`);
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
             await runAdapter.getMetadata(RUN_KEY, METADATA, { timeout: 300, ritual: RITUAL.REANIMATE });
@@ -824,13 +819,13 @@ describe('Run APIs', () => {
             searchParams.get('timeout').should.equal('300');
             searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
         });
-        it('Should handle multiple run keys in the URL search parameters', async() => {
+        it('Should handle multiple run keys in the request body', async() => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
             const req = fakeServer.requests.pop();
-            const [url, search] = req.url.split('?');
+            const [url] = req.url.split('?');
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
-            const searchParams = new URLSearchParams(search);
-            searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
+            const body = JSON.parse(req.requestBody);
+            body.runKey.should.deep.equal([RUN_KEY, '987654321']);
         });
         it('Should set ritual to undefined when using mutiple run keys', async() => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA, { ritual: RITUAL.REANIMATE });

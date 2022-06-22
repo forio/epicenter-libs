@@ -19,7 +19,7 @@ describe('Time APIs', () => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
         });
 
-        fakeServer.respondWith('GET', /(.*)\/time/, function (xhr, id) {
+        fakeServer.respondWith('GET', /(.*)\/time/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
