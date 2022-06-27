@@ -63,12 +63,10 @@ export default class Channel {
         update: (data: unknown) => unknown,
         options: { inert?: boolean } = {},
     ): Promise<SubscriptionHandle> {
-        const oldSubscription = this.subscription;
+        if (this.subscription) await cometdAdapter.remove(this.subscription);
         this.update = update;
-        const newSubscription = await cometdAdapter.add(this, update, options) as SubscriptionHandle;
-        this.subscription = newSubscription;
-        if (oldSubscription) await cometdAdapter.remove(oldSubscription);
-        return newSubscription;
+        this.subscription = await cometdAdapter.add(this, update, options) as SubscriptionHandle;
+        return this.subscription;
     }
 
     async unsubscribe(): Promise<void> {
