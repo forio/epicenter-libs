@@ -1,3 +1,12 @@
+## [3.15.1](https://github.com/forio/epicenter-libs/compare/v3.15.0...v3.15.1) (2022-06-29)
+
+
+### Bug Fixes
+
+* remove previous subscription before adding new version ([0473e92](https://github.com/forio/epicenter-libs/commit/0473e928699802da9434dc5197117298cdddc069))
+
+
+
 # [3.15.0](https://github.com/forio/epicenter-libs/compare/v3.14.0...v3.15.0) (2022-06-22)
 
 
