@@ -1,6 +1,6 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope, GenericSearchOptions } from '../utils/constants';
-import type { Video, AFFILIATE } from '../apis/video';
+import type { Video, AFFILIATE, PROCESSING_TYPE, MEDIA_FORMAT, LANGUAGE_CODE } from '../apis/video';
 
 import EpicenterError from '../utils/error';
 import * as videoAPI from '../apis/video';
@@ -92,4 +92,54 @@ export async function getURL(
         return videoAPI.getVideoURLByKey(file, videoKey, routingOptions);
     }
     throw new EpicenterError('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
+}
+
+/**
+ * Processes a video (one example of this is transcribing a video)
+ * @example
+ *  
+ *       const processors = [
+ *           {
+ *               mediaFormat: 'mp4',
+ *               languageCode: 'en-US',
+ *               objectType: 'transcription',
+ *               mediaFile: 'archive.mp4',
+ *               jobName: 'test-transcription',
+ *           },
+ *       ];
+ *       
+ *       videoAdapter.processVideo(videoKey, processors);
+ * 
+ * @param videoKey                              Video key
+ * @param [processors[]]                        List of processes to complete
+ * @param [processors[].jobName]                A string to specify the title of the newly file
+ * @param [processors[].mediaFormat]            The format of the file you are processing
+ * @param [processors[].languageCode]           The language which the video is recorded in
+ * @param [processors[].timeoutMinutes]         Optional- how long to wait before the call cancels out; defaults to 3 minutes
+ * @param [processors[].mediaFile]              The name of the media file to perform the process on
+ * @param [processors[].objectType]             The type of processing job to perform (currently limited to transcribe)
+ * @param [optionals]                           Optional arguments; pass network call options overrides here.
+ * @param [optionals.log]                       Name for log file
+ * @returns promise that resolves a boolean
+ */
+export async function processVideo(
+    videoKey: string,
+    processors: {
+        jobName: string,
+        mediaFormat: keyof typeof MEDIA_FORMAT,
+        languageCode: keyof typeof LANGUAGE_CODE,
+        timeoutMinutes?: number,
+        mediaFile: string,
+        objectType: keyof typeof PROCESSING_TYPE,
+    }[],
+    optionals: {
+        log?: string,
+    } & RoutingOptions = {}
+): Promise<boolean> {
+    const { log, ...routingOptions } = optionals;
+    const body = {
+        processors,
+        log,
+    };
+    return videoAPI.postVideoProcessor(videoKey, body, routingOptions);
 }
