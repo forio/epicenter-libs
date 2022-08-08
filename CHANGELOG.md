@@ -1,3 +1,17 @@
+## [3.15.2](https://github.com/forio/epicenter-libs/compare/v3.15.1...v3.15.2) (2022-08-08)
+
+
+### Bug Fixes
+
+* adjust run spec to account for recent updates ([7bbb853](https://github.com/forio/epicenter-libs/commit/7bbb8538f8cf0bd044c7da65e0bbf94438635983))
+
+
+### Features
+
+* t: EPICENTER-5304 make getVariables more flexible for single run ([122828e](https://github.com/forio/epicenter-libs/commit/122828e00067f879ab20e3188eed15d27baaa709))
+
+
+
 ## [3.15.1](https://github.com/forio/epicenter-libs/compare/v3.15.0...v3.15.1) (2022-06-29)
 
 
