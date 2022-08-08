@@ -77,6 +77,14 @@ class CometdAdapter {
     }
 
     listenToMetaChannels() {
+        errorManager.registerHandler(
+            (error) => error.code === 'COMETD_RECONNECTED',
+            async(error: Fault) => {
+                if (isBrowser()) {
+                    console.warn('Cometd Reconnected. If you wish to react to this reconnection, register an error handler with identifier: error.code === "COMETD_RECONNECTED".', error);
+                }
+            }
+        );
         const connectListener = new Promise((resolve, reject) => {
             this.cometd.addListener(CONNECT_META_CHANNEL, (message: Message) => {
                 if (this.cometd.isDisconnected()) {
