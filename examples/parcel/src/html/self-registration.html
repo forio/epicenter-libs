@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+    <meta charset="utf-8">
+    <title>v3 Vanilla</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="../assets/favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../assets/favicon/site.webmanifest">
+    <link rel="mask-icon" href="../assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="../assets/favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="../assets/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="../css/common.scss">
+    <link rel="stylesheet" href="../css/self-registration.scss">
+</head>
+<body>
+    <main>
+        <h1>Self Registration</h1>
+        <a href="index.html"><< Back</a>
+        <form id="self-register">
+            <h3>Send Registration Email</h3>
+            <h4>An email will be sent to you with a link to register</h4>
+            <fieldset>
+            <div class="inputs">
+                <label for="email">Email</label>
+                <input id="email" name="email" />
+                <label for="groupKey">groupKey</label>
+                <input id="groupKey" name="groupKey" />
+            </div>
+            </fieldset>
+            <button>Send Email</button>
+        </form>
+        <hr/>
+        <form id="finish-self-register">
+            <h3>Finalize Self-Registration</h3>
+            <p>Note: this is just for testing the functionality; actual signup would occur via clicking the link and completing the process in Epicenter Manager</p>
+            <fieldset>
+                <legend>Required</legend>
+                <div class="inputs">
+                    <label for="url">Link from registration email</label>
+                    <input id="url" name="url" />
+                    <label for="password">Password</label>
+                    <input id="password" name="password" type="password" />
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Optional</legend>
+                <div class="inputs">
+                    <label for="handle">Handle (defaults to email)</label>
+                    <input id="handle" name="handle" />
+                    <label for="givenName">Given name</label>
+                    <input id="givenName" name="givenName" />
+                    <label for="familyName">Family name</label>
+                    <input id="familyName" name="familyName" />
+                    <label for="displayName">Display name</label>
+                    <input id="displayName" name="displayName" />
+                </div>
+            </fieldset>
+            <button>Finish</button>
+        </form>
+    </main>
+</body>
+<script src="../js/self-registration.js"></script>
+</html>

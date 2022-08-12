@@ -1,4 +1,4 @@
-import type { UserSession } from '../utils/identification';
+import type { UserSession, Session } from '../utils/identification';
 import type { RoutingOptions, Page } from '../utils/router';
 import type { GenericSearchOptions } from '../utils/constants';
 import type { User } from './user';
@@ -47,6 +47,11 @@ export interface Group extends GroupUpdate {
     name: string,
     groupKey: string,
     members?: Member[],
+}
+
+interface SelfRegistrationResult {
+    redirectUrl: string,
+    whoAmI: Session,
 }
 
 
@@ -375,20 +380,139 @@ export async function getSessionGroups(
 
 
 /**
- * Self-application for membership in a group; will only work if the group has the self-registration setting turned on.
+ * Permits a list of users to self-register for membership in a group; will only work if the group has allowSelfRegistration set to true
  * @example
- * epicenter.groupAdapter.register('0000017dd3bf540e5ada5b1e058f08f20461');
- * @param groupKey      Key associated with group
- * @param [optionals]   Optional arguments; pass network call options overrides here.
- * @returns promise that resolves in a group
+ * epicenter.groupAdapter.whitelistUsers('0000017dd3bf540e5ada5b1e058f08f20461', {
+ *    allow: true,
+ *    emails: ['user1@test.com', 'user2@test.com'],
+ * });
+ * @param groupKey                  Key associated with group
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals.allow]         Whether to allow or disallow self-registration for the specified users; defaults to true if unset
+ * @param [optionals.emails]        List of emails to allow or disallow; a value of "*" is interpreted as all users; defaults to all users if unset
+ * @returns promise that resolves to undefined (indicating success)
  */
-export async function register(
+export async function whitelistUsers(
     groupKey: string,
-    optionals: RoutingOptions = {}
-): Promise<Group> {
+    optionals: {
+        allow?: boolean,
+        emails?: string[]
+    } & RoutingOptions = {}
+): Promise<void> {
+    const { 
+        allow = true,
+        emails = ['*'],
+        ...routingOptions
+    } = optionals;
 
     return await new Router()
-        .post(`/group/selfRegistration/${groupKey}`, optionals)
+        .post(`/group/self/${groupKey}`, {
+            body: {
+                allow,
+                emails,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Retrieves a group with given group name
+ * @example
+ * epicenter.groupAdapter.getWhitelistedUsers('0000017dd3bf540e5ada5b1e058f08f20461');
+ * @param groupKey      Key associated with the group
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a list of users
+ */
+export async function getWhitelistedUsers(
+    groupKey: string,
+    optionals: RoutingOptions = {}
+): Promise<User[]> {
+
+    return await new Router()
+        .get(`/group/self/${groupKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Sends an email to the specified email address with a link to complete self-registration for a group
+ * @example
+ * epicenter.groupAdapter.sendRegistrationEmail('0000017dd3bf540e5ada5b1e058f08f20461', 'user1@test.com', {
+ *     redirectURL: 'https://forio.com/app/acme/simulations',
+ *     subject: 'Complete your registration!',
+ * });
+ * @param groupKey                  Key associated with group
+ * @param email                     Email address to send the link to
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param  [optionals.redirectURL]  Url to redirect to after password reset is completed. Must be in the forio domain otherwise an error will be thrown
+ * @param  [optionals.subject]      The subject of the email that will be sent
+ * @returns promise that resolves to undefined (indicating success)
+ */
+export async function sendRegistrationEmail(
+    groupKey: string,
+    email: string,
+    optionals: {
+        redirectURL?: string,
+        subject?: string,
+    } & RoutingOptions = {}
+): Promise<void> {
+    const { redirectURL, subject, ...routingOptions } = optionals;
+
+    return await new Router()
+        .post(`/registration/self/${groupKey}`, {
+            body: {
+                email,
+                redirectUrl: redirectURL,
+                subject,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Finalizes a user's self-registration process for a group, requires the project to have deployment.autoCreatePlayer set to true
+ * @example
+ * epicenter.groupAdapter.selfRegister('myregistrationtoken', 'pass', {
+ *    displayName: 'My Display Name',
+ *    givenName: 'Leonard',
+ *    familyName: 'Nimoy',
+ *    handle: 'the_real_spock',
+ * });
+ * @param groupKey                  Key associated with group
+ * @param password                  Password the user would use to log in
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param  [optionals.displayName]  Display name chosen by user
+ * @param  [optionals.givenName]    User's given name
+ * @param  [optionals.familyName]   User's family name
+ * @param  [optionals.handle]       Handle the user would use to log in, defaults to email address if not specified
+ * @returns promise resolving to an object containing the redirect URL and the session
+ */
+export async function selfRegister(
+    token: string,
+    password: string,
+    optionals: {
+        displayName?: string,
+        givenName?: string,
+        familyName?: string,
+        handle?: string,
+    } & RoutingOptions = {}
+): Promise<SelfRegistrationResult> {
+    const { displayName, givenName, familyName, handle, ...routingOptions } = optionals;
+
+    return await new Router()
+        .patch(`/registration/self/${token}`, {
+            body: {
+                password,
+                displayName,
+                givenName,
+                familyName,
+                handle,
+            },
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
