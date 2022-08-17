@@ -97,6 +97,7 @@ describe('Router (Fetch/Request Wrapper)', () => {
         config.loadBrowser();
         config.accountShortName = ACCOUNT;
         config.projectShortName = PROJECT;
+        config.useProjectProxy = false;
         config.authOverride = undefined;
     });
 
@@ -110,6 +111,7 @@ describe('Router (Fetch/Request Wrapper)', () => {
     describe('Configuration', () => {
         it('Should start with URI components all undefined', () => {
             (typeof router.server).should.equal('undefined');
+            (typeof router.useProjectProxy).should.equal('undefined');
             (typeof router.accountShortName).should.equal('undefined');
             (typeof router.projectShortName).should.equal('undefined');
             (typeof router.version).should.equal('undefined');
@@ -138,6 +140,19 @@ describe('Router (Fetch/Request Wrapper)', () => {
             const req2 = fakeServer.requests.pop();
             req2.url.should.equal(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
         });
+        it('Should route calls to the project proxy server', async() => {
+            config.useProjectProxy = true;
+
+            await router.get('/run');
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://forio.com/proxy/${ACCOUNT}/${PROJECT}/api/v3/${ACCOUNT}/${PROJECT}/run`);
+
+            config.useProjectProxy = false;
+
+            await router.get('/run');
+            const req2 = fakeServer.requests.pop();
+            req2.url.should.equal(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
+        });
         it('Should ignore configuration values when URI components are provided directly to the router', async() => {
             router.server = 'https://mydomain.com';
             router.accountShortName = 'anything';
@@ -149,6 +164,13 @@ describe('Router (Fetch/Request Wrapper)', () => {
             await router.get('/run');
             const req = fakeServer.requests.pop();
             req.url.should.equal('https://mydomain.com/api/v3/anything/else/run');
+
+            config.useProjectProxy = false;
+            router.useProjectProxy = true;
+
+            await router.get('/run');
+            const req2 = fakeServer.requests.pop();
+            req2.url.should.equal('https://mydomain.com/proxy/anything/else/api/v3/anything/else/run');
         });
         describe('Routing Options', () => {
             it('Should accept routing options overrides from adapter methods', async() => {
@@ -174,6 +196,10 @@ describe('Router (Fetch/Request Wrapper)', () => {
                 await router.put('/run', { accountShortName: 'something', projectShortName: 'else' });
                 const req5 = fakeServer.requests.pop();
                 req5.url.should.equal('https://forio.com/api/v3/something/else/run');
+
+                await router.get('/run', { useProjectProxy: true });
+                const req6 = fakeServer.requests.pop();
+                req6.url.should.equal(`https://forio.com/proxy/${ACCOUNT}/${PROJECT}/api/v3/${ACCOUNT}/${PROJECT}/run`);
             });
             it('Should prioritize method overrides over router instance properties', async() => {
                 router.accountShortName = 'something';
@@ -191,6 +217,12 @@ describe('Router (Fetch/Request Wrapper)', () => {
                 await router.get('/run', { accountShortName: 'foo', projectShortName: 'bar' });
                 const req = fakeServer.requests.pop();
                 req.url.should.equal('https://forio.com/api/v3/foo/bar/run');
+
+                config.useProjectProxy = false;
+
+                await router.get('/run', { accountShortName: 'foo', projectShortName: 'bar', useProjectProxy: true });
+                const req2 = fakeServer.requests.pop();
+                req2.url.should.equal('https://forio.com/proxy/foo/bar/api/v3/foo/bar/run');
             });
             it('Should accept configuration from config, router instance, and method overrides', async() => {
                 config.accountShortName = 'something';
@@ -279,14 +311,16 @@ describe('Router (Fetch/Request Wrapper)', () => {
         });
     });
     describe('\'with\' Functions', () => {
-        it('Should have \'with\' functions for server, account, project, and search params', () => {
+        it('Should have \'with\' functions for server, project proxy, account, project, and search params', () => {
             (typeof router.withServer).should.equal('function');
+            (typeof router.withProjectProxy).should.equal('function');
             (typeof router.withAccountShortName).should.equal('function');
             (typeof router.withProjectShortName).should.equal('function');
             (typeof router.withSearchParams).should.equal('function');
         });
         it('Should return the router instance', () => {
             router.withServer().should.equal(router);
+            router.withProjectProxy().should.equal(router);
             router.withAccountShortName().should.equal(router);
             router.withProjectShortName().should.equal(router);
             router.withSearchParams().should.equal(router);
@@ -302,6 +336,20 @@ describe('Router (Fetch/Request Wrapper)', () => {
             await router.get('/run');
             const req = fakeServer.requests.pop();
             req.url.should.equal('https://forio.com/api/v3/something//run');
+
+            router.accountShortName = 'something';
+            router.projectShortName = 'else';
+            router.withProjectProxy(true);
+
+            await router.get('/run');
+            const req2 = fakeServer.requests.pop();
+            req2.url.should.equal('https://forio.com/proxy/something/else/api/v3/something/else/run');
+
+            router.withProjectProxy(false);
+
+            await router.get('/run');
+            const req3 = fakeServer.requests.pop();
+            req3.url.should.equal('https://forio.com/api/v3/something/else/run');
         });
     });
     describe('Authorization', () => {

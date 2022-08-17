@@ -5,6 +5,7 @@ describe('Global Configuration', () => {
         config.setContext({
             accountShortName: ACCOUNT,
             projectShortName: PROJECT,
+            useProjectProxy: false,
         });
     });
     it('Should be able to detect test site is using local.forio.com', () => {
@@ -18,14 +19,22 @@ describe('Global Configuration', () => {
         config.setContext({
             apiProtocol: 'http',
             apiHost: 'localhost',
+            useProjectProxy: true,
             accountShortName: 'account',
             projectShortName: 'project',
         });
 
         config.apiProtocol.should.be.equal('http');
         config.apiHost.should.be.equal('localhost');
+        config.useProjectProxy.should.be.equal(true);
         config.accountShortName.should.be.equal('account');
         config.projectShortName.should.be.equal('project');
+
+        config.setContext({
+            useProjectProxy: false,
+        });
+
+        config.useProjectProxy.should.be.equal(false);
     });
     it('Should ignore sets for apiProtocol when setting values that aren\'t http', () => {
         config.apiProtocol = 'anything else';
