@@ -10,6 +10,7 @@ import { prefix, isBrowser } from './helpers';
 
 type Version = number | undefined;
 type Server = string | undefined;
+type UseProjectProxy = boolean | undefined;
 type AccountShortName = string | undefined;
 type ProjectShortName = string | undefined;
 type Authorization = string | undefined;
@@ -19,6 +20,7 @@ type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 export interface RoutingOptions {
     authorization?: Authorization,
     server?: Server,
+    useProjectProxy?: UseProjectProxy,
     accountShortName?: AccountShortName,
     projectShortName?: ProjectShortName,
     query?: SearchParams,
@@ -228,6 +230,7 @@ async function request(
 export default class Router {
     _version: Version = undefined
     _server: Server = undefined
+    _useProjectProxy: UseProjectProxy = undefined;
     _accountShortName: AccountShortName = undefined;
     _projectShortName: ProjectShortName = undefined;
     _authorization: Authorization = undefined;
@@ -254,6 +257,22 @@ export default class Router {
 
     set server(value: Server) {
         this._server = value;
+    }
+
+    /**
+     * If true, requests are routed to project proxy server.
+     * The proxy server processes requests and forwards them to the Epicenter platform as appropriate,
+     * usually with some modification. Can be used to grant heightened privileges to a request.
+     *
+     * If true, prefixes all request pathnames with `proxy/${accountShortName}/${projectShortName}/`.
+     * @type {boolean}
+     */
+    get useProjectProxy(): UseProjectProxy {
+        return this._useProjectProxy;
+    }
+
+    set useProjectProxy(value: UseProjectProxy) {
+        this._useProjectProxy = value;
     }
 
     /**
@@ -348,6 +367,16 @@ export default class Router {
     }
 
     /**
+     * Sets whether to route requests to project proxy server. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
+     * @param {string} [useProjectProxy] Whether to use the proxy server
+     * @returns {Router}                 The Router instance
+     */
+    withProjectProxy(useProjectProxy: UseProjectProxy): Router {
+        if (typeof useProjectProxy !== 'undefined') this.useProjectProxy = useProjectProxy;
+        return this;
+    }
+
+    /**
      * Sets the account. Does nothing if invoked with no input. This is a part of a series of convenience functions for chaining sets on values.
      * @param {string} [accountShortName]   Account name to use
      * @returns {Router}                    The Router instance
@@ -392,6 +421,7 @@ export default class Router {
      * @param uriComponent                  The URI component used to generate the URL object
      * @param [overrides]                   Overrides for generating the URL object
      * @param [overrides.server]            Override for the root URL string -- composed of the protocol and the hostname; e.g., https://forio.com
+     * @param [overrides.useProjectProxy]   Override for routing requests to the project proxy server
      * @param [overrides.accountShortName]  Override for the account short name
      * @param [overrides.projectShortName]  Override for the project short name
      * @param [overrides.version]           Override for the version (NIU, is set by the config)
@@ -402,6 +432,7 @@ export default class Router {
         uriComponent: string,
         overrides: {
             server?: string,
+            useProjectProxy?: boolean,
             accountShortName?: string,
             projectShortName?: string,
             version?: number
@@ -409,12 +440,19 @@ export default class Router {
         } = {}
     ): URL {
         const server = overrides.server ?? this.server ?? `${config.apiProtocol}://${config.apiHost}`;
+        const useProjectProxy = overrides.useProjectProxy ?? this.useProjectProxy ?? config.useProjectProxy;
         const accountShortName = overrides.accountShortName ?? this.accountShortName ?? config.accountShortName;
         const projectShortName = overrides.projectShortName ?? this.projectShortName ?? config.projectShortName;
         const version = overrides?.version ?? this.version ?? config.apiVersion;
 
         const url = new URL(`${server}`);
-        url.pathname = `api/v${version}/${accountShortName}/${projectShortName}${prefix('/', uriComponent)}`;
+
+        const proxyPathComponent = useProjectProxy ? `proxy/${accountShortName}/${projectShortName}/` : '';
+        const commonPathComponent = `api/v${version}/${accountShortName}/${projectShortName}`;
+        const uniquePathComponent = prefix('/', uriComponent);
+
+        url.pathname = `${proxyPathComponent}${commonPathComponent}${uniquePathComponent}`;
+
         url.search = overrides.query !== undefined ?
             parseQuery(overrides.query).toString() :
             (this.searchParams ?? new URLSearchParams()).toString();
@@ -424,11 +462,11 @@ export default class Router {
     //Network Requests
     async get(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query,
+            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
             headers, includeAuthorization, inert, paginated, parsePage,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
 
         if (url.href.length > MAX_URL_LENGTH) {
             const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
@@ -468,11 +506,11 @@ export default class Router {
 
     async delete(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query,
+            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
             headers, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
         return request(url, {
             method: 'DELETE',
             headers,
@@ -484,11 +522,11 @@ export default class Router {
 
     async patch(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query,
+            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
             headers, body, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
         return request(url, {
             method: 'PATCH',
             headers,
@@ -501,11 +539,11 @@ export default class Router {
 
     async post(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query,
+            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
             headers, body, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy});
         return request(url, {
             method: 'POST',
             headers,
@@ -518,11 +556,11 @@ export default class Router {
 
     async put(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query,
+            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
             headers, body, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName });
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy});
         return request(url, {
             method: 'PUT',
             headers,
