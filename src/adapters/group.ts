@@ -417,7 +417,7 @@ export async function whitelistUsers(
 }
 
 /**
- * Retrieves a group with given group name
+ * Retrieves a list of users allowed to self-register for membership in a group with a given groupKey
  * @example
  * epicenter.groupAdapter.getWhitelistedUsers('0000017dd3bf540e5ada5b1e058f08f20461');
  * @param groupKey      Key associated with the group
