@@ -150,6 +150,69 @@ describe('Router (Fetch/Request Wrapper)', () => {
             const req = fakeServer.requests.pop();
             req.url.should.equal('https://mydomain.com/api/v3/anything/else/run');
         });
+        describe('Routing Options', () => {
+            it('Should accept routing options overrides from adapter methods', async() => {
+                config.accountShortName = ACCOUNT;
+                config.projectShortName = PROJECT;
+
+                await router.get('/run', { accountShortName: 'something', projectShortName: 'else' });
+                const req = fakeServer.requests.pop();
+                req.url.should.equal('https://forio.com/api/v3/something/else/run');
+
+                await router.delete('/run', { accountShortName: 'something', projectShortName: 'else' });
+                const req2 = fakeServer.requests.pop();
+                req2.url.should.equal('https://forio.com/api/v3/something/else/run');
+
+                await router.patch('/run', { accountShortName: 'something', projectShortName: 'else' });
+                const req3 = fakeServer.requests.pop();
+                req3.url.should.equal('https://forio.com/api/v3/something/else/run');
+
+                await router.post('/run', { accountShortName: 'something', projectShortName: 'else' });
+                const req4 = fakeServer.requests.pop();
+                req4.url.should.equal('https://forio.com/api/v3/something/else/run');
+
+                await router.put('/run', { accountShortName: 'something', projectShortName: 'else' });
+                const req5 = fakeServer.requests.pop();
+                req5.url.should.equal('https://forio.com/api/v3/something/else/run');
+            });
+            it('Should prioritize method overrides over router instance properties', async() => {
+                router.accountShortName = 'something';
+                router.projectShortName = 'else';
+                router.apiHost = 'mydomain.com';
+
+                await router.get('/run', { apiHost: 'forio.com', accountShortName: 'foo', projectShortName: 'bar' });
+                const req = fakeServer.requests.pop();
+                req.url.should.equal('https://forio.com/api/v3/foo/bar/run');
+            });
+            it('Should prioritize method overrides over configuration values', async() => {
+                config.accountShortName = 'something';
+                config.projectShortName = 'else';
+
+                await router.get('/run', { accountShortName: 'foo', projectShortName: 'bar' });
+                const req = fakeServer.requests.pop();
+                req.url.should.equal('https://forio.com/api/v3/foo/bar/run');
+            });
+            it('Should accept configuration from config, router instance, and method overrides', async() => {
+                config.accountShortName = 'something';
+                router.projectShortName = 'else';
+
+                await router.get('/run', { server: 'https://mydomain.com' });
+                const req = fakeServer.requests.pop();
+                req.url.should.equal('https://mydomain.com/api/v3/something/else/run');
+            });
+            it('Should not affect subsequent requests', async() => {
+                config.accountShortName = ACCOUNT;
+                config.projectShortName = PROJECT;
+
+                await router.get('/run', { accountShortName: 'foo', projectShortName: 'bar' });
+                const req = fakeServer.requests.pop();
+                req.url.should.equal('https://forio.com/api/v3/foo/bar/run');
+
+                await router.get('/run');
+                const req2 = fakeServer.requests.pop();
+                req2.url.should.equal(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
+            });
+        });
     });
     describe('Network Calls', () => {
         it('Should make a GET call when calling \'get\'', async() => {
