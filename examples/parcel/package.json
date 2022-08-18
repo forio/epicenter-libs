@@ -15,7 +15,6 @@
     "sass": "^1.35.2"
   },
   "dependencies": {
-    "epicenter": "file:../..",
-    "epicenter-libs": "^3.15.1"
+    "epicenter-libs": "file:../.."
   }
 }
