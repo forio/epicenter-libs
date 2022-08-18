@@ -1,5 +1,5 @@
 import './config';
-import { authAdapter, groupAdapter } from 'epicenter-libs';
+import { authAdapter, groupAdapter } from 'epicenter';
 
 const identifyError = (code) => {
     switch (code) {

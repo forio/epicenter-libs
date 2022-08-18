@@ -618,6 +618,7 @@ describe('Run APIs', () => {
     });
     describe('runAdapter.getVariables', () => {
         const RUN_KEY = '123456789';
+        const RUN_KEY_2 = '123456789';
         const VARIABLES = ['var1', 'var2', 'var3'];
         it('Should do a POST', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
@@ -629,8 +630,14 @@ describe('Run APIs', () => {
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/variable URL', async() => {
+        it('Should use the run/variable/runkey URL for single runs', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+        });
+        it('Should use the run/variable URL for multiple runs', async() => {
+            await runAdapter.getVariables([RUN_KEY, RUN_KEY_2], VARIABLES);
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
@@ -640,7 +647,7 @@ describe('Run APIs', () => {
             const req = fakeServer.requests.pop();
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable`);
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: 300, ritual: RITUAL.REANIMATE });
@@ -709,7 +716,7 @@ describe('Run APIs', () => {
             await runAdapter.getVariable(RUN_KEY, [VARIABLE, 'var2']);
             const req = fakeServer.requests.pop();
             const [url] = req.url.split('?');
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
             const body = JSON.parse(req.requestBody);
             body.include.should.equal([VARIABLE, 'var2'].join(';'));
         });
