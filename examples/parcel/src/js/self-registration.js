@@ -3,10 +3,11 @@ import { groupAdapter } from 'epicenter-libs';
 
 document.getElementById('self-register').addEventListener('submit', async(event) => {
     event.preventDefault();
-    const redirectURL = 'https://forio.com/app/harvard-test/crafting-your-life';
+    const linkURL = '/register';
+    const redirectURL = '/login';
     const subject = 'Please finish your registration for test!';
     const { email, groupKey } = event.target.elements;
-    await groupAdapter.sendRegistrationEmail(groupKey.value, email.value, { redirectURL, subject });
+    await groupAdapter.sendRegistrationEmail(groupKey.value, email.value, { linkURL, redirectURL, subject });
 });
 
 document.getElementById('finish-self-register').addEventListener('submit', async(event) => {

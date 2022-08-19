@@ -439,13 +439,15 @@ export async function getWhitelistedUsers(
  * Sends an email to the specified email address with a link to complete self-registration for a group
  * @example
  * epicenter.groupAdapter.sendRegistrationEmail('0000017dd3bf540e5ada5b1e058f08f20461', 'user1@test.com', {
- *     redirectURL: 'https://forio.com/app/acme/simulations',
+ *     redirectURL: '/login',
+ *     linkURL: '/register',
  *     subject: 'Complete your registration!',
  * });
  * @param groupKey                  Key associated with group
  * @param email                     Email address to send the link to
  * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @param  [optionals.redirectURL]  Url to redirect to after password reset is completed. Must be in the forio domain otherwise an error will be thrown
+ * @param  [optionals.linkURL]      Relative path to link sent in email to complete registration (<forio scheme>://<forio host>/app/<account>/<project><linkURL>)
+ * @param  [optionals.redirectURL]  Relative path to redirect to after completing registration (<forio scheme>://<forio host>/app/<account>/<project><redirectURL>)
  * @param  [optionals.subject]      The subject of the email that will be sent
  * @returns promise that resolves to undefined (indicating success)
  */
@@ -453,16 +455,18 @@ export async function sendRegistrationEmail(
     groupKey: string,
     email: string,
     optionals: {
+        linkURL?: string,
         redirectURL?: string,
         subject?: string,
     } & RoutingOptions = {}
 ): Promise<void> {
-    const { redirectURL, subject, ...routingOptions } = optionals;
+    const { redirectURL, linkURL, subject, ...routingOptions } = optionals;
 
     return await new Router()
         .post(`/registration/self/${groupKey}`, {
             body: {
                 email,
+                linkUrl: linkURL,
                 redirectUrl: redirectURL,
                 subject,
             },
