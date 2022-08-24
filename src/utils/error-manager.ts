@@ -3,7 +3,9 @@ import Fault from './fault';
 
 
 type Identifier = (error: Fault) => boolean
-type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<T>
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>
+/* eslint-enable  @typescript-eslint/no-explicit-any */
 
 interface Handler {
     identifier: Identifier,
