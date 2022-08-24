@@ -29,7 +29,7 @@ describe('Time APIs', () => {
 
     after(() => {
         fakeServer.restore();
-        authAdapter.logout();
+        authAdapter.setLocalSession(undefined);
     });
 
     describe('timeAdapter.get', () => {

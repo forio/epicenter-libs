@@ -7,6 +7,7 @@ class Config {
     _apiVersion = API_VERSION;
     _apiProtocol = '';
     _apiHost = '';
+    _useProjectProxy = false;
     _accountShortName = '';
     _projectShortName = '';
 
@@ -52,6 +53,21 @@ class Config {
 
     set apiHost(apiHost) {
         this._apiHost = apiHost;
+    }
+
+    /**
+     * If true, requests are routed to project proxy server.
+     * The proxy server processes requests and forwards them to the Epicenter platform as appropriate,
+     * usually with some modification. Can be used to grant heightened privileges to a request.
+     * @memberof config
+     * @type {boolean}
+     */
+    get useProjectProxy() {
+        return this._useProjectProxy;
+    }
+
+    set useProjectProxy(useProjectProxy) {
+        this._useProjectProxy = useProjectProxy;
     }
 
     /**
@@ -161,11 +177,13 @@ class Config {
     setContext(context: {
         apiProtocol?: string,
         apiHost?: string,
+        useProjectProxy?: boolean,
         accountShortName?: string,
         projectShortName?: string,
     }) {
         if (context.apiProtocol) this.apiProtocol = context.apiProtocol;
         if (context.apiHost) this.apiHost = context.apiHost;
+        if (typeof context.useProjectProxy === 'boolean') this.useProjectProxy = context.useProjectProxy;
         if (context.accountShortName) this.accountShortName = context.accountShortName;
         if (context.projectShortName) this.projectShortName = context.projectShortName;
     }
