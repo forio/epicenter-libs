@@ -269,19 +269,22 @@ describe('Vault APIs', () => {
         it('Should use accept userKey, ttlSeconds, and mutationKey provided', async() => {
             const USER_KEY = 'myuserkey';
             const TTL_SECONDS = 20;
-            const MUTATION_KEY = 'mymutationkey';
+            const MUTATION_STRATEGY = 'ALLOW';
             const RANDOM_THING = { something: 'random' };
             await vaultAdapter.define(NAME, { ...WORLD_SCOPE, userKey: USER_KEY }, {
                 ttlSeconds: TTL_SECONDS,
-                mutationKey: MUTATION_KEY,
+                mutationStrategy: MUTATION_STRATEGY,
                 ...RANDOM_THING,
             });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.scope.userKey.should.equal(USER_KEY);
             body.ttlSeconds.should.equal(TTL_SECONDS);
-            body.mutationKey.should.equal(MUTATION_KEY);
             body.should.not.include(RANDOM_THING);
+
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.get('mutationStrategy').should.equal(MUTATION_STRATEGY);
         });
         testedMethods.push('define');
     });
