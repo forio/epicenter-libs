@@ -34,6 +34,14 @@ describe('Group APIs', () => {
         fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
         });
+        fakeServer.respondWith('POST', /(.*)\/registration/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+        });
+        fakeServer.respondWith('PATCH', /(.*)\/registration/, function(xhr, id) {
+            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+        });
 
         fakeServer.respondImmediately = true;
     });
@@ -406,30 +414,111 @@ describe('Group APIs', () => {
         });
         testedMethods.push('getSessionGroups');
     });
-    describe('groupAdapter.register', () => {
+    describe('groupAdapter.whitelistUsers', () => {
         const GROUP_KEY = 'mygroupkey';
+        const allow = true;
+        const emails = ['user1@test.com', 'user2@test.com'];
         it('Should do a POST', async() => {
-            await groupAdapter.register(GROUP_KEY);
+            await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
-            await groupAdapter.register(GROUP_KEY);
+            await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the group/member URL', async() => {
-            await groupAdapter.register(GROUP_KEY);
+        it('Should use the group/self URL', async() => {
+            await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/selfRegistration/${GROUP_KEY}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+        });
+        it('Should by default set allow for all users', async() => {
+            await groupAdapter.whitelistUsers(GROUP_KEY);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.allow.should.equal(true);
+            body.emails.should.deep.equal(['*']);
         });
         it('Should support generic URL options', async() => {
-            await groupAdapter.register(GROUP_KEY, GENERIC_OPTIONS);
+            await groupAdapter.whitelistUsers(GROUP_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/selfRegistration/${GROUP_KEY}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
         });
-        testedMethods.push('register');
+        testedMethods.push('whitelistUsers');
+    });
+    describe('groupAdapter.getWhitelistedUsers', () => {
+        const GROUP_KEY = 'mygroupkey';
+        it('Should do a GET', async() => {
+            await groupAdapter.getWhitelistedUsers(GROUP_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await groupAdapter.getWhitelistedUsers(GROUP_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the group/self URL', async() => {
+            await groupAdapter.getWhitelistedUsers(GROUP_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await groupAdapter.getWhitelistedUsers(GROUP_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
+        });
+        testedMethods.push('getWhitelistedUsers');
+    });
+    describe('groupAdapter.sendRegistrationEmail', () => {
+        const GROUP_KEY = 'mygroupkey';
+        const email = 'user1@test.com';
+        it('Should do a POST', async() => {
+            await groupAdapter.sendRegistrationEmail(GROUP_KEY, email);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should use the /registration/self URL', async() => {
+            await groupAdapter.sendRegistrationEmail(GROUP_KEY, email);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${GROUP_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await groupAdapter.sendRegistrationEmail(GROUP_KEY, email, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${GROUP_KEY}`);
+        });
+        testedMethods.push('sendRegistrationEmail');
+    });
+    describe('groupAdapter.selfRegister', () => {
+        const REGISTRATION_TOKEN = 'myregistrationtoken';
+        const password = 'pass';
+        it('Should do a PATCH', async() => {
+            await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('PATCH');
+        });
+        it('Should have authorization', async() => {
+            await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the /registration/self URL', async() => {
+            await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${REGISTRATION_TOKEN}`);
+        });
+        it('Should support generic URL options', async() => {
+            await groupAdapter.selfRegister(REGISTRATION_TOKEN, password, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${REGISTRATION_TOKEN}`);
+        });
+        testedMethods.push('selfRegister');
     });
     describe('groupAdapter.addUser', () => {
         const GROUP_KEY = SESSION.groupKey;

@@ -1,9 +1,8 @@
 import './config';
 import {
-    authAdapter, presenceAdapter, episodeAdapter, runAdapter,
+    authAdapter, presenceAdapter, episodeAdapter, runAdapter, videoAdapter,
     Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter, userAdapter,
 } from 'epicenter-libs';
-import {videoAdapter} from 'epicenter';
 const session = authAdapter.getLocalSession();
 
 /* Define DOM elements */
