@@ -1,9 +1,8 @@
 import './config';
 import {
-    authAdapter, presenceAdapter, episodeAdapter, runAdapter,
-    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter, userAdapter
+    authAdapter, presenceAdapter, episodeAdapter, runAdapter, videoAdapter,
+    Channel, SCOPE_BOUNDARY, PUSH_CATEGORY, emailAdapter, userAdapter,
 } from 'epicenter-libs';
-
 const session = authAdapter.getLocalSession();
 
 /* Define DOM elements */
@@ -145,6 +144,23 @@ const initialize = () => {
         userAdapter.createUser({ handle, familyName, givenName, displayName, secret: { password }, objectType: 'native' })
             .then((user) => console.log('%c Created a user', 'font-size: 20px; color: #FB15B9FF;', user));
     };
+
+    document.getElementById('transcribeVideo').addEventListener('click', () => {
+        const videoKey = document.getElementById('transcribeVideoInput').value;
+        const processors = [
+            {
+                mediaFormat: 'mp4',
+                languageCode: 'en-US',
+                objectType: 'transcription',
+                mediaFile: 'archive.mp4',
+                jobName: 'test-transcription',
+            },
+        ];
+        const optionals = {
+            // log: 'test log',
+        };
+        videoAdapter.processVideo(videoKey, processors, optionals);
+    });
 };
 
 if (!session) {

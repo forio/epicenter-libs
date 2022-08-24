@@ -8,6 +8,62 @@ export enum AFFILIATE {
     VONAGE = 'VONAGE',
 }
 
+export enum PROCESSING_TYPE {
+    transcription = 'transcription',
+}
+
+export enum MEDIA_FORMAT {
+    mp3 = 'mp3',
+    mp4 = 'mp4',
+    wav = 'wav',
+    flac = 'flac',
+    ogg = 'ogg',
+    amr = 'amr',
+    webm = 'webm',
+}
+
+export enum LANGUAGE_CODE {
+    'af-ZA' = 'af-ZA',
+    'ar-AE' = 'ar-AE',
+    'ar-SA' = 'ar-SA',
+    'cy-GB' = 'cy-GB',
+    'da-DK' = 'da-DK',
+    'de-CH' = 'de-CH',
+    'de-DE' = 'de-DE',
+    'en-AB' = 'en-AB',
+    'en-AU' = 'en-AU',
+    'en-GB' = 'en-GB',
+    'en-IE' = 'en-IE',
+    'en-IN' = 'en-IN',
+    'en-US' = 'en-US',
+    'en-WL' = 'en-WL',
+    'es-ES' = 'es-ES',
+    'es-US' = 'es-US',
+    'fa-IR' = 'fa-IR',
+    'fr-CA' = 'fr-CA',
+    'fr-FR' = 'fr-FR',
+    'ga-IE' = 'ga-IE',
+    'gd-GB' = 'gd-GB',
+    'he-IL' = 'he-IL',
+    'hi-IN' = 'hi-IN',
+    'id-ID' = 'id-ID',
+    'it-IT' = 'it-IT',
+    'ja-JP' = 'ja-JP',
+    'ko-KR' = 'ko-KR',
+    'nl-NL' = 'nl-NL',
+    'pt-BR' = 'pt-BR',
+    'pt-PT' = 'pt-PT',
+    'ru-RU' = 'ru-RU',
+    'ta-IN' = 'ta-IN',
+    'te-IN' = 'te-IN',
+    'tr-TR' = 'tr-TR',
+    'zh-CN' = 'zh-CN',
+    'zh-TW' = 'zh-TW',
+    'th-TH' = 'th-TH',
+    'en-ZA' = 'en-ZA',
+    'en-NZ' = 'en-NZ',
+}
+
 export async function getVideoURLByKey(
     file: string,
     videoKey: string,
@@ -46,5 +102,25 @@ export async function deleteVideoByKey(
 ): Promise<void> {
     return await new Router()
         .delete(`/video/${videoKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+export async function postVideoProcessor(
+    videoKey: string,
+    body: {
+        processors: {
+            jobName?: string,
+            mediaFormat: keyof typeof MEDIA_FORMAT,
+            languageCode: keyof typeof LANGUAGE_CODE,
+            timeoutMinutes?: number,
+            mediaFile?: string,
+            objectType: keyof typeof PROCESSING_TYPE,
+        }[],
+        log?: string,
+    },
+    optionals: RoutingOptions = {},
+): Promise<boolean> {
+    return await new Router()
+        .post(`/video/execute/${videoKey}`, { body, ...optionals })
         .then(({ body }) => body);
 }
