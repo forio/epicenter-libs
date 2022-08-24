@@ -10,6 +10,14 @@ import { errorManager, identification, isBrowser, Fault, EpicenterError } from '
 
 const UNAUTHORIZED = 401;
 errorManager.registerHandler(
+    (error) => error.code === 'COMETD_RECONNECTED',
+    async(error: Fault) => {
+        if (isBrowser()) {
+            console.warn('Cometd Reconnected. If you wish to react to this reconnection, register an error handler with identifier: error.code === "COMETD_RECONNECTED".', error);
+        }
+    }
+);
+errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
     async(error: Fault) => {
         await authAdapter.removeLocalSession();
