@@ -1,3 +1,22 @@
+# [3.16.0](https://github.com/forio/epicenter-libs/compare/v3.15.2...v3.16.0) (2022-08-25)
+
+
+### Bug Fixes
+
+* add back run link; fix description of getWhitelistedUsers ([e15e750](https://github.com/forio/epicenter-libs/commit/e15e750e0eca82def6c7d8e76c017a7ae4b3be6f))
+* added video transcription route ([2ab0d77](https://github.com/forio/epicenter-libs/commit/2ab0d77a4a10b2a3ba4ff3a39fa3d7f2ebdc946c))
+* updated dependency ([c727f22](https://github.com/forio/epicenter-libs/commit/c727f2237bcbcf4e608627617875998afd4c9c83))
+
+
+### Features
+
+* add a handler to the cometd reconnection error ([531d602](https://github.com/forio/epicenter-libs/commit/531d6022c9bef3ff46cf8fce8aa989c4e4728c99))
+* add ability to specify link for self-registration email ([91ab013](https://github.com/forio/epicenter-libs/commit/91ab01350deca764dc3698fe0fdff9aff3f9eaac))
+* add functionality to self-register for groups ([ca0f785](https://github.com/forio/epicenter-libs/commit/ca0f78516d325f16486a80624fc289807e7bcdee))
+* **router:** add `useProjectProxy` routing config ([5c06a4b](https://github.com/forio/epicenter-libs/commit/5c06a4be2cf60768e833dbb882e091a622079150))
+
+
+
 ## [3.15.2](https://github.com/forio/epicenter-libs/compare/v3.15.1...v3.15.2) (2022-08-08)
 
 
