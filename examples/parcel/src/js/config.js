@@ -1,4 +1,4 @@
-import { config, version } from 'epicenter';
+import { config, version } from 'epicenter-libs';
 
 if (config.isLocal()) {
     /* For Production Site */
