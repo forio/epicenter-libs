@@ -225,6 +225,7 @@ describe('Vault APIs', () => {
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const ITEMS = { set: { foo: 'bar' } };
+        const DEFAULT_MUTATION_STRATEGY = '?mutationStrategy=ERROR';
         it('Should do a POST', async() => {
             await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
@@ -238,13 +239,18 @@ describe('Vault APIs', () => {
         it('Should use the vault URL', async() => {
             await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${NAME}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${NAME}${DEFAULT_MUTATION_STRATEGY}`);
+        });
+        it('Should pass on the mutationStrategy to the URL', async() => {
+            await vaultAdapter.define(NAME, GROUP_SCOPE, { mutationStrategy: 'DISALLOW' });
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${NAME}?mutationStrategy=DISALLOW`);
         });
         it('Should support generic URL options', async() => {
             await vaultAdapter.define(NAME, GROUP_SCOPE, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${NAME}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${NAME}${DEFAULT_MUTATION_STRATEGY}`);
         });
         it('Should pass the scope and items to the body', async() => {
             await vaultAdapter.define(NAME, GROUP_SCOPE, { items: ITEMS });
@@ -262,6 +268,7 @@ describe('Vault APIs', () => {
         it('Should use readLock and writeLock when explicitly provided', async() => {
             await vaultAdapter.define(NAME, WORLD_SCOPE, { readLock: ROLE.ANONYMOUS, writeLock: ROLE.ANONYMOUS });
             const req = fakeServer.requests.pop();
+
             const body = JSON.parse(req.requestBody);
             body.permit.readLock.should.equal(ROLE.ANONYMOUS);
             body.permit.writeLock.should.equal(ROLE.ANONYMOUS);
