@@ -172,7 +172,8 @@ export async function define(
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
         readLock, writeLock, items,
-        ttlSeconds, mutationStrategy,
+        ttlSeconds,
+        mutationStrategy = 'ERROR',
         ...routingOptions
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
@@ -180,7 +181,6 @@ export async function define(
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
     const searchParams = { mutationStrategy };
-    if (!mutationStrategy) delete searchParams.mutationStrategy;
 
     return await new Router()
         .withSearchParams(searchParams)
