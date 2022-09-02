@@ -29,21 +29,21 @@ describe('Run APIs', () => {
     });
 
     describe('worldAdapter.getPersonas', () => {
-        const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
+        const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
         it('Should do a GET to persona', async() => {
-            await worldAdapter.getPersonas(WORLD_SCOPE);
+            await worldAdapter.getPersonas(GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await worldAdapter.getPersonas(WORLD_SCOPE);
+            await worldAdapter.getPersonas(GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
         it('Should use the world/persona/group URL', async() => {
-            await worldAdapter.getPersonas(WORLD_SCOPE);
+            await worldAdapter.getPersonas(GROUP_SCOPE);
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${WORLD_SCOPE.scopeKey}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
     });
 
