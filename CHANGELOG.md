@@ -1,3 +1,19 @@
+# [3.17.0](https://github.com/forio/epicenter-libs/compare/v3.16.0...v3.17.0) (2022-10-07)
+
+
+### Bug Fixes
+
+* remove mutationStrategy from url if not provided, fix vault.spec ([fb26e9f](https://github.com/forio/epicenter-libs/commit/fb26e9fa40cba9c828acef817de6ab206a1a8b79))
+
+
+### Features
+
+* default mutationStrategy to ERROR for vault definitions ([0efae18](https://github.com/forio/epicenter-libs/commit/0efae18a94e04d969df4fe83d7700d95dbc4eb2a))
+* getPersonas added to worldAdapter ([b8083ad](https://github.com/forio/epicenter-libs/commit/b8083adfbc8c5d249fb154d7bd357b522d50ca38))
+* remove mutationKey from vault post, add mutationStrategy ([b0028a3](https://github.com/forio/epicenter-libs/commit/b0028a3b5f586a39ca0cdf4f5fae8097969be7e1))
+
+
+
 # [3.16.0](https://github.com/forio/epicenter-libs/compare/v3.15.2...v3.16.0) (2022-08-25)
 
 
