@@ -143,20 +143,20 @@ export async function remove(
  *      scopeKey: 'GROUP_KEY'
  * });
  *
- * @param name                      Name of the vault
- * @param scope                     Scope associated with your run
- * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param [scope.userKey]           Optional key to scope the vault to a user
- * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @param [optionals.items]         Optional items parameter for updating vault contents
- * @param [optionals.items.set]     Sets a field in the vault, where `[name]: [value]`, send `[name]: null` to delete
- * @param [optionals.items.push]    Adds an item to a list in the vault, it the list does not exist it will create one
- * @param [optionals.items.pop]     Use to remove items lists in a vault; TODO: how to use is unclear, elucidate
- * @param [optionals.readLock]      Role allowed to read
- * @param [optionals.writeLock]     Role allowed to write
- * @param [optionals.ttlSeconds]    Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
- * @param [optionals.mutationKey]   Setting a mutation key ensures that the platform will try to find the vault w/ the making scope, name, and mutation key. If one does not exist, it will try to create a vault with the same scope and name, erroring if one already exists. If the mutation key is omitted, it will simply search by scope and name; updating if it exists, creating if not.
+ * @param name                          Name of the vault
+ * @param scope                         Scope associated with your run
+ * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]               Optional key to scope the vault to a user
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @param [optionals.items]             Optional items parameter for updating vault contents
+ * @param [optionals.items.set]         Sets a field in the vault, where `[name]: [value]`, send `[name]: null` to delete
+ * @param [optionals.items.push]        Adds an item to a list in the vault, it the list does not exist it will create one
+ * @param [optionals.items.pop]         Use to remove items lists in a vault; TODO: how to use is unclear, elucidate
+ * @param [optionals.readLock]          Role allowed to read
+ * @param [optionals.writeLock]         Role allowed to write
+ * @param [optionals.ttlSeconds]        Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
+ * @param [optionals.mutationStrategy]  Setting a mutation strategy allows for the following behaviors: ALLOW - Is an upsert which means if the entry exists it will be updated with the items in the POST. DISALLOW - Is an insert which means that if the entry exists no changes will be made (the 'changed' flag will be false). ERROR - Is an insert and, if the entry exists, a conflict exception will be thrown. If the mutationStrategy is omitted, it will simply search by scope and name; updating if it exists, creating if not.
  * @returns the vault (created or modified) */
 export async function define(
     name: string,
@@ -166,20 +166,24 @@ export async function define(
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: string,
-        mutationKey?: string,
+        mutationStrategy?: string,
     } & RoutingOptions = {}
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
         readLock, writeLock, items,
-        ttlSeconds, mutationKey,
+        ttlSeconds,
+        mutationStrategy = 'ERROR',
         ...routingOptions
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
     const { PARTICIPANT, USER } = ROLE;
     const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
 
+    const searchParams = { mutationStrategy };
+
     return await new Router()
+        .withSearchParams(searchParams)
         .post(`/vault/${name}`, {
             body: {
                 scope: {
@@ -192,7 +196,6 @@ export async function define(
                     writeLock: writeLock || defaultLock,
                 },
                 ttlSeconds,
-                mutationKey,
                 items,
             },
             ...routingOptions,
@@ -208,7 +211,7 @@ export async function create(
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: string,
-        mutationKey?: string,
+        mutationStrategy?: string,
     } & RoutingOptions = {}
 ): Promise<Vault<unknown>> {
     console.warn('DEPRECATION WARNING: vaultAdapter.create is deprecated and will be removed with the next release. Use vaultAdapter.define instead.');
