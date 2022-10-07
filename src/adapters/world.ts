@@ -352,6 +352,34 @@ export async function removeUsers(
 
 
 /**
+ * Gets the personas of a given scope (project, group, episode, world). Personas correspond to a role that a user in the world can be assigned to.
+ *
+ * @example
+ * import { worldAdapter } from 'epicenter-libs';
+ * await worldAdapter.getPersonas({ scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: GROUP_KEY });
+ * 
+ * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
+ * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves with undefined when successful
+ */
+export async function getPersonas(
+    scope: GenericScope,
+    optionals: RoutingOptions = {}
+): Promise<void> {
+    const { scopeBoundary, scopeKey } = scope;
+    const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
+    const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+
+    return await new Router()
+        /* We will at some point remove the need to explicitly lower case this */
+        .get(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
+            ...optionals,
+        })
+        .then(({ body }) => body);
+}
+/**
  * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
  * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
  *
