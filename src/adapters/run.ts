@@ -121,6 +121,8 @@ export async function create(
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * runAdapter.createSingular('model.py');
+ * NOTE permit default behavior baed on who starts the run: 
+ * * Admin: read/write Author, User with World: read PARTICPANT, write FACILITATOR, User with Group: read/write USER,
  * @param model                         Name of your model file
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
@@ -147,11 +149,10 @@ export async function createSingular(
                 permit: {
                     readLock: readLock,
                     writeLock: writeLock,
-                    modelFile: model,
-                    modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
-                    executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
-                    ephemeral,
                 },
+                modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
+                executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
+                ephemeral,
             },
             ...routingOptions,
         }).then(({ body }) => body);
