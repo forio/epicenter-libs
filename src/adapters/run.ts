@@ -121,7 +121,7 @@ export async function create(
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * runAdapter.createSingular('model.py');
- * NOTE permit default behavior baed on who starts the run: 
+ * NOTE permit default behavior based on who starts the run: 
  * * Admin: read/write Author, User with World: read PARTICPANT, write FACILITATOR, User with Group: read/write USER,
  * @param model                         Name of your model file
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
