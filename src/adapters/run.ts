@@ -116,6 +116,46 @@ export async function create(
             ...routingOptions,
         }).then(({ body }) => body);
 }
+/**
+ * Creates a project scoped run
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * runAdapter.createSingular('model.py');
+ * @param model                         Name of your model file
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to the newly created run
+ */
+export async function createSingular(
+    model: string,
+    optionals: RunCreateOptions = {},
+): Promise<Run> {
+    const {
+        readLock, writeLock, ephemeral,
+        modelContext, executionContext,
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .post('/run/singular', {
+            body: {
+                modelFile: model,
+                permit: {
+                    readLock: readLock,
+                    writeLock: writeLock,
+                    modelFile: model,
+                    modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
+                    executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
+                    ephemeral,
+                },
+            },
+            ...routingOptions,
+        }).then(({ body }) => body);
+}
 
 /**
  * Clone a run
