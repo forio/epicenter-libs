@@ -70,7 +70,7 @@ export async function getVideoURLByKey(
     optionals: RoutingOptions = {}
 ): Promise<string> {
     return await new Router()
-        .get(`/video/${videoKey}/${file}`, optionals)
+        .get(`/video/url/${videoKey}/${file}`, optionals)
         .then(({ body }) => body);
 }
 
