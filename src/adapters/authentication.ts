@@ -26,14 +26,18 @@ interface AppCredentials {
  * @returns promise resolving to successful logout
  */
 export async function logout(): Promise<void> {
+    await cometdAdapter.disconnect();
     try {
+        if (identification?.session?.groupKey) {
+            await new Router()
+                .delete(`/presence/group/${identification?.session?.groupKey}`);
+        }
         await new Router()
             .delete('/verification');
     } catch (err) {
         console.error('Error with DELETE to /verification', err);
     }
     identification.session = undefined;
-    await cometdAdapter.disconnect();
 }
 
 export async function getSession(): Promise<Session> {
