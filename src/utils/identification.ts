@@ -33,6 +33,7 @@ export interface AdminSession {
     teamAccountShortName: string,
     projectShortName?:string,
     projectKey?: string,
+    groupKey?: string,
     timeoutMinutes: number,
     token: string,
 }
