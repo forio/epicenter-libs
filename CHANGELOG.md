@@ -1,3 +1,12 @@
+## [3.17.1](https://github.com/forio/epicenter-libs/compare/v3.17.0...v3.17.1) (2022-11-17)
+
+
+### Features
+
+* [EPICENTER-5374] Add Presence terminate call to epicenter-libs ([2efba58](https://github.com/forio/epicenter-libs/commit/2efba58e4257c02304a94ae7d40f703c17436913))
+
+
+
 # [3.17.0](https://github.com/forio/epicenter-libs/compare/v3.16.0...v3.17.0) (2022-10-07)
 
 
