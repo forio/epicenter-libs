@@ -1088,6 +1088,30 @@ describe('Run APIs', () => {
         });
         testedMethods.push('createSingular');
     });
+    describe('runAdapter.createSingular', () => {
+        it('Should do a GET', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the singular run URL', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/singular/key`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.getSingularRunKey(GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/singular/key`);
+        });
+        testedMethods.push('getSingularRunKey');
+    });
 
     it('Should not have any untested methods', () => {
         chai.expect(runAdapter).to.have.all.keys(...testedMethods);

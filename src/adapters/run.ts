@@ -159,6 +159,21 @@ export async function createSingular(
 }
 
 /**
+ * Gets the singular run's runKey
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * runAdapter.getSingularRunKey();
+ * @returns promise that resolves to a runKey
+ */
+export async function getSingularRunKey(
+    optionals: RoutingOptions = {}
+): Promise<number> {
+    return await new Router()
+        .get('/run/singular/key', optionals)
+        .then(({ body }) => body);
+}
+
+/**
  * Clone a run
  * @param runKey                        Run key for the run you want to clone
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
