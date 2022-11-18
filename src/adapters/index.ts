@@ -18,6 +18,7 @@ import * as worldAdapter from './world';
 import * as timeAdapter from './time';
 import * as taskAdapter from './task';
 import * as chatAdapter from './chat';
+import * as consensusAdapter from './consensus';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -43,5 +44,6 @@ export {
     vonageAdapter,
     worldAdapter,
     taskAdapter,
+    consensusAdapter,
     Channel,
 };
