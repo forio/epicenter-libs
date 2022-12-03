@@ -2,6 +2,7 @@ import type { RoutingOptions } from '../utils/router';
 
 import {
     Router,
+    RITUAL,
 } from 'utils';
 
 interface Consensus {
@@ -19,6 +20,8 @@ interface Consensus {
     arrivedRoles: Record<string, unknown>,
 }
 
+
+//TODO: Is this still an optoin? executeActionsImmediately
 /**
  * Creates a new consensus point
  * @example
@@ -31,14 +34,19 @@ interface Consensus {
  *          ROLE1: 1,
  *          ROLE2: 1,
  *          ROLE3: 2,
+ *      },
+ *      {
+ *          ROLE1: [{ name: 'step', arguments: [] }],
+ *          ROLE2: [{ name: 'step', arguments: [] }],
+ *          ROLE3: [{ name: 'step', arguments: [] }],
  *      }
  * );
  * @param worldKey                      World key for the world you are making a consensus point for
  * @param name                          Unique string to name a set of consensus points
  * @param stage                         Unique string to name one stage of the set of consensus points
  * @param expectedRoles                 Map where the keys are the names of each role participating and the number of users expected to submit consensus actions for each role
+ * @param defaultActions                Map defining which actions to take if the role specified in the key does not submit
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.defaultActions]    Actions to take if the role specified in the key does not submit
  * @param [optionals.ttlSeconds]        How long the consensus point lasts for.
  * @returns promise that resolves to the newly created consensus point
  */
@@ -46,43 +54,83 @@ export async function create(
     worldKey: string,
     name: string,
     stage: string,
-    expectedRoles: Record<string, unknown>,
+    expectedRoles: Record<string, number>,
+    defaultActions: Record<string, Record<string, number>[]>,
     optionals: {
-        defaultActions?: Record<string, unknown>,
         ttlSeconds?: number,
         transparent?: boolean,
     } & RoutingOptions = {}
 ): Promise<Consensus> {
     const {
         ttlSeconds,
-        defaultActions,
         transparent = false,
         ...routingOptions
     } = optionals;
+    const actions = JSON.parse(JSON.stringify(defaultActions));
+    
+    Object.keys(defaultActions).forEach((role) => {
+        const roleActions = actions[role].map((item = { objectType: '' }) => {
+            item.objectType = 'execute';
+            return item;
+        });
+        actions[role] = roleActions;
+    });
+
     return await new Router()
         .post(`/consensus/${worldKey}/${name}/${stage}`, {
             body: {
-                actions: defaultActions,
                 expectedRoles,
                 ttlSeconds,
                 transparent,
+                actions,
             },
             ...routingOptions,
         })
         .then(({ body }) => body);
 }
 
-//TODO:
+/**
+ * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus point, the actions will be immediately sent to the model.
+ * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
+ *
+ * @example
+ * cs.submitActions([{ name: 'step', arguments: [] }]);
+ *  
+ * @param worldKey                      World key for the world you are making a consensus point for
+ * @param name                          Unique string to name a set of consensus points
+ * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param actions                       List of objects describing the actions to send
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @returns {Promise}
+ */
 export async function submitActions(
     worldKey: string,
     name: string,
     stage: string,
+    actions: {
+        name: string,
+        arguments: string|number|Record<string, unknown>[],
+    }[],
+    optionals: {
+        message?: string,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
 ): Promise<unknown> {
+    const {
+        ritual,
+        ...routingOptions
+    } = optionals;
     return await new Router()
         .post(`/consensus/actions/${worldKey}/${name}/${stage}`, {
             body: {
-
+                ritual,
+                actions: actions.map((item) => {
+                    const newItem = JSON.parse(JSON.stringify(item));
+                    newItem.objectType = 'execute';
+                    return newItem;
+                }),
             },
+            ...routingOptions,
         })
         .then(({ body }) => body);
 }
