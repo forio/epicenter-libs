@@ -172,5 +172,5 @@ export async function download(
     if (videoKey) {
         videoAPI.downloadVideoByKey(file, videoKey, routingOptions);
     }
-    throw new EpicenterError('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
+    throw new EpicenterError('Cannot download video -- either a video key or scope/affiliate/family specification is required.');
 }
