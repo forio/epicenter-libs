@@ -124,27 +124,3 @@ export async function postVideoProcessor(
         .post(`/video/execute/${videoKey}`, { body, ...optionals })
         .then(({ body }) => body);
 }
-
-export async function downloadVideoByKey(
-    file: string,
-    videoKey: string,
-    optionals: RoutingOptions = {}
-): Promise<void> {
-    return await new Router()
-        .get(`/video/download/${videoKey}/${file}`, optionals)
-        .then(({ body }) => body);
-}
-
-export async function downloadVideoWith(
-    file: string,
-    family: string,
-    affiliate: keyof typeof AFFILIATE,
-    scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
-): Promise<void> {
-    const { scopeBoundary, scopeKey, userKey } = scope;
-    const userKeyURIComponent = userKey ? `/${userKey}` : '';
-    return await new Router()
-        .get(`/video/download/with/${scopeBoundary}/${scopeKey}${userKeyURIComponent}/${affiliate}/${family}/${file}`, optionals)
-        .then(({ body }) => body);
-}

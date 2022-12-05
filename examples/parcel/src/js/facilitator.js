@@ -161,11 +161,6 @@ const initialize = () => {
         };
         videoAdapter.processVideo(videoKey, processors, optionals);
     });
-
-    document.getElementById('downloadVideo').addEventListener('click', () => {
-        const videoKey = document.getElementById('downloadVideoInput').value;
-        videoAdapter.download('archive.mp4', { videoKey });
-    });
 };
 
 if (!session) {
