@@ -97,7 +97,7 @@ export async function getURL(
 /**
  * Processes a video (one example of this is transcribing a video)
  * @example
- *  
+ *
  *       const processors = [
  *           {
  *               mediaFormat: 'mp4',
@@ -107,9 +107,9 @@ export async function getURL(
  *               jobName: 'test-transcription',
  *           },
  *       ];
- *       
+ *
  *       videoAdapter.processVideo(videoKey, processors);
- * 
+ *
  * @param videoKey                              Video key
  * @param [processors[]]                        List of processes to complete
  * @param [processors[].jobName]                A string to specify the title of the newly file

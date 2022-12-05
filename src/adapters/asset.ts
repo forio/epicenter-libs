@@ -162,6 +162,27 @@ export async function getURLWithScope(
         .then(({ body }) => body);
 }
 
+export async function download(
+    assetKey: string,
+    optionals: RoutingOptions = {}
+): Promise<void> {
+    return await new Router()
+        .get(`/asset/download/${assetKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+export async function downloadWithScope(
+    file: string,
+    scope: AssetScope,
+    optionals: RoutingOptions = {}
+): Promise<void> {
+    const { scopeBoundary, scopeKey, userKey } = scope;
+    const uriComponent = userKey ? `/${userKey}` : '';
+    return await new Router()
+        .get(`/asset/download/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, optionals)
+        .then(({ body }) => body);
+}
+
 const CONFLICT = 409;
 export async function store(
     file: File,
