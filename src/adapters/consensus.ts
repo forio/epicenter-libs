@@ -66,23 +66,14 @@ export async function create(
         transparent = false,
         ...routingOptions
     } = optionals;
-    const actions = JSON.parse(JSON.stringify(defaultActions));
     
-    Object.keys(defaultActions).forEach((role) => {
-        const roleActions = actions[role].map((item = { objectType: '' }) => {
-            item.objectType = 'execute';
-            return item;
-        });
-        actions[role] = roleActions;
-    });
-
     return await new Router()
         .post(`/consensus/${worldKey}/${name}/${stage}`, {
             body: {
                 expectedRoles,
                 ttlSeconds,
                 transparent,
-                actions,
+                actions: defaultActions,
             },
             ...routingOptions,
         })
@@ -94,7 +85,12 @@ export async function create(
  * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
  *
  * @example
- * cs.submitActions([{ name: 'step', arguments: [] }]);
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.submitActions(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1', 
+ *      [{ name: 'step', arguments: [] }]);
  *  
  * @param worldKey                      World key for the world you are making a consensus point for
  * @param name                          Unique string to name a set of consensus points
@@ -124,11 +120,7 @@ export async function submitActions(
         .post(`/consensus/actions/${worldKey}/${name}/${stage}`, {
             body: {
                 ritual,
-                actions: actions.map((item) => {
-                    const newItem = JSON.parse(JSON.stringify(item));
-                    newItem.objectType = 'execute';
-                    return newItem;
-                }),
+                actions,
             },
             ...routingOptions,
         })
@@ -137,9 +129,6 @@ export async function submitActions(
 
 // PATCH /api/v3/{accountShortName}/{projectShortName}/consensus/actions/{worldKey}/{name}/{stage}
 //To edit the actions for this user's role
-
-// POST /api/v3/{accountShortName}/{projectShortName}/consensus/actions/{worldKey}/{name}/{stage}
-// Submitting actions , "publish"
 
 // DELETE /api/v3/{accountShortName}/{projectShortName}/consensus/actions/{worldKey}/{name}/{stage}
 // Deletes anyone who has made the call
