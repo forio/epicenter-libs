@@ -1047,6 +1047,72 @@ describe('Run APIs', () => {
         testedMethods.push('removeFromWorld');
     });
 
+    describe('runAdapter.createSingular', () => {
+        const MODEL = 'model.vmf';
+        it('Should do a POST', async() => {
+            await runAdapter.createSingular(MODEL);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.createSingular(MODEL);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the singular run URL', async() => {
+            await runAdapter.createSingular(MODEL);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/singular`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.createSingular(MODEL, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/singular`);
+        });
+        it('Should pass the run to the request body', async() => {
+            await runAdapter.createSingular(MODEL, {
+                readLock: ROLE.AUTHOR,
+                writeLock: ROLE.AUTHOR,
+                ephemeral: true,
+            });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.have.property('permit');
+            body.permit.readLock.should.equal(ROLE.AUTHOR);
+            body.permit.writeLock.should.equal(ROLE.AUTHOR);
+            body.modelFile.should.equal(MODEL);
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+        testedMethods.push('createSingular');
+    });
+    describe('runAdapter.createSingular', () => {
+        it('Should do a GET', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the singular run URL', async() => {
+            await runAdapter.getSingularRunKey();
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/singular/key`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.getSingularRunKey(GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/singular/key`);
+        });
+        testedMethods.push('getSingularRunKey');
+    });
+
     it('Should not have any untested methods', () => {
         chai.expect(runAdapter).to.have.all.keys(...testedMethods);
     });
