@@ -110,13 +110,13 @@ describe('Consensus APIs', () => {
         it('Should use the consensus/actions URL', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions);
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/actions/${worldKey}/${name}/${stage}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/publish/${worldKey}/${name}/${stage}`);
         });
         it('Should support generic URL options', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/actions/${worldKey}/${name}/${stage}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/publish/${worldKey}/${name}/${stage}`);
         });
         it('Should pass the consensus details to the request body', async() => {
             const optionals = {

@@ -117,7 +117,7 @@ export async function submitActions(
         ...routingOptions
     } = optionals;
     return await new Router()
-        .post(`/consensus/actions/${worldKey}/${name}/${stage}`, {
+        .post(`/consensus/publish/${worldKey}/${name}/${stage}`, { //consensus/publish/{worldKey}/{name}/{stage}
             body: {
                 ritual,
                 actions,
