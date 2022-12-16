@@ -19,6 +19,11 @@ enum ORBIT_TYPE {
     EPISODE = 'EPISODE',
 }
 
+enum WORLD_NAME_GENERATOR {
+    colorAnimal = 'colorAnimal',
+    sequential = 'sequential',
+}
+
 interface UserAssignment {
     userKey: string,
     role?: string,
@@ -100,6 +105,8 @@ export async function destroy(
  * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
  * @param [optionals.episodeName]   Name of the episode for episode scoping
+ * @param [optionals.worldNameGenerator]    Specifies how world names are generated
+ * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
  * @returns promise that resolves to the newly created world
  */
 export async function create(
@@ -107,16 +114,17 @@ export async function create(
         name?: string,
         groupName?: string,
         episodeName?: string,
+        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        name, groupName, episodeName,
+        name, groupName, episodeName, worldNameGenerator,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { name },
+            body: { name, worldNameGenerator },
             ...routingOptions,
         }).then(({ body }) => body);
 }
@@ -206,6 +214,8 @@ export async function getSessionWorlds(
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
  * @param [optionals.episodeName]   Name of the episode for episode scoped worlds
  * @param [optionals.objective]     Allows platform to assign users beyond minimum amount
+ * @param [optionals.worldNameGenerator]    Specifies how world names are generated
+ * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
  * @returns promise that resolves to the world the user was assigned to
  */
 export async function selfAssign(
@@ -214,16 +224,17 @@ export async function selfAssign(
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
+        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM,
+        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM, worldNameGenerator,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/selfassign/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { role, objective },
+            body: { role, objective, worldNameGenerator },
             ...routingOptions,
         })
         .then(({ body }) => body);
@@ -248,6 +259,9 @@ export async function selfAssign(
  * @param [optionals.episodeName]           Name of the episode for episode scoped worlds
  * @param [optionals.objective]             Allows platform to assign users beyond minimum amount
  * @param [optionals.requireAllAssignments] Have the server return w/ an error whenever an assignment was not made (instead of silently leaving the user as unassigned)
+ * @param [optionals.keepEmptyWorlds]       Specify whether worlds that are now empty should be deleted
+ * @param [optionals.worldNameGenerator]    Specifies how world names are generated
+ * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
  * @returns promise that resolves to the list of worlds created by the assignment
  */
 export async function autoAssignUsers(
@@ -256,17 +270,19 @@ export async function autoAssignUsers(
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
+        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
         requireAllAssignments?: boolean,
+        keepEmptyWorlds?: boolean,
     } & RoutingOptions = {}
 ): Promise<World[]> {
     const {
-        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, worldNameGenerator, keepEmptyWorlds,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, objective, requireAllAssignments },
+            body: { assignments, objective, requireAllAssignments, worldNameGenerator, keepEmptyWorlds },
             ...routingOptions,
         })
         .then(({ body }) => body);
