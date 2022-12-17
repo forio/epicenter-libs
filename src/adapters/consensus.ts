@@ -80,6 +80,107 @@ export async function create(
         .then(({ body }) => body);
 }
 
+// /api/v3/{accountShortName}/{projectShortName}/consensus/{worldKey}/{name}/{stage}
+//Load one specific consensus point by specifying stage
+export async function load(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    return await new Router()
+        .get(`/consensus/${worldKey}/${name}/${stage}`, optionals)
+        .then(({ body }) => body);
+}
+
+//List all consensus points sharing the same name
+export async function list(
+    worldKey: string,
+    name: string,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    return await new Router()
+        .get(`/consensus/${worldKey}/${name}`, optionals)
+        .then(({ body }) => body);
+}
+
+// {
+//   "type" : "object",
+//   "properties" : {
+//     "ritual" : {
+//       "enum" : [ "NONE", "INTER", "REANIMATE", "REVIVE", "EXORCISE", "RESURRECT" ]
+//     }
+//   }
+// }
+// POST /api/v3/{accountShortName}/{projectShortName}/consensus/close/{worldKey}/{name}/{stage}
+//TODO: Test this function
+export async function forceClose(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: {
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<unknown> {
+    const {
+        ritual,
+        ...routingOptions
+    } = optionals;
+    
+    return await new Router()
+        .patch(`/consensus/close/${worldKey}/${name}/${stage}`, {
+            body: {
+                ritual,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus point, the actions will be immediately sent to the model.
+ * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.updateDefaults(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1', 
+ *      {
+ *          ROLE1: [{ name: 'step', arguments: [] }],
+ *          ROLE2: [{ name: 'step', arguments: [] }],
+ *          ROLE3: [{ name: 'step', arguments: [] }],
+ *      }
+ *  
+ * @param worldKey                      World key for the world you are making a consensus point for
+ * @param name                          Unique string to name a set of consensus points
+ * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param actions                       List of objects describing the actions to update
+ * @returns promise that resolves to the newly created consensus point
+*/
+//TODO TEST THAT THIS WORKS
+export async function updateDefaults(
+    worldKey: string,
+    name: string,
+    stage: string,
+    actions: Record<string, Record<string, number>[]>,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    const {
+        ...routingOptions
+    } = optionals;
+    
+    return await new Router()
+        .patch(`/consensus/actions/${worldKey}/${name}/${stage}`, {
+            body: {
+                actions,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
 /**
  * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus point, the actions will be immediately sent to the model.
  * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
