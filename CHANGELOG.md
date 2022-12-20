@@ -1,3 +1,19 @@
+## [3.17.2](https://github.com/forio/epicenter-libs/compare/v3.17.1...v3.17.2) (2022-12-20)
+
+
+### Bug Fixes
+
+* typo ([8c4a6ac](https://github.com/forio/epicenter-libs/commit/8c4a6ac63f9588adaa386ae1e6a3ccf91eec6898))
+
+
+### Features
+
+* added in support for worldNameGenerator for certain world routes ([ef8e3b4](https://github.com/forio/epicenter-libs/commit/ef8e3b46e387e943968c271f3cbab7334f714392))
+* epicenter-5306 wrap GET to run/singular/key ([4f62b68](https://github.com/forio/epicenter-libs/commit/4f62b6862acff26645f9f2b147249522fcf078a5))
+* runAdapter.createSingular is now available ([bb86ca3](https://github.com/forio/epicenter-libs/commit/bb86ca370db66b0b256b9b9c485b95a92ceee050))
+
+
+
 ## [3.17.1](https://github.com/forio/epicenter-libs/compare/v3.17.0...v3.17.1) (2022-11-17)
 
 
