@@ -8,7 +8,7 @@ const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 
 const DISCONNECTED = 'disconnected';
 const CONNECTED = 'connected';
-const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
 const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
@@ -155,7 +155,7 @@ class CometdAdapter {
 
             const errorMessage = handshakeReply.error ?? '';
             const error = new Fault({
-                status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                status: errorMessage.includes('403') ? FORBIDDEN : undefined,
                 message: errorMessage,
                 information: {
                     code: 'COMETD_ERROR',
@@ -226,7 +226,7 @@ class CometdAdapter {
 
                 const errorMessage = subscribeReply.error ?? '';
                 const error = new Fault({
-                    status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                    status: errorMessage.includes('403') ? FORBIDDEN : undefined,
                     message: errorMessage,
                     information: {
                         code: 'COMETD_ERROR',
@@ -279,7 +279,7 @@ class CometdAdapter {
 
                 const errorMessage = publishReply.error ?? '';
                 const error = new Fault({
-                    status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                    status: errorMessage.includes('403') ? FORBIDDEN : undefined,
                     message: errorMessage,
                     information: {
                         code: 'COMETD_ERROR',
@@ -315,8 +315,9 @@ class CometdAdapter {
                 resolve(unsubscribeReply);
             }
             const errorMessage = unsubscribeReply.error ?? '';
+            // No default error handling for this
             const error = new Fault({
-                status: errorMessage.includes('403') ? UNAUTHORIZED : undefined,
+                status: undefined,
                 message: errorMessage,
                 information: {
                     code: 'COMETD_ERROR',
@@ -324,7 +325,6 @@ class CometdAdapter {
                 },
             });
             reject(error);
-            /* Not using error handling here yet -- should we? */
         }));
     }
 
