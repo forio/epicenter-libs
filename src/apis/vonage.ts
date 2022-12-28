@@ -29,7 +29,10 @@ export async function postToken(
     optionals: RoutingOptions = {},
 ): Promise<{ token: Token }> {
     return await new Router()
-        .post('/vonage/token', { body, ...optionals })
+        // The initialLayoutClassList is a temporary fix for existing simulations;
+        // This should likely be implemented differently if we decide to continue using Vonage;
+        // We are currently investigating alternatives due to performance issues, so this solution just prevents API errors;
+        .post('/vonage/token', { body: {...body, initialLayoutClassList: ['placeholder']}, ...optionals })
         .then(({ body }) => body);
 }
 
