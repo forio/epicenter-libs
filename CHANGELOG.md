@@ -1,3 +1,12 @@
+## [3.17.3](https://github.com/forio/epicenter-libs/compare/v3.17.2...v3.17.3) (2023-01-02)
+
+
+### Bug Fixes
+
+* fixed initialLayoutClassList Vonage bug ([9d7ce6c](https://github.com/forio/epicenter-libs/commit/9d7ce6cf672a9bf80da86cc863df7feb841e620d))
+
+
+
 ## [3.17.2](https://github.com/forio/epicenter-libs/compare/v3.17.1...v3.17.2) (2022-12-20)
 
 
