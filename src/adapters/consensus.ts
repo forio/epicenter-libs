@@ -20,8 +20,6 @@ interface Consensus {
     arrivedRoles: Record<string, unknown>,
 }
 
-
-//TODO: Is this still an optoin? executeActionsImmediately
 /**
  * Creates a new consensus point
  * @example
@@ -80,7 +78,6 @@ export async function create(
         .then(({ body }) => body);
 }
 
-// /api/v3/{accountShortName}/{projectShortName}/consensus/{worldKey}/{name}/{stage}
 //Load one specific consensus point by specifying stage
 export async function load(
     worldKey: string,
@@ -104,16 +101,18 @@ export async function list(
         .then(({ body }) => body);
 }
 
-// {
-//   "type" : "object",
-//   "properties" : {
-//     "ritual" : {
-//       "enum" : [ "NONE", "INTER", "REANIMATE", "REVIVE", "EXORCISE", "RESURRECT" ]
-//     }
-//   }
-// }
-// POST /api/v3/{accountShortName}/{projectShortName}/consensus/close/{worldKey}/{name}/{stage}
-//TODO: Test this function
+/**
+ * Marks current consensus point as complete. Default actions, if specified, will be sent for defaulting roles.
+ *
+ * @example
+ * cs.forceClose();
+ * 
+ * @param worldKey                      World key for the world you are making a consensus point for
+ * @param name                          Unique string to name a set of consensus points
+ * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @returns promise that returns a 204 if successful
+ */
 export async function forceClose(
     worldKey: string,
     name: string,
@@ -128,7 +127,7 @@ export async function forceClose(
     } = optionals;
     
     return await new Router()
-        .patch(`/consensus/close/${worldKey}/${name}/${stage}`, {
+        .post(`/consensus/close/${worldKey}/${name}/${stage}`, {
             body: {
                 ritual,
             },
