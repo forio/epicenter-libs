@@ -16,10 +16,6 @@ describe('Consensus APIs', () => {
         fakeServer = sinon.fakeServer.create();
         authAdapter.setLocalSession(SESSION);
         
-        // fakeServer.respondWith('DELETE', /(.*)\/run/, function(xhr, id) {
-        //     const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-        //     xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
-        // });
         fakeServer.respondWith('POST', /(.*)\/consensus/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
