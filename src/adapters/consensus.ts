@@ -132,7 +132,7 @@ export async function list(
  * @param worldKey                      World key for the world you are making a consensus barrier for
  * @param name                          Unique string that names a set of consensus barriers
  * @param stage                         Unique string that specifies which stage of the set of consensus barriers to close
- * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns promise that returns a 204 if successful
  */
 export async function forceClose(
@@ -206,13 +206,16 @@ export async function updateDefaults(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
  *      'ROUND1', 
- *      [{ name: 'step', arguments: [] }]);
+ *      [{ name: 'step', arguments: [] }]
+ *      { message: 'Student side submission!' },
+ * );
  *  
  * @param worldKey                      World key for the world you are making a consensus barrier for
  * @param name                          Unique string to name a set of consensus barriers
  * @param stage                         Unique string to name one stage of the set of consensus barriers
  * @param actions                       List of objects describing the actions to send
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.message]           Message that is stored in the barrier arrival entity; opportunity to note a description regarding this submission
  * @returns {Promise}                   Note: the response consensus object will have `triggered: true` for the final user that submits and triggers the barrier. triggered is a virtual field, not stored in the database as part of the barrier entity, so it only appears in the response for the final user submitting
  */
 export async function submitActions(
@@ -229,14 +232,16 @@ export async function submitActions(
     } & RoutingOptions = {}
 ): Promise<unknown> {
     const {
+        message,
         ritual,
         ...routingOptions
     } = optionals;
     return await new Router()
-        .post(`/consensus/publish/${worldKey}/${name}/${stage}`, { //consensus/publish/{worldKey}/{name}/{stage}
+        .post(`/consensus/publish/${worldKey}/${name}/${stage}`, {
             body: {
                 ritual,
                 actions,
+                message,
             },
             ...routingOptions,
         })
@@ -337,6 +342,55 @@ export async function undoSubmit(
     
     return await new Router()
         .delete(`/consensus/arrival/${worldKey}/${name}/${stage}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Facilitator only; artificial triggering of the arrival of a participant to the barrier. Useful for testing or for missing participants
+ *
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.triggerFor(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1', 
+ *       userKey: 0000017cb60ad697e109dcb11cdd4cfcdd1d,
+ *      { message: "Facilitator Triggered this submission!" },
+ *  
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names this set of consensus barriers
+ * @param stage                         Unique string that names the stage of targeted barrier
+ * @param userKey                       userKey of the user the facilitator is triggering for
+ * @param [optionals.message]           message
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns {Promise}                   ???
+ */
+export async function triggerFor(
+    worldKey: string,
+    name: string,
+    stage: string,
+    userKey: string,
+    optionals: {
+        message?: string,
+        ritual?: keyof typeof RITUAL,
+    } & RoutingOptions = {}
+): Promise<unknown> {
+    const {
+        ritual,
+        message,
+        ...routingOptions
+    } = optionals;
+    return await new Router()
+        .post(`/consensus/trigger/${worldKey}/${name}/${stage}`, {
+
+            body: {
+                ritual,
+                userKey,
+                message,
+            },
             ...routingOptions,
         })
         .then(({ body }) => body);
