@@ -21,7 +21,7 @@ interface Consensus {
 }
 
 /**
- * Creates a new consensus point
+ * Creates a new consensus barrier
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * consensusAdapter.create(
@@ -39,14 +39,15 @@ interface Consensus {
  *          ROLE3: [{ name: 'step', arguments: [] }],
  *      }
  * );
- * @param worldKey                      World key for the world you are making a consensus point for
- * @param name                          Unique string to name a set of consensus points
- * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param worldKey                      World key for the world you are making a consensus barrier for
+ * @param name                          Unique string to name a set of consensus barriers
+ * @param stage                         Unique string to name one stage of the set of consensus barriers
  * @param expectedRoles                 Map where the keys are the names of each role participating and the number of users expected to submit consensus actions for each role
  * @param defaultActions                Map defining which actions to take if the role specified in the key does not submit
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.ttlSeconds]        How long the consensus point lasts for.
- * @returns promise that resolves to the newly created consensus point
+ * @param [optionals.ttlSeconds]        How long the consensus barrier lasts for.
+ * @param [optionals.transparent]       If the barrier has `transparent: false`, then only one of the default actions will be sent. If it has `transparent: true` then they are all sent.
+ * @returns promise that resolves to the newly created consensus barrier
  */
 export async function create(
     worldKey: string,
@@ -78,7 +79,18 @@ export async function create(
         .then(({ body }) => body);
 }
 
-//Load one specific consensus point by specifying stage
+/**
+ * Load one specific consensus barrier by specifying stage
+ *
+ * @example
+ * consensusAdapter.load(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS', 'ROUND1');
+ * 
+ * @param worldKey                      World key for the world you are loading a consensus barrier for
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to load
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that returns a 204 if successful
+ */
 export async function load(
     worldKey: string,
     name: string,
@@ -90,7 +102,17 @@ export async function load(
         .then(({ body }) => body);
 }
 
-//List all consensus points sharing the same name
+/**
+ * List all consensus barriers sharing the same name
+ *
+ * @example
+ * consensusAdapter.list(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS');
+ * 
+ * @param worldKey                      World key for the world you are loading consensus barriers for
+ * @param name                          Unique string that specifies which set of consensus barriers to retrieve
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that returns a 204 if successful
+ */
 export async function list(
     worldKey: string,
     name: string,
@@ -102,14 +124,14 @@ export async function list(
 }
 
 /**
- * Marks current consensus point as complete. Default actions, if specified, will be sent for defaulting roles.
+ * Facilitator only. Marks current consensus barrier as complete. Closing the barrier will send default actions for anyone who has not arrived. If the barrier is opaque, then only one of the default actions will be sent, and if it's transparent then they are all sent
  *
  * @example
- * cs.forceClose();
+ * consensusAdapter.forceClose(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS', 'ROUND1');
  * 
- * @param worldKey                      World key for the world you are making a consensus point for
- * @param name                          Unique string to name a set of consensus points
- * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param worldKey                      World key for the world you are making a consensus barrier for
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string that specifies which stage of the set of consensus barriers to close
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @returns promise that returns a 204 if successful
  */
@@ -137,8 +159,7 @@ export async function forceClose(
 }
 
 /**
- * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus point, the actions will be immediately sent to the model.
- * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
+ * Updates the default actions defined in .create. A user can only update their own default actions, and this call will only work for a barrier that has `transparent: true`
  *
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
@@ -146,19 +167,14 @@ export async function forceClose(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
  *      'ROUND1', 
- *      {
- *          ROLE1: [{ name: 'step', arguments: [] }],
- *          ROLE2: [{ name: 'step', arguments: [] }],
- *          ROLE3: [{ name: 'step', arguments: [] }],
- *      }
+ *      [{name: "message", value: "DEFAULT MESSAGE 2", objectType: "set"}]}
  *  
- * @param worldKey                      World key for the world you are making a consensus point for
- * @param name                          Unique string to name a set of consensus points
- * @param stage                         Unique string to name one stage of the set of consensus points
- * @param actions                       List of objects describing the actions to update
- * @returns promise that resolves to the newly created consensus point
+ * @param worldKey                      World key for the world you are making a consensus barrier for
+ * @param name                          Unique string to name a set of consensus barriers
+ * @param stage                         Unique string to name one stage of the set of consensus barriers
+ * @param actions                       List of objects describing the default actions to update for the current user
+ * @returns promise that resolves to the newly created consensus barrier
 */
-//TODO TEST THAT THIS WORKS
 export async function updateDefaults(
     worldKey: string,
     name: string,
@@ -181,8 +197,8 @@ export async function updateDefaults(
 }
 
 /**
- * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus point, the actions will be immediately sent to the model.
- * Note that you can still call operations from the RunService directly, but will bypass the consensus requirements.
+ * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus barrier, the actions will be immediately sent to the model.
+ * Note that you can still call operations from the runAdapter directly, but will bypass the consensus requirements.
  *
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
@@ -192,12 +208,12 @@ export async function updateDefaults(
  *      'ROUND1', 
  *      [{ name: 'step', arguments: [] }]);
  *  
- * @param worldKey                      World key for the world you are making a consensus point for
- * @param name                          Unique string to name a set of consensus points
- * @param stage                         Unique string to name one stage of the set of consensus points
+ * @param worldKey                      World key for the world you are making a consensus barrier for
+ * @param name                          Unique string to name a set of consensus barriers
+ * @param stage                         Unique string to name one stage of the set of consensus barriers
  * @param actions                       List of objects describing the actions to send
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @returns {Promise}
+ * @returns {Promise}                   Note: the response consensus object will have `triggered: true` for the final user that submits and triggers the barrier. triggered is a virtual field, not stored in the database as part of the barrier entity, so it only appears in the response for the final user submitting
  */
 export async function submitActions(
     worldKey: string,
@@ -227,8 +243,101 @@ export async function submitActions(
         .then(({ body }) => body);
 }
 
-// PATCH /api/v3/{accountShortName}/{projectShortName}/consensus/actions/{worldKey}/{name}/{stage}
-//To edit the actions for this user's role
+/**
+ * Deletes the targeted barrier, which allows users to create a new barrier with the same name and stage
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.deleteBarrier(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1',
+ * );
+ *  
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to undo your submission for
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns {Promise}                   
+ */
+export async function deleteBarrier(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    const {
+        ...routingOptions
+    } = optionals;
+    
+    return await new Router()
+        .delete(`/consensus/${worldKey}/${name}/${stage}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
 
-// DELETE /api/v3/{accountShortName}/{projectShortName}/consensus/actions/{worldKey}/{name}/{stage}
-// Deletes anyone who has made the call
+/**
+ * Deletes all barriers under the same name, which allows users to create new barriers with the same name and stage
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.deleteAll(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ * );
+ *  
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns {Promise}                   
+ */
+export async function deleteAll(
+    worldKey: string,
+    name: string,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    const {
+        ...routingOptions
+    } = optionals;
+    
+    return await new Router()
+        .delete(`/consensus/${worldKey}/${name}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+/**
+ * Removes the currently logged in user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission.
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.undoSubmit(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1',
+ * );
+ *  
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to undo your submission for
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns {Promise}                   
+ */
+export async function undoSubmit(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {}
+): Promise<Consensus> {
+    const {
+        ...routingOptions
+    } = optionals;
+    
+    return await new Router()
+        .delete(`/consensus/arrival/${worldKey}/${name}/${stage}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
