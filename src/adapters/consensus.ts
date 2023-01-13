@@ -364,6 +364,7 @@ export async function undoSubmit(
  * @param name                          Unique string that names this set of consensus barriers
  * @param stage                         Unique string that names the stage of targeted barrier
  * @param userKey                       userKey of the user the facilitator is triggering for
+ * @param actions                       List of objects describing the default actions to update for the current user
  * @param [optionals.message]           message
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns {Promise}                   ???
@@ -373,6 +374,10 @@ export async function triggerFor(
     name: string,
     stage: string,
     userKey: string,
+    actions: {
+        name: string,
+        arguments: string|number|Record<string, unknown>[],
+    }[],
     optionals: {
         message?: string,
         ritual?: keyof typeof RITUAL,
@@ -390,6 +395,7 @@ export async function triggerFor(
                 ritual,
                 userKey,
                 message,
+                actions,
             },
             ...routingOptions,
         })
