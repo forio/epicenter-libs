@@ -89,29 +89,75 @@ describe('Run APIs', () => {
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
         });
-        it('Should have read lock default to participant when using world scope', async() => {
-            await runAdapter.create(MODEL, WORLD_SCOPE);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.permit.readLock.should.equal(ROLE.PARTICIPANT);
-        });
         it('Should not provide a userKey with a world scope', async() => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.scope.should.not.have.property('userKey');
         });
-        it('Should use a user read lock when creating with a group scope', async() => {
-            await runAdapter.create(MODEL, GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.permit.readLock.should.equal(ROLE.USER);
-        });
         it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
             await runAdapter.create(MODEL, GROUP_SCOPE);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
+        });
+        describe('Permits', () => {
+            it('Should include a confirmation header if permit specified', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                req1.requestHeaders['x-forio-confirmation'].should.equal('true');
+
+                await runAdapter.create(MODEL, GROUP_SCOPE, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                req2.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should forward only the specified parts of a permit', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                const body1 = JSON.parse(req1.requestBody);
+                body1.permit.readLock.should.equal(ROLE.USER);
+                body1.permit.should.not.have.property('writeLock');
+
+                await runAdapter.create(MODEL, GROUP_SCOPE, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                const body2 = JSON.parse(req2.requestBody);
+                body2.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                body2.permit.should.not.have.property('readLock');
+            });
+            it('Should forward full permit with confirmation header if specified', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                });
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.permit.readLock.should.equal(ROLE.USER);
+                body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should send no permit if none specified', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.should.not.have.property('permit');
+            });
+            it('Should merge confirmation header with provided headers if permit specified', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
+            it('Should forward provided headers if no permit specified', async() => {
+                await runAdapter.create(MODEL, GROUP_SCOPE, {
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
         });
         testedMethods.push('create');
     });
@@ -505,29 +551,75 @@ describe('Run APIs', () => {
                 body.modelContext.should.be.an('object').that.is.empty;
                 body.executionContext.should.be.an('object').that.is.empty;
             });
-            it('Should have read lock default to participant when using world scope', async() => {
-                await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE);
-                const req = fakeServer.requests.pop();
-                const body = JSON.parse(req.requestBody);
-                body.permit.readLock.should.equal(ROLE.PARTICIPANT);
-            });
             it('Should not provide a userKey with a world scope', async() => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE);
                 const req = fakeServer.requests.pop();
                 const body = JSON.parse(req.requestBody);
                 body.scope.should.not.have.property('userKey');
             });
-            it('Should use a user read lock when creating with a group scope', async() => {
-                await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
-                const req = fakeServer.requests.pop();
-                const body = JSON.parse(req.requestBody);
-                body.permit.readLock.should.equal(ROLE.USER);
-            });
             it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
                 const req = fakeServer.requests.pop();
                 const body = JSON.parse(req.requestBody);
                 body.scope.userKey.should.equal(authAdapter.getLocalSession().userKey);
+            });
+            describe('Permits', () => {
+                it('Should include a confirmation header if permit specified', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
+                    const req1 = fakeServer.requests.pop();
+                    req1.requestHeaders['x-forio-confirmation'].should.equal('true');
+
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { writeLock: ROLE.PARTICIPANT });
+                    const req2 = fakeServer.requests.pop();
+                    req2.requestHeaders['x-forio-confirmation'].should.equal('true');
+                });
+                it('Should forward only the specified parts of a permit', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
+                    const req1 = fakeServer.requests.pop();
+                    const body1 = JSON.parse(req1.requestBody);
+                    body1.permit.readLock.should.equal(ROLE.USER);
+                    body1.permit.should.not.have.property('writeLock');
+
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { writeLock: ROLE.PARTICIPANT });
+                    const req2 = fakeServer.requests.pop();
+                    const body2 = JSON.parse(req2.requestBody);
+                    body2.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                    body2.permit.should.not.have.property('readLock');
+                });
+                it('Should forward full permit with confirmation header if specified', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
+                        readLock: ROLE.USER,
+                        writeLock: ROLE.PARTICIPANT,
+                    });
+                    const req = fakeServer.requests.pop();
+                    const body = JSON.parse(req.requestBody);
+                    body.permit.readLock.should.equal(ROLE.USER);
+                    body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                    req.requestHeaders['x-forio-confirmation'].should.equal('true');
+                });
+                it('Should send no permit if none specified', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
+                    const req = fakeServer.requests.pop();
+                    const body = JSON.parse(req.requestBody);
+                    body.should.not.have.property('permit');
+                });
+                it('Should merge confirmation header with provided headers if permit specified', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
+                        readLock: ROLE.USER,
+                        writeLock: ROLE.PARTICIPANT,
+                        headers: { 'accept-language': 'en-US' },
+                    });
+                    const req = fakeServer.requests.pop();
+                    req.requestHeaders['x-forio-confirmation'].should.equal('true');
+                    req.requestHeaders['accept-language'].should.equal('en-US');
+                });
+                it('Should forward provided headers if no permit specified', async() => {
+                    await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
+                        headers: { 'accept-language': 'en-US' },
+                    });
+                    const req = fakeServer.requests.pop();
+                    req.requestHeaders['accept-language'].should.equal('en-US');
+                });
             });
         });
         testedMethods.push('getWithStrategy');
@@ -991,13 +1083,6 @@ describe('Run APIs', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
         });
-        it('Should use participant as the default for read/write locks', async() => {
-            await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.permit.readLock.should.equal(ROLE.PARTICIPANT);
-            body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
-        });
         it('Should pass creation options to the request body', async() => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
                 readLock: ROLE.AUTHOR,
@@ -1016,6 +1101,64 @@ describe('Run APIs', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
+        });
+        describe('Permits', () => {
+            it('Should include a confirmation header if permit specified', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                req1.requestHeaders['x-forio-confirmation'].should.equal('true');
+
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                req2.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should forward only the specified parts of a permit', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                const body1 = JSON.parse(req1.requestBody);
+                body1.permit.readLock.should.equal(ROLE.USER);
+                body1.permit.should.not.have.property('writeLock');
+
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                const body2 = JSON.parse(req2.requestBody);
+                body2.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                body2.permit.should.not.have.property('readLock');
+            });
+            it('Should forward full permit with confirmation header if specified', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                });
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.permit.readLock.should.equal(ROLE.USER);
+                body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should send no permit if none specified', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.should.not.have.property('permit');
+            });
+            it('Should merge confirmation header with provided headers if permit specified', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
+            it('Should forward provided headers if no permit specified', async() => {
+                await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
         });
         testedMethods.push('retrieveFromWorld');
     });
@@ -1085,6 +1228,64 @@ describe('Run APIs', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
+        });
+        describe('Permits', () => {
+            it('Should include a confirmation header if permit specified', async() => {
+                await runAdapter.createSingular(MODEL, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                req1.requestHeaders['x-forio-confirmation'].should.equal('true');
+
+                await runAdapter.createSingular(MODEL, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                req2.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should forward only the specified parts of a permit', async() => {
+                await runAdapter.createSingular(MODEL, { readLock: ROLE.USER });
+                const req1 = fakeServer.requests.pop();
+                const body1 = JSON.parse(req1.requestBody);
+                body1.permit.readLock.should.equal(ROLE.USER);
+                body1.permit.should.not.have.property('writeLock');
+
+                await runAdapter.createSingular(MODEL, { writeLock: ROLE.PARTICIPANT });
+                const req2 = fakeServer.requests.pop();
+                const body2 = JSON.parse(req2.requestBody);
+                body2.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                body2.permit.should.not.have.property('readLock');
+            });
+            it('Should forward full permit with confirmation header if specified', async() => {
+                await runAdapter.createSingular(MODEL, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                });
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.permit.readLock.should.equal(ROLE.USER);
+                body.permit.writeLock.should.equal(ROLE.PARTICIPANT);
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+            });
+            it('Should send no permit if none specified', async() => {
+                await runAdapter.createSingular(MODEL);
+                const req = fakeServer.requests.pop();
+                const body = JSON.parse(req.requestBody);
+                body.should.not.have.property('permit');
+            });
+            it('Should merge confirmation header with provided headers if permit specified', async() => {
+                await runAdapter.createSingular(MODEL, {
+                    readLock: ROLE.USER,
+                    writeLock: ROLE.PARTICIPANT,
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['x-forio-confirmation'].should.equal('true');
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
+            it('Should forward provided headers if no permit specified', async() => {
+                await runAdapter.createSingular(MODEL, {
+                    headers: { 'accept-language': 'en-US' },
+                });
+                const req = fakeServer.requests.pop();
+                req.requestHeaders['accept-language'].should.equal('en-US');
+            });
         });
         testedMethods.push('createSingular');
     });
