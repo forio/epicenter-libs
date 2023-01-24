@@ -56,7 +56,10 @@ type RunStrategy =
     | 'multiplayer'
 
 /**
- * Creates a run. By default, all runs are created with the user's ID (`userKey`) and user-only read-write permissions, except in the case of world-scoped runs. For more information on scopes,
+ * Creates a run. By default, all runs are created with the user's ID (`userKey`), except in the case of world-scoped runs.
+ * If no permit is specified, platform will assign a default determined by the session user type and the scope boundary.
+ * For a participant creating a run, the default readLock/writeLock is `USER/USER`, unless that run is scoped to a world,
+ * in which case `PARTICIPANT/FACILITATOR` is the default. Admins and facilitators/reviewers have their own defaults.
  * @example
  * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * runAdapter.create('model.py', {
@@ -89,9 +92,16 @@ export async function create(
     } = optionals;
 
     const { WORLD } = SCOPE_BOUNDARY;
-    const { PARTICIPANT, USER } = ROLE;
-    const defaultLock = scopeBoundary === WORLD ? PARTICIPANT : USER;
     const session = identification.session as UserSession;
+
+    const hasPermit = readLock || writeLock;
+    const headers = Object.assign(
+        {},
+        routingOptions.headers,
+        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+    );
+    const permit = hasPermit ? { readLock, writeLock } : undefined;
+
     return await new Router()
         .post('/run', {
             body: {
@@ -102,10 +112,7 @@ export async function create(
                         undefined :
                         userKey ?? session?.userKey,
                 },
-                permit: {
-                    readLock: readLock || defaultLock,
-                    writeLock: writeLock || defaultLock,
-                },
+                permit,
                 morphology: 'MANY',
                 trackingKey,
                 modelFile: model,
@@ -114,6 +121,7 @@ export async function create(
                 ephemeral,
             },
             ...routingOptions,
+            headers,
         }).then(({ body }) => body);
 }
 /**
@@ -121,7 +129,7 @@ export async function create(
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * runAdapter.createSingular('model.py');
- * NOTE permit default behavior based on who starts the run: 
+ * NOTE permit default behavior based on who starts the run:
  * * Admin: read/write Author, User with World: read PARTICPANT, write FACILITATOR, User with Group: read/write USER,
  * @param model                         Name of your model file
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
@@ -142,19 +150,25 @@ export async function createSingular(
         ...routingOptions
     } = optionals;
 
+    const hasPermit = readLock || writeLock;
+    const headers = Object.assign(
+        {},
+        routingOptions.headers,
+        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+    );
+    const permit = hasPermit ? { readLock, writeLock } : undefined;
+
     return await new Router()
         .post('/run/singular', {
             body: {
                 modelFile: model,
-                permit: {
-                    readLock: readLock,
-                    writeLock: writeLock,
-                },
+                permit,
                 modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
                 executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
                 ephemeral,
             },
             ...routingOptions,
+            headers,
         }).then(({ body }) => body);
 }
 
@@ -647,6 +661,7 @@ export async function action(
 
 /**
  * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
+ * See `runAdapter.create` for more information about platform-determined default permits.
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * const run = await runAdapter.retrieveFromWorld('0000017a445032dc38cb2cecd5fc13708314', 'model.py');
@@ -678,15 +693,19 @@ export async function retrieveFromWorld(
         modelContext, executionContext,
         ...routingOptions
     } = optionals;
-    const { PARTICIPANT } = ROLE;
+
+    const hasPermit = readLock || writeLock;
+    const headers = Object.assign(
+        {},
+        routingOptions.headers,
+        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+    );
+    const permit = hasPermit ? { readLock, writeLock } : undefined;
 
     return await new Router()
         .post(`/run/world/${worldKey}`, {
             body: {
-                permit: {
-                    readLock: readLock || PARTICIPANT,
-                    writeLock: writeLock || PARTICIPANT,
-                },
+                permit,
                 morphology: 'MANY',
                 trackingKey,
                 modelFile: model,
@@ -695,6 +714,7 @@ export async function retrieveFromWorld(
                 ephemeral,
             },
             ...routingOptions,
+            headers,
         })
         .then(({ body }) => body);
 }
