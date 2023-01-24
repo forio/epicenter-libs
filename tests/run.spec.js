@@ -1088,7 +1088,7 @@ describe('Run APIs', () => {
         });
         testedMethods.push('createSingular');
     });
-    describe('runAdapter.createSingular', () => {
+    describe('runAdapter.getSingularRunKey', () => {
         it('Should do a GET', async() => {
             await runAdapter.getSingularRunKey();
             const req = fakeServer.requests.pop();
