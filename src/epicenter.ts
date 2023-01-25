@@ -5,10 +5,11 @@ import 'regenerator-runtime/runtime';
 const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
 
 import type { RetryFunction } from './utils/router';
-import { authAdapter } from './adapters';
+import { authAdapter, cometdAdapter } from './adapters';
 import { errorManager, identification, isBrowser, Fault, EpicenterError } from './utils';
 
 const UNAUTHORIZED = 401;
+const FORBIDDEN = 403;
 errorManager.registerHandler(
     (error) => error.code === 'COMETD_RECONNECTED',
     async(error: Fault) => {
@@ -17,6 +18,16 @@ errorManager.registerHandler(
         }
     }
 );
+
+errorManager.registerHandler(
+    (error) => error.status === FORBIDDEN && error.code === 'COMETD_ERROR',
+    async<T>(error: Fault, retry: RetryFunction<T>) => {
+        console.warn('Cometd error. Attempting to reconnect.', error);
+        await cometdAdapter.disconnect();
+        return await retry();
+    }
+);
+
 errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
     async(error: Fault) => {
