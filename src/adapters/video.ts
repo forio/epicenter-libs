@@ -97,7 +97,7 @@ export async function getURL(
 /**
  * Processes a video (one example of this is transcribing a video)
  * @example
- *  
+ *
  *       const processors = [
  *           {
  *               mediaFormat: 'mp4',
@@ -107,9 +107,9 @@ export async function getURL(
  *               jobName: 'test-transcription',
  *           },
  *       ];
- *       
+ *
  *       videoAdapter.processVideo(videoKey, processors);
- * 
+ *
  * @param videoKey                              Video key
  * @param [processors[]]                        List of processes to complete
  * @param [processors[].jobName]                A string to specify the title of the newly file
@@ -142,4 +142,35 @@ export async function processVideo(
         log,
     };
     return videoAPI.postVideoProcessor(videoKey, body, routingOptions);
+}
+
+/**
+ * @param file                              Name of the file
+ * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.scope]                 Scope object
+ * @param [optionals.scope.scopeBoundary]   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param [optionals.scope.scopeKey]        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals.scope.userKey]         User attached to scope if necessary
+ * @param [optionals.affiliate]             Affiliate -- only support for one for now: Vonage
+ * @param [optionals.family]                Identifier for the resourced provided by the affiliate (in the case of Vonage, this is the archive name).
+ * @param [optionals.videoKey]              Key for the video object
+ * @returns
+ */
+export async function download(
+    file: string,
+    optionals: {
+        scope?: { userKey?: string } & GenericScope,
+        affiliate?: keyof typeof AFFILIATE,
+        family?: string,
+        videoKey?: string,
+    } & RoutingOptions = {}
+): Promise<void> {
+    const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
+    if (scope && family && affiliate) {
+        videoAPI.downloadVideoWith(file, family, affiliate, scope, routingOptions);
+    }
+    if (videoKey) {
+        videoAPI.downloadVideoByKey(file, videoKey, routingOptions);
+    }
+    throw new EpicenterError('Cannot download video -- either a video key or scope/affiliate/family specification is required.');
 }
