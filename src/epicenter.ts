@@ -98,7 +98,7 @@ export {
     accountAdapter,
     adminAdapter,
     assetAdapter,
-    // consensusAdapter,
+    consensusAdapter,
     emailAdapter,
     authAdapter,
     chatAdapter,
