@@ -1,3 +1,30 @@
+# [3.18.0](https://github.com/forio/epicenter-libs/compare/v3.17.3...v3.18.0) (2023-01-26)
+
+
+### Bug Fixes
+
+* cleanup unused code ([03af3d6](https://github.com/forio/epicenter-libs/commit/03af3d6e75e328415a2ed463d5be52a59839e592))
+* use correct endpoint for consensusAdapter.submitActions ([dd15a42](https://github.com/forio/epicenter-libs/commit/dd15a4220fe567bd67aaeb44828fd6e5845a0a93))
+* wording ([e878939](https://github.com/forio/epicenter-libs/commit/e8789399625c7be4ab0679257935bed049ef6ecf))
+
+
+### Features
+
+* [EPICENTER-5331] Add video download ([208e1d7](https://github.com/forio/epicenter-libs/commit/208e1d7493d839a6cc5a574ad126b09691595f71))
+* [EPICENTER-5423] Add asset download ([d70863e](https://github.com/forio/epicenter-libs/commit/d70863e710518b4a1a8196f0e8df74058245d02c))
+* add actions to triggerFor ([d7b80f6](https://github.com/forio/epicenter-libs/commit/d7b80f69b8bde407ad33cefc8caf274a84bba100))
+* added default error handling for cometd ([95182d1](https://github.com/forio/epicenter-libs/commit/95182d151f9573f2f1dfcf868fee7d1f6c3b3f03))
+* begin consensus wrapping ([b4fa346](https://github.com/forio/epicenter-libs/commit/b4fa34666be84adef5cf36511b92e8e9ca0525cd))
+* complete consensus wrapper; first pass ([2f40cf1](https://github.com/forio/epicenter-libs/commit/2f40cf17a9fda37e79f9553cd7feffb00e02ee2e))
+* consensus create comments ([e5dc177](https://github.com/forio/epicenter-libs/commit/e5dc177ced53536f8055adc32bab3d70dc324b6b))
+* consensus progress ([632ffe6](https://github.com/forio/epicenter-libs/commit/632ffe606dfac4ea178ae81cfa2419096b5ab7e8))
+* functional forceClose consensus ([9f52e9a](https://github.com/forio/epicenter-libs/commit/9f52e9af9391eaa9b326c23dd8cdc6d983f63df2))
+* newly wrapped consensus API calls ([0e30b57](https://github.com/forio/epicenter-libs/commit/0e30b577ba50576f2596c62057a24dedc013ad41))
+* platform accepts run `permit` or assigns default ([8056b3a](https://github.com/forio/epicenter-libs/commit/8056b3ab806bec65699320ff9820d43d860cf685))
+* submit consensus actions ([1ebc74c](https://github.com/forio/epicenter-libs/commit/1ebc74c220629fe74c3e44a094f0e662e4764095))
+
+
+
 ## [3.17.3](https://github.com/forio/epicenter-libs/compare/v3.17.2...v3.17.3) (2023-01-02)
 
 
