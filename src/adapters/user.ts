@@ -76,6 +76,24 @@ export async function createUser(
         .then(({ body }) => body);
 }
 
+/**
+ * Gets a specific user.
+ * @example
+ * epicenter.userAdapter.get('00000179b4d3fb0c84f822df8cd2aa53be25');
+ *
+ * @param userKey    The user key
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to an user
+ */
+export async function get(
+    userKey: string,
+    optionals: RoutingOptions = {}
+): Promise<User> {
+    return await new Router()
+        .get(`/user/${userKey}`, optionals)
+        .then(({ body }) => body);
+}
+
 export async function getWithHandle(
     handle: string,
     optionals: {
