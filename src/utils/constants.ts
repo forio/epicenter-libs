@@ -339,6 +339,7 @@ export interface GenericSearchOptions {
     sort?: string[],
     first?: number,
     max?: number,
+    count?: boolean,
 }
 
 /**

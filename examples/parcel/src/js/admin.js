@@ -1,5 +1,7 @@
 import './config';
-import { taskAdapter, authAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+import { taskAdapter, authAdapter, SCOPE_BOUNDARY, somebodyAdapter } from 'epicenter-libs';
+// Use below to import from local build
+// import { taskAdapter, authAdapter, SCOPE_BOUNDARY, somebodyAdapter } from 'epicenter';
 
 const session = authAdapter.getLocalSession();
 
@@ -69,4 +71,34 @@ document.getElementById('get-task-in').addEventListener('click', (event) => {
 document.getElementById('get-task-in-2').addEventListener('click', (event) => {
     event.preventDefault();
     taskAdapter.getTaskIn(scope, { pseudonymKey });
+});
+
+document.getElementById('create-somebody').addEventListener('click', (event) => {
+    event.preventDefault();
+    const email = 'test4@test.com';
+    const optionals = {
+        givenName: 'Test',
+        familyName: 'McTest',
+    };
+    console.log('sombodye', somebodyAdapter);
+    somebodyAdapter.create(email, optionals);
+});
+
+document.getElementById('search-somebody').addEventListener('click', (event) => {
+    event.preventDefault();
+    somebodyAdapter.query({
+        filter: [
+            'email|=test4@test.com|test2@test.com',         // looks for any rooms with the names provided
+            // 'givenName=Person',                              // used in conjunction with the scopeBoundary
+            // 'familyName=PersonLastName',  // searches for a specific chat
+            // 'accountId=0000017dd3bf540e5ada5b1e058f08f20461',  // searches for a specific accountId
+            // 'accountShortName=acme',                         // specifies the account, typically unnecessary
+            // 'projectShortName=simulations',                  // specifies the project, typically unnecessary
+
+        ],
+        sort: ['-somebody.email'],    // sort all findings by the 'created' field (ascending)
+        // first: 3,                   // page should start with the 4th item found (defaults to 0)
+        // max: 10,                    // page should only include the first 10 items
+        count: false,               // If set to true this will return the number of somebodies that match the search
+    });
 });

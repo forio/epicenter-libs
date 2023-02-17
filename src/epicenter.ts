@@ -116,6 +116,7 @@ export {
     videoAdapter,
     vonageAdapter,
     worldAdapter,
+    somebodyAdapter,
     Channel,
 } from './adapters';
 
