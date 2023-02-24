@@ -20,6 +20,7 @@ import * as taskAdapter from './task';
 import * as chatAdapter from './chat';
 import * as consensusAdapter from './consensus';
 import * as somebodyAdapter from './somebody';
+import * as matchmakerAdapter from './matchmaker';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -47,5 +48,6 @@ export {
     taskAdapter,
     consensusAdapter,
     somebodyAdapter,
+    matchmakerAdapter,
     Channel,
 };

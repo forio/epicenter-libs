@@ -117,6 +117,7 @@ export {
     vonageAdapter,
     worldAdapter,
     somebodyAdapter,
+    matchmakerAdapter,
     Channel,
 } from './adapters';
 
