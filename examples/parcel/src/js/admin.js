@@ -1,5 +1,7 @@
 import './config';
-import { taskAdapter, authAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+import { taskAdapter, authAdapter, SCOPE_BOUNDARY, somebodyAdapter } from 'epicenter-libs';
+// Use below to import from local build
+// import { taskAdapter, authAdapter, SCOPE_BOUNDARY, somebodyAdapter } from 'epicenter';
 
 const session = authAdapter.getLocalSession();
 
@@ -69,4 +71,27 @@ document.getElementById('get-task-in').addEventListener('click', (event) => {
 document.getElementById('get-task-in-2').addEventListener('click', (event) => {
     event.preventDefault();
     taskAdapter.getTaskIn(scope, { pseudonymKey });
+});
+
+document.getElementById('create-somebody').addEventListener('click', (event) => {
+    event.preventDefault();
+    const email = 'test4@test.com';
+    const optionals = {
+        givenName: 'Test',
+        familyName: 'McTest',
+    };
+    somebodyAdapter.create(email, optionals);
+});
+
+document.getElementById('search-somebody').addEventListener('click', (event) => {
+    event.preventDefault();
+    somebodyAdapter.query({
+        filter: [
+            'email|=test4@test.com|test2@test.com',
+        ],
+        sort: ['-somebody.email'],    
+        // first: 3,                   
+        // max: 10,                    
+        count: false,               
+    });
 });

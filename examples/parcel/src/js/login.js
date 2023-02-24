@@ -1,5 +1,6 @@
 import './config';
 import { authAdapter, groupAdapter } from 'epicenter-libs';
+// import { authAdapter, groupAdapter } from 'epicenter';
 
 const identifyError = (code) => {
     switch (code) {
@@ -34,12 +35,13 @@ document.getElementById('submit').onclick = async(e) => {
     const passwordEl = document.getElementById('password');
     const groupEl = document.getElementById('group');
     const groupLabelEl = document.getElementById('group-label');
+    const adminCheckboxEl = document.getElementById('admin');
 
     const session = await authAdapter.login({
         handle: usernameEl.value,
         password: passwordEl.value,
         groupKey: groupEl.value,
-    });
+    }, {objectType: adminCheckboxEl.checked ? 'admin' : 'user' });
 
     if (!session.groupKey) {
         groupAdapter.getSessionGroups().then((groups) => {
