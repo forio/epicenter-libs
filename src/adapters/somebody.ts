@@ -62,18 +62,18 @@ export async function create(
  * @example
  * epicenter.somebodyAdapter.query({
  *      filter: [
- *          'email|=email1@email.com|email2@email.com',         // looks for any rooms with the names provided
- *          // 'givenName=Person',                              // used in conjunction with the scopeBoundary
- *          // 'familyName=PersonLastName',  // searches for a specific chat
+ *          'email|=email1@email.com|email2@email.com',         // searches for a specific email(s)
+ *          // 'givenName=Person',                              // searches for somebody by given name (first name)
+ *          // 'familyName=PersonLastName',                     // searches for somebody by family name (last name)
  *          // 'accountId=0000017dd3bf540e5ada5b1e058f08f20461',  // searches for a specific accountId
  *          // 'accountShortName=acme',                         // specifies the account, typically unnecessary
  *          // 'projectShortName=simulations',                  // specifies the project, typically unnecessary
 
  *      ],
- *      sort: ['+somebody.email'],    // sort all findings by the 'created' field (ascending)
+ *      sort: ['+somebody.email'],    // sort all findings by the 'email' field (ascending)
  *      first: 3,                   // page should start with the 4th item found (defaults to 0)
  *      max: 10,                    // page should only include the first 10 items
- *      count: false,               // If set to true this will return the number of somebodies that match the search
+ *      count: false,               // If set to true this will return the number of items that match the search
  * });
  * @param searchOptions Search options -- for more on Epicenter search options go [here](NOOP link)
  * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.

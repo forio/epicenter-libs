@@ -80,7 +80,6 @@ document.getElementById('create-somebody').addEventListener('click', (event) => 
         givenName: 'Test',
         familyName: 'McTest',
     };
-    console.log('sombodye', somebodyAdapter);
     somebodyAdapter.create(email, optionals);
 });
 
@@ -88,17 +87,11 @@ document.getElementById('search-somebody').addEventListener('click', (event) => 
     event.preventDefault();
     somebodyAdapter.query({
         filter: [
-            'email|=test4@test.com|test2@test.com',         // looks for any rooms with the names provided
-            // 'givenName=Person',                              // used in conjunction with the scopeBoundary
-            // 'familyName=PersonLastName',  // searches for a specific chat
-            // 'accountId=0000017dd3bf540e5ada5b1e058f08f20461',  // searches for a specific accountId
-            // 'accountShortName=acme',                         // specifies the account, typically unnecessary
-            // 'projectShortName=simulations',                  // specifies the project, typically unnecessary
-
+            'email|=test4@test.com|test2@test.com',
         ],
-        sort: ['-somebody.email'],    // sort all findings by the 'created' field (ascending)
-        // first: 3,                   // page should start with the 4th item found (defaults to 0)
-        // max: 10,                    // page should only include the first 10 items
-        count: false,               // If set to true this will return the number of somebodies that match the search
+        sort: ['-somebody.email'],    
+        // first: 3,                   
+        // max: 10,                    
+        count: false,               
     });
 });
