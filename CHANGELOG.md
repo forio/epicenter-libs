@@ -1,3 +1,15 @@
+# [3.19.0](https://github.com/forio/epicenter-libs/compare/v3.18.0...v3.19.0) (2023-02-27)
+
+
+### Features
+
+* `userAdapter` GET /user/{userKey} ([bc088d9](https://github.com/forio/epicenter-libs/commit/bc088d9b686bbd676e1db0cf3dd3c8cfc945e963))
+* added matchmaker adapter ([b3ae97f](https://github.com/forio/epicenter-libs/commit/b3ae97fac358bcba97ba5b4ba95b20aa99253853))
+* added somebody adapter ([a1d60e5](https://github.com/forio/epicenter-libs/commit/a1d60e55f3bc492079cf6cc8cf8f89ae60fdb974))
+* added somebody tests ([afc956e](https://github.com/forio/epicenter-libs/commit/afc956eb72d3d3296c85adb41a5dcebf6929b8df))
+
+
+
 # [3.18.0](https://github.com/forio/epicenter-libs/compare/v3.17.3...v3.18.0) (2023-01-26)
 
 
