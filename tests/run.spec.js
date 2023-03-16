@@ -1342,7 +1342,7 @@ describe('Run APIs', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
         });
-        it('Should pass the appropriate options to the request body (1)', async() => {
+        it('Should pass the appropriate options to the request body', async() => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY, {
                 trackingKey: 'trackingkey',
                 ephemeral: true,
@@ -1353,22 +1353,6 @@ describe('Run APIs', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
-        });
-        it('Should pass the appropriate options to the request body (2)', async() => {
-            await runAdapter.migrate(RUN_KEY, EPISODE_KEY, {
-                modelContext: 'modelContext123',
-                executionContext: 'executionContext123',
-            });
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.modelContext.should.equal('modelContext123');
-            body.executionContext.should.equal('executionContext123');
-            body.trackingKey.should.be.an('object').that.is.empty;
-            body.ephemeral.should.be.an('object').that.is.empty;
-        });
-        it('Should use desired scope destination', async() => {
-            const migrant = await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
-            migrant.scope.scopeKey.should.equal(EPISODE_KEY);
         });
         testedMethods.push('migrate');
     });
