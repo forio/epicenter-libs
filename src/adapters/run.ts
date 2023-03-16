@@ -821,13 +821,14 @@ export async function getWithStrategy(
 
 /**
  * Clone a run into a novel episode scope
- * @param runKey                        Source run key for the run you want to clone
+ * @param runKey                        Source run key for the run you want to copy and migrate
+ * @param episodeKey                    Destination episode key for the run's new episode scope
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
- * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
- * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
- * @returns promise that resolves to the cloned run
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by migrate operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by migrate operations.
+ * @returns promise that resolves to the migrated run
  */
 export async function migrate(
     runKey: string,
