@@ -1317,4 +1317,43 @@ describe('Run APIs', () => {
     it('Should not have any untested methods', () => {
         chai.expect(runAdapter).to.have.all.keys(...testedMethods);
     });
+    describe('runAdapter.migrate', () => {
+        const RUN_KEY = 'testRunKey123';
+        const EPISODE_KEY = 'testEpisodeKey123';
+        it('Should do a POST', async() => {
+            await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('POST');
+        });   
+        it('Should have authorization', async() => {
+            await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/migrate/episodeKey/runKey URL', async() => {
+            await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
+        });
+        
+        it('Should support generic URL options', async() => {
+            await runAdapter.migrate(RUN_KEY, EPISODE_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
+        });
+        it('Should pass the appropriate options to the request body', async() => {
+            await runAdapter.migrate(RUN_KEY, EPISODE_KEY, {
+                trackingKey: 'trackingkey',
+                ephemeral: true,
+            });
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.trackingKey.should.equal('trackingkey');
+            body.ephemeral.should.equal(true);
+            body.modelContext.should.be.an('object').that.is.empty;
+            body.executionContext.should.be.an('object').that.is.empty;
+        });
+        testedMethods.push('migrate');
+    });
 });
