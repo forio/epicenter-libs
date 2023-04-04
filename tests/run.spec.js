@@ -636,18 +636,43 @@ describe('Run APIs', () => {
             const req = fakeServer.requests.pop();
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
-        it('Should use the run/introspect/modelFile URL', async() => {
+        it('Should use the run/introspect/model/modelFile URL', async() => {
             await runAdapter.introspect(MODEL);
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/${MODEL}`);
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/model/${MODEL}`);
         });
         it('Should support generic URL options', async() => {
             await runAdapter.introspect(MODEL, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${MODEL}`);
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/model/${MODEL}`);
         });
         testedMethods.push('introspect');
+    });
+    describe('runAdapter.introspectWithRunKey', () => {
+        const RUN_KEY = 'runKey';
+        it('Should do a GET', async() => {
+            await runAdapter.introspectWithRunKey(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await runAdapter.introspectWithRunKey(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the run/introspect/runKey URL', async() => {
+            await runAdapter.introspectWithRunKey(RUN_KEY);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/${RUN_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await runAdapter.introspectWithRunKey(RUN_KEY, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${RUN_KEY}`);
+        });
+        testedMethods.push('introspectWithRunKey');
     });
     describe('runAdapter.operation', () => {
         const RUN_KEY = '123456789';
