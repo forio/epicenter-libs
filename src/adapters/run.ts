@@ -416,7 +416,7 @@ export async function introspect(
 ): Promise<Record<string, unknown>> {
 
     return await new Router()
-        .get(`/run/introspect/${model}`, optionals)
+        .get(`/run/introspect/model/${model}`, optionals)
         .then(({ body }) => body);
 }
 
