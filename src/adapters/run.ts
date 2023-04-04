@@ -416,7 +416,17 @@ export async function introspect(
 ): Promise<Record<string, unknown>> {
 
     return await new Router()
-        .get(`/run/introspect/${model}`, optionals)
+        .get(`/run/introspect/model/${model}`, optionals)
+        .then(({ body }) => body);
+}
+
+export async function introspectWithRunKey(
+    runKey: string,
+    optionals: RoutingOptions = {}
+): Promise<Record<string, unknown>> {
+
+    return await new Router()
+        .get(`/run/introspect/${runKey}`, optionals)
         .then(({ body }) => body);
 }
 
