@@ -1,3 +1,24 @@
+# [3.20.0](https://github.com/forio/epicenter-libs/compare/v3.19.0...v3.20.0) (2023-04-05)
+
+
+### Bug Fixes
+
+* use correct endpoint for runAdapter.introspect ([acc5920](https://github.com/forio/epicenter-libs/commit/acc5920bf3b319b41f914bbf35b93e07b4b57675))
+
+
+### Features
+
+* migrate wrapper tests epilibs 104 ([bfa3958](https://github.com/forio/epicenter-libs/commit/bfa3958d86a3ed5d42e2ea98a84f1a8f3021c21a))
+* wrap endpoint for introspection via runKey ([d3da6f8](https://github.com/forio/epicenter-libs/commit/d3da6f84c3f11e9e7ed11fd15afb254fbd9e81ae))
+* wrap migrate for run adapter ([07efb2e](https://github.com/forio/epicenter-libs/commit/07efb2ea4f0cc85aacc68474d8dcc68f1fe72215))
+
+
+### Reverts
+
+* remove bad tests epilibs 104 ([e1aa923](https://github.com/forio/epicenter-libs/commit/e1aa92373ee8de2278b9cf3fbbfd98e7ef9a538f))
+
+
+
 # [3.19.0](https://github.com/forio/epicenter-libs/compare/v3.18.0...v3.19.0) (2023-02-27)
 
 
