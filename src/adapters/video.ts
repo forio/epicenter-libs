@@ -1,6 +1,6 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope, GenericSearchOptions } from '../utils/constants';
-import type { Video, AFFILIATE, PROCESSING_TYPE, MEDIA_FORMAT, LANGUAGE_CODE } from '../apis/video';
+import type { Video, AFFILIATE, PROCESSING_TYPE, MEDIA_FORMAT, LANGUAGE_CODE, VIDEO_DIR } from '../apis/video';
 
 import EpicenterError from '../utils/error';
 import * as videoAPI from '../apis/video';
@@ -90,6 +90,53 @@ export async function getURL(
     }
     if (videoKey) {
         return videoAPI.getVideoURLByKey(file, videoKey, routingOptions);
+    }
+    throw new EpicenterError('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
+}
+
+/**
+ * @example
+ * import { videoAdapter } from 'epicenter-libs';
+ *
+ * // get using video key
+ * videoAdapter.getDirectoryURL({
+ *      videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
+ * });
+ *
+ * // get using scope/affiliate/family
+ * videoAdapter.getDirectoryURL({
+ *      scope: {
+ *          scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *          scopeKey: session.groupKey,
+ *      },
+ *      affiliate: 'VONAGE',
+ *      family: 'archiveName'
+ * });
+ *
+ * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.scope]                 Scope object
+ * @param [optionals.scope.scopeBoundary]   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param [optionals.scope.scopeKey]        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [optionals.scope.userKey]         User attached to scope if necessary
+ * @param [optionals.affiliate]             Affiliate -- only support for one for now: Vonage
+ * @param [optionals.family]                Identifier for the resourced provided by the affiliate (in the case of Vonage, this is the archive name).
+ * @param [optionals.videoKey]              Key for the video object
+ * @returns
+ */
+export async function getDirectoryURL(
+    optionals: {
+        scope?: { userKey?: string } & GenericScope,
+        affiliate?: keyof typeof AFFILIATE,
+        family?: string,
+        videoKey?: string,
+    } & RoutingOptions = {}
+): Promise<VIDEO_DIR> {
+    const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
+    if (scope && family && affiliate) {
+        return videoAPI.getVideoDirectoryWith(family, affiliate, scope, routingOptions);
+    }
+    if (videoKey) {
+        return videoAPI.getVideoDirectoryByKey(videoKey, routingOptions);
     }
     throw new EpicenterError('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
 }

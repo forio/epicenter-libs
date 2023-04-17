@@ -21,6 +21,7 @@ import * as chatAdapter from './chat';
 import * as consensusAdapter from './consensus';
 import * as somebodyAdapter from './somebody';
 import * as matchmakerAdapter from './matchmaker';
+import * as dailyAdapter from './daily';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -49,5 +50,6 @@ export {
     consensusAdapter,
     somebodyAdapter,
     matchmakerAdapter,
+    dailyAdapter,
     Channel,
 };
