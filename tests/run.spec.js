@@ -766,13 +766,14 @@ describe('Run APIs', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
         });
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters and body', async() => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: 300, ritual: RITUAL.REANIMATE });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
             searchParams.get('timeout').should.equal('300');
-            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
+            const body = JSON.parse(req.requestBody);
+            body.ritual.should.equal(RITUAL.REANIMATE);
         });
         it('Should handle the use of multiple run keys in the request body', async() => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES);
@@ -783,9 +784,8 @@ describe('Run APIs', () => {
         it('Should set ritual to undefined when using mutiple run keys', async() => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.REANIMATE });
             const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.has('ritual').should.equal(false);
+            const body = JSON.parse(req.requestBody);
+            body.hasOwnProperty('ritual').should.equal(false);
         });
         testedMethods.push('getVariables');
     });
