@@ -252,7 +252,7 @@ export async function getVideoByRecordingId(
     const filePaths = filePathInfo.contents;
     if (!filePaths?.length) return null;
     filePaths.sort((a, b) => Number(b.split('.')[0]) - Number(a.split('.')[0]));
-    const filePath = filePaths.find((p) => p.includes(recordingId));
+    const filePath = filePaths.find((p) => p.includes(recordingId) && p.includes('.mp4'));
     if (!filePath) return null;
     return await videoAdapter.getURL(filePath, {
         scope,
