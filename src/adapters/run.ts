@@ -486,10 +486,10 @@ export async function getVariables(
         return variableMap;
     }, {} as Record<string, unknown>);
 
-    const searchParams = hasMultiple ? { timeout } : { ritual, timeout };
+    const searchParams = hasMultiple ? { timeout } : { timeout };
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const include = variables.join(';');
-    const body = hasMultiple ? { include, runKey } : { include };
+    const body = hasMultiple ? { include, runKey } : { include, ritual };
     return await new Router()
         .withSearchParams(searchParams)
         .post(`/run/variable${uriComponent}`, {
