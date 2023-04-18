@@ -936,12 +936,11 @@ describe('Run APIs', () => {
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
-            await runAdapter.getMetadata(RUN_KEY, METADATA, { timeout: 300, ritual: RITUAL.REANIMATE });
+            await runAdapter.getMetadata(RUN_KEY, METADATA, { timeout: 300 });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
             searchParams.get('timeout').should.equal('300');
-            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
         });
         it('Should handle multiple run keys in the request body', async() => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
@@ -950,13 +949,6 @@ describe('Run APIs', () => {
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
             const body = JSON.parse(req.requestBody);
             body.runKey.should.deep.equal([RUN_KEY, '987654321']);
-        });
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
-            await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA, { ritual: RITUAL.REANIMATE });
-            const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.has('ritual').should.equal(false);
         });
         testedMethods.push('getMetadata');
     });
@@ -991,12 +983,11 @@ describe('Run APIs', () => {
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta/${RUN_KEY}`);
         });
         it('Should pass non-generic options to URL search parameters', async() => {
-            await runAdapter.updateMetadata(RUN_KEY, UPDATE, { timeout: 300, ritual: RITUAL.REANIMATE });
+            await runAdapter.updateMetadata(RUN_KEY, UPDATE, { timeout: 300 });
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
             searchParams.get('timeout').should.equal('300');
-            searchParams.get('ritual').should.equal(RITUAL.REANIMATE);
         });
         it('Should handle multiple run keys in the URL search parameters', async() => {
             await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE);
@@ -1005,13 +996,6 @@ describe('Run APIs', () => {
             url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
             const searchParams = new URLSearchParams(search);
             searchParams.getAll('runKey').should.deep.equal([RUN_KEY, '987654321']);
-        });
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
-            await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.REANIMATE });
-            const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.has('ritual').should.equal(false);
         });
         it('Should pass the metadata update to the request body', async() => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);

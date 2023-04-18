@@ -574,21 +574,16 @@ export async function getMetadata(
     runKey: string | string[],
     metadata: string[],
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
-        timeout, ritual,
+        timeout,
         ...routingOptions
     } = optionals;
     const include = metadata.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
-    const searchParams = hasMultiple ? { timeout } : { ritual, timeout };
-
-    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
-        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
-    }
+    const searchParams = { timeout };
 
     const runKeyArg = Array.isArray(runKey) ? runKey : [runKey];
     return await new Router()
@@ -615,21 +610,16 @@ export async function updateMetadata(
     runKey: string | string[],
     update: Record<string, unknown>,
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
-        timeout, ritual,
+        timeout,
         ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const searchParams = hasMultiple ? { runKey, timeout } : { ritual, timeout };
-
-    if (ritual !== RITUAL.EXORCISE && hasMultiple) {
-        console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
-    }
+    const searchParams = hasMultiple ? { runKey, timeout } : { timeout };
 
     return await new Router()
         .withSearchParams(searchParams)
