@@ -1,3 +1,12 @@
+# [3.21.0](https://github.com/forio/epicenter-libs/compare/v3.20.0...v3.21.0) (2023-04-19)
+
+
+### Features
+
+* [EPILIBS-102] removed ritual from getMetadata and updateMetadata ([8455ca5](https://github.com/forio/epicenter-libs/commit/8455ca59f02da6da44242ce5dff2ced4a91f11b3))
+
+
+
 # [3.20.0](https://github.com/forio/epicenter-libs/compare/v3.19.0...v3.20.0) (2023-04-05)
 
 
