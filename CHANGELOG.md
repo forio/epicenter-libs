@@ -1,3 +1,17 @@
+# [3.22.0](https://github.com/forio/epicenter-libs/compare/v3.21.0...v3.22.0) (2023-04-20)
+
+
+### Bug Fixes
+
+* accounted for various file types in getVideoByRecordingId ([707e87c](https://github.com/forio/epicenter-libs/commit/707e87cd6d1055e3f4ac24239e4b5ce2f93eb9ad))
+
+
+### Features
+
+* added daily adapter ([3d98386](https://github.com/forio/epicenter-libs/commit/3d98386536b6b9d3aaf511f5632141e104696bcb))
+
+
+
 # [3.21.0](https://github.com/forio/epicenter-libs/compare/v3.20.0...v3.21.0) (2023-04-19)
 
 
