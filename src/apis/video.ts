@@ -6,6 +6,8 @@ import Router from '../utils/router';
 export type Video = FIXME;
 export enum AFFILIATE {
     VONAGE = 'VONAGE',
+    DAILY = 'DAILY',
+    DOMESTIC = 'DOMESTIC',
 }
 
 export enum PROCESSING_TYPE {
@@ -64,6 +66,11 @@ export enum LANGUAGE_CODE {
     'en-NZ' = 'en-NZ',
 }
 
+export type VIDEO_DIR = {
+    contents: string[],
+    videoKey: string,
+}
+
 export async function getVideoURLByKey(
     file: string,
     videoKey: string,
@@ -85,6 +92,28 @@ export async function getVideoURLWith(
     const userKeyURIComponent = userKey ? `/${userKey}` : '';
     return await new Router()
         .get(`/video/url/with/${scopeBoundary}/${scopeKey}${userKeyURIComponent}/${affiliate}/${family}/${file}`, optionals)
+        .then(({ body }) => body);
+}
+
+export async function getVideoDirectoryByKey(
+    videoKey: string,
+    optionals: RoutingOptions = {}
+): Promise<VIDEO_DIR> {
+    return await new Router()
+        .get(`/video/url/${videoKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+export async function getVideoDirectoryWith(
+    family: string,
+    affiliate: keyof typeof AFFILIATE,
+    scope: { userKey?: string } & GenericScope,
+    optionals: RoutingOptions = {}
+): Promise<VIDEO_DIR> {
+    const { scopeBoundary, scopeKey, userKey } = scope;
+    const userKeyURIComponent = userKey ? `/${userKey}` : '';
+    return await new Router()
+        .get(`/video/dir/with/${scopeBoundary}/${scopeKey}${userKeyURIComponent}/${affiliate}/${family}`, optionals)
         .then(({ body }) => body);
 }
 
