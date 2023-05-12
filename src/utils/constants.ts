@@ -57,17 +57,35 @@ export enum RITUAL {
      */
     NONE = 'NONE',
     /**
+     * Does not allow restore and will not access archived state (if down stay down)
+     * @constant
+     * @type {string}
+     */
+    INTER = 'INTER',
+    /**
      * A run with this ritual will be pulled into memory as needed, and will stay in memory until it's lifespan (defined in your project Settings) has expired.
      * @constant
      * @type {string}
      */
     REANIMATE = 'REANIMATE',
     /**
+     * Will always restore, and never access archived state
+     * @constant
+     * @type {string}
+     */
+    REVIVE = 'REVIVE',
+    /**
      * A run with this ritual will be pulled into memory as needed, and removed from memory afterwards.
      * @constant
      * @type {string}
      */
     EXORCISE = 'EXORCISE',
+    /**
+     * Will always restore, and never access archived state, but will also terminate the run after issuing the command.
+     * @constant
+     * @type {string}
+     */
+    RESURRECT = 'RESURRECT',
 }
 
 /**
