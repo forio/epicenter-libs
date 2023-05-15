@@ -261,3 +261,20 @@ export async function getVideoByRecordingId(
         ...optionals,
     });
 }
+
+/**
+ * Sets the daily family/room to a recording status of recorded; necessary to prevent videos from deleting automatically within 1 hour
+ * 
+ * Base URL: DELETE `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1/meetingToken/{room_name}`
+ * 
+ * @example
+ * import { dailyAdapter } from 'epicenter-libs';
+ * dailyAdapter.updateRecordingStatus(room_name);
+ */
+export async function updateRecordingStatus(room_name : string,
+    optionals: RoutingOptions = {}
+): Promise<number> {
+    return await new Router()
+        .delete(`/daily/v1/meetingToken/${room_name}`, optionals)
+        .then(({ body }) => body);
+}
