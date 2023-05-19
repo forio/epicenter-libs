@@ -1,3 +1,14 @@
+# [3.23.0](https://github.com/forio/epicenter-libs/compare/v3.22.0...v3.23.0) (2023-05-19)
+
+
+### Features
+
+* added sso outcome and saml determination ([df88351](https://github.com/forio/epicenter-libs/commit/df8835117385282aab18317e194c8825daeb45e3))
+* added updateRecordingStatus for Daily ([3bbbb8e](https://github.com/forio/epicenter-libs/commit/3bbbb8e02ef7ba2b1edcda7dffdb562914834722))
+* expose `INTER` `REVIVE`, `RESURRECT` rituals ([c40cc61](https://github.com/forio/epicenter-libs/commit/c40cc6194d178dd616744d517c070de56099974b))
+
+
+
 # [3.22.0](https://github.com/forio/epicenter-libs/compare/v3.21.0...v3.22.0) (2023-04-20)
 
 
