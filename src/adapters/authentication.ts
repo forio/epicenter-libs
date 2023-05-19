@@ -142,6 +142,52 @@ export async function sso(
 }
 
 /**
+ * Retrieves the SAML link from the SSO configuration
+ */
+export async function getSAMLLink(
+    optionals: RoutingOptions = {},
+): Promise<string> {
+    return await new Router()
+        .get('/registration/sso/saml', optionals)
+        .then(({ body }) => body);
+}
+
+/**
+ * Generates and returns an epicenter URL that will redirect to the SAML url. 
+ */
+export function generateSAMLLINK(
+    optionals: RoutingOptions = {},
+): string {
+    return new Router().getURL('/registration/sso/saml', optionals).toString();
+}
+
+/**
+ * Sends an outcome to an external link specified in project config. For example, sending a grade back to a third party platform.
+ * @param  ltiVersion               The version of LTI to use. Valid versions include 1.1, 1.2, and 1.3
+ * @param  [outcomeInformation]              Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param  [outcomeInformation.value]  The value to pass back to the outcomeServiceUrl. For example, the grade a student received upon simulation completion
+ * @param  [outcomeInformation.sourcedId]      The id of the current assignment/student as provided by the client using the SSO service
+ * @param  [outcomeInformation.outcomeServiceUrl]      The url called for passing back the outcome
+ * @returns promise that resolves to undefined (indicating success)
+ */
+export async function ssoOutcome(
+    ltiVersion : string,
+    outcomeInformation: {
+        value: number,
+        sourcedId: string,
+        outcomeServiceUrl: string,
+    },
+    optionals: RoutingOptions = {}
+): Promise<Record<string, unknown>> {
+    const { ...routingOptions } = optionals;
+    return await new Router()
+        .post(`/lti/${ltiVersion}/outcome`, {
+            body: outcomeInformation,
+            ...routingOptions,
+        }).then(({ body }) => body);
+}
+
+/**
  * Sends a link to reset a user's password to their email
  * @example
  * const subject = 'Please reset your password for the Acme simulation';
