@@ -1,3 +1,13 @@
+## [3.23.2](https://github.com/forio/epicenter-libs/compare/v3.23.1...v3.23.2) (2023-07-20)
+
+
+### Bug Fixes
+
+* correct errors in leaderboardAdapter.update jsdocs ([8569124](https://github.com/forio/epicenter-libs/commit/8569124a7790588068c4bd2ee786fa7e2022dae5))
+* ensure isNode function returns a value ([9237dea](https://github.com/forio/epicenter-libs/commit/9237dea9350fbba178550b9d3df5f7ee4476509c))
+
+
+
 ## [3.23.1](https://github.com/forio/epicenter-libs/compare/v3.22.0...v3.23.1) (2023-06-27)
 
 
