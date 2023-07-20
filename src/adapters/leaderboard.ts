@@ -24,10 +24,10 @@ interface Leaderboard {
  * Creates a leaderboard entry.
  * @example
  * import { leaderboardAdapter } from 'epicenter-libs';
- * const leaderboard = await leaderboardAdapter.post(
+ * const leaderboard = await leaderboardAdapter.update(
  *      'class-23-leaderboard',
- *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
  *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461' },
+ *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
  *      { tags: [{ label: 'role', content: 'doctor' }] }
  * );
  * @param collection            Name of the leaderboard
