@@ -193,6 +193,7 @@ export async function createToken(
         exp?: number,
         enable_recording?: keyof typeof RECORDING_TYPES,
         disableRateLimitHandling?: boolean,
+        selfSign?: boolean,
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
@@ -203,10 +204,12 @@ export async function createToken(
         exp,
         enable_recording,
         disableRateLimitHandling,
+        selfSign = true,
         ...routingOptions
     } = optionals;
     const callAPI = async() => {
         return await new Router()
+            .withSearchParams({ selfSign })
             .post(
                 '/daily/v1/meetingToken',
                 {
