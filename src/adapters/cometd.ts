@@ -21,7 +21,7 @@ let cometdInstance: CometD | undefined;
 class CometdAdapter {
 
     url = '';
-    initialization = false;
+    initialization: Promise<boolean> | undefined = undefined;
     subscriptions = new Map();
     isConnected = false;
 
@@ -118,7 +118,7 @@ class CometdAdapter {
 
     async init() {
         if (!this.initialization) {
-            this.initialization = await this.startup();
+            this.initialization = this.startup();
         }
         return this.initialization;
     }
