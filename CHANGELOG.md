@@ -1,3 +1,17 @@
+## [3.23.3](https://github.com/forio/epicenter-libs/compare/v3.23.2...v3.23.3) (2023-10-04)
+
+
+### Bug Fixes
+
+* `cometdAdapter` init only once ([fd9a07f](https://github.com/forio/epicenter-libs/commit/fd9a07f0c1f3b383f53f3542fc959e5dabfe18f2))
+
+
+### Features
+
+* added support for self signed Daily tokens ([f6240ea](https://github.com/forio/epicenter-libs/commit/f6240eae42e680aaedf40bfd748aa2306b615414))
+
+
+
 ## [3.23.2](https://github.com/forio/epicenter-libs/compare/v3.23.1...v3.23.2) (2023-07-20)
 
 
