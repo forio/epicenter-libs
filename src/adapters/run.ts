@@ -491,13 +491,13 @@ export async function getVariables(
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const include = variables.join(';');
     const body = hasMultiple ? { include, runKey } : { ritual, include };
-    const additonal = ignorable ? { ignorable } : {};
+    const additional = ignorable ? { ignorable } : {};
     return await new Router()
         .withSearchParams(searchParams)
         .post(`/run/variable${uriComponent}`, {
             body: {
                 ...body,
-                ...additonal,
+                ...additional,
             },
             ...routingOptions,
         })
