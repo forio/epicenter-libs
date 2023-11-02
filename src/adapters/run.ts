@@ -469,10 +469,11 @@ export async function getVariables(
     optionals: {
         timeout?: number,
         ritual?: keyof typeof RITUAL,
+        ignorable?: boolean,
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown> | Record<string, unknown>[]> {
     const {
-        timeout, ritual,
+        timeout, ritual, ignorable,
         ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -490,10 +491,14 @@ export async function getVariables(
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const include = variables.join(';');
     const body = hasMultiple ? { include, runKey } : { ritual, include };
+    const additonal = ignorable ? { ignorable } : {};
     return await new Router()
         .withSearchParams(searchParams)
         .post(`/run/variable${uriComponent}`, {
-            body,
+            body: {
+                ...body,
+                ...additonal,
+            },
             ...routingOptions,
         })
         .then(({ body }) => {
