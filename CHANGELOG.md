@@ -1,3 +1,17 @@
+## [3.23.4](https://github.com/forio/epicenter-libs/compare/v3.23.3...v3.23.4) (2023-11-02)
+
+
+### Bug Fixes
+
+* fix a typo ([8a9b707](https://github.com/forio/epicenter-libs/commit/8a9b7076daf8c572bf3365086c6fef6b6e95fe69))
+
+
+### Features
+
+* ability to ignore missing variables in getVariables response ([35c17f1](https://github.com/forio/epicenter-libs/commit/35c17f1d56b5a063cebd4a69efa984770c49d0ab))
+
+
+
 ## [3.23.3](https://github.com/forio/epicenter-libs/compare/v3.23.2...v3.23.3) (2023-10-04)
 
 
