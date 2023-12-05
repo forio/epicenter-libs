@@ -15,29 +15,41 @@ interface AppCredentials {
 }
 
 /**
- * Run API adapters -- use this to create, update, delete, and manage your runs
+ * Authentication API adapters -- use to manage user Epicenter session.
  * @namespace authAdapter
  */
 
 /**
- * Logs out of current Epicenter session.
+ * Logs out of current Epicenter session. Also disconnects from CometD and removes
+ * user from presence list.
  * @example
  * epicenter.authAdapter.logout()
+ * @param verificationOptionals     Optional arguments; pass network call options overrides here.
+ * @param presenceOptionals         Optional arguments; pass network call options overrides here.
  * @returns promise resolving to successful logout
  */
-export async function logout(): Promise<void> {
-    await cometdAdapter.disconnect();
+export async function logout(
+    verificationOptionals: RoutingOptions = {},
+    presenceOptionals: RoutingOptions = verificationOptionals,
+): Promise<void> {
     try {
-        if (identification?.session?.groupKey) {
+        await cometdAdapter.disconnect();
+        const groupKey = identification?.session?.groupKey;
+        if (groupKey) {
             await new Router()
-                .delete(`/presence/group/${identification?.session?.groupKey}`);
+                .delete(`/presence/group/${groupKey}`, {
+                    inert: true,
+                    ...presenceOptionals,
+                });
         }
+    } finally {
         await new Router()
-            .delete('/verification');
-    } catch (err) {
-        console.error('Error with DELETE to /verification', err);
+            .delete('/verification', {
+                inert: true,
+                ...verificationOptionals,
+            })
+            .finally(() => identification.session = undefined);
     }
-    identification.session = undefined;
 }
 
 export async function getSession(): Promise<Session> {
@@ -80,9 +92,9 @@ export async function login(
             body: payload,
             ...routingOptions,
         }).then(({ body }) => body);
-    
+
     await removeLocalSession();
-    
+
     identification.session = session;
     return session;
 }
@@ -124,7 +136,7 @@ export async function regenerate(
             },
             ...routingOptions,
         }).then(({ body }) => body);
-    
+
     await removeLocalSession();
     identification.session = session;
     return session;
@@ -153,7 +165,7 @@ export async function getSAMLLink(
 }
 
 /**
- * Generates and returns an epicenter URL that will redirect to the SAML url. 
+ * Generates and returns an epicenter URL that will redirect to the SAML url.
  */
 export function generateSAMLLINK(
     optionals: RoutingOptions = {},
