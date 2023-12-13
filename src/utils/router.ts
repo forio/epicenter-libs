@@ -27,7 +27,7 @@ export interface RoutingOptions {
     headers?: Record<string, string>,
     body?: unknown,
     includeAuthorization?: boolean,
-    inert?: boolean,
+    inert?: boolean | ((fault: Fault) => boolean),
     paginated?: boolean,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     parsePage?: (values: any[]) => any[],
@@ -213,7 +213,8 @@ async function request(
     }
 
     const fault = new Fault(json, response);
-    if (inert) throw fault;
+    if (inert === true) throw fault;
+    if (typeof inert === 'function' && inert(fault)) throw fault;
 
     const retryOptions = {...options, inert: true};
     const retry = () => request(url, retryOptions);

@@ -67,6 +67,23 @@ errorManager.registerHandler(
     }
 );
 
+const { handlers } = errorManager;
+const [
+    authInvalidated,
+    authGroupExpired,
+    authExpired,
+    cometdError,
+    cometdReconnected,
+] = handlers;
+
+export const defaultErrorHandlers = {
+    authInvalidated,
+    authGroupExpired,
+    authExpired,
+    cometdError,
+    cometdReconnected,
+};
+
 
 /* Interfaces & Types */
 export type { Session, UserSession, AdminSession } from './utils/identification';

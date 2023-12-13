@@ -37,23 +37,17 @@ export async function logout(
         const groupKey = identification?.session?.groupKey;
         if (groupKey) {
             await new Router()
-                .delete(`/presence/group/${groupKey}`, {
-                    inert: true,
-                    ...presenceOptionals,
-                });
+                .delete(`/presence/group/${groupKey}`, presenceOptionals);
         }
     } finally {
         await new Router()
-            .delete('/verification', {
-                inert: true,
-                ...verificationOptionals,
-            })
+            .delete('/verification', verificationOptionals)
             .finally(() => identification.session = undefined);
     }
 }
 
-export async function getSession(): Promise<Session> {
-    const { body } = await new Router().get('/verification');
+export async function getSession(optionals: RoutingOptions): Promise<Session> {
+    const { body } = await new Router().get('/verification', optionals);
     identification.session = body;
     return body;
 }
