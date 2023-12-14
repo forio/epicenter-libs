@@ -15,33 +15,45 @@ interface AppCredentials {
 }
 
 /**
- * Run API adapters -- use this to create, update, delete, and manage your runs
+ * Authentication API adapters -- use to manage user Epicenter session.
  * @namespace authAdapter
  */
 
 /**
- * Logs out of current Epicenter session.
+ * Logs out of current Epicenter session. Also disconnects from CometD and removes user presence.
+ * Priorities:
+ * 1. Delete local session (even if 2 and 3 fail)
+ * 2. Delete remote session (even if 3 fails)
+ * 3. Other cleanup (disconnect CometD, delete presence)
+ * Cleanup operations require authentication, so await cleanup before delete.
  * @example
  * epicenter.authAdapter.logout()
+ * @param verificationOptionals     Optional arguments; pass network call options overrides here.
+ * @param presenceOptionals         Optional arguments; pass network call options overrides here.
  * @returns promise resolving to successful logout
  */
-export async function logout(): Promise<void> {
-    await cometdAdapter.disconnect();
-    try {
-        if (identification?.session?.groupKey) {
-            await new Router()
-                .delete(`/presence/group/${identification?.session?.groupKey}`);
-        }
-        await new Router()
-            .delete('/verification');
-    } catch (err) {
-        console.error('Error with DELETE to /verification', err);
+export async function logout(
+    verificationOptionals: RoutingOptions = {},
+    presenceOptionals: RoutingOptions = verificationOptionals
+): Promise<void> {
+    const cleanup = [cometdAdapter.disconnect()];
+    const groupKey = identification?.session?.groupKey;
+    if (groupKey) {
+        cleanup.push(
+            new Router().delete(
+                `/presence/group/${groupKey}`,
+                presenceOptionals
+            )
+        );
     }
-    identification.session = undefined;
+    await Promise.allSettled(cleanup);
+    await new Router()
+        .delete('/verification', verificationOptionals)
+        .finally(() => (identification.session = undefined));
 }
 
-export async function getSession(): Promise<Session> {
-    const { body } = await new Router().get('/verification');
+export async function getSession(optionals: RoutingOptions): Promise<Session> {
+    const { body } = await new Router().get('/verification', optionals);
     identification.session = body;
     return body;
 }
@@ -80,9 +92,9 @@ export async function login(
             body: payload,
             ...routingOptions,
         }).then(({ body }) => body);
-    
+
     await removeLocalSession();
-    
+
     identification.session = session;
     return session;
 }
@@ -124,7 +136,7 @@ export async function regenerate(
             },
             ...routingOptions,
         }).then(({ body }) => body);
-    
+
     await removeLocalSession();
     identification.session = session;
     return session;
@@ -153,7 +165,7 @@ export async function getSAMLLink(
 }
 
 /**
- * Generates and returns an epicenter URL that will redirect to the SAML url. 
+ * Generates and returns an epicenter URL that will redirect to the SAML url.
  */
 export function generateSAMLLINK(
     optionals: RoutingOptions = {},
