@@ -7,10 +7,13 @@ const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DAT
 import type { RetryFunction } from './utils/router';
 import { authAdapter, cometdAdapter } from './adapters';
 import { errorManager, identification, isBrowser, Fault, EpicenterError } from './utils';
+import { Handler } from './utils/error-manager';
 
 const UNAUTHORIZED = 401;
 const FORBIDDEN = 403;
-errorManager.registerHandler(
+export const DEFAULT_ERROR_HANDLERS: Record<string, Handler> = {};
+
+DEFAULT_ERROR_HANDLERS.cometdReconnected = errorManager.registerHandler(
     (error) => error.code === 'COMETD_RECONNECTED',
     async(error: Fault) => {
         if (isBrowser()) {
@@ -19,7 +22,7 @@ errorManager.registerHandler(
     }
 );
 
-errorManager.registerHandler(
+DEFAULT_ERROR_HANDLERS.cometdError = errorManager.registerHandler(
     (error) => error.status === FORBIDDEN && error.code === 'COMETD_ERROR',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         console.warn('Cometd error. Attempting to reconnect.', error);
@@ -28,7 +31,7 @@ errorManager.registerHandler(
     }
 );
 
-errorManager.registerHandler(
+DEFAULT_ERROR_HANDLERS.authExpired = errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
     async(error: Fault) => {
         await authAdapter.removeLocalSession();
@@ -39,7 +42,8 @@ errorManager.registerHandler(
         throw error;
     },
 );
-errorManager.registerHandler(
+
+DEFAULT_ERROR_HANDLERS.authGroupExpired = errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
     async(error: Fault) => {
         if (isBrowser()) {
@@ -49,7 +53,8 @@ errorManager.registerHandler(
         throw error;
     },
 );
-errorManager.registerHandler(
+
+DEFAULT_ERROR_HANDLERS.authInvalidated = errorManager.registerHandler(
     (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         try {
@@ -67,6 +72,7 @@ errorManager.registerHandler(
     }
 );
 
+Object.freeze(DEFAULT_ERROR_HANDLERS);
 
 /* Interfaces & Types */
 export type { Session, UserSession, AdminSession } from './utils/identification';
