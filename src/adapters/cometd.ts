@@ -330,11 +330,8 @@ class CometdAdapter {
 
     async empty() {
         await this.init();
-        const promises: Promise<unknown>[] = [];
-        this.cometd.batch(() => this.subscriptions.forEach((subscription) => {
-            promises.push(this.remove(subscription));
-        }));
-        return Promise.all(promises);
+        this.cometd.clearSubscriptions();
+        this.subscriptions.clear();
     }
 }
 const cometdAdapter = new CometdAdapter();
