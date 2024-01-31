@@ -1,3 +1,12 @@
+## [3.23.5](https://github.com/forio/epicenter-libs/compare/v3.23.4...v3.23.5) (2024-01-31)
+
+
+### Bug Fixes
+
+* use cometd `clearSubscriptions` in `empty` ([68d1d80](https://github.com/forio/epicenter-libs/commit/68d1d80661899e15f7d1581d333131437224cfb9))
+
+
+
 ## [3.23.4](https://github.com/forio/epicenter-libs/compare/v3.23.3...v3.23.4) (2023-11-02)
 
 
