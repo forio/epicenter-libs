@@ -54,24 +54,23 @@ interface World {
 /**
  * Updates fields for a particular world.
  * @example
- * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { name: 'World A1' });
+ * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e' });
  * @param worldKey          Key associated with world
  * @param update            Attributes you wish to update
- * @param [update.name]     Name of the world
  * @param [update.runKey]   Key for the run you want to attach to the world
  * @param [optionals]       Optional arguments; pass network call options overrides here.
  * @returns promise wiworld with updated attributes
  */
 export async function update(
     worldKey: string,
-    update: { name?: string, runKey?: string },
+    update: { runKey?: string },
     optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { name, runKey } = update;
+    const { runKey } = update;
 
     return await new Router()
         .patch(`/world/${worldKey}`, {
-            body: { name, runKey },
+            body: { runKey },
             ...optionals,
         })
         .then(({ body }) => body);
