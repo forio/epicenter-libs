@@ -388,15 +388,18 @@ export async function getPersonas(
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
-    const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    /* We will at some point remove the need to explicitly lower case this */
+    const boundaryComponent = boundary === SCOPE_BOUNDARY.WORLD ? '' : `/${boundary.toLowerCase()}`;
+    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    const uriComponent = `${boundaryComponent}${scopeKeyComponent}`;
 
     return await new Router()
-        /* We will at some point remove the need to explicitly lower case this */
-        .get(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
+        .get(`/world/persona${uriComponent}`, {
             ...optionals,
         })
         .then(({ body }) => body);
 }
+
 /**
  * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
  * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
@@ -423,11 +426,13 @@ export async function setPersonas(
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
-    const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    /* We will at some point remove the need to explicitly lower case this */
+    const boundaryComponent = boundary === SCOPE_BOUNDARY.WORLD ? '' : `/${boundary.toLowerCase()}`;
+    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    const uriComponent = `${boundaryComponent}${scopeKeyComponent}`;
 
     return await new Router()
-        /* We will at some point remove the need to explicitly lower case this */
-        .put(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
+        .put(`/world/persona${uriComponent}`, {
             body: personas,
             ...optionals,
         })
