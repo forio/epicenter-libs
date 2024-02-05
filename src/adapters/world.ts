@@ -12,6 +12,7 @@ import {
 enum OBJECTIVE {
     MINIMUM = 'MINIMUM',
     MAXIMUM = 'MAXIMUM',
+    MARGINAL = 'MARGINAL',
 }
 
 enum ORBIT_TYPE {
@@ -33,6 +34,7 @@ interface Persona {
     role: string,
     minimum: number,
     maximum?: number,
+    marginal?: number,
 }
 
 interface Assignment {
@@ -402,7 +404,7 @@ export async function getPersonas(
 
 /**
  * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
- * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
+ * A null value for minimum is 0, but a null maximum is uncapped. A null marginal defaults to maximum. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
@@ -413,6 +415,7 @@ export async function getPersonas(
  * @param personas[].role       Name of the role
  * @param [personas[].minimum]  The minimum number of users that required for this role
  * @param [personas[].maximum]  The maximum number of users that can be assigned to this role
+ * @param [personas[].marginal] The maximum number of users that can be assigned to this role when using objective MARGINAL
  * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
  * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
@@ -420,7 +423,7 @@ export async function getPersonas(
  * @returns promise that resolves with undefined when successful
  */
 export async function setPersonas(
-    personas: { role: string, minimum?: number, maximum?: number }[],
+    personas: { role: string, minimum?: number, maximum?: number, marginal?: number }[],
     scope: GenericScope,
     optionals: RoutingOptions = {}
 ): Promise<void> {
