@@ -54,23 +54,24 @@ interface World {
 /**
  * Updates fields for a particular world.
  * @example
- * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e' });
- * @param worldKey          Key associated with world
- * @param update            Attributes you wish to update
- * @param [update.runKey]   Key for the run you want to attach to the world
- * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e', displayName: 'World A1' });
+ * @param worldKey              Key associated with world
+ * @param update                Attributes you wish to update
+ * @param [update.displayName]  Display name of the world
+ * @param [update.runKey]       Key for the run you want to attach to the world
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise wiworld with updated attributes
  */
 export async function update(
     worldKey: string,
-    update: { runKey?: string },
+    update: { displayName?: string, runKey?: string },
     optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { runKey } = update;
+    const { displayName, runKey } = update;
 
     return await new Router()
         .patch(`/world/${worldKey}`, {
-            body: { runKey },
+            body: { displayName, runKey },
             ...optionals,
         })
         .then(({ body }) => body);
@@ -101,7 +102,8 @@ export async function destroy(
  * @example
  * epicenter.worldAdapter.create({ name: 'Whole New World' });
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter
+ * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter. Must be unique within the world's scope.
+ * @param [optionals.displayName]   Display name of the new world
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
  * @param [optionals.episodeName]   Name of the episode for episode scoping
  * @param [optionals.worldNameGenerator]    Specifies how world names are generated
@@ -111,19 +113,20 @@ export async function destroy(
 export async function create(
     optionals: {
         name?: string,
+        displayName?: string,
         groupName?: string,
         episodeName?: string,
         worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        name, groupName, episodeName, worldNameGenerator,
+        name, displayName, groupName, episodeName, worldNameGenerator,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { name, worldNameGenerator },
+            body: { name, worldNameGenerator, displayName },
             ...routingOptions,
         }).then(({ body }) => body);
 }
