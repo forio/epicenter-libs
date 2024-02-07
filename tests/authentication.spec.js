@@ -19,6 +19,10 @@ describe('Authentication', () => {
         fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
         });
+        const presence = new RegExp(`(.*)\/presence\/group\/${SESSION.groupKey}`);
+        fakeServer.respondWith('DELETE', presence, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
+        });
         fakeServer.respondImmediately = true;
     });
 
