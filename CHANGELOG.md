@@ -1,3 +1,23 @@
+# [3.24.0](https://github.com/forio/epicenter-libs/compare/v3.23.5...v3.24.0) (2024-02-08)
+
+
+### Bug Fixes
+
+* remove `name` field from `worldAdapter.update` ([3ce0bcb](https://github.com/forio/epicenter-libs/commit/3ce0bcbee3c69448725edbfc780db53318b6e0a1))
+* use correct endpoint for world-scoped personas ([8a8bf88](https://github.com/forio/epicenter-libs/commit/8a8bf88c0a652a903310eb762675623db469efc8))
+
+
+### Features
+
+* `authAdapter` `logout`, `getSession` accept `RoutingOptions` ([01bb2a8](https://github.com/forio/epicenter-libs/commit/01bb2a8fd8b72be7597eb1d0ee65512583fad4d6))
+* `RoutingOptions.inert` accepts predicate function ([f61ce44](https://github.com/forio/epicenter-libs/commit/f61ce4452329c91759a1770ce2041950afc3febf))
+* `unregister` `ErrorManager` handlers ([a181f7c](https://github.com/forio/epicenter-libs/commit/a181f7ce6c64aa1a37cb9d8323e64e4d6bfc3ba8))
+* add `displayName` to world create/update ([0e831c3](https://github.com/forio/epicenter-libs/commit/0e831c3c9e8ec4c979ddd249b0777c633f78eda3))
+* add MARGINAL objective and marginal number to personas ([bfd124f](https://github.com/forio/epicenter-libs/commit/bfd124f0f2a3cfa508791b13a5880af1b4c125ef))
+* export `DEFAULT_ERROR_HANDLERS` ([dbe48f1](https://github.com/forio/epicenter-libs/commit/dbe48f1b852579431cfafdefd3eb8e7bf6e5d077))
+
+
+
 ## [3.23.5](https://github.com/forio/epicenter-libs/compare/v3.23.4...v3.23.5) (2024-01-31)
 
 
