@@ -12,6 +12,7 @@ import {
 enum OBJECTIVE {
     MINIMUM = 'MINIMUM',
     MAXIMUM = 'MAXIMUM',
+    MARGINAL = 'MARGINAL',
 }
 
 enum ORBIT_TYPE {
@@ -33,6 +34,7 @@ interface Persona {
     role: string,
     minimum: number,
     maximum?: number,
+    marginal?: number,
 }
 
 interface Assignment {
@@ -54,24 +56,24 @@ interface World {
 /**
  * Updates fields for a particular world.
  * @example
- * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { name: 'World A1' });
- * @param worldKey          Key associated with world
- * @param update            Attributes you wish to update
- * @param [update.name]     Name of the world
- * @param [update.runKey]   Key for the run you want to attach to the world
- * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * epicenter.worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e', displayName: 'World A1' });
+ * @param worldKey              Key associated with world
+ * @param update                Attributes you wish to update
+ * @param [update.displayName]  Display name of the world
+ * @param [update.runKey]       Key for the run you want to attach to the world
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise wiworld with updated attributes
  */
 export async function update(
     worldKey: string,
-    update: { name?: string, runKey?: string },
+    update: { displayName?: string, runKey?: string },
     optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { name, runKey } = update;
+    const { displayName, runKey } = update;
 
     return await new Router()
         .patch(`/world/${worldKey}`, {
-            body: { name, runKey },
+            body: { displayName, runKey },
             ...optionals,
         })
         .then(({ body }) => body);
@@ -102,7 +104,8 @@ export async function destroy(
  * @example
  * epicenter.worldAdapter.create({ name: 'Whole New World' });
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter
+ * @param [optionals.name]          Name of the new world -- if omitted one will be provided by Epicenter. Must be unique within the world's scope.
+ * @param [optionals.displayName]   Display name of the new world
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
  * @param [optionals.episodeName]   Name of the episode for episode scoping
  * @param [optionals.worldNameGenerator]    Specifies how world names are generated
@@ -112,19 +115,20 @@ export async function destroy(
 export async function create(
     optionals: {
         name?: string,
+        displayName?: string,
         groupName?: string,
         episodeName?: string,
         worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        name, groupName, episodeName, worldNameGenerator,
+        name, displayName, groupName, episodeName, worldNameGenerator,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { name, worldNameGenerator },
+            body: { name, worldNameGenerator, displayName },
             ...routingOptions,
         }).then(({ body }) => body);
 }
@@ -386,18 +390,21 @@ export async function getPersonas(
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
-    const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    /* We will at some point remove the need to explicitly lower case this */
+    const boundaryComponent = boundary === SCOPE_BOUNDARY.WORLD ? '' : `/${boundary.toLowerCase()}`;
+    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    const uriComponent = `${boundaryComponent}${scopeKeyComponent}`;
 
     return await new Router()
-        /* We will at some point remove the need to explicitly lower case this */
-        .get(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
+        .get(`/world/persona${uriComponent}`, {
             ...optionals,
         })
         .then(({ body }) => body);
 }
+
 /**
  * Sets the personas of a given scope (project, group, episode, world). Personas correspond to a role the a user in the world can be assigned to.
- * A null value for minimum is 0, but a null maximum is uncapped. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
+ * A null value for minimum is 0, but a null maximum is uncapped. A null marginal defaults to maximum. Personas with greater specificity override more general ones (which are by default PROJECT scoped).
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
@@ -408,6 +415,7 @@ export async function getPersonas(
  * @param personas[].role       Name of the role
  * @param [personas[].minimum]  The minimum number of users that required for this role
  * @param [personas[].maximum]  The maximum number of users that can be assigned to this role
+ * @param [personas[].marginal] The maximum number of users that can be assigned to this role when using objective MARGINAL
  * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
  * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
@@ -415,17 +423,19 @@ export async function getPersonas(
  * @returns promise that resolves with undefined when successful
  */
 export async function setPersonas(
-    personas: { role: string, minimum?: number, maximum?: number }[],
+    personas: { role: string, minimum?: number, maximum?: number, marginal?: number }[],
     scope: GenericScope,
     optionals: RoutingOptions = {}
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
-    const uriComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    /* We will at some point remove the need to explicitly lower case this */
+    const boundaryComponent = boundary === SCOPE_BOUNDARY.WORLD ? '' : `/${boundary.toLowerCase()}`;
+    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    const uriComponent = `${boundaryComponent}${scopeKeyComponent}`;
 
     return await new Router()
-        /* We will at some point remove the need to explicitly lower case this */
-        .put(`/world/persona/${boundary.toLowerCase()}${uriComponent}`, {
+        .put(`/world/persona${uriComponent}`, {
             body: personas,
             ...optionals,
         })
