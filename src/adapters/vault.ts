@@ -233,3 +233,25 @@ export async function list(
         .get('/vault/search', optionals)
         .then(({ body }) => body);
 }
+
+/**
+ * Counts the number of vaults that match the search options
+ * @param searchOptions     Search options
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the number of vaults that match the search options
+ */
+export async function count(
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<Vault<unknown>[]> {
+    const { first, filter = [], max } = searchOptions;
+    const searchParams = {
+        filter: filter.join(';') || undefined,
+        first, max,
+    };
+
+    return new Router()
+        .withSearchParams(searchParams)
+        .get('/vault/count', optionals)
+        .then(({ body }) => body);
+}

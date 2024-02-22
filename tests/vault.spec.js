@@ -304,6 +304,38 @@ describe('Vault APIs', () => {
         // TODO -- flesh this out when you get the chance
         testedMethods.push('list');
     });
+    describe('vaultAdapter.count', () => {
+        const OPTIONS = {
+            filter: ['item.test=123', 'item.trackingKey=789', 'vault.scopeKey=u5e3rK3y', 'vault.scopeBoundary=GROUP'],
+            first: 20,
+            max: 15,
+        };
+        it('Should do a GET', async() => {
+            await vaultAdapter.count(OPTIONS);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        }); 
+        it('Should have authorization', async() => {
+            await vaultAdapter.count(OPTIONS);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the /vault/count URL', async() => {
+            await vaultAdapter.count(OPTIONS);
+            const req1 = fakeServer.requests.pop();
+            req1.url.should.include(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/count`);
+        });
+        it('Should pass in query options as a part of the search parameters (query string)', async() => {
+            await vaultAdapter.count(OPTIONS);
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.get('filter').should.equal(OPTIONS.filter.join(';'));
+            searchParams.get('first').should.equal(OPTIONS.first.toString());
+            searchParams.get('max').should.equal(OPTIONS.max.toString());
+        });
+        testedMethods.push('count');
+    });
 
     it('Should not have any untested methods', () => {
         chai.expect(vaultAdapter).to.have.all.keys(...testedMethods);
