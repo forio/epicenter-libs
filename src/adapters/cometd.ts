@@ -35,7 +35,7 @@ class CometdAdapter {
         cometdInstance = instance;
     }
 
-    async startup() {
+    async startup(options: { logLevel: 'info' | 'debug' | 'warn' } = { logLevel: 'warn' }) {
         const enabled = await channelsEnabled();
         if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
 
@@ -71,7 +71,7 @@ class CometdAdapter {
 
         this.cometd.configure({
             url: this.url,
-            logLevel: 'debug',
+            logLevel: options.logLevel,
         });
         return true;
     }
@@ -116,9 +116,9 @@ class CometdAdapter {
         return Promise.all([connectListener, disconnectListener]);
     }
 
-    async init() {
+    async init(options?: { logLevel: 'info' | 'debug' | 'warn' }) {
         if (!this.initialization) {
-            this.initialization = this.startup();
+            this.initialization = this.startup(options);
         }
         return this.initialization;
     }
@@ -336,4 +336,3 @@ class CometdAdapter {
 }
 const cometdAdapter = new CometdAdapter();
 export default cometdAdapter;
-
