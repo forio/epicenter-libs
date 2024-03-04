@@ -12,6 +12,7 @@ const FORBIDDEN = 403;
 const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
+const DEFAULT_CHANNEL_URL = 'cometd';
 
 interface ChannelUpdate {
     data: string | Record<string, unknown>,
@@ -44,11 +45,11 @@ class CometdAdapter {
         const ReloadExtension = (await import('cometd/ReloadExtension')).default;
 
         this.cometd = new CometD();
-        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
+        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName, pushChannelURL } = config;
         const accountProject = (accountShortName && projectShortName) ?
             `/${accountShortName}/${projectShortName}` :
             '/epicenter/manager';
-        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/cometd`;
+        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/${pushChannelURL || DEFAULT_CHANNEL_URL}`;
 
         this.cometd.registerExtension('ack', new AckExtension());
         if (isBrowser()) {
