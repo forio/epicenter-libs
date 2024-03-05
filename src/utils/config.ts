@@ -12,7 +12,6 @@ class Config {
     _projectShortName = '';
 
     authOverride?: string
-    pushChannelURL?: string
 
     constructor() {
         if (isBrowser()) {
@@ -181,14 +180,12 @@ class Config {
         useProjectProxy?: boolean,
         accountShortName?: string,
         projectShortName?: string,
-        pushChannelURL?: string,
     }) {
         if (context.apiProtocol) this.apiProtocol = context.apiProtocol;
         if (context.apiHost) this.apiHost = context.apiHost;
         if (typeof context.useProjectProxy === 'boolean') this.useProjectProxy = context.useProjectProxy;
         if (context.accountShortName) this.accountShortName = context.accountShortName;
         if (context.projectShortName) this.projectShortName = context.projectShortName;
-        if (context.pushChannelURL) this.pushChannelURL = context.pushChannelURL;
     }
 }
 

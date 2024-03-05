@@ -77,6 +77,7 @@ interface TeamProject {
     fileType: keyof typeof FILE_TYPE,
     dimensions: 'UNIVERSE' | 'MULTIVERSE',
     deployment: Deployment,
+    channelProtocol: 'OUMUAMUA' | 'COMETD',
 }
 
 interface PersonalProject {
@@ -93,6 +94,8 @@ interface PersonalProject {
     approximateRunCount: number,
     fileType: keyof typeof FILE_TYPE,
     deployment: Deployment,
+    channelProtocol: 'OUMUAMUA' | 'COMETD',
+    channelEnabled: boolean,
 }
 
 type Project =

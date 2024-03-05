@@ -2,7 +2,7 @@ import type { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'come
 import type Channel from './channel';
 
 import { EpicenterError, Fault, identification, isBrowser, errorManager, config } from '../utils';
-import { channelsEnabled } from './project';
+import { get as getProject } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 
@@ -12,7 +12,7 @@ const FORBIDDEN = 403;
 const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
-const DEFAULT_CHANNEL_URL = 'cometd';
+const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
 interface ChannelUpdate {
     data: string | Record<string, unknown>,
@@ -37,19 +37,20 @@ class CometdAdapter {
     }
 
     async startup(options: { logLevel: 'info' | 'debug' | 'warn' } = { logLevel: 'warn' }) {
-        const enabled = await channelsEnabled();
-        if (!enabled) throw new EpicenterError('Push Channels are not enabled on this project');
+        const project = await getProject();
+        if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project');
+        const channelProtocol = project.channelProtocol?.toLowerCase() || DEFAULT_CHANNEL_PROTOCOL;
 
         const { CometD } = await import('cometd');
         const AckExtension = (await import('cometd/AckExtension')).default;
         const ReloadExtension = (await import('cometd/ReloadExtension')).default;
 
         this.cometd = new CometD();
-        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName, pushChannelURL } = config;
+        const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
         const accountProject = (accountShortName && projectShortName) ?
             `/${accountShortName}/${projectShortName}` :
             '/epicenter/manager';
-        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/${pushChannelURL || DEFAULT_CHANNEL_URL}`;
+        this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/${channelProtocol}`;
 
         this.cometd.registerExtension('ack', new AckExtension());
         if (isBrowser()) {
