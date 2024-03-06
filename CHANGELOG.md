@@ -1,3 +1,15 @@
+# [3.25.0](https://github.com/forio/epicenter-libs/compare/v3.24.0...v3.25.0) (2024-03-06)
+
+
+### Features
+
+* add `logLevel` argument to cometd adapter ([0275578](https://github.com/forio/epicenter-libs/commit/0275578840faa494d83c696913dfc409fc2e8115))
+* add pushChannelURL to config ([4748dd9](https://github.com/forio/epicenter-libs/commit/4748dd935b3feb85278f1713cac4c3dbf069e510))
+* add vault count feature ([e9c2d90](https://github.com/forio/epicenter-libs/commit/e9c2d90d4d778d344499a9fe446969601c20b175))
+* channel auto detect protocol on startup ([2be0667](https://github.com/forio/epicenter-libs/commit/2be06674203a34559187eb0528738056bf489454))
+
+
+
 # [3.24.0](https://github.com/forio/epicenter-libs/compare/v3.23.5...v3.24.0) (2024-02-08)
 
 
