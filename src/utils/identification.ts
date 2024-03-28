@@ -86,7 +86,7 @@ class Identification {
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
         if (objectType === 'user' && isEpicenterDomain) {
-            const { accountShortName, projectShortName } = mySession;
+            const { accountShortName, projectShortName } = config;
             const account = accountShortName ? `/${accountShortName}` : '';
             const project = account && projectShortName ? `/${projectShortName}` : '';
             return { ...base, path: `/app${account}${project}` };
