@@ -1,3 +1,7 @@
+# [3.26.0](https://github.com/forio/epicenter-libs/compare/v3.25.0...v3.26.0) (2024-03-28)
+
+
+
 # [3.25.0](https://github.com/forio/epicenter-libs/compare/v3.24.0...v3.25.0) (2024-03-06)
 
 
