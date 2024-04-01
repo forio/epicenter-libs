@@ -61,19 +61,32 @@ interface World {
  * @param update                Attributes you wish to update
  * @param [update.displayName]  Display name of the world
  * @param [update.runKey]       Key for the run you want to attach to the world
+ * @param [update.allowChannel] Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise wiworld with updated attributes
  */
 export async function update(
     worldKey: string,
-    update: { displayName?: string, runKey?: string },
+    update: {
+      displayName?: string,
+      runKey?: string,
+      allowChannel?: boolean
+    },
     optionals: RoutingOptions = {}
 ): Promise<World> {
-    const { displayName, runKey } = update;
+    const {
+        displayName,
+        runKey,
+        allowChannel,
+    } = update;
 
     return await new Router()
         .patch(`/world/${worldKey}`, {
-            body: { displayName, runKey },
+            body: {
+                displayName,
+                runKey,
+                allowChannel,
+            },
             ...optionals,
         })
         .then(({ body }) => body);
@@ -110,6 +123,7 @@ export async function destroy(
  * @param [optionals.episodeName]   Name of the episode for episode scoping
  * @param [optionals.worldNameGenerator]    Specifies how world names are generated
  * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
+ * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created world
  */
 export async function create(
@@ -118,17 +132,28 @@ export async function create(
         displayName?: string,
         groupName?: string,
         episodeName?: string,
-        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        name, displayName, groupName, episodeName, worldNameGenerator,
+        name,
+        displayName,
+        groupName,
+        episodeName,
+        worldNameGenerator,
+        allowChannel,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { name, worldNameGenerator, displayName },
+            body: {
+                name,
+                worldNameGenerator,
+                displayName,
+                allowChannel,
+            },
             ...routingOptions,
         }).then(({ body }) => body);
 }
@@ -377,7 +402,7 @@ export async function removeUsers(
  * @example
  * import { worldAdapter } from 'epicenter-libs';
  * await worldAdapter.getPersonas({ scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: GROUP_KEY });
- * 
+ *
  * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
  * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.

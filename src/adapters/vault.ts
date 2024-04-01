@@ -157,6 +157,7 @@ export async function remove(
  * @param [optionals.writeLock]         Role allowed to write
  * @param [optionals.ttlSeconds]        Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
  * @param [optionals.mutationStrategy]  Setting a mutation strategy allows for the following behaviors: ALLOW - Is an upsert which means if the entry exists it will be updated with the items in the POST. DISALLOW - Is an insert which means that if the entry exists no changes will be made (the 'changed' flag will be false). ERROR - Is an insert and, if the entry exists, a conflict exception will be thrown. If the mutationStrategy is omitted, it will simply search by scope and name; updating if it exists, creating if not.
+ * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns the vault (created or modified) */
 export async function define(
     name: string,
@@ -167,13 +168,17 @@ export async function define(
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: string,
         mutationStrategy?: string,
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, items,
+        readLock,
+        writeLock,
+        items,
         ttlSeconds,
         mutationStrategy = 'ERROR',
+        allowChannel,
         ...routingOptions
     } = optionals;
     const { WORLD } = SCOPE_BOUNDARY;
@@ -197,6 +202,7 @@ export async function define(
                 },
                 ttlSeconds,
                 items,
+                allowChannel,
             },
             ...routingOptions,
         }).then(({ body }) => body);

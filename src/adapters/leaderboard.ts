@@ -46,9 +46,12 @@ export async function update(
     collection: string,
     scope: { userKey?: string } & GenericScope,
     scores: Score[],
-    optionals: { tags?: Tag[] } & RoutingOptions = {}
+    optionals: {
+      tags?: Tag[],
+      allowChannel?: boolean,
+    } & RoutingOptions = {}
 ): Promise<Leaderboard> {
-    const { tags, ...routingOptions } = optionals;
+    const { tags, allowChannel, ...routingOptions } = optionals;
     const { scopeBoundary, scopeKey, userKey } = scope;
     const session = identification.session as UserSession;
     return await new Router()
@@ -60,7 +63,9 @@ export async function update(
                     userKey: userKey ?? session?.userKey,
                 },
                 collection,
-                scores, tags,
+                scores,
+                tags,
+                allowChannel,
             },
             ...routingOptions,
         }).then(({ body }) => body);

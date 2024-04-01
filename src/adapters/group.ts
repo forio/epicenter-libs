@@ -31,6 +31,7 @@ interface GroupUpdate {
     startDate?: Date,
     expirationDate?: Date,
     capacity?: number,
+    allowChannel?: boolean,
 }
 
 interface GroupPermission {
@@ -151,6 +152,7 @@ export async function gather(
  * @param [update.startDate]                TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [update.expirationDate]           Date the group expires
  * @param [update.capacity]                 Defines the upper limit on the number of users allowed in the group
+ * @param [update.allowChannel]             Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @param [optionals]                       Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the updated group
  */
@@ -160,17 +162,33 @@ export async function update(
     optionals: RoutingOptions = {}
 ): Promise<Group> {
     const {
-        runLimit, organization, allowSelfRegistration, flightRecorder,
-        event, allowMembershipChanges, pricing,
-        startDate, expirationDate, capacity,
+        runLimit,
+        organization,
+        allowSelfRegistration,
+        flightRecorder,
+        event,
+        allowMembershipChanges,
+        pricing,
+        startDate,
+        expirationDate,
+        capacity,
+        allowChannel,
     } = update;
 
     return await new Router()
         .patch(`/group/${groupKey}`, {
             body: {
-                runLimit, organization, allowSelfRegistration, flightRecorder,
-                event, allowMembershipChanges, pricing,
-                startDate, expirationDate, capacity,
+                runLimit,
+                organization,
+                allowSelfRegistration,
+                flightRecorder,
+                event,
+                allowMembershipChanges,
+                pricing,
+                startDate,
+                expirationDate,
+                capacity,
+                allowChannel,
             },
             ...optionals,
         })
@@ -200,6 +218,7 @@ export async function update(
  * @param [group.startDate]                 TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [group.expirationDate]            Date the group expires
  * @param [group.capacity]                  Defines the upper limit on the number of users allowed in the group
+ * @param [group.allowChannel]              Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @param [optionals]                       Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the newly created group
  */
@@ -208,17 +227,35 @@ export async function create(
     optionals: RoutingOptions = {}
 ): Promise<Group> {
     const {
-        name, runLimit, organization, allowSelfRegistration,
-        flightRecorder, event, allowMembershipChanges, pricing,
-        startDate, expirationDate, capacity,
+        name,
+        runLimit,
+        organization,
+        allowSelfRegistration,
+        flightRecorder,
+        event,
+        allowMembershipChanges,
+        pricing,
+        startDate,
+        expirationDate,
+        capacity,
+        allowChannel,
     } = group;
     if (!name) throw new EpicenterError('Cannot create a group with no name');
     return await new Router()
         .post('/group', {
             body: {
-                name, runLimit, organization, allowSelfRegistration,
-                flightRecorder, event, allowMembershipChanges, pricing,
-                startDate, expirationDate, capacity,
+                name,
+                runLimit,
+                organization,
+                allowSelfRegistration,
+                flightRecorder,
+                event,
+                allowMembershipChanges,
+                pricing,
+                startDate,
+                expirationDate,
+                capacity,
+                allowChannel,
             },
             ...optionals,
         })
@@ -399,7 +436,7 @@ export async function whitelistUsers(
         emails?: string[]
     } & RoutingOptions = {}
 ): Promise<void> {
-    const { 
+    const {
         allow = true,
         emails = ['*'],
         ...routingOptions

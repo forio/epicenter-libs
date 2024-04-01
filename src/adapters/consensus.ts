@@ -18,6 +18,7 @@ interface Consensus {
     expectedRoles: Record<string, unknown>,
     impendingRoles: Record<string, unknown>,
     arrivedRoles: Record<string, unknown>,
+    allowChannel: boolean,
 }
 
 /**
@@ -47,6 +48,7 @@ interface Consensus {
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.ttlSeconds]        How long the consensus barrier lasts for.
  * @param [optionals.transparent]       If the barrier has `transparent: false`, then only one of the default actions will be sent. If it has `transparent: true` then they are all sent.
+ * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created consensus barrier
  */
 export async function create(
@@ -58,11 +60,13 @@ export async function create(
     optionals: {
         ttlSeconds?: number,
         transparent?: boolean,
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<Consensus> {
     const {
         ttlSeconds,
         transparent = false,
+        allowChannel,
         ...routingOptions
     } = optionals;
 
@@ -73,6 +77,7 @@ export async function create(
                 ttlSeconds,
                 transparent,
                 actions: defaultActions,
+                allowChannel,
             },
             ...routingOptions,
         })
