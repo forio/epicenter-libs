@@ -27,7 +27,7 @@ interface Consensus {
  * consensusAdapter.create(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
- *      'ROUND1', 
+ *      'ROUND1',
  *      {
  *          ROLE1: 1,
  *          ROLE2: 1,
@@ -65,7 +65,7 @@ export async function create(
         transparent = false,
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .post(`/consensus/${worldKey}/${name}/${stage}`, {
             body: {
@@ -84,7 +84,7 @@ export async function create(
  *
  * @example
  * consensusAdapter.load(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS', 'ROUND1');
- * 
+ *
  * @param worldKey                      World key for the world you are loading a consensus barrier for
  * @param name                          Unique string that names a set of consensus barriers
  * @param stage                         Unique string to specify which specific barrier to load
@@ -107,7 +107,7 @@ export async function load(
  *
  * @example
  * consensusAdapter.list(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS');
- * 
+ *
  * @param worldKey                      World key for the world you are loading consensus barriers for
  * @param name                          Unique string that specifies which set of consensus barriers to retrieve
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
@@ -128,7 +128,7 @@ export async function list(
  *
  * @example
  * consensusAdapter.forceClose(00000173078afb05b4ae4c726637167a1a9e, 'SUBMISSIONS', 'ROUND1');
- * 
+ *
  * @param worldKey                      World key for the world you are making a consensus barrier for
  * @param name                          Unique string that names a set of consensus barriers
  * @param stage                         Unique string that specifies which stage of the set of consensus barriers to close
@@ -147,7 +147,7 @@ export async function forceClose(
         ritual,
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .post(`/consensus/close/${worldKey}/${name}/${stage}`, {
             body: {
@@ -166,9 +166,9 @@ export async function forceClose(
  * consensusAdapter.updateDefaults(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
- *      'ROUND1', 
+ *      'ROUND1',
  *      [{name: "message", value: "DEFAULT MESSAGE 2", objectType: "set"}]}
- *  
+ *
  * @param worldKey                      World key for the world you are making a consensus barrier for
  * @param name                          Unique string to name a set of consensus barriers
  * @param stage                         Unique string to name one stage of the set of consensus barriers
@@ -185,7 +185,7 @@ export async function updateDefaults(
     const {
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .patch(`/consensus/actions/${worldKey}/${name}/${stage}`, {
             body: {
@@ -205,11 +205,11 @@ export async function updateDefaults(
  * consensusAdapter.submitActions(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
- *      'ROUND1', 
+ *      'ROUND1',
  *      [{ name: 'step', arguments: [] }]
  *      { message: 'Student side submission!' },
  * );
- *  
+ *
  * @param worldKey                      World key for the world you are making a consensus barrier for
  * @param name                          Unique string to name a set of consensus barriers
  * @param stage                         Unique string to name one stage of the set of consensus barriers
@@ -258,12 +258,12 @@ export async function submitActions(
  *      'SUBMISSIONS',
  *      'ROUND1',
  * );
- *  
+ *
  * @param worldKey                      World key for the world you are targeting
  * @param name                          Unique string that names a set of consensus barriers
  * @param stage                         Unique string to specify which specific barrier to undo your submission for
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
- * @returns {Promise}                   
+ * @returns {Promise}
  */
 export async function deleteBarrier(
     worldKey: string,
@@ -274,7 +274,7 @@ export async function deleteBarrier(
     const {
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .delete(`/consensus/${worldKey}/${name}/${stage}`, {
             ...routingOptions,
@@ -291,11 +291,11 @@ export async function deleteBarrier(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
  * );
- *  
+ *
  * @param worldKey                      World key for the world you are targeting
  * @param name                          Unique string that names a set of consensus barriers
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
- * @returns {Promise}                   
+ * @returns {Promise}
  */
 export async function deleteAll(
     worldKey: string,
@@ -305,7 +305,7 @@ export async function deleteAll(
     const {
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .delete(`/consensus/${worldKey}/${name}`, {
             ...routingOptions,
@@ -323,12 +323,12 @@ export async function deleteAll(
  *      'SUBMISSIONS',
  *      'ROUND1',
  * );
- *  
+ *
  * @param worldKey                      World key for the world you are targeting
  * @param name                          Unique string that names a set of consensus barriers
  * @param stage                         Unique string to specify which specific barrier to undo your submission for
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
- * @returns {Promise}                   
+ * @returns {Promise}
  */
 export async function undoSubmit(
     worldKey: string,
@@ -339,7 +339,7 @@ export async function undoSubmit(
     const {
         ...routingOptions
     } = optionals;
-    
+
     return await new Router()
         .delete(`/consensus/arrival/${worldKey}/${name}/${stage}`, {
             ...routingOptions,
@@ -356,10 +356,10 @@ export async function undoSubmit(
  * consensusAdapter.triggerFor(
  *      00000173078afb05b4ae4c726637167a1a9e,
  *      'SUBMISSIONS',
- *      'ROUND1', 
+ *      'ROUND1',
  *       userKey: 0000017cb60ad697e109dcb11cdd4cfcdd1d,
  *      { message: "Facilitator Triggered this submission!" },
- *  
+ *
  * @param worldKey                      World key for the world you are targeting
  * @param name                          Unique string that names this set of consensus barriers
  * @param stage                         Unique string that names the stage of targeted barrier
