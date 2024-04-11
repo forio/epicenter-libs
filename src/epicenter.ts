@@ -125,6 +125,7 @@ export {
     somebodyAdapter,
     dailyAdapter,
     matchmakerAdapter,
+    walletAdapter,
     Channel,
 } from './adapters';
 

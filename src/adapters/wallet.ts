@@ -1,4 +1,4 @@
-import type { RoutingOptions } from '../utils/router';
+import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
 import type { User } from './user';
 
@@ -65,6 +65,35 @@ export async function get(
     if (!userKey) throw new EpicenterError('userKey is required in wallet scope');
     return await new Router()
         .get(`/wallet/${scopeBoundary}/${scopeKey}/${userKey}`, optionals)
+        .catch((error) => {
+            if (error.status === NOT_FOUND) return { body: undefined };
+            return Promise.reject(error);
+        }).then(({ body }) => body);
+}
+
+/**
+ * Get all wallets under a certain scope
+ * @example
+ * // Get all wallets under a group
+ * const scope = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
+ * epicenter.walletAdapter.withScope(scope)
+ * @param scope     Scope attached to the wallets
+ * @param optionals Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a page of wallets
+ */
+export async function withScope(
+    scope: GenericScope,
+    optionals: {
+        first?: number,
+        max?: number,
+    } & RoutingOptions = {}
+): Promise<Page<Wallet>> {
+    const { scopeBoundary, scopeKey } = scope;
+    const { first = 0, max } = optionals;
+
+    return await new Router()
+        .withSearchParams({ first, max })
+        .get(`/wallet/with/${scopeBoundary}/${scopeKey}`, optionals)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);

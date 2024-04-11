@@ -22,6 +22,7 @@ import * as consensusAdapter from './consensus';
 import * as somebodyAdapter from './somebody';
 import * as matchmakerAdapter from './matchmaker';
 import * as dailyAdapter from './daily';
+import * as walletAdapter from './wallet';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -51,5 +52,6 @@ export {
     somebodyAdapter,
     matchmakerAdapter,
     dailyAdapter,
+    walletAdapter,
     Channel,
 };
