@@ -15,7 +15,7 @@ describe('Consensus APIs', () => {
     before(() => {
         fakeServer = sinon.fakeServer.create();
         authAdapter.setLocalSession(SESSION);
-        
+
         fakeServer.respondWith('POST', /(.*)\/consensus/, function(xhr, id) {
             const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
@@ -69,9 +69,10 @@ describe('Consensus APIs', () => {
             const optionals = {
                 ttlSeconds: 60000,
                 transparent: true,
+                allowChannel: true,
             };
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions, optionals);
-            
+
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.should.have.property('ttlSeconds');
@@ -80,6 +81,7 @@ describe('Consensus APIs', () => {
             body.transparent.should.equal(optionals.transparent);
             body.should.have.property('actions');
             body.should.have.property('expectedRoles');
+            body.allowChannel.should.equal(optionals.allowChannel);
         });
         testedMethods.push('create');
     });
@@ -119,7 +121,7 @@ describe('Consensus APIs', () => {
                 ritual: 'REANIMATE',
             };
             await consensusAdapter.submitActions(worldKey, name, stage, actions, optionals);
-            
+
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.should.have.property('actions');

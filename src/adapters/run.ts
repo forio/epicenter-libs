@@ -47,6 +47,7 @@ type RunCreateOptions = {
     trackingKey?: string,
     modelContext?: ModelContext,
     executionContext?: ExecutionContext,
+    allowChannel?: boolean,
 } & RoutingOptions;
 
 type RunStrategy =
@@ -77,6 +78,7 @@ type RunStrategy =
  * @param [optionals.trackingKey]       Tracking key
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created run
  */
 export async function create(
@@ -86,8 +88,13 @@ export async function create(
 ): Promise<Run> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, ephemeral,
-        trackingKey, modelContext, executionContext,
+        readLock,
+        writeLock,
+        ephemeral,
+        trackingKey,
+        modelContext,
+        executionContext,
+        allowChannel,
         ...routingOptions
     } = optionals;
 
@@ -119,6 +126,7 @@ export async function create(
                 modelContext: modelContext || {/* Is not recorded for clone. Overrides model ctx2 file. */},
                 executionContext: executionContext || {/* Affected by clone. Carries arguments for model file worker on model initialization */},
                 ephemeral,
+                allowChannel,
             },
             ...routingOptions,
             headers,
@@ -277,10 +285,19 @@ export async function update(
         marked?: boolean, /* analogous to v2's 'saved' */
         hidden?: boolean, /* analogous to v2's 'trashed' */
         closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
+        allowChannel?: boolean, /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
     },
     optionals: RoutingOptions = {}
 ): Promise<Run> {
-    const { readLock, writeLock, trackingKey, marked, hidden, closed } = update;
+    const {
+        readLock,
+        writeLock,
+        trackingKey,
+        marked,
+        hidden,
+        closed,
+        allowChannel,
+    } = update;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const permit = (readLock || writeLock) ? { readLock, writeLock } : undefined;
@@ -294,6 +311,7 @@ export async function update(
                 marked,
                 hidden,
                 closed,
+                allowChannel,
             },
             ...optionals,
         }).then(({ body }) => body);
@@ -679,6 +697,7 @@ export async function action(
  * @param [optionals.trackingKey]       Tracking key
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the run retrieved from, or created for the world
  */
 export async function retrieveFromWorld(
@@ -691,11 +710,17 @@ export async function retrieveFromWorld(
         trackingKey?: string,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<Run> {
     const {
-        readLock, writeLock, ephemeral, trackingKey,
-        modelContext, executionContext,
+        readLock,
+        writeLock,
+        ephemeral,
+        trackingKey,
+        modelContext,
+        executionContext,
+        allowChannel,
         ...routingOptions
     } = optionals;
 
@@ -717,6 +742,7 @@ export async function retrieveFromWorld(
                 modelContext: modelContext || {},
                 executionContext: executionContext || {},
                 ephemeral,
+                allowChannel,
             },
             ...routingOptions,
             headers,
