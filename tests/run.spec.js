@@ -73,6 +73,7 @@ describe('Run APIs', () => {
                 userKey: 'userkey',
                 ephemeral: true,
                 trackingKey: 'trackingkey',
+                allowChannel: true,
             });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
@@ -88,6 +89,7 @@ describe('Run APIs', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
+            body.allowChannel.should.equal(true);
         });
         it('Should not provide a userKey with a world scope', async() => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
@@ -273,6 +275,7 @@ describe('Run APIs', () => {
             marked: true,
             hidden: true,
             closed: false,
+            allowChannel: true,
         };
         const PARSED_UPDATE = {
             trackingKey: 'trackingkey',
@@ -283,6 +286,7 @@ describe('Run APIs', () => {
             marked: true,
             hidden: true,
             closed: false,
+            allowChannel: true,
         };
         const RUN_KEY = 'runkey';
         it('Should do a PATCH', async() => {
@@ -1098,6 +1102,7 @@ describe('Run APIs', () => {
                 writeLock: ROLE.AUTHOR,
                 ephemeral: true,
                 trackingKey: 'trackingkey',
+                allowChannel: true,
             });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
@@ -1110,6 +1115,7 @@ describe('Run APIs', () => {
             body.ephemeral.should.equal(true);
             body.modelContext.should.be.an('object').that.is.empty;
             body.executionContext.should.be.an('object').that.is.empty;
+            body.allowChannel.should.equal(true);
         });
         describe('Permits', () => {
             it('Should include a confirmation header if permit specified', async() => {
@@ -1333,7 +1339,7 @@ describe('Run APIs', () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
-        });   
+        });
         it('Should have authorization', async() => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = fakeServer.requests.pop();
@@ -1344,7 +1350,7 @@ describe('Run APIs', () => {
             const req = fakeServer.requests.pop();
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
         });
-        
+
         it('Should support generic URL options', async() => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();

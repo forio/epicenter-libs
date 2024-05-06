@@ -163,6 +163,7 @@ describe('Group APIs', () => {
             startDate: new Date().toUTCString(),
             expirationDate: new Date().toUTCString(),
             capacity: 500,
+            allowChannel: true,
         };
         it('Should do a PATCH', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
@@ -211,6 +212,7 @@ describe('Group APIs', () => {
             startDate: new Date().toUTCString(),
             expirationDate: new Date().toUTCString(),
             capacity: 500,
+            allowChannel: true,
         };
         it('Should do a POST', async() => {
             await groupAdapter.create(GROUP);

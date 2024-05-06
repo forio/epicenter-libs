@@ -273,7 +273,7 @@ describe('Vault APIs', () => {
             body.permit.readLock.should.equal(ROLE.ANONYMOUS);
             body.permit.writeLock.should.equal(ROLE.ANONYMOUS);
         });
-        it('Should use accept userKey, ttlSeconds, and mutationKey provided', async() => {
+        it('Should use accept optionals provided', async() => {
             const USER_KEY = 'myuserkey';
             const TTL_SECONDS = 20;
             const MUTATION_STRATEGY = 'ALLOW';
@@ -281,12 +281,14 @@ describe('Vault APIs', () => {
             await vaultAdapter.define(NAME, { ...WORLD_SCOPE, userKey: USER_KEY }, {
                 ttlSeconds: TTL_SECONDS,
                 mutationStrategy: MUTATION_STRATEGY,
+                allowChannel: true,
                 ...RANDOM_THING,
             });
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
             body.scope.userKey.should.equal(USER_KEY);
             body.ttlSeconds.should.equal(TTL_SECONDS);
+            body.allowChannel.should.equal(true);
             body.should.not.include(RANDOM_THING);
 
             const search = req.url.split('?')[1];
@@ -314,7 +316,7 @@ describe('Vault APIs', () => {
             await vaultAdapter.count(OPTIONS);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
-        }); 
+        });
         it('Should have authorization', async() => {
             await vaultAdapter.count(OPTIONS);
             const req = fakeServer.requests.pop();
