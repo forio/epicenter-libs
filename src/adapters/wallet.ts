@@ -4,8 +4,9 @@ import type { User } from './user';
 
 import {
     Router,
-    EpicenterError,
+    identification,
 } from '../utils';
+import { UserSession } from 'epicenter';
 
 
 interface Item {
@@ -25,17 +26,21 @@ interface Wallet {
  * @example
  * // Add a user's phone number to their wallet
  * epicenter.walletAdapter.update(scope, [{ label: 'phone', value: '555-555-5555' }])
- * @param scope         Scope attached to the wallet; userKey is required
- * @param items         List of items to update the wallet with
- * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @param scope                 Scope attached to the wallet; userKey is required
+ * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey        Key of the resource defined by the scope boundary
+ * @param scope.userKey         User key for the user creating the entry, if omitted will use the one in current session
+ * @param items                 List of items to update the wallet with
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the updated wallet
  */
 export async function update(
-    scope: { userKey: string } & GenericScope,
+    scope: { userKey: string | undefined } & GenericScope,
     items: Item[],
     optionals: RoutingOptions = {},
 ): Promise<Wallet> {
-    if (!scope.userKey) throw new EpicenterError('userKey is required in wallet scope');
+    const session = identification.session as UserSession;
+    scope.userKey ??= session?.userKey;
     return await new Router()
         .post('/wallet', {
             body: {
@@ -53,16 +58,21 @@ const NOT_FOUND = 404;
  * // Get a user's wallet
  * const scope = { userKey, scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
  * epicenter.walletAdapter.get(scope)
- * @param scope     Scope attached to the wallet; userKey is required
- * @param optionals Optional arguments; pass network call options overrides here.
+ * @param scope                 Scope attached to the wallet; userKey is required
+ * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey        Key of the resource defined by the scope boundary
+ * @param scope.userKey         User key for the user creating the entry, if omitted will use the one in current session
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the wallet
  */
 export async function get(
     scope: { userKey: string } & GenericScope,
     optionals: RoutingOptions = {}
 ): Promise<Wallet> {
-    const { scopeBoundary, scopeKey, userKey } = scope;
-    if (!userKey) throw new EpicenterError('userKey is required in wallet scope');
+    const { scopeBoundary, scopeKey } = scope;
+    let { userKey } = scope;
+    const session = identification.session as UserSession;
+    userKey ??= session?.userKey;
     return await new Router()
         .get(`/wallet/${scopeBoundary}/${scopeKey}/${userKey}`, optionals)
         .catch((error) => {
@@ -77,8 +87,10 @@ export async function get(
  * // Get all wallets under a group
  * const scope = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
  * epicenter.walletAdapter.withScope(scope)
- * @param scope     Scope attached to the wallets
- * @param optionals Optional arguments; pass network call options overrides here.
+ * @param scope                 Scope attached to the wallets
+ * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey        Key of the resource defined by the scope boundary
+ * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a page of wallets
  */
 export async function withScope(
@@ -89,11 +101,11 @@ export async function withScope(
     } & RoutingOptions = {}
 ): Promise<Page<Wallet>> {
     const { scopeBoundary, scopeKey } = scope;
-    const { first = 0, max } = optionals;
+    const { first = 0, max, ...routingOptions } = optionals;
 
     return await new Router()
         .withSearchParams({ first, max })
-        .get(`/wallet/with/${scopeBoundary}/${scopeKey}`, optionals)
+        .get(`/wallet/with/${scopeBoundary}/${scopeKey}`, routingOptions)
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
