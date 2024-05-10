@@ -1,3 +1,15 @@
+# [3.27.0](https://github.com/forio/epicenter-libs/compare/v3.26.0...v3.27.0) (2024-05-10)
+
+
+### Features
+
+* add extra docs to walletAdapter and use userKey when not available ([4b367f6](https://github.com/forio/epicenter-libs/commit/4b367f6c3cad9456405b5a3dd44e18f95d255e62))
+* add withScope method to walletAdapter ([e2fe5d8](https://github.com/forio/epicenter-libs/commit/e2fe5d8b07b93cc0e66f0bcbb2bd81d7ffee5d04))
+* added wallet adapter ([ff35b02](https://github.com/forio/epicenter-libs/commit/ff35b020b5dd0c206a280bc9d0f72dc8be2cc687))
+* applicable resources `allowChannel` ([6bd461d](https://github.com/forio/epicenter-libs/commit/6bd461dc200f6fee4e0a9c6db55c71b39be36d96))
+
+
+
 # [3.26.0](https://github.com/forio/epicenter-libs/compare/v3.25.0...v3.26.0) (2024-03-28)
 
 
