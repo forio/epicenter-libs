@@ -245,6 +245,11 @@ export async function getSessionWorlds(
  * @param [optionals.objective]     Allows platform to assign users beyond minimum amount
  * @param [optionals.worldNameGenerator]    Specifies how world names are generated
  * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
+ * @param [optionals.populace]      List of role description objects (personas) to dictate the self assignment
+ * @param [optionals.populace[].role]       Name of the role
+ * @param [optionals.populace[].minimum]    The minimum number of users that required for this role
+ * @param [optionals.populace[].maximum]    The maximum number of users that can be assigned to this role
+ * @param [optionals.populace[].marginal]   The maximum number of users that can be assigned to this role when using objective MARGINAL
  * @returns promise that resolves to the world the user was assigned to
  */
 export async function selfAssign(
@@ -254,16 +259,17 @@ export async function selfAssign(
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
         worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
+        populace?: Persona[],
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM, worldNameGenerator,
+        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM, worldNameGenerator, populace,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/selfassign/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { role, objective, worldNameGenerator },
+            body: { role, objective, worldNameGenerator, populace },
             ...routingOptions,
         })
         .then(({ body }) => body);
@@ -291,6 +297,11 @@ export async function selfAssign(
  * @param [optionals.keepEmptyWorlds]       Specify whether worlds that are now empty should be deleted
  * @param [optionals.worldNameGenerator]    Specifies how world names are generated
  * @param [optionals.worldNameGenerator.objectType]     Can be either colorAnimal or sequential
+ * @param [optionals.populace]              List of role description objects (personas) to use while creating assignments
+ * @param [optionals.populace[].role]       Name of the role
+ * @param [optionals.populace[].minimum]    The minimum number of users that required for this role
+ * @param [optionals.populace[].maximum]    The maximum number of users that can be assigned to this role
+ * @param [optionals.populace[].marginal]   The maximum number of users that can be assigned to this role when using objective MARGINAL
  * @returns promise that resolves to the list of worlds created by the assignment
  */
 export async function autoAssignUsers(
@@ -302,16 +313,17 @@ export async function autoAssignUsers(
         worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
         requireAllAssignments?: boolean,
         keepEmptyWorlds?: boolean,
+        populace?: Persona[],
     } & RoutingOptions = {}
 ): Promise<World[]> {
     const {
-        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, worldNameGenerator, keepEmptyWorlds,
+        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, worldNameGenerator, keepEmptyWorlds, populace,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, objective, requireAllAssignments, worldNameGenerator, keepEmptyWorlds },
+            body: { assignments, objective, requireAllAssignments, worldNameGenerator, keepEmptyWorlds, populace },
             ...routingOptions,
         })
         .then(({ body }) => body);
