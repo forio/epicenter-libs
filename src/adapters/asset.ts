@@ -199,7 +199,7 @@ export async function store(
     const name = fileName ?? file.name;
     let presignedUrl = '';
     try {
-        const response = await create(name, scope, remaining);
+        const response = await create(name, scope, {inert: true, ...remaining});
         presignedUrl = response.url;
     } catch (error) {
         if (error instanceof Fault) {
