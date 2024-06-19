@@ -1,3 +1,17 @@
+## [3.27.1](https://github.com/forio/epicenter-libs/compare/v3.27.0...v3.27.1) (2024-06-19)
+
+
+### Bug Fixes
+
+* updated assetAdapter.store error handling ([e083a12](https://github.com/forio/epicenter-libs/commit/e083a12f4b7410bcc7593050d0f0e77b1e4bbbe2))
+
+
+### Features
+
+* add populace to worldAdapter: selfAssign, autoAssignUsers ([562db6a](https://github.com/forio/epicenter-libs/commit/562db6ad05bb5b8f0b85745dedc8f449ea48f9f6))
+
+
+
 # [3.27.0](https://github.com/forio/epicenter-libs/compare/v3.26.0...v3.27.0) (2024-05-10)
 
 
