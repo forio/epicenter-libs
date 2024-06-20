@@ -1,3 +1,12 @@
+## [3.27.2](https://github.com/forio/epicenter-libs/compare/v3.27.1...v3.27.2) (2024-06-20)
+
+
+### Bug Fixes
+
+* include pagination in walletAdapter.withScope ([3308967](https://github.com/forio/epicenter-libs/commit/33089679ad6917cd6a464cdd77ea3e545b1f8d92))
+
+
+
 ## [3.27.1](https://github.com/forio/epicenter-libs/compare/v3.27.0...v3.27.1) (2024-06-19)
 
 
