@@ -105,7 +105,10 @@ export async function withScope(
 
     return await new Router()
         .withSearchParams({ first, max })
-        .get(`/wallet/with/${scopeBoundary}/${scopeKey}`, routingOptions)
+        .get(`/wallet/with/${scopeBoundary}/${scopeKey}`, {
+            paginated: true,
+            ...routingOptions,
+        })
         .catch((error) => {
             if (error.status === NOT_FOUND) return { body: undefined };
             return Promise.reject(error);
