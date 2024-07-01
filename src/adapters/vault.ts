@@ -49,7 +49,7 @@ export async function update(
     } = optionals;
 
     return await new Router()
-        .withSearchParams({ MutationKey: mutationKey })
+        .withSearchParams({ mutationKey: mutationKey })
         .put(`/vault/${vaultKey}`, {
             body: {
                 set: items.set ?? {},
@@ -127,7 +127,7 @@ export async function remove(
         ...routingOptions
     } = optionals;
     return await new Router()
-        .withSearchParams({ MutationKey: mutationKey })
+        .withSearchParams({ mutationKey: mutationKey })
         .delete(`/vault/${vaultKey}`, routingOptions)
         .then(({ body }) => body);
 }
