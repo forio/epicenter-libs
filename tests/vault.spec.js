@@ -210,7 +210,7 @@ describe('Vault APIs', () => {
             const req = fakeServer.requests.pop();
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('MutationKey').should.equal(MUTATION_KEY);
+            searchParams.get('mutationKey').should.equal(MUTATION_KEY);
         });
         it('Should support generic URL options', async() => {
             await vaultAdapter.remove(VAULT_KEY, GENERIC_OPTIONS);
