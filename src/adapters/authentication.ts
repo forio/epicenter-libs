@@ -71,11 +71,14 @@ export async function removeLocalSession(): Promise<void> {
     await cometdAdapter.disconnect();
 }
 
+// forcePathInclusion should be used to force an admin login to include the path in the generated cookie
+// use cases for this include when an admin login should be limited in scope to a single project
+// this prevents login issues when trying to access other simulations
 export async function login(
     credentials: UserCredentials | AppCredentials,
-    optionals: { objectType?: string } & RoutingOptions = {}
+    optionals: { objectType?: string, forcePathInclusion?: boolean } & RoutingOptions = {}
 ): Promise<Session> {
-    const { objectType, ...routingOptions } = optionals;
+    const { objectType, forcePathInclusion, ...routingOptions } = optionals;
     let payload;
     if (Object.prototype.hasOwnProperty.call(credentials, 'handle')) {
         const { handle, password, groupKey } = credentials as UserCredentials;
@@ -95,7 +98,7 @@ export async function login(
 
     await removeLocalSession();
 
-    identification.session = session;
+    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
     return session;
 }
 
@@ -115,11 +118,13 @@ export async function regenerate(
     groupOrAccount: string,
     optionals: {
         objectType?: string,
+        forcePathInclusion?: boolean,
     } & RoutingOptions = {}
 ): Promise<Session> {
     const {
         objectType = 'user',
         accountShortName,
+        forcePathInclusion,
         ...routingOptions
     } = optionals;
 
@@ -138,7 +143,7 @@ export async function regenerate(
         }).then(({ body }) => body);
 
     await removeLocalSession();
-    identification.session = session;
+    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
     return session;
 }
 
