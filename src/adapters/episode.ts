@@ -22,6 +22,7 @@ interface Episode {
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.draft]     Flag to indicate the episode is a draft (intended when used for settings scoping)
  * @param [optionals.runLimit]  Optional argument to define the number of runs that can be made using this episode as the scope
+ * @param [optionals.category]  Optional argument to allow for establishing episode hierarchies
  * @returns promise that resolves to the newly created episode
  */
 export async function create(
@@ -30,15 +31,16 @@ export async function create(
     optionals: {
         draft?: boolean,
         runLimit?: number,
+        category?: string,
     } & RoutingOptions = {}
 ): Promise<Episode> {
     const {
-        draft, runLimit,
+        draft, runLimit, category,
         ...routingOptions
     } = optionals;
     return await new Router()
         .post(`/episode/${groupName}`, {
-            body: { name, draft, runLimit },
+            body: { name, draft, runLimit, category },
             ...routingOptions,
         }).then(({ body }) => body);
 }

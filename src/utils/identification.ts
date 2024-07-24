@@ -67,6 +67,16 @@ class Identification {
             new Store(options).removeItem(SESSION_KEY);
         }
     }
+    setSessionWithOptions(session: Session | undefined, forcePathInclusion: boolean) {
+        const Store = this.getStore();
+        const options = this.getStoreOptions(session, forcePathInclusion);
+
+        if (session) {
+            new Store(options).setItem(SESSION_KEY, session as Session);
+        } else if (this.session) {
+            new Store(options).removeItem(SESSION_KEY);
+        }
+    }
     getStore() {
         if (isNode()) return NodeStore;
         switch (this.type) {
@@ -76,7 +86,7 @@ class Identification {
         }
     }
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
-    getStoreOptions(session?: Session) {
+    getStoreOptions(session?: Session, forcePathInclusion?: boolean) {
         const mySession = session || this.session;
         if (!mySession || isNode()) return '';
 
@@ -85,7 +95,7 @@ class Identification {
         const base = { samesite: isLocal ? 'lax' : 'none', secure: !isLocal };
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
-        if (objectType === 'user' && isEpicenterDomain) {
+        if ((objectType === 'user' || forcePathInclusion) && isEpicenterDomain) {
             const { accountShortName, projectShortName } = config;
             const account = accountShortName ? `/${accountShortName}` : '';
             const project = account && projectShortName ? `/${projectShortName}` : '';
