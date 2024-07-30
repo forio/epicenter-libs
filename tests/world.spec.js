@@ -48,7 +48,7 @@ describe('World APIs', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${SESSION.groupName}`);
         });
 
-        it('Should forward world config in the request body', async () => {
+        it('Should forward world config in the request body', async() => {
             const config = {
                 name: 'world-name',
                 displayName: 'World Name',
@@ -260,6 +260,20 @@ describe('World APIs', () => {
             JSON.parse(req.requestBody).should.have.property('assignments').that.deep.equals(ASSIGNMENTS);
         });
 
+        it('Should send the world config in the request body', async() => {
+            const optionals = {
+                objective: 'MARGINAL',
+                allowChannel: true,
+                worldNameGenerator: { objectType: 'color-animal' },
+            };
+            await worldAdapter.autoAssignUsers(ASSIGNMENTS, optionals);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.allowChannel.should.equal(optionals.allowChannel);
+            body.objective.should.equal(optionals.objective);
+            body.worldNameGenerator.should.deep.equal(optionals.worldNameGenerator);
+        });
+
         testedMethods.push('autoAssignUsers');
     });
 
@@ -384,7 +398,7 @@ describe('World APIs', () => {
             req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
         });
 
-        it('Should use the world/assignment/{groupName} URL', async () => {
+        it('Should use the world/assignment/{groupName} URL', async() => {
             const keepEmptyWorlds = true;
             await worldAdapter.removeUsers(USER_KEYS, { keepEmptyWorlds});
             const req = fakeServer.requests.pop();
@@ -413,10 +427,22 @@ describe('World APIs', () => {
             req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/selfassign/${SESSION.groupName}`);
         });
 
+        it('Should send the world config in the request body', async() => {
+            const optionals = {
+                allowChannel: true,
+                role: 'leader',
+                worldNameGenerator: { objectType: 'color-animal' },
+            };
+            await worldAdapter.selfAssign(optionals);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.allowChannel.should.equal(optionals.allowChannel);
+            body.role.should.equal(optionals.role);
+            body.worldNameGenerator.should.deep.equal(optionals.worldNameGenerator);
+        });
+
         testedMethods.push('selfAssign');
     });
-
-
 
     it('Should not have any untested methods', () => {
         chai.expect(worldAdapter).to.have.all.keys(...testedMethods);

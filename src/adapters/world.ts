@@ -68,9 +68,9 @@ interface World {
 export async function update(
     worldKey: string,
     update: {
-      displayName?: string,
-      runKey?: string,
-      allowChannel?: boolean
+        displayName?: string,
+        runKey?: string,
+        allowChannel?: boolean
     },
     optionals: RoutingOptions = {}
 ): Promise<World> {
@@ -250,6 +250,7 @@ export async function getSessionWorlds(
  * @param [optionals.populace[].minimum]    The minimum number of users that required for this role
  * @param [optionals.populace[].maximum]    The maximum number of users that can be assigned to this role
  * @param [optionals.populace[].marginal]   The maximum number of users that can be assigned to this role when using objective MARGINAL
+ * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the world the user was assigned to
  */
 export async function selfAssign(
@@ -258,18 +259,25 @@ export async function selfAssign(
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
-        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
         populace?: Persona[],
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<World> {
     const {
-        role, groupName, episodeName, objective = OBJECTIVE.MINIMUM, worldNameGenerator, populace,
+        role,
+        groupName,
+        episodeName,
+        objective = OBJECTIVE.MINIMUM,
+        worldNameGenerator,
+        populace,
+        allowChannel,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/selfassign/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { role, objective, worldNameGenerator, populace },
+            body: { role, objective, worldNameGenerator, populace, allowChannel },
             ...routingOptions,
         })
         .then(({ body }) => body);
@@ -302,6 +310,7 @@ export async function selfAssign(
  * @param [optionals.populace[].minimum]    The minimum number of users that required for this role
  * @param [optionals.populace[].maximum]    The maximum number of users that can be assigned to this role
  * @param [optionals.populace[].marginal]   The maximum number of users that can be assigned to this role when using objective MARGINAL
+ * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the list of worlds created by the assignment
  */
 export async function autoAssignUsers(
@@ -310,20 +319,36 @@ export async function autoAssignUsers(
         groupName?: string,
         episodeName?: string,
         objective?: keyof typeof OBJECTIVE,
-        worldNameGenerator?: {objectType: keyof typeof WORLD_NAME_GENERATOR},
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
         requireAllAssignments?: boolean,
         keepEmptyWorlds?: boolean,
         populace?: Persona[],
+        allowChannel?: boolean,
     } & RoutingOptions = {}
 ): Promise<World[]> {
     const {
-        groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, worldNameGenerator, keepEmptyWorlds, populace,
+        groupName,
+        episodeName,
+        objective = OBJECTIVE.MINIMUM,
+        requireAllAssignments,
+        worldNameGenerator,
+        keepEmptyWorlds,
+        populace,
+        allowChannel,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
     return await new Router()
         .post(`/world/assignment/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`, {
-            body: { assignments, objective, requireAllAssignments, worldNameGenerator, keepEmptyWorlds, populace },
+            body: {
+                assignments,
+                objective,
+                requireAllAssignments,
+                worldNameGenerator,
+                keepEmptyWorlds,
+                populace,
+                allowChannel,
+            },
             ...routingOptions,
         })
         .then(({ body }) => body);
