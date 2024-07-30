@@ -1,3 +1,20 @@
+## [3.28.1](https://github.com/forio/epicenter-libs/compare/v3.27.1...v3.28.1) (2024-07-30)
+
+
+### Bug Fixes
+
+* changed casing of mutationKey for vaultAdapter ([d178f85](https://github.com/forio/epicenter-libs/commit/d178f859bc4683d23bd596c0995fce318890aa13))
+* include pagination in walletAdapter.withScope ([3308967](https://github.com/forio/epicenter-libs/commit/33089679ad6917cd6a464cdd77ea3e545b1f8d92))
+* updated mutationKey test ([b0acd5c](https://github.com/forio/epicenter-libs/commit/b0acd5c4d472522350efe4d7028f942c85b67c81))
+
+
+### Features
+
+* add allowChannel parameter to selfAssign and autoAssignUsers ([8c3a540](https://github.com/forio/epicenter-libs/commit/8c3a540fe01b92853f5fcfbcdf3781d62f38cbaa))
+* added episode categories and auth forcePathInclusion options ([891b0a8](https://github.com/forio/epicenter-libs/commit/891b0a8c1fb67e98dcb927602ca61ee306988534))
+
+
+
 # [3.28.0](https://github.com/forio/epicenter-libs/compare/v3.27.1...v3.28.0) (2024-07-24)
 
 
