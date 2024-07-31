@@ -1,7 +1,7 @@
 import type { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
 import type Channel from './channel';
 
-import { EpicenterError, Fault, identification, isBrowser, errorManager, config } from '../utils';
+import { config, EpicenterError, errorManager, Fault, identification, isBrowser } from '../utils';
 import { get as getProject } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
@@ -37,7 +37,7 @@ class CometdAdapter {
     }
 
     async startup(options: { logLevel: 'info' | 'debug' | 'warn' } = { logLevel: 'warn' }) {
-        const project = await getProject();
+        const project = await getProject({ inert: true });
         if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project');
         const channelProtocol = project.channelProtocol?.toLowerCase() || DEFAULT_CHANNEL_PROTOCOL;
 
@@ -122,7 +122,12 @@ class CometdAdapter {
         if (!this.initialization) {
             this.initialization = this.startup(options);
         }
-        return this.initialization;
+        return this.initialization.catch((e) => {
+            if (e instanceof Fault && e.status === 401) {
+                this.initialization = undefined;
+                throw e;
+            }
+        });
     }
 
     // Connects to CometD server

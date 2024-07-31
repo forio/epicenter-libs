@@ -1,5 +1,5 @@
-import type { RoutingOptions } from '../utils/router';
 import type { Session } from '../utils/identification';
+import type { RoutingOptions } from '../utils/router';
 
 import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
@@ -67,8 +67,11 @@ export function setLocalSession(session: Session): Session {
 }
 
 export async function removeLocalSession(): Promise<void> {
-    identification.session = undefined;
-    await cometdAdapter.disconnect();
+    try {
+        await cometdAdapter.disconnect();
+    } finally {
+        identification.session = undefined;
+    }
 }
 
 // forcePathInclusion should be used to force an admin login to include the path in the generated cookie
@@ -142,8 +145,13 @@ export async function regenerate(
             ...routingOptions,
         }).then(({ body }) => body);
 
-    await removeLocalSession();
-    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    try {
+        await removeLocalSession();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    }
     return session;
 }
 
