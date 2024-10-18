@@ -40,8 +40,8 @@ class CometdAdapter {
         const project = await getProject();
         if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project');
         const channelProtocol = project.channelProtocol?.toLowerCase() || DEFAULT_CHANNEL_PROTOCOL;
-
-        const { CometD } = await import('cometd');
+        const CometDImports = await import('cometd');
+        const { CometD } = CometDImports;
         const AckExtension = (await import('cometd/AckExtension')).default;
         const ReloadExtension = (await import('cometd/ReloadExtension')).default;
 
