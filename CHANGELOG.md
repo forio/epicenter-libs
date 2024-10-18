@@ -1,3 +1,12 @@
+## [3.28.2](https://github.com/forio/epicenter-libs/compare/v3.28.1...v3.28.2) (2024-10-18)
+
+
+### Bug Fixes
+
+* changed cometD import ([39996a9](https://github.com/forio/epicenter-libs/commit/39996a9a55b6cfbc7d4396fab73d61e0c2c28aa4))
+
+
+
 ## [3.28.1](https://github.com/forio/epicenter-libs/compare/v3.27.1...v3.28.1) (2024-07-30)
 
 
