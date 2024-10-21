@@ -1,41 +1,42 @@
-import type { GenericSearchOptions } from '../utils/constants';
-import type { RoutingOptions } from '../utils/router';
+import type { GenericScope, GenericSearchOptions } from '../utils/constants';
+import type { Page, RoutingOptions } from '../utils/router';
 import { Router } from '../utils';
+
+interface SomebodyCreateView {
+    email: string,
+    givenName?: string,
+    familyName?: string,
+}
+
+export interface Somebody extends SomebodyCreateView {
+    somebodyKey: string;
+    scope: GenericScope;
+}
+
 /**
- * Adds somebody to an account; somebody is a person who is not a user, but whose information is used in a simulation; requires support level authentication
- *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/somebody`
+ * Create a new Somebody at the provided scope.
+ * A somebody is a non-user individual whose information is used in the simulation.
+ * For example, if your simulation is played by employees, you might store information
+ * about each player's manager in a somebody.
  *
  * @example
- * const email = 'test@test.com';
- * const optionals = {
- *      givenName: 'Person',
- *      familyName: 'Family',
- *      acountId: '12345',
- * }
- *
- * epicenter.somebodyAdapter.create(email, optionals);
- *
- * @param {string}  email                           Email of the person being added
+ * somebodyAdapter.create('test@forio.com', { scopeBoundary: 'group', scopeKey: '000001796733eef0842f4d6d960997018a3b' });
 
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.givenName]           Given name of new user
- * @param {string}  [optionals.familyName]          Family name of new user
- * @param {string}  [optionals.accountId]           Account Id of new user
- * @returns {somebodyObject}                        Returns a promise that resolves to the newly created somebody
+ * @param email     The email address of the new Somebody
+ * @param scope     The scope of the new Somebody
+ * @param optionals Optional arguments; pass network call options overrides here.
+ * @param [optionals.givenName] The given name of the new Somebody
+ * @param [optionals.familyName] The family name of the new Somebody
+ * @returns promise that resolves to the new Somebody
  */
 export async function create(
-    email: string,
-    optionals: {
-        givenName?: string;
-        familyName?: string;
-        accountId?: string;
-    } & RoutingOptions = {}
-): Promise<Record<string, unknown>> {
+    email: SomebodyCreateView['email'],
+    scope: GenericScope,
+    optionals: Omit<SomebodyCreateView, 'email'> & RoutingOptions = {}
+): Promise<Somebody> {
     const {
         givenName,
         familyName,
-        accountId,
         ...routingOptions
     } = optionals;
     return await new Router()
@@ -44,9 +45,9 @@ export async function create(
             {
                 body: {
                     email,
+                    scope,
                     givenName,
                     familyName,
-                    accountId,
                 },
                 ...routingOptions,
             }
@@ -55,45 +56,70 @@ export async function create(
 }
 
 /**
- * Open search for somebody, returns a page
- * 
- * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/somebody/search`
- * 
+ * Get a Somebody by their key
+ *
  * @example
- * epicenter.somebodyAdapter.query({
- *      filter: [
- *          'email|=email1@email.com|email2@email.com',         // searches for a specific email(s)
- *          // 'givenName=Person',                              // searches for somebody by given name (first name)
- *          // 'familyName=PersonLastName',                     // searches for somebody by family name (last name)
- *          // 'accountId=0000017dd3bf540e5ada5b1e058f08f20461',  // searches for a specific accountId
- *          // 'accountShortName=acme',                         // specifies the account, typically unnecessary
- *          // 'projectShortName=simulations',                  // specifies the project, typically unnecessary
-
- *      ],
- *      sort: ['+somebody.email'],    // sort all findings by the 'email' field (ascending)
- *      first: 3,                   // page should start with the 4th item found (defaults to 0)
- *      max: 10,                    // page should only include the first 10 items
- *      count: false,               // If set to true this will return the number of items that match the search
- * });
- * @param searchOptions Search options -- for more on Epicenter search options go [here](NOOP link)
- * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @returns A page for the list of sombodies found
+ * somebodyAdapter.get('000001796733eef0842f4d6d960997018a3b');
+ *
+ * @param somebodyKey   Somebody key
+ * @param optionals     Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the Somebody
  */
-export async function query(
-    searchOptions: GenericSearchOptions,
+export async function get(
+    somebodyKey: string,
     optionals: RoutingOptions = {}
-): Promise<Record<string, unknown>> {
-    const { filter = [], sort = [], first = 0, max, count = false } = searchOptions;
-    const searchParams = {
-        filter: filter.join(';') || undefined,
-        sort: sort.join(';') || undefined,
-        first, max, count,
-    };
+): Promise<Somebody> {
     return await new Router()
-        .withSearchParams(searchParams)
-        .get('/somebody/search', {
+        .get(`/somebody/${somebodyKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+/**
+ * Get Somebodies at the provided scope
+ *
+ * @example
+ * somebodyAdapter.list({ scopeBoundary: 'group', scopeKey: '000001796733eef0842f4d6d960997018a3b' });
+ * somebodyAdapter.list({ scopeBoundary: 'group', scopeKey: '000001796733eef0842f4d6d960997018a3b' }, { first: 10, max: 20 });
+ *
+ * @param scope     The scope to query
+ * @param optionals Optional arguments; pass network call options overrides here.
+ * @param [optionals.first] The first item to return
+ * @param [optionals.max] The maximum number of items to return
+ * @returns promise that resolves to a page of Somebodies
+ */
+export async function list(
+    scope: GenericScope,
+    optionals: Pick<GenericSearchOptions, 'first' | 'max'> &
+        RoutingOptions = {}
+): Promise<Page<Somebody>> {
+    const { scopeBoundary, scopeKey } = scope;
+    const { first, max, ...routingOptions } = optionals;
+    return await new Router()
+        .withSearchParams({ first, max })
+        .get(`/somebody/in/${scopeBoundary}/${scopeKey}`, {
             paginated: true,
-            ...optionals,
+            ...routingOptions,
         })
+        .then(({ body }) => body);
+}
+
+/**
+ * Get a Somebody by their email address (unique per scope)
+ *
+ * @example
+ * somebodyAdapter.byEmail('test@forio.com', { scopeBoundary: 'group', scopeKey: '000001796733eef0842f4d6d960997018a3b' });
+ *
+ * @param email     The email address of the Somebody
+ * @param scope     The scope of the Somebody
+ * @param optionals Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the Somebody
+ */
+export async function byEmail(
+    email: string,
+    scope: GenericScope,
+    optionals: RoutingOptions = {}
+): Promise<Somebody> {
+    return await new Router()
+        .get(`/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`, optionals)
         .then(({ body }) => body);
 }
