@@ -505,13 +505,11 @@ export async function getVariables(
         return variableMap;
     }, {} as Record<string, unknown>);
 
-    const searchParams = { timeout };
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
     const include = variables.join(';');
-    const body = hasMultiple ? { include, runKey } : { ritual, include };
+    const body = hasMultiple ? { runKey, include, timeout } : { ritual, include, timeout };
     const additional = ignorable ? { ignorable } : {};
     return await new Router()
-        .withSearchParams(searchParams)
         .post(`/run/variable${uriComponent}`, {
             body: {
                 ...body,
@@ -601,16 +599,13 @@ export async function getMetadata(
     } & RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
     const {
-        timeout,
         ...routingOptions
     } = optionals;
     const include = metadata.join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
-    const searchParams = { timeout };
 
     const runKeyArg = Array.isArray(runKey) ? runKey : [runKey];
     return await new Router()
-        .withSearchParams(searchParams)
         .post('/run/meta', {
             body: {
                 include,

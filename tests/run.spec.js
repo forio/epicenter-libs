@@ -770,14 +770,13 @@ describe('Run APIs', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
         });
-        it('Should pass non-generic options to URL search parameters and body', async() => {
-            await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: 300, ritual: RITUAL.REANIMATE });
+        it('Should pass non-generic options to body', async() => {
+            const TIMEOUT = 300;
+            await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: TIMEOUT, ritual: RITUAL.REANIMATE });
             const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.get('timeout').should.equal('300');
             const body = JSON.parse(req.requestBody);
             body.ritual.should.equal(RITUAL.REANIMATE);
+            body.timeout.should.equal(TIMEOUT);
         });
         it('Should handle the use of multiple run keys in the request body', async() => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES);
@@ -938,13 +937,6 @@ describe('Run APIs', () => {
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta`);
-        });
-        it('Should pass non-generic options to URL search parameters', async() => {
-            await runAdapter.getMetadata(RUN_KEY, METADATA, { timeout: 300 });
-            const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.get('timeout').should.equal('300');
         });
         it('Should handle multiple run keys in the request body', async() => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
