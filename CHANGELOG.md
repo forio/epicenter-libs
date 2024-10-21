@@ -1,3 +1,12 @@
+## [3.28.3](https://github.com/forio/epicenter-libs/compare/v3.28.2...v3.28.3) (2024-10-21)
+
+
+### Bug Fixes
+
+* move timeout query param to body in POST calls ([9fa1cc6](https://github.com/forio/epicenter-libs/commit/9fa1cc6b872a280ef62d7f4e034d396fede4b83b))
+
+
+
 ## [3.28.2](https://github.com/forio/epicenter-libs/compare/v3.28.1...v3.28.2) (2024-10-18)
 
 
