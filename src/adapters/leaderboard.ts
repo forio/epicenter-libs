@@ -144,7 +144,7 @@ export async function get(
  * @param searchOptions             Search options for the query
  * @param [searchOptions.filter]    Filters for searching
  * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to to a list of leaderboard entries
+ * @returns promise that resolves to the number of entries in hte leaderboard
  */
 export async function getCount(
     collection: string,

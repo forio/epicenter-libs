@@ -156,7 +156,7 @@ describe('Leaderboard APIs', () => {
             const req = fakeServer.requests.pop();
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             const url = req.url.split('?')[0];
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/leaderboard/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/leaderboard/count/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
         });
         it('Should pass search options in the URL search parameters', async() => {
             await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
