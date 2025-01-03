@@ -125,3 +125,41 @@ export async function get(
     console.warn('DEPRECATION WARNING: leaderboardAdapter.get is deprecated and will be removed with the next release. Use leaderboardAdapter.list instead.');
     return await list(collection, scope, searchOptions, optionals);
 }
+
+
+/**
+ * Returns the total count in the given collection
+ * @example
+ * import { leaderboardAdapter } from 'epicenter-libs';
+ * const leaderboard = await leaderboardAdapter.getCount('myLeaderboard', scope, {
+ *      filter: [
+ *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
+ *          'score.total>0'     // where the users scored a total higher than 0
+ *      ],
+ * });
+ * @param collection                Name of the leaderboard
+ * @param scope                     Scope attached to the leaderboard entry; allows for scoping
+ * @param scope.scopeBoundary       Can be a couple things, commonly group, project, episode, or world
+ * @param scope.scopeKey            Key of the resource defined by the scope boundary
+ * @param searchOptions             Search options for the query
+ * @param [searchOptions.filter]    Filters for searching
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the number of entries in hte leaderboard
+ */
+export async function getCount(
+    collection: string,
+    scope: GenericScope,
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {}
+): Promise<number> {
+    const { scopeBoundary, scopeKey } = scope;
+    const { filter = [] } = searchOptions;
+    const searchParams = {
+        filter: filter.join(';') || undefined,
+    };
+
+    return await new Router()
+        .withSearchParams(searchParams)
+        .get(`/leaderboard/count/${scopeBoundary}/${scopeKey}/${collection}`, optionals)
+        .then(({ body }) => body);
+}
