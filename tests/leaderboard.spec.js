@@ -165,7 +165,7 @@ describe('Leaderboard APIs', () => {
             const searchParams = new URLSearchParams(search);
             searchParams.get('filter').should.equal(SEARCH_OPTIONS.filter.join(';'));
         });
-        testedMethods.push('list');
+        testedMethods.push('getCount');
     })
 
     it('Should not have any untested methods', () => {
