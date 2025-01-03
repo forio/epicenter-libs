@@ -128,6 +128,46 @@ describe('Leaderboard APIs', () => {
         testedMethods.push('list');
     });
 
+    describe('leaderboardAdapter.getCount', () => {
+        const COLLECTION = 'mycollection';
+        const SCOPE = { scopeBoundary: 'group', scopeKey: 'mygroupkey' };
+        const SEARCH_OPTIONS = {
+            filter: ['score.total>10'],
+        };
+
+        it('Should do a GET', async() => {
+            await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the /leaderboard/count/{scopeBoundary}/{scopeKey}/{collection} URL', async() => {
+            await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const url = req.url.split('?')[0];
+            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/leaderboard/count/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
+        });
+        it('Should support generic URL options', async() => {
+            await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            const url = req.url.split('?')[0];
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/leaderboard/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
+        });
+        it('Should pass search options in the URL search parameters', async() => {
+            await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            searchParams.get('filter').should.equal(SEARCH_OPTIONS.filter.join(';'));
+        });
+        testedMethods.push('list');
+    })
+
     it('Should not have any untested methods', () => {
         const exportedMethods = Object.keys(leaderboardAdapter);
         const untestedMethods = exportedMethods.filter((method) =>
