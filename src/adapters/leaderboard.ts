@@ -131,7 +131,7 @@ export async function get(
  * Returns the total count in the given collection
  * @example
  * import { leaderboardAdapter } from 'epicenter-libs';
- * const leaderboard = await leaderboardAdapter.list('myLeaderboard', scope, {
+ * const leaderboard = await leaderboardAdapter.getCount('myLeaderboard', scope, {
  *      filter: [
  *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
  *          'score.total>0'     // where the users scored a total higher than 0
