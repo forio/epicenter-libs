@@ -75,4 +75,19 @@ describe('Authentication', () => {
             req.method.toUpperCase().should.equal('DELETE');
         });
     });
+    describe('authAdapter.ssoHref', () => {
+        it('Should accept `protocol`', async() => {
+            const protocol = 'SAML';
+            const href = authAdapter.ssoHref(protocol);
+            const url = href.split('?')[0];
+            url.should.equal(`${config.apiProtocol}://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/sso/user/${protocol}`);
+        });
+        it('Should support generic URL options', async() => {
+            const protocol = 'SAML';
+            const href = authAdapter.ssoHref(protocol, GENERIC_OPTIONS);
+            const url = href.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/sso/user/${protocol}`);
+        });
+    });
 });

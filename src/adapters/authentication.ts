@@ -147,35 +147,21 @@ export async function regenerate(
     return session;
 }
 
-export async function sso(
-    optionals: RoutingOptions = {},
-): Promise<Session> {
-    const session = await new Router()
-        .get('/registration/sso', optionals)
-        .then(({ body }) => body);
-
-    identification.session = session;
-    return session;
-}
-
 /**
- * Retrieves the SAML link from the SSO configuration
+ * Compute an Epicenter URL string that will redirect to the app's SSO login page.
+ * SSO login destination configured separately.
+ * @param  protocol                 The SSO protocol to use.
+ * @param  [optionals]              Optional arguments; pass network call options overrides here.
+ * @returns URL string. GET expects 302 to SSO login destination.
+ * @example
+ * const href = epicenter.authAdapter.ssoHref('SAML');
+ * <a href={href}>Login with SSO</a>
  */
-export async function getSAMLLink(
-    optionals: RoutingOptions = {},
-): Promise<string> {
-    return await new Router()
-        .get('/registration/sso/saml', optionals)
-        .then(({ body }) => body);
-}
-
-/**
- * Generates and returns an epicenter URL that will redirect to the SAML url.
- */
-export function generateSAMLLINK(
+export function ssoHref(
+    protocol: 'SAML',
     optionals: RoutingOptions = {},
 ): string {
-    return new Router().getURL('/registration/sso/saml', optionals).toString();
+    return new Router().getURL(`/registration/sso/user/${protocol}`, optionals).toString();
 }
 
 /**
