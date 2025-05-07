@@ -75,6 +75,10 @@ export default class Channel {
             this.subscription = null;
         }
     }
+
+    async unsubscribeAll(): Promise<void> {
+        await cometdAdapter.empty();
+    }
 }
 
 
