@@ -431,7 +431,7 @@ export async function undoSubmitFor(
     stage: string,
     userKey: string,
     optionals: RoutingOptions = {}
-): Promise<Consensus> {
+): Promise<void> {
     const {
         ...routingOptions
     } = optionals;

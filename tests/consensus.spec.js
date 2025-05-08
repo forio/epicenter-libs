@@ -21,6 +21,10 @@ describe('Consensus APIs', () => {
             xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
         });
 
+        fakeServer.respondWith('DELETE', /(.*)\/consensus/, (xhr, id) => {
+            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
+        });
+
         fakeServer.respondImmediately = true;
     });
 
@@ -135,4 +139,33 @@ describe('Consensus APIs', () => {
     // it('Should not have any untested methods', () => {
     //     chai.expect(consensusAdapter).to.have.all.keys(...testedMethods);
     // });
+    describe('consensusAdapter.undoSubmitFor', () => {
+        const worldKey = 'WORLD_KEY';
+        const name = 'CONSENSUS_NAME';
+        const stage = 'CONSENSUS_STAGE';
+        const userKey = 'USER_KEY';
+
+        it('Should do a DELETE', async() => {
+            await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('DELETE');
+        });
+        it('Should have authorization', async() => {
+            await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the consensus/actions URL', async() => {
+            await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+        });
+        it('Should support generic URL options', async() => {
+            await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+        });
+        testedMethods.push('undoSubmitFor');
+    });
 });
