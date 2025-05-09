@@ -8,7 +8,7 @@ describe('Global Configuration', () => {
             useProjectProxy: false,
         });
     });
-    it('Should be able to detect test site is using local.forio.com', () => {
+    it('Should be able to detect test site is using localhost', () => {
         config.isLocal().should.be.equal(true);
     });
     it('Should initialize with the proper protocol and host in a test environment', () => {

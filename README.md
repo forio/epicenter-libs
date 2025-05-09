@@ -145,7 +145,7 @@ npm install             # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
 cd examples/parcel
 npm install             # Install dependencies for example
-npm start               # Serves example locally at local.forio.com:3913
+npm start               # Serves example locally at localhost:3913
 ```
 ## Node Server
 ```

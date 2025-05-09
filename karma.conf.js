@@ -30,7 +30,7 @@ module.exports = function(config) {
         // singleRun: false, // Karma captures browsers, runs the tests and exits
         concurrency: Infinity,
         basePath: '',
-        hostname: 'local.forio.com',
+        hostname: 'localhost',
         // browsers: ['Chrome'],
         reporters: ['mocha'],
         mochaReporter: {
