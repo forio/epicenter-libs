@@ -406,3 +406,39 @@ export async function triggerFor(
         })
         .then(({ body }) => body);
 }
+
+/**
+ * Removes the specified user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission.
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * consensusAdapter.undoSubmit(
+ *      00000173078afb05b4ae4c726637167a1a9e,
+ *      'SUBMISSIONS',
+ *      'ROUND1',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to undo your submission for
+ * @param userKey                       userKey of the user the facilitator is undoing the submit for
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns {Promise}
+ */
+export async function undoSubmitFor(
+    worldKey: string,
+    name: string,
+    stage: string,
+    userKey: string,
+    optionals: RoutingOptions = {}
+): Promise<void> {
+    const {
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
