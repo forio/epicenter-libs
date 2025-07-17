@@ -224,40 +224,86 @@ export async function create(
     return await define(name, scope, { items, ...optionals });
 }
 
+/**
+ * Searches for vaults that match the search options; not paginable (hence named 'list' and not 'query').
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/search`
+ *
+ * @example
+ * import { vaultAdapter } from 'epicenter-libs';
+ * vaultAdapter.list({
+ *      filter: [
+ *          'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
+ *          'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
+ *          'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
+ *      ],
+ *      sort: ['+vault.created'],                               // sort all findings by the 'created' field (ascending)
+ *      first: 3,                                               // page should start with the 4th item found (defaults to 0)
+ *      max: 10,                                                // page should only include the first 10 items
+ * }, {
+ *      groupName: 'my-group-name',                             // search within a group
+ * });
+ * 
+ * @param searchOptions             Search options
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals.groupName]     Name of the group
+ * @returns promise that resolves to an array of vaults that match the search options
+ */
 export async function list(
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {}
 ): Promise<Vault<unknown>[]> {
     const { first, filter = [], max } = searchOptions;
     const searchParams = {
         filter: filter.join(';') || undefined,
         first, max,
     };
+    const {
+        groupName,
+        ...routingOptions
+    } = optionals;
 
     return new Router()
         .withSearchParams(searchParams)
-        .get('/vault/search', optionals)
+        .get(`/vault/search${groupName ? `/${groupName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
 
 /**
  * Counts the number of vaults that match the search options
- * @param searchOptions     Search options
- * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/count`
+ *
+ * @example
+ * import { vaultAdapter } from 'epicenter-libs';
+ * vaultAdapter.count({
+ *      filter: [
+ *          'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
+ *          'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
+ *          'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
+ *      ],
+ * }, {
+ *      groupName: 'my-group-name',                             // search within a group
+ * });
+ * @param searchOptions             Search options
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals.groupName]     Name of the group
  * @returns promise that resolves to the number of vaults that match the search options
  */
 export async function count(
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {}
 ): Promise<Vault<unknown>[]> {
     const { first, filter = [], max } = searchOptions;
     const searchParams = {
         filter: filter.join(';') || undefined,
         first, max,
     };
+    const {
+        groupName,
+        ...routingOptions
+    } = optionals;
 
     return new Router()
         .withSearchParams(searchParams)
-        .get('/vault/count', optionals)
+        .get(`/vault/count${groupName ? `/${groupName}` : ''}`, routingOptions)
         .then(({ body }) => body);
 }
