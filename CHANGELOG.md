@@ -1,3 +1,23 @@
+# [3.30.0](https://github.com/forio/epicenter-libs/compare/v3.28.3...v3.30.0) (2025-07-18)
+
+
+### Bug Fixes
+
+* change local.forio.com to localhost ([9b9d68b](https://github.com/forio/epicenter-libs/commit/9b9d68bcfaf419e6fc0b4f4bad43ebde9caf3e01))
+* updated test spec for leaderboard getCount ([257ea07](https://github.com/forio/epicenter-libs/commit/257ea075488dc68aad52821d32ff66c3d9ce69e4))
+* updated tests ([d8564fc](https://github.com/forio/epicenter-libs/commit/d8564fc3916ee7826a1d4f0d9095683848e555e9))
+* updated typo in jsdocs for getCount leaderboard adapter call ([21c48aa](https://github.com/forio/epicenter-libs/commit/21c48aa0cb09e02a7ef64d72676ccd6b6ac8762a))
+* updated typos in Leaderboard and spec from poor copy/pasting ([666766a](https://github.com/forio/epicenter-libs/commit/666766a2be948e90cfde90925a7f64ba760ad881))
+
+
+### Features
+
+* add groupName optional to vaultAdapter.list and vaultAdapter.count ([93db181](https://github.com/forio/epicenter-libs/commit/93db1818252ef643af1f78a9a22224e9fca10cc5))
+* added consensus undoSubmitFor and channel unsubscribeAll ([ab0285f](https://github.com/forio/epicenter-libs/commit/ab0285fef182cc9695a66f5159d19605c78fd826))
+* added getCount call to Leaderboard Adapter ([b4e058a](https://github.com/forio/epicenter-libs/commit/b4e058a49ab1c7dc0fe6690193556cd4acf1cc54))
+
+
+
 # [3.29.0](https://github.com/forio/epicenter-libs/compare/v3.28.3...v3.29.0) (2025-05-09)
 
 
