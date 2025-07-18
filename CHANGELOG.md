@@ -1,3 +1,12 @@
+# [3.30.0](https://github.com/forio/epicenter-libs/compare/v3.29.0...v3.30.0) (2025-07-18)
+
+
+### Features
+
+* add groupName optional to vaultAdapter.list and vaultAdapter.count ([93db181](https://github.com/forio/epicenter-libs/commit/93db1818252ef643af1f78a9a22224e9fca10cc5))
+
+
+
 # [3.29.0](https://github.com/forio/epicenter-libs/compare/v3.28.3...v3.29.0) (2025-05-09)
 
 
