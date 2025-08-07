@@ -5,10 +5,10 @@ if (config.isLocal()) {
     // config.accountShortName = 'forio-dev';
     // config.projectShortName = 'epi-v3';
 
-    /* For Development Site (dev 2) */
+    /* For Development Site (sandbox 1) */
     config.accountShortName = 'forio-dev';
     config.projectShortName = 'libs-v3-test';
-    config.apiHost = 'epicenter-dev-2.forio.com';
+    config.apiHost = 'epicenter-sandbox-1.forio.com';
     // config.projectShortName = 'epi-v3';
     // config.authOverride = 'Bearer ${token}';
 
