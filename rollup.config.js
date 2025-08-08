@@ -125,7 +125,7 @@ export default [{
             babelHelpers: 'runtime',
             include: ['src/**/*'],
             presets: [
-                ['@babel/env', {
+                ['@babel/preset-env', {
                     targets: [
                         'defaults',
                         'not IE 11',
