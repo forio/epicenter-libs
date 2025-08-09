@@ -6,22 +6,33 @@ import { get as getProject } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
 
-const DISCONNECTED = 'disconnected';
+const IDLE = 'idle';
+const FAILED = 'failed';
 const CONNECTED = 'connected';
+const SUCCEEDED = 'succeeded';
+const CONNECTING = 'connecting';
+const HANDSHAKING = 'handshaking';
+const DISCONNECTED = 'disconnected';
 const FORBIDDEN = 403;
 const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
+const HANDSHAKE_META_CHANNEL = '/meta/handshake';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
+type HandshakeState = 'idle' | 'handshaking' | 'succeeded' | 'failed';
 
 let cometdInstance: CometD | undefined;
 class CometdAdapter {
 
     url = '';
     initialization: Promise<boolean> | undefined = undefined;
+    handshakePromise: Promise<void> | undefined = undefined;
     subscriptions = new Map<string, SubscriptionHandle>();
     isConnected = false;
+    handshakeState: HandshakeState = IDLE;
+    pendingOperations: Array<() => Promise<unknown>> = [];
+    processingQueue = false;
 
     get cometd() {
         if (!cometdInstance) {
@@ -75,6 +86,16 @@ class CometdAdapter {
     }
 
     listenToMetaChannels() {
+        this.cometd.addListener(HANDSHAKE_META_CHANNEL, (message: Message) => {
+            if (message.successful) {
+                this.handshakeState = SUCCEEDED;
+                this.processPendingOperations();
+            } else {
+                this.handshakeState = FAILED;
+                this.handleHandshakeFailure(message);
+            }
+        });
+
         const connectListener = new Promise((resolve, reject) => {
             this.cometd.addListener(CONNECT_META_CHANNEL, (message: Message) => {
                 if (this.cometd.isDisconnected()) {
@@ -82,6 +103,7 @@ class CometdAdapter {
                 }
                 const wasConnected = this.isConnected;
                 this.isConnected = message.successful || false;
+                
                 if (!wasConnected && this.isConnected) {
                     const error = new Fault({
                         status: undefined,
@@ -98,6 +120,9 @@ class CometdAdapter {
                     } catch (e) {
                         reject(e);
                     }
+                    this.processPendingOperations();
+                } else if (wasConnected && !this.isConnected) {
+                    this.handshakeState = IDLE;
                 }
             });
         });
@@ -106,12 +131,35 @@ class CometdAdapter {
             this.cometd.addListener(DISCONNECT_META_CHANNEL, (message: Message) => {
                 if (message.successful) {
                     this.isConnected = false;
+                    this.handshakeState = IDLE;
                 }
                 resolve(message);
             });
         });
 
         return Promise.all([connectListener, disconnectListener]);
+    }
+
+    private handleHandshakeFailure(message: Message) {
+        const errorMessage = message.error ?? '';
+        if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+            this.handshakeState = IDLE;
+            this.handshakePromise = undefined;
+        }
+    }
+
+    private async processPendingOperations() {
+        if (this.processingQueue || this.pendingOperations.length === 0) return;
+
+        this.processingQueue = true;
+        const operations = [...this.pendingOperations];
+        this.pendingOperations = [];
+
+        try {
+            await Promise.all(operations.map((op) => op().catch(console.error)));
+        } finally {
+            this.processingQueue = false;
+        }
     }
 
     async init(options?: { logLevel: 'info' | 'debug' | 'warn' }) {
@@ -125,12 +173,35 @@ class CometdAdapter {
     async handshake(options: { inert?: boolean } = {}) {
         await this.init();
 
-        if (this.cometd.getStatus() !== DISCONNECTED) {
+        // Prevent concurrent handshake attempts
+        if (this.handshakePromise && this.handshakeState === HANDSHAKING) {
+            return this.handshakePromise;
+        }
+
+        const currentStatus = this.cometd.getStatus();
+
+        // If already connected and handshake succeeded, return immediately
+        if (currentStatus === CONNECTED && this.handshakeState === SUCCEEDED) {
             return Promise.resolve();
         }
 
-        let handshakeProps = {};
+        // If CometD is connecting or handshaking, don't call handshake again - just wait
+        if (currentStatus === CONNECTING || currentStatus === HANDSHAKING) {
+            if (this.handshakePromise) {
+                return this.handshakePromise;
+            }
+            // Return a rejected promise to indicate we can't handshake right now
+            return Promise.reject(new Error('CometD is already connecting, please wait'));
+        }
+
+        // Only proceed if disconnected
+        if (currentStatus !== DISCONNECTED) {
+            return Promise.resolve();
+        }
+
+        this.handshakeState = HANDSHAKING;
         const { session } = identification;
+        let handshakeProps = {};
 
         if (session) {
             handshakeProps = {
@@ -141,39 +212,49 @@ class CometdAdapter {
             };
         }
 
-        // TODO -- this was line in the old libs, don't know why; probably not needed so commenting out for now.
-        // this.cometd.ackEnabled = true;
         this.cometd.websocketEnabled = true;
-        return new Promise((resolve, reject) => this.cometd.handshake(handshakeProps, (handshakeReply) => {
-            if (handshakeReply.successful) {
-                this.listenToMetaChannels();
-                resolve(handshakeReply);
-                return;
-            }
+        this.handshakePromise = new Promise((resolve, reject) => {
+            this.cometd.handshake(handshakeProps, (handshakeReply) => {
+                if (handshakeReply.successful) {
+                    this.handshakeState = SUCCEEDED;
+                    this.listenToMetaChannels();
+                    resolve(undefined);
+                    return;
+                }
 
-            const errorMessage = handshakeReply.error ?? '';
-            const error = new Fault({
-                status: errorMessage.includes('403') ? FORBIDDEN : undefined,
-                message: errorMessage,
-                information: {
-                    code: 'COMETD_ERROR',
-                    ...handshakeReply,
-                },
+                this.handshakeState = FAILED;
+                const errorMessage = handshakeReply.error ?? '';
+
+                if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+                    this.handshakeState = IDLE;
+                    this.handshakePromise = undefined;
+                }
+
+                const error = new Fault({
+                    status: errorMessage.includes('403') ? FORBIDDEN : undefined,
+                    message: errorMessage,
+                    information: {
+                        code: 'COMETD_ERROR',
+                        ...handshakeReply,
+                    },
+                });
+
+                if (options.inert) {
+                    reject(error);
+                    return;
+                }
+
+                const retry = () => this.handshake({ inert: true });
+                try {
+                    const result = errorManager.handle(error, retry);
+                    resolve(result);
+                } catch (e) {
+                    reject(e);
+                }
             });
-
-            if (options.inert) {
-                reject(error);
-                return;
-            }
-
-            const retry = () => this.handshake({ inert: true });
-            try {
-                const result = errorManager.handle(error, retry);
-                resolve(result);
-            } catch (e) {
-                reject(e);
-            }
-        }));
+        });
+        
+        return this.handshakePromise;
     }
 
     async disconnect() {
@@ -193,15 +274,29 @@ class CometdAdapter {
     }
 
     async add(
-        channel: Channel | Channel[],
+        channel: Channel,
         update: (data: unknown) => unknown,
         options: { inert?: boolean } = {}
-    ): Promise<SubscriptionHandle | SubscriptionHandle[]> {
+    ): Promise<SubscriptionHandle> {
         await this.init();
-        const channels = ([] as Channel[]).concat(channel);
 
-        if (this.cometd?.getStatus() !== CONNECTED) {
-            await this.handshake();
+        const currentStatus = this.cometd?.getStatus();
+        if (currentStatus !== CONNECTED) {
+            try {
+                await this.handshake();
+            } catch (error: unknown) {
+                const errorObj = error as { message?: string };
+                if (errorObj?.message?.includes('already connecting')) {
+                    // Wait a moment and try again
+                    const retryDelay = 500;
+                    await new Promise((resolve) => setTimeout(resolve, retryDelay));
+                    if (this.cometd?.getStatus() === CONNECTED) {
+                        // Connection succeeded while we waited, continue to subscription
+                        // Don't return here since we need to continue with the subscription logic
+                    }
+                }
+                throw error;
+            }
         }
         const { session } = identification;
         const subscriptionProps = !session ? {} :
@@ -220,11 +315,10 @@ class CometdAdapter {
             return update(data);
         };
 
-        const promises: Promise<SubscriptionHandle>[] = [];
-        this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: Message) => {
+        return new Promise((resolve, reject) => {
+            const subscription = this.cometd.subscribe(channel.path, handleCometdUpdate, subscriptionProps, (subscribeReply: Message) => {
                 if (subscribeReply.successful) {
-                    this.subscriptions.set(path, subscription);
+                    this.subscriptions.set(channel.path, subscription);
                     resolve(subscription);
                     return;
                 }
@@ -246,27 +340,21 @@ class CometdAdapter {
 
                 const retry = () => this.add(channel, update, { inert: true });
                 try {
-                    const result = errorManager.handle<SubscriptionHandle | SubscriptionHandle[]>(error, retry);
-                    const sub = Array.isArray(result) ? result[0] : result;
-                    resolve(sub);
+                    const result = errorManager.handle<SubscriptionHandle>(error, retry);
+                    resolve(result);
                 } catch (e) {
                     reject(e);
                 }
             });
-        }))));
-        return promises.length === 1 ?
-            Promise.all(promises).then(([res]) => res) :
-            Promise.all(promises);
+        });
     }
 
     async publish(
-        channel: Channel | Channel[],
+        channel: Channel,
         content: Record<string, unknown>,
         options: { inert?: boolean } = {}
-    ) {
+    ): Promise<Message> {
         await this.init();
-        const channels = ([] as Channel[]).concat(channel);
-
         if (this.cometd.getStatus() !== CONNECTED) {
             await this.handshake();
         }
@@ -274,9 +362,9 @@ class CometdAdapter {
         const publishProps = {
             ext: session ? { [AUTH_TOKEN_KEY]: session.token } : undefined,
         };
-        const promises: Promise<Message>[] = [];
-        this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            this.cometd.publish(path, content, publishProps, (publishReply: Message) => {
+
+        return new Promise((resolve, reject) => {
+            this.cometd.publish(channel.path, content, publishProps, (publishReply: Message) => {
                 if (publishReply.successful) {
                     resolve(publishReply);
                     return;
@@ -299,21 +387,18 @@ class CometdAdapter {
 
                 const retry = () => this.publish(channel, content, { inert: true });
                 try {
-                    const result = errorManager.handle<Message | Message[]>(error, retry);
-                    const message = Array.isArray(result) ? result[0] : result;
-                    resolve(message);
+                    const result = errorManager.handle<Message>(error, retry);
+                    resolve(result);
                 } catch (e) {
                     reject(e);
                 }
             });
-        }))));
-        return promises.length === 1 ?
-            Promise.all(promises).then(([res]) => res) :
-            Promise.all(promises);
+        });
     }
 
     async remove(subscription: SubscriptionHandle) {
         await this.init();
+
         // Find the subscription by iterating through the map
         let channelPath: string | undefined;
         for (const [path, sub] of this.subscriptions.entries()) {
@@ -322,15 +407,25 @@ class CometdAdapter {
                 break;
             }
         }
+
         if (channelPath) {
             this.subscriptions.delete(channelPath);
         }
+
         return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
             if (unsubscribeReply.successful) {
                 resolve(unsubscribeReply);
+                return;
             }
+
             const errorMessage = unsubscribeReply.error ?? '';
-            // No default error handling for this
+
+            // Handle session_unknown errors gracefully - subscription is already invalid
+            if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+                resolve(unsubscribeReply);
+                return;
+            }
+
             const error = new Fault({
                 status: undefined,
                 message: errorMessage,
@@ -349,5 +444,6 @@ class CometdAdapter {
         this.subscriptions.clear();
     }
 }
+
 const cometdAdapter = new CometdAdapter();
 export default cometdAdapter;
