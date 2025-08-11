@@ -51,7 +51,7 @@ describe('Vault APIs', () => {
             set: { foo: 'bar' },
             push: {},
         };
-        it('Should do a PATCH', async() => {
+        it('Should do a PUT', async() => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('PUT');
@@ -80,6 +80,47 @@ describe('Vault APIs', () => {
         });
         testedMethods.push('update');
     });
+
+    describe('vaultAdapter.updateProperties', () => {
+        const VAULT_KEY = 'MOCK_VAULT_KEY';
+        const UPDATE = {
+            allowChannel: true,
+            permit: {
+                readLock: ROLE.FACILITATOR,
+                writeLock: ROLE.FACILITATOR,
+            },
+            ttlSeconds: 3600,
+        };
+        it('Should do a PATCH', async() => {
+            await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('PATCH');
+        });
+        it('Should have authorization', async() => {
+            await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+        });
+        it('Should use the vault/vaultKey URL', async() => {
+            await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/vault/${VAULT_KEY}`);
+        });
+        it('Should support generic URL options', async() => {
+            await vaultAdapter.updateProperties(VAULT_KEY, UPDATE, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${VAULT_KEY}`);
+        });
+        it('Should send the update in the request body', async() => {
+            await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
+            const req = fakeServer.requests.pop();
+            const body = JSON.parse(req.requestBody);
+            body.should.deep.equal(UPDATE);
+        });
+        testedMethods.push('updateProperties');
+    });
+
     describe('vaultAdapter.get', () => {
         const VAULT_KEY = 'MOCK_VAULT_KEY';
         it('Should do a GET', async() => {
