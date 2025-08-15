@@ -7,7 +7,7 @@ docs/
 
 
 # Parcel
-.cache/
+.parcel-cache/
 examples/**/dist/
 
 # Rollup

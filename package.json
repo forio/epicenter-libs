@@ -11,8 +11,8 @@
     "CHANGELOG.md"
   ],
   "scripts": {
-    "test": "karma start --browsers ChromeHeadless karma.conf.js",
-    "single-test": "karma start --browsers ChromeHeadless karma.conf.js --single-run",
+    "test": "NODE_OPTIONS=\"--openssl-legacy-provider\" karma start --browsers ChromeHeadless karma.conf.js",
+    "single-test": "NODE_OPTIONS=\"--openssl-legacy-provider\" karma start --browsers ChromeHeadless karma.conf.js --single-run",
     "changelog": "npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "changelog:all": "npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "type-check": "tsc --noEmit",
@@ -51,7 +51,7 @@
     }
   },
   "dependencies": {
-    "cometd": "^4.0.9",
+    "cometd": "^8.0.9",
     "cross-fetch": "^3.0.6"
   },
   "devDependencies": {
@@ -63,7 +63,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.12.7",
     "@babel/plugin-proposal-private-methods": "^7.12.1",
     "@babel/plugin-transform-runtime": "^7.15.0",
-    "@babel/preset-env": "^7.12.11",
+    "@babel/preset-env": "^7.28.0",
     "@babel/preset-typescript": "^7.12.7",
     "@commitlint/cli": "^11.0.0",
     "@commitlint/config-conventional": "^11.0.0",
@@ -86,7 +86,7 @@
     "karma-chrome-launcher": "^2.2.0",
     "karma-mocha": "^1.3.0",
     "karma-mocha-reporter": "^2.2.5",
-    "karma-webpack": "^3.0.5",
+    "karma-webpack": "^4.0.2",
     "mocha": "^5.2.0",
     "pre-push": "^0.1.1",
     "rollup": "^2.38.4",

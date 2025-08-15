@@ -45,7 +45,7 @@ export default [{
         babel({
             extensions,
             babelHelpers: 'runtime',
-            include: ['src/**/*'],
+            include: ['src/**/*', 'node_modules/cometd/**/*'],
             presets: [
                 ['@babel/env', {
                     targets: [
@@ -57,7 +57,7 @@ export default [{
                 ['@babel/typescript'],
             ],
             plugins: [
-                '@babel/plugin-proposal-private-methods',
+                '@babel/plugin-transform-private-methods',
                 '@babel/plugin-proposal-class-properties',
                 '@babel/plugin-proposal-numeric-separator',
                 '@babel/plugin-proposal-optional-chaining',
@@ -123,9 +123,9 @@ export default [{
         babel({
             extensions,
             babelHelpers: 'runtime',
-            include: ['src/**/*'],
+            include: ['src/**/*', 'node_modules/cometd/**/*'],
             presets: [
-                ['@babel/env', {
+                ['@babel/preset-env', {
                     targets: [
                         'defaults',
                         'not IE 11',
@@ -135,7 +135,7 @@ export default [{
                 ['@babel/typescript'],
             ],
             plugins: [
-                '@babel/plugin-proposal-private-methods',
+                '@babel/plugin-transform-private-methods',
                 '@babel/plugin-proposal-class-properties',
                 '@babel/plugin-proposal-numeric-separator',
                 '@babel/plugin-proposal-optional-chaining',

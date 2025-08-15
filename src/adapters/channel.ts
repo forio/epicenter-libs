@@ -36,7 +36,7 @@ export default class Channel {
         validateScope(scope);
         this.path = `/${scopeBoundary.toLowerCase()}/${scopeKey}/${pushCategory.toLowerCase()}`;
         if (cometdAdapter.subscriptions.has(this.path)) {
-            this.subscription = cometdAdapter.subscriptions.get(this.path);
+            this.subscription = cometdAdapter.subscriptions.get(this.path) || null;
         }
     }
 
@@ -80,5 +80,4 @@ export default class Channel {
         await cometdAdapter.empty();
     }
 }
-
 

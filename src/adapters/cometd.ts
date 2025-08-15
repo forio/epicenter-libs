@@ -1,4 +1,4 @@
-import type { CometD, Message, SubscribeMessage, SubscriptionHandle } from 'cometd';
+import type { CometD, Message, SubscriptionHandle } from 'cometd';
 import type Channel from './channel';
 
 import { EpicenterError, Fault, identification, isBrowser, errorManager, config } from '../utils';
@@ -14,16 +14,13 @@ const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
-interface ChannelUpdate {
-    data: string | Record<string, unknown>,
-}
 
 let cometdInstance: CometD | undefined;
 class CometdAdapter {
 
     url = '';
     initialization: Promise<boolean> | undefined = undefined;
-    subscriptions = new Map();
+    subscriptions = new Map<string, SubscriptionHandle>();
     isConnected = false;
 
     get cometd() {
@@ -40,10 +37,9 @@ class CometdAdapter {
         const project = await getProject();
         if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project');
         const channelProtocol = project.channelProtocol?.toLowerCase() || DEFAULT_CHANNEL_PROTOCOL;
-        const CometDImports = await import('cometd');
-        const { CometD } = CometDImports;
-        const AckExtension = (await import('cometd/AckExtension')).default;
-        const ReloadExtension = (await import('cometd/ReloadExtension')).default;
+        const { CometD } = await import('cometd');
+        const { AckExtension } = await import('cometd');
+        const { ReloadExtension } = await import('cometd');
 
         this.cometd = new CometD();
         const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
@@ -85,7 +81,7 @@ class CometdAdapter {
                     return;
                 }
                 const wasConnected = this.isConnected;
-                this.isConnected = message.successful;
+                this.isConnected = message.successful || false;
                 if (!wasConnected && this.isConnected) {
                     const error = new Fault({
                         status: undefined,
@@ -211,17 +207,24 @@ class CometdAdapter {
         const subscriptionProps = !session ? {} :
             { ext: { [AUTH_TOKEN_KEY]: session.token } };
 
-        const handleCometdUpdate = ({ data }: ChannelUpdate) => {
+        const handleCometdUpdate = (message: Message) => {
             // TODO -- figure out why there's ambiguity here and try to remove it
-            data = typeof data === 'string' ? JSON.parse(data) : data;
+            let data = message.data;
+            if (typeof data === 'string') {
+                try {
+                    data = JSON.parse(data);
+                } catch {
+                    // If parsing fails, use raw string
+                }
+            }
             return update(data);
         };
 
         const promises: Promise<SubscriptionHandle>[] = [];
         this.cometd.batch(() => channels.forEach(({ path }) => promises.push(new Promise((resolve, reject) => {
-            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: SubscribeMessage) => {
+            const subscription = this.cometd.subscribe(path, handleCometdUpdate, subscriptionProps, (subscribeReply: Message) => {
                 if (subscribeReply.successful) {
-                    this.subscriptions.set(subscription.channel, subscription);
+                    this.subscriptions.set(path, subscription);
                     resolve(subscription);
                     return;
                 }
@@ -311,7 +314,17 @@ class CometdAdapter {
 
     async remove(subscription: SubscriptionHandle) {
         await this.init();
-        this.subscriptions.delete(subscription.channel);
+        // Find the subscription by iterating through the map
+        let channelPath: string | undefined;
+        for (const [path, sub] of this.subscriptions.entries()) {
+            if (sub === subscription) {
+                channelPath = path;
+                break;
+            }
+        }
+        if (channelPath) {
+            this.subscriptions.delete(channelPath);
+        }
         return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
             if (unsubscribeReply.successful) {
                 resolve(unsubscribeReply);
