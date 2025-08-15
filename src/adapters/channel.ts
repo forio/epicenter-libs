@@ -40,7 +40,7 @@ export default class Channel {
         }
     }
 
-    publish(content: FIXME): Promise<Message | Message[]> {
+    publish(content: Record<string, unknown>): Promise<Message> {
         return cometdAdapter.publish(this, content);
     }
 
@@ -53,9 +53,10 @@ export default class Channel {
      *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
      *     scopeKey: session.groupKey,
      *     pushCategory: PUSH_CATEGORY.CHAT,
-     * }).subscribe((data) => {
+     * });
+     * await channel.subscribe((data) => {
      *      console.log(data.content);
-     * })
+     * });
      * @param update function that is called whenever a channel update occurs.
      * @returns the subscription object returned by CometD after a sucessful subscribe.
      */
@@ -63,10 +64,53 @@ export default class Channel {
         update: (data: unknown) => unknown,
         options: { inert?: boolean } = {},
     ): Promise<SubscriptionHandle> {
-        if (this.subscription) await cometdAdapter.remove(this.subscription);
+        if (this.subscription) {
+            try {
+                await cometdAdapter.remove(this.subscription);
+            } catch (error: unknown) {
+                const errorObj = error as { message?: string; information?: { error?: string } };
+                const errorMessage = errorObj?.message || errorObj?.information?.error || '';
+
+                if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+                    // Previous subscription already invalid due to session expiration
+                } else {
+                    // Re-throw other errors
+                    throw error;
+                }
+            }
+        }
         this.update = update;
-        this.subscription = await cometdAdapter.add(this, update, options) as SubscriptionHandle;
-        return this.subscription;
+
+        let retryCount = 0;
+        const maxRetries = 3;
+
+        while (retryCount < maxRetries) {
+            try {
+                this.subscription = await cometdAdapter.add(this, update, options) as SubscriptionHandle;
+                return this.subscription;
+            } catch (error: unknown) {
+                const errorObj = error as { message?: string; information?: { error?: string } };
+                const errorMessage = errorObj?.message || errorObj?.information?.error || '';
+
+                if ((errorMessage.includes('session_unknown') || errorMessage.includes('402')) && retryCount < maxRetries - 1) {
+                    retryCount++;
+                    // Force fresh handshake
+                    cometdAdapter.handshakeState = 'idle';
+                    cometdAdapter.handshakePromise = undefined;
+
+                    // Wait a moment before retrying
+                    const retryDelay = 1000;
+                    const currentRetry = retryCount;
+                    await new Promise((resolve) => setTimeout(resolve, retryDelay * currentRetry));
+                    continue;
+                }
+
+                // Re-throw if not session_unknown or max retries exceeded
+                throw error;
+            }
+        }
+
+        throw new Error(`Failed to subscribe to ${this.path} after ${maxRetries} attempts`);
     }
 
     async unsubscribe(): Promise<void> {
