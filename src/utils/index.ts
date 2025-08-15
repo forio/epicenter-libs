@@ -1,6 +1,7 @@
 export * from './constants';
 export * from './helpers';
 export * from './store';
+export * from './filter-parser';
 export { default as cookies } from './cookies';
 export { default as EpicenterError } from './error';
 export { default as Fault } from './fault';

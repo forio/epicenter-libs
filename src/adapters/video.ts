@@ -3,6 +3,7 @@ import type { GenericScope, GenericSearchOptions } from '../utils/constants';
 import type { Video, AFFILIATE, PROCESSING_TYPE, MEDIA_FORMAT, LANGUAGE_CODE, VIDEO_DIR } from '../apis/video';
 
 import EpicenterError from '../utils/error';
+import { parseFilterInput } from '../utils/filter-parser';
 import * as videoAPI from '../apis/video';
 
 
@@ -29,10 +30,10 @@ export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {},
 ): Promise<Page<Video>> {
-    const { filter = [], sort = [], first, max } = searchOptions;
+    const { filter, sort = [], first, max } = searchOptions;
 
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         sort: sort.join(';') || undefined,
         first, max,
     };

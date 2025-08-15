@@ -2,7 +2,6 @@ import fetch from 'cross-fetch';
 import config from './utils/config';
 import { prefix } from './utils/helpers';
 
-
 export const proxy = async(
     resource: string,
     options?: RequestInit,
