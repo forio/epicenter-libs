@@ -8,6 +8,11 @@ import {
     EpicenterError,
 } from 'utils';
 
+export enum MORPHOLOGY {
+    MANY = 'MANY',
+    PROXY = 'PROXY',
+    SINGULAR = 'SINGULAR',
+}
 
 interface ModelContext {
     version: string,
