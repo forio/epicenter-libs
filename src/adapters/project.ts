@@ -21,6 +21,24 @@ enum PHYLOGENY {
     REFERENTIAL = 'REFERENTIAL',
     ORDERED = 'ORDERED',
     EVENTUAL = 'EVENTUAL',
+    /**
+     * TRANSMOGRIFIED Improves the way Epicenter runs proxies.
+     * @constant
+     * @type {string}
+     */
+    TRANSMOGRIFIED = 'TRANSMOGRIFIED',
+    /**
+     * REANIMATED Changes the default run start-up ritual.
+     * @constant
+     * @type {string}
+     */
+    REANIMATED = 'REANIMATED',
+    /**
+     * SILENT Inhibits push channel notifications unless allowChannel is true, which by default is false.
+     * @constant
+     * @type {string}
+     */
+    SILENT = 'SILENT',
 }
 
 enum FILE_TYPE {
