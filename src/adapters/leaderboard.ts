@@ -17,6 +17,10 @@ interface Tag {
 
 interface Leaderboard {
     lastUpdated: Date,
+    scores: Score[],
+    scope: { userKey?: string } & GenericScope,
+    collection: string,
+    tags: Tag[],
 }
 
 
