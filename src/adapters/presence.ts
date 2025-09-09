@@ -5,7 +5,7 @@ import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
 
 
-interface Presence {
+export interface Presence {
     lastUpdated: number,
     ttlSeconds: number,
     groupRole: 'FACILITATOR' | 'REVIEWER' | 'LEADER' | 'PARTICIPANT',

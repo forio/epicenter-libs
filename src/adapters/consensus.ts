@@ -5,7 +5,7 @@ import {
     RITUAL,
 } from 'utils';
 
-interface Consensus {
+export interface Consensus {
     instantiated: boolean,
     triggered: boolean,
     closed: boolean,

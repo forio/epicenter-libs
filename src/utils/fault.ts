@@ -1,6 +1,6 @@
 import EpicenterError from './error';
 
-interface ErrorBody {
+export interface ErrorBody {
     status?: number,
     message: string,
     information?: {
@@ -8,6 +8,7 @@ interface ErrorBody {
         [key: string]: unknown,
     },
     cause?: unknown,
+    code?: string,
 }
 
 

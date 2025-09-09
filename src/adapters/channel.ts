@@ -4,7 +4,7 @@ import type { GenericScope } from '../utils/constants';
 import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
-interface ChannelScope extends GenericScope {
+export interface ChannelScope extends GenericScope {
     pushCategory: string,
 }
 
@@ -61,7 +61,8 @@ export default class Channel {
      * @returns the subscription object returned by CometD after a sucessful subscribe.
      */
     async subscribe(
-        update: (data: unknown) => unknown,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        update: (data: any) => unknown,
         options: { inert?: boolean } = {},
     ): Promise<SubscriptionHandle> {
         if (this.subscription) {

@@ -117,6 +117,8 @@ describe('Somebody APIs', () => {
     });
     
     it('Should not have any untested methods', () => {
-        chai.expect(somebodyAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });

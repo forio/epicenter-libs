@@ -9,40 +9,40 @@ import {
 } from '../utils';
 
 
-enum OBJECTIVE {
+export enum OBJECTIVE {
     MINIMUM = 'MINIMUM',
     MAXIMUM = 'MAXIMUM',
     MARGINAL = 'MARGINAL',
 }
 
-enum ORBIT_TYPE {
+export enum ORBIT_TYPE {
     GROUP = 'GROUP',
     EPISODE = 'EPISODE',
 }
 
-enum WORLD_NAME_GENERATOR {
+export enum WORLD_NAME_GENERATOR {
     colorAnimal = 'colorAnimal',
     sequential = 'sequential',
 }
 
-interface UserAssignment {
+export interface UserAssignment {
     userKey: string,
     role?: string,
 }
 
-interface Persona {
+export interface Persona {
     role: string,
     minimum: number,
     maximum?: number,
     marginal?: number,
 }
 
-interface Assignment {
+export interface Assignment {
     role: string,
     user: User,
 }
 
-interface World {
+export interface World {
     lastUpdated: string,
     personae: Persona[],
     assignments: Assignment[],

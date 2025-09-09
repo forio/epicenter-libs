@@ -5,17 +5,17 @@ import type { GenericScope, GenericSearchOptions } from '../utils/constants';
 import { identification, Router } from '../utils';
 
 
-interface Score {
+export interface Score {
     name: string,
     quantity: number,
 }
 
-interface Tag {
+export interface Tag {
     label: string,
     content: string,
 }
 
-interface Leaderboard {
+export interface Leaderboard {
     lastUpdated: Date,
 }
 

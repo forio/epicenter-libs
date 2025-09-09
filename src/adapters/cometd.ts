@@ -410,6 +410,7 @@ class CometdAdapter {
 
         if (channelPath) {
             this.subscriptions.delete(channelPath);
+            if (this.cometd.getStatus() === DISCONNECTED) return Promise.resolve();
         }
 
         return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
