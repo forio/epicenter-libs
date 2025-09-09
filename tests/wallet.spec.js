@@ -149,6 +149,8 @@ describe('Wallet APIs', () => {
     });
 
     it('Should not have any untested methods', () => {
-        chai.expect(walletAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(walletAdapter).filter((key) => typeof walletAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });

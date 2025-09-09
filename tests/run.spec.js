@@ -1322,7 +1322,9 @@ describe('Run APIs', () => {
     });
 
     it('Should not have any untested methods', () => {
-        chai.expect(runAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(runAdapter).filter((key) => typeof runAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
     describe('runAdapter.migrate', () => {
         const RUN_KEY = 'testRunKey123';

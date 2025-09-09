@@ -15,7 +15,7 @@ export interface AdminCreateView {
     active?: true;
 }
 
-interface Admin {
+export interface Admin {
     lastUpdated: string,
     lastLogin: string,
     created: string,

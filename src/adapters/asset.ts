@@ -4,11 +4,11 @@ import type { GenericScope } from '../utils/constants';
 import fetch from 'cross-fetch';
 import { Fault, Router, ROLE } from '../utils';
 
-interface AssetScope extends GenericScope {
+export interface AssetScope extends GenericScope {
     userKey?: string,
 }
 
-interface Asset {
+export interface Asset {
     file: string,
     address: {
         projectShortName: string,
@@ -20,7 +20,7 @@ interface Asset {
     scope: AssetScope,
 }
 
-interface AssetTicket {
+export interface AssetTicket {
     url: string,
 }
 

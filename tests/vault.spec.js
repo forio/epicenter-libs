@@ -381,6 +381,8 @@ describe('Vault APIs', () => {
     });
 
     it('Should not have any untested methods', () => {
-        chai.expect(vaultAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(vaultAdapter).filter((key) => typeof vaultAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });

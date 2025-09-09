@@ -9,12 +9,12 @@ import {
 import { UserSession } from 'epicenter';
 
 
-interface Item {
+export interface Item {
     label: string,
     value: string | null,
 }
 
-interface Wallet {
+export interface Wallet {
     items: Item[],
     user: User,
     walletKey: string,

@@ -445,6 +445,8 @@ describe('World APIs', () => {
     });
 
     it('Should not have any untested methods', () => {
-        chai.expect(worldAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(worldAdapter).filter((key) => typeof worldAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });

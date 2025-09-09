@@ -39,6 +39,8 @@ describe('Project APIs', () => {
     });
 
     it('Should not have any untested methods', () => {
-        chai.expect(projectAdapter).to.have.all.keys(...testedMethods);
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(projectAdapter).filter((key) => typeof projectAdapter[key] === 'function');
+        chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });

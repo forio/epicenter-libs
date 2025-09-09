@@ -22,7 +22,7 @@ export interface Vault<Items> {
     changed?: boolean
 }
 
-interface Items {
+export interface Items {
     set?: Record<string, unknown>,
     push?: Record<string, unknown>,
     pop?: Record<string, unknown>,

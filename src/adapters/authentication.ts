@@ -5,12 +5,12 @@ import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
 
 
-interface UserCredentials {
+export interface UserCredentials {
     handle: string,
     password: string,
     groupKey?: string,
 }
-interface AppCredentials {
+export interface AppCredentials {
     secretKey: string,
 }
 
