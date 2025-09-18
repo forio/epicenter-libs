@@ -2,7 +2,7 @@ import type { UserSession } from '../utils/identification';
 import type { GenericSearchOptions } from '../utils/constants';
 import type { RoutingOptions, Page } from '../utils/router';
 
-import { Router, identification } from '../utils';
+import { Router, identification, parseFilterInput } from '../utils';
 
 
 export interface Episode {
@@ -93,11 +93,11 @@ export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {}
 ): Promise<Page<Episode>> {
-    const { filter = [], sort = [], first = 0, max } = searchOptions;
+    const { filter, sort = [], first = 0, max } = searchOptions;
 
     return await new Router()
         .withSearchParams({
-            filter: filter.join(';') || undefined,
+            filter: parseFilterInput(filter),
             sort: sort.join(';') || undefined,
             first, max,
         })

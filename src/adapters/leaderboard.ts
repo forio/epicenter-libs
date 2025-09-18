@@ -2,7 +2,7 @@ import type { UserSession } from '../utils/identification';
 import type { RoutingOptions } from '../utils/router';
 import type { GenericScope, GenericSearchOptions } from '../utils/constants';
 
-import { identification, Router } from '../utils';
+import { identification, Router, parseFilterInput } from '../utils';
 
 
 export interface Score {
@@ -103,9 +103,9 @@ export async function list(
     optionals: RoutingOptions = {}
 ): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
-    const { filter = [], sort = [], first, max } = searchOptions;
+    const { filter, sort = [], first, max } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         sort: sort.join(';') || undefined,
         first, max,
     };
@@ -153,9 +153,9 @@ export async function getCount(
     optionals: RoutingOptions = {}
 ): Promise<number> {
     const { scopeBoundary, scopeKey } = scope;
-    const { filter = [] } = searchOptions;
+    const { filter } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
     };
 
     return await new Router()

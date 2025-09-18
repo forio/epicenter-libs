@@ -2,6 +2,7 @@ import type { GenericScope, GenericSearchOptions, Permit } from '../utils/consta
 import type { RoutingOptions, Page } from '../utils/router';
 
 import Router from '../utils/router';
+import { parseFilterInput } from '../utils/filter-parser';
 
 export interface ChatMessage {
     senderKey: string,
@@ -119,9 +120,9 @@ export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {}
 ): Promise<Page<Chat>> {
-    const { filter = [], sort = [], first = 0, max } = searchOptions;
+    const { filter, sort = [], first = 0, max } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         sort: sort.join(';') || undefined,
         first, max,
     };

@@ -5,6 +5,7 @@ import type { GenericScope, GenericSearchOptions, Permit } from '../utils/consta
 import {
     identification, Router,
     ROLE, SCOPE_BOUNDARY,
+    parseFilterInput,
 } from '../utils';
 
 
@@ -290,9 +291,9 @@ export async function list(
     searchOptions: GenericSearchOptions,
     optionals: { groupName?: string } & RoutingOptions = {}
 ): Promise<Vault<unknown>[]> {
-    const { first, filter = [], max } = searchOptions;
+    const { first, filter, max } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         first, max,
     };
     const {
@@ -330,9 +331,9 @@ export async function count(
     searchOptions: GenericSearchOptions,
     optionals: { groupName?: string } & RoutingOptions = {}
 ): Promise<Vault<unknown>[]> {
-    const { first, filter = [], max } = searchOptions;
+    const { first, filter, max } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         first, max,
     };
     const {

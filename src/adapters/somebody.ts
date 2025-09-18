@@ -1,6 +1,6 @@
 import type { GenericSearchOptions } from '../utils/constants';
 import type { RoutingOptions } from '../utils/router';
-import { Router } from '../utils';
+import { Router, parseFilterInput } from '../utils';
 /**
  * Adds somebody to an account; somebody is a person who is not a user, but whose information is used in a simulation; requires support level authentication
  *
@@ -83,9 +83,9 @@ export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {}
 ): Promise<Record<string, unknown>> {
-    const { filter = [], sort = [], first = 0, max, count = false } = searchOptions;
+    const { filter, sort = [], first = 0, max, count = false } = searchOptions;
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         sort: sort.join(';') || undefined,
         first, max, count,
     };

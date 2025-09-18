@@ -1,3 +1,4 @@
+import type { FilterInput } from './filter-parser';
 
 export enum BROWSER_STORAGE_TYPE {
     COOKIE = 'COOKIE',
@@ -351,9 +352,14 @@ export interface GenericScope {
 /**
  * Generic search options for adapter methods. All adapter methods
  * will take `filter` and `sort` as a list of strings, and join with a ";"
+ * 
+ * Enhanced filter support allows:
+ * - string[] (legacy): ['name=Mike', 'count<=3'] -> 'name=Mike;count<=3'
+ * - string (raw): '(name=Mike;count<=3;[id=1;id=2])' -> passed through as-is
+ * - FilterGroup (object): { type: 'and', filters: [...] } -> parsed to boolean syntax
  */
 export interface GenericSearchOptions {
-    filter?: string[],
+    filter?: FilterInput,
     sort?: string[],
     first?: number,
     max?: number,
