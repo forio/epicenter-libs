@@ -1,5 +1,4 @@
-import chai, { expect } from 'chai';
-chai.use(require('sinon-chai'));
+import { describe, it, expect } from 'vitest';
 
 
 describe('Channels', () => {
@@ -16,7 +15,7 @@ describe('Channels', () => {
                 scopeKey: 'irrelevant',
                 pushCategory,
             });
-            expect(channel.path).to.equal(`/${scopeBoundary.toLowerCase()}/irrelevant/${pushCategory.toLowerCase()}`);
+            expect(channel.path).toBe(`/${scopeBoundary.toLowerCase()}/irrelevant/${pushCategory.toLowerCase()}`);
         });
     });
 });

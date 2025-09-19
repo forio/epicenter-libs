@@ -3,20 +3,22 @@
 module.exports = {
     root: true,
     globals: {
-        'epicenter': true
+        'epicenter': true,
+        'globalThis': 'readonly',
     },
     ignorePatterns: ['**/dist/**'],
     parser: '@typescript-eslint/parser',
     plugins: [
-      '@typescript-eslint',
+        '@typescript-eslint',
     ],
     extends: [
-      'eslint:recommended',
-      'plugin:@typescript-eslint/recommended',
+        'eslint:recommended',
+        'plugin:@typescript-eslint/recommended',
     ],
     env: {
         'browser': true,
-        'node': true
+        'node': true,
+        'es2020': true
     },
     rules: {
         'comma-dangle': [2, 'always-multiline'],

@@ -44,8 +44,9 @@ export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
-    getItem(key: string): JavaScriptObject {
-        return JSON.parse(super.store.getItem(key));
+    getItem(key: string): JavaScriptObject | null {
+        const item = super.store.getItem(key);
+        return item ? JSON.parse(item) : null;
     }
     setItem(key: string, value: JavaScriptObject): void {
         return super.store.setItem(key, JSON.stringify(value));
@@ -66,7 +67,7 @@ export class CookieStore {
             { path: '/' };
         this.options = { ...defaults, ...options };
     }
-    getItem(key: string): JavaScriptObject {
+    getItem(key: string): JavaScriptObject | null {
         const item = cookies.getItem(key);
         return item ? JSON.parse(item) : null;
     }
