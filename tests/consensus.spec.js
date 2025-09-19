@@ -1,36 +1,26 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
-chai.use(require('sinon-chai'));
+import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, consensusAdapter, getAuthHeader } from './common';
 
-
-describe('Consensus APIs', () => {
-    const { config, consensusAdapter, authAdapter, SCOPE_BOUNDARY, ROLE, RITUAL } = epicenter;
-    let fakeServer;
-    const testedMethods = [];
+describe('consensusAdapter', () => {
+    let capturedRequests = [];
+    let mockSetup;
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        authAdapter.setLocalSession(SESSION);
-
-        fakeServer.respondWith('POST', /(.*)\/consensus/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-
-        fakeServer.respondWith('DELETE', /(.*)\/consensus/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
-        });
-
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
-        authAdapter.setLocalSession(undefined);
+    beforeEach(() => {
+        capturedRequests.length = 0;
+        authAdapter.setLocalSession(SESSION);
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
+        authAdapter.removeLocalSession();
     });
 
     describe('consensusAdapter.create', () => {
@@ -50,25 +40,29 @@ describe('Consensus APIs', () => {
 
         it('Should do a POST', async() => {
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the consensus URL', async() => {
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/${worldKey}/${name}/${stage}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/${worldKey}/${name}/${stage}`);
         });
+
         it('Should support generic URL options', async() => {
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}/${stage}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}/${stage}`);
         });
+
         it('Should pass the consensus details to the request body', async() => {
             const optionals = {
                 ttlSeconds: 60000,
@@ -77,18 +71,20 @@ describe('Consensus APIs', () => {
             };
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions, optionals);
 
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.have.property('ttlSeconds');
-            body.ttlSeconds.should.equal(optionals.ttlSeconds);
-            body.should.have.property('transparent');
-            body.transparent.should.equal(optionals.transparent);
-            body.should.have.property('actions');
-            body.should.have.property('expectedRoles');
-            body.allowChannel.should.equal(optionals.allowChannel);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('ttlSeconds');
+            expect(body.ttlSeconds).toBe(optionals.ttlSeconds);
+            expect(body).toHaveProperty('transparent');
+            expect(body.transparent).toBe(optionals.transparent);
+            expect(body).toHaveProperty('actions');
+            expect(body).toHaveProperty('expectedRoles');
+            expect(body.allowChannel).toBe(optionals.allowChannel);
         });
+
         testedMethods.push('create');
     });
+
     describe('consensusAdapter.submitActions', () => {
         const worldKey = 'RUN_KEY';
         const name = 'CONSENSUS_NAME';
@@ -101,37 +97,42 @@ describe('Consensus APIs', () => {
 
         it('Should do a POST', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the consensus/actions URL', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/publish/${worldKey}/${name}/${stage}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/publish/${worldKey}/${name}/${stage}`);
         });
+
         it('Should support generic URL options', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/publish/${worldKey}/${name}/${stage}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/publish/${worldKey}/${name}/${stage}`);
         });
+
         it('Should pass the consensus details to the request body', async() => {
             const optionals = {
                 ritual: 'REANIMATE',
             };
             await consensusAdapter.submitActions(worldKey, name, stage, actions, optionals);
 
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.have.property('actions');
-            body.should.have.property('ritual');
-            body.ritual.should.equal(optionals.ritual);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('actions');
+            expect(body).toHaveProperty('ritual');
+            expect(body.ritual).toBe(optionals.ritual);
         });
+
         testedMethods.push('submitActions');
     });
 
@@ -147,25 +148,29 @@ describe('Consensus APIs', () => {
 
         it('Should do a DELETE', async() => {
             await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
+
         it('Should have authorization', async() => {
             await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the consensus/actions URL', async() => {
             await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
         });
+
         it('Should support generic URL options', async() => {
             await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
         });
+
         testedMethods.push('undoSubmitFor');
     });
 });

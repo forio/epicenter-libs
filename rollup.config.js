@@ -1,15 +1,19 @@
 import path from 'path';
+import { fileURLToPath } from 'url';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import alias from '@rollup/plugin-alias';
 import replace from '@rollup/plugin-replace';
-import { terser } from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
+import terser from '@rollup/plugin-terser';
 import filesize from 'rollup-plugin-filesize';
 import progress from 'rollup-plugin-progress';
-import visualizer from 'rollup-plugin-visualizer';
-import pkg from './package.json';
+import { visualizer } from 'rollup-plugin-visualizer';
+import pkg from './package.json' with { type: 'json' };
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const input = './src/epicenter.ts';
 const extensions = [
@@ -41,6 +45,9 @@ export default [{
         // Allow bundling cjs modules. Rollup doesn't understand cjs
         commonjs(),
 
+        // Handle JSON imports
+        json(),
+
         // Compile TypeScript/JavaScript files
         babel({
             extensions,
@@ -58,10 +65,10 @@ export default [{
             ],
             plugins: [
                 '@babel/plugin-transform-private-methods',
-                '@babel/plugin-proposal-class-properties',
-                '@babel/plugin-proposal-numeric-separator',
-                '@babel/plugin-proposal-optional-chaining',
-                '@babel/plugin-proposal-nullish-coalescing-operator',
+                '@babel/plugin-transform-class-properties',
+                '@babel/plugin-transform-numeric-separator',
+                '@babel/plugin-transform-optional-chaining',
+                '@babel/plugin-transform-nullish-coalescing-operator',
                 '@babel/plugin-transform-runtime',
                 '@babel/plugin-transform-logical-assignment-operators',
             ],
@@ -114,6 +121,9 @@ export default [{
         // Allow bundling cjs modules. Rollup doesn't understand cjs
         commonjs(),
 
+        // Handle JSON imports
+        json(),
+
         // Compile TypeScript/JavaScript files
         // babel({
         //     extensions,
@@ -137,11 +147,12 @@ export default [{
             ],
             plugins: [
                 '@babel/plugin-transform-private-methods',
-                '@babel/plugin-proposal-class-properties',
-                '@babel/plugin-proposal-numeric-separator',
-                '@babel/plugin-proposal-optional-chaining',
-                '@babel/plugin-proposal-nullish-coalescing-operator',
+                '@babel/plugin-transform-class-properties',
+                '@babel/plugin-transform-numeric-separator',
+                '@babel/plugin-transform-optional-chaining',
+                '@babel/plugin-transform-nullish-coalescing-operator',
                 '@babel/plugin-transform-runtime',
+                '@babel/plugin-transform-logical-assignment-operators',
             ],
         }),
         progress(),

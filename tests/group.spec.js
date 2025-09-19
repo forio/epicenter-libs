@@ -1,150 +1,160 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
-chai.use(require('sinon-chai'));
+import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
+import {
+    ROLE,
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    OK_CODE,
+    CREATED_CODE,
+    GENERIC_OPTIONS,
+    createFetchMock,
+    getAuthHeader,
+    testedMethods,
+    groupAdapter,
+    authAdapter,
+    config,
+} from './common';
+
+const DEPRECATED_METHODS = ['search'];
 
 describe('Group APIs', () => {
-    const { config, groupAdapter, authAdapter, ROLE } = epicenter;
-    let fakeServer;
-    const testedMethods = [];
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        authAdapter.setLocalSession(SESSION);
+    let capturedRequests = [];
+    let mockSetup;
 
-        fakeServer.respondWith('DELETE', /(.*)\/group/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('GET', /(.*)\/group/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('POST', /(.*)\/group/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('PATCH', /(.*)\/group/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
-        });
-        fakeServer.respondWith('POST', /(.*)\/registration/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('PATCH', /(.*)\/registration/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
-        authAdapter.setLocalSession(undefined);
+    beforeEach(() => {
+        capturedRequests.length = 0;
+        authAdapter.setLocalSession(SESSION);
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
+        authAdapter.removeLocalSession();
     });
 
     describe('groupAdapter.get', () => {
         const GROUP_KEY = SESSION.groupKey;
+
         it('Should do a GET', async() => {
             await groupAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
         });
+
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.get({ groupKey: 'mygroupkey' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/mygroupkey`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/mygroupkey`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.get(GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+
         it('Should use an updated URL when provided the members augment', async() => {
             await groupAdapter.get({ augment: 'MEMBERS' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
         });
+
         it('Should use an updated URL when provided the quantized augment', async() => {
             await groupAdapter.get({ augment: 'QUANTIZED' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/${GROUP_KEY}`);
         });
+
         testedMethods.push('get');
     });
+
     describe('groupAdapter.destroy', () => {
         const GROUP_KEY = SESSION.groupKey;
+
         it('Should do a DELETE', async() => {
             await groupAdapter.destroy(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.destroy(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/groupKey URL', async() => {
             await groupAdapter.destroy(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.destroy(GROUP_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+
         testedMethods.push('destroy');
     });
+
     describe('groupAdapter.gather', () => {
         it('Should do a GET', async() => {
             await groupAdapter.gather();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.gather();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group URL', async() => {
             await groupAdapter.gather();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.gather(GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group`);
         });
+
         it('Should support sending an \'expired\' flag', async() => {
             await groupAdapter.gather({ includeExpired: true });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?includeExpired=true`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?includeExpired=true`);
         });
+
         testedMethods.push('gather');
     });
+
     describe('groupAdapter.update', () => {
         const GROUP_KEY = SESSION.groupKey;
         const UPDATE = {
@@ -165,35 +175,42 @@ describe('Group APIs', () => {
             capacity: 500,
             allowChannel: true,
         };
+
         it('Should do a PATCH', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PATCH');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/groupKey URL', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
+
         it('Should send the update in the request body', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.deep.equal(UPDATE);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toEqual(UPDATE);
         });
+
         testedMethods.push('update');
     });
+
     describe('groupAdapter.create', () => {
         const GROUP = {
             name: 'groupname',
@@ -214,35 +231,42 @@ describe('Group APIs', () => {
             capacity: 500,
             allowChannel: true,
         };
+
         it('Should do a POST', async() => {
             await groupAdapter.create(GROUP);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.create(GROUP);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group URL', async() => {
             await groupAdapter.create(GROUP);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.create(GROUP, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group`);
         });
+
         it('Should pass the group as part of the request body', async() => {
             await groupAdapter.create(GROUP);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.be.deep.equal(GROUP);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toEqual(GROUP);
         });
+
         testedMethods.push('create');
     });
+
     describe('groupAdapter.query', () => {
         const OPTIONS = {
             filter: [
@@ -254,375 +278,522 @@ describe('Group APIs', () => {
             first: 0,
             max: 100,
         };
+
         it('Should do a GET', async() => {
             await groupAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group URL', async() => {
             await groupAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/search`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.query(OPTIONS, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/search`);
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/search`);
         });
+
         it('Should modify URL to contain \'quantized\' when the option is provided', async() => {
             await groupAdapter.query({ ...OPTIONS, quantized: true });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/search`);
         });
+
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
             await groupAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('filter').should.equal(OPTIONS.filter.join(';'));
-            searchParams.get('sort').should.equal(OPTIONS.sort.join(';'));
-            searchParams.get('first').should.equal(OPTIONS.first.toString());
-            searchParams.get('max').should.equal(OPTIONS.max.toString());
+            expect(searchParams.get('filter')).toBe(OPTIONS.filter.join(';'));
+            expect(searchParams.get('sort')).toBe(OPTIONS.sort.join(';'));
+            expect(searchParams.get('first')).toBe(OPTIONS.first.toString());
+            expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
         });
-        testedMethods.push('query');
 
+        testedMethods.push('query');
     });
+
     describe('groupAdapter.search', () => {
-        // TODO -- remove this as groupAdapter.search is DEPRECATED
+        it('Should be deprecated', () => {
+            expect(DEPRECATED_METHODS).toContain('search');
+        });
         testedMethods.push('search');
     });
+
     describe('groupAdapter.withGroupName', () => {
         const GROUP_NAME = 'groupname';
+
         it('Should do a GET', async() => {
             await groupAdapter.withGroupName(GROUP_NAME);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.withGroupName(GROUP_NAME);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/with/groupName URL', async() => {
             await groupAdapter.withGroupName(GROUP_NAME);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/with/${GROUP_NAME}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/with/${GROUP_NAME}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.withGroupName(GROUP_NAME, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/with/${GROUP_NAME}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/with/${GROUP_NAME}`);
         });
+
         testedMethods.push('withGroupName');
     });
+
     describe('groupAdapter.forUser', () => {
         const USER_KEY = 'userkey';
+
         it('Should do a GET', async() => {
             await groupAdapter.forUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.forUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/member/for/userKey URL', async() => {
             await groupAdapter.forUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/for/${USER_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/for/${USER_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.forUser(USER_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/for/${USER_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/for/${USER_KEY}`);
         });
+
         it('Should pass non-generic options to URL search parameters', async() => {
             await groupAdapter.forUser(USER_KEY, {
                 includeExpired: false,
                 includeAllMembers: true,
                 role: ROLE.PARTICIPANT,
             });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('includeExpired').should.equal('false');
-            searchParams.get('includeAllMembers').should.equal('true');
-            searchParams.get('role').should.equal(ROLE.PARTICIPANT);
+            expect(searchParams.get('includeExpired')).toBe('false');
+            expect(searchParams.get('includeAllMembers')).toBe('true');
+            expect(searchParams.get('role')).toBe(ROLE.PARTICIPANT);
         });
+
         it('Should handle the use of multiple roles in the URL search parameters', async() => {
             await groupAdapter.forUser(USER_KEY, {
                 role: [ROLE.PARTICIPANT, ROLE.FACILITATOR],
             });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.getAll('role').should.deep.equal([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
+            expect(searchParams.getAll('role')).toEqual([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
+
         testedMethods.push('forUser');
     });
+
     describe('groupAdapter.getSessionGroups', () => {
         it('Should do a GET', async() => {
             await groupAdapter.getSessionGroups();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.getSessionGroups();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/member URL', async() => {
             await groupAdapter.getSessionGroups();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.getSessionGroups(GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member`);
         });
+
         it('Should pass non-generic options to URL search parameters', async() => {
             await groupAdapter.getSessionGroups({
                 includeExpired: false,
                 role: ROLE.PARTICIPANT,
             });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('includeExpired').should.equal('false');
-            searchParams.get('role').should.equal(ROLE.PARTICIPANT);
+            expect(searchParams.get('includeExpired')).toBe('false');
+            expect(searchParams.get('role')).toBe(ROLE.PARTICIPANT);
         });
+
         it('Should handle the use of multiple roles in the URL search parameters', async() => {
             await groupAdapter.getSessionGroups({
                 role: [ROLE.PARTICIPANT, ROLE.FACILITATOR],
             });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.getAll('role').should.deep.equal([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
+            expect(searchParams.getAll('role')).toEqual([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
+
         testedMethods.push('getSessionGroups');
     });
+
     describe('groupAdapter.whitelistUsers', () => {
         const GROUP_KEY = 'mygroupkey';
         const allow = true;
         const emails = ['user1@test.com', 'user2@test.com'];
+
         it('Should do a POST', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/self URL', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
         });
+
         it('Should by default set allow for all users', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.allow.should.equal(true);
-            body.emails.should.deep.equal(['*']);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.allow).toBe(true);
+            expect(body.emails).toEqual(['*']);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
         });
+
         testedMethods.push('whitelistUsers');
     });
+
     describe('groupAdapter.getWhitelistedUsers', () => {
         const GROUP_KEY = 'mygroupkey';
+
         it('Should do a GET', async() => {
             await groupAdapter.getWhitelistedUsers(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.getWhitelistedUsers(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/self URL', async() => {
             await groupAdapter.getWhitelistedUsers(GROUP_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.getWhitelistedUsers(GROUP_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
         });
+
         testedMethods.push('getWhitelistedUsers');
     });
+
     describe('groupAdapter.sendRegistrationEmail', () => {
         const GROUP_KEY = 'mygroupkey';
         const email = 'user1@test.com';
+
         it('Should do a POST', async() => {
             await groupAdapter.sendRegistrationEmail(GROUP_KEY, email);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should use the /registration/self URL', async() => {
             await groupAdapter.sendRegistrationEmail(GROUP_KEY, email);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${GROUP_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.sendRegistrationEmail(GROUP_KEY, email, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${GROUP_KEY}`);
         });
+
         testedMethods.push('sendRegistrationEmail');
     });
+
     describe('groupAdapter.selfRegister', () => {
         const REGISTRATION_TOKEN = 'myregistrationtoken';
         const password = 'pass';
+
         it('Should do a PATCH', async() => {
             await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PATCH');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the /registration/self URL', async() => {
             await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${REGISTRATION_TOKEN}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${REGISTRATION_TOKEN}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.selfRegister(REGISTRATION_TOKEN, password, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${REGISTRATION_TOKEN}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${REGISTRATION_TOKEN}`);
         });
+
         testedMethods.push('selfRegister');
     });
+
     describe('groupAdapter.addUser', () => {
         const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
+
         it('Should do a POST', async() => {
             await groupAdapter.addUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.addUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/member/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.addUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
         });
+
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.addUser(USER_KEY, { groupKey: 'mygroupkey' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.addUser(USER_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}`);
         });
+
         it('Should pass the userKey to the request body as an array', async() => {
             await groupAdapter.addUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            Array.isArray(body).should.be.true;
-            body.map((u) => u.userKey).should.deep.equal([USER_KEY]);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(Array.isArray(body)).toBe(true);
+            expect(body.map((u) => u.userKey)).toEqual([USER_KEY]);
         });
+
         it('Should by default set user as an available participant', async() => {
             await groupAdapter.addUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.every((u) => u.available).should.be.true;
-            body.every((u) => u.role === ROLE.PARTICIPANT).should.be.true;
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.every((u) => u.available)).toBe(true);
+            expect(body.every((u) => u.role === ROLE.PARTICIPANT)).toBe(true);
         });
+
         it('Should support adding multiple users', async() => {
             const USER_KEYS = [USER_KEY, 'anotheruserkey'];
             await groupAdapter.addUser(USER_KEYS);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            Array.isArray(body).should.be.true;
-            body.map((u) => u.userKey).should.deep.equal(USER_KEYS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(Array.isArray(body)).toBe(true);
+            expect(body.map((u) => u.userKey)).toEqual(USER_KEYS);
         });
+
         testedMethods.push('addUser');
     });
+
     describe('groupAdapter.updateUser', () => {
-        // TODO -- add tests!!!
+        const USER_KEY = 'myuserkey';
+        const GROUP_KEY = SESSION.groupKey;
+        const update = { role: ROLE.PARTICIPANT, available: true };
+
+        it('Should do a PATCH', async() => {
+            await groupAdapter.updateUser(USER_KEY, update);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
+        });
+
+        it('Should have authorization', async() => {
+            await groupAdapter.updateUser(USER_KEY, update);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the group/member/groupKey/userKey URL', async() => {
+            await groupAdapter.updateUser(USER_KEY, update);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
+        });
+
+        it('Should support generic URL options', async() => {
+            await groupAdapter.updateUser(USER_KEY, update, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
+        });
+
+        it('Should pass update data in request body', async() => {
+            await groupAdapter.updateUser(USER_KEY, update);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('objectType', 'group');
+            expect(body).toHaveProperty('role', ROLE.PARTICIPANT);
+            expect(body).toHaveProperty('available', true);
+        });
+
         testedMethods.push('updateUser');
     });
+
     describe('groupAdapter.statusUpdate', () => {
-        // TODO -- add tests!!!
+        const GROUP_KEY = SESSION.groupKey;
+        const code = 'ACTIVE';
+        const message = 'Group is now active';
+
+        it('Should do a PATCH', async() => {
+            await groupAdapter.statusUpdate(code, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
+        });
+
+        it('Should have authorization', async() => {
+            await groupAdapter.statusUpdate(code, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the group/status/groupKey URL', async() => {
+            await groupAdapter.statusUpdate(code, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/status/${GROUP_KEY}`);
+        });
+
+        it('Should support generic URL options', async() => {
+            await groupAdapter.statusUpdate(code, message, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/status/${GROUP_KEY}`);
+        });
+
+        it('Should pass code and message in request body', async() => {
+            await groupAdapter.statusUpdate(code, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('code', 'ACTIVE');
+            expect(body).toHaveProperty('message', 'Group is now active');
+        });
+
         testedMethods.push('statusUpdate');
     });
+
     describe('groupAdapter.removeUser', () => {
         const GROUP_KEY = SESSION.groupKey;
         const USER_KEY = 'myuserkey';
+
         it('Should do a DELETE', async() => {
             await groupAdapter.removeUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
+
         it('Should have authorization', async() => {
             await groupAdapter.removeUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the group/member/groupKey/userKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.removeUser(USER_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
+
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.removeUser(USER_KEY, { groupKey: 'mygroupkey' });
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey/${USER_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey/${USER_KEY}`);
         });
+
         it('Should support generic URL options', async() => {
             await groupAdapter.removeUser(USER_KEY, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
+
         it('Should support multiple userKeys', async() => {
             await groupAdapter.removeUser([USER_KEY, 'anotheruserkey']);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
         });
+
         testedMethods.push('removeUser');
     });
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(groupAdapter).filter((key) => typeof groupAdapter[key] === 'function');
-        chai.expect(actualMethods).to.have.members(testedMethods);
+        const actualMethods = Object.keys(groupAdapter).filter((key) => typeof groupAdapter[key] === 'function').sort();
+        expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

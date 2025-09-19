@@ -1,34 +1,25 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
-chai.use(require('sinon-chai'));
+import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, somebodyAdapter, getAuthHeader } from './common';
 
-describe('Somebody APIs', () => {
-    const { config, authAdapter, somebodyAdapter } = epicenter;
-    let fakeServer;
-    const testedMethods = [];
+describe('somebodyAdapter', () => {
+    let capturedRequests = [];
+    let mockSetup;
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        authAdapter.setLocalSession(SESSION);
-
-        fakeServer.respondWith('GET', /(.*)\/somebody/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondWith('POST', /(.*)\/somebody/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
+    beforeEach(() => {
+        capturedRequests.length = 0;
+        authAdapter.setLocalSession(SESSION);
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
         authAdapter.setLocalSession(undefined);
     });
 
@@ -41,33 +32,39 @@ describe('Somebody APIs', () => {
 
         it('Should do a POST', async() => {
             await somebodyAdapter.create(email, optionals);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should have authorization', async() => {
             await somebodyAdapter.create(email, optionals);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the somebody URL', async() => {
             await somebodyAdapter.create(email, optionals);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody`);
         });
+
         it('Should support generic URL options', async() => {
             await somebodyAdapter.create(email, { optionals, ...GENERIC_OPTIONS });
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody`);
         });
+
         it('Should pass the arguments as part of the request body', async() => {
             await somebodyAdapter.create(email, optionals);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.be.deep.equal({email, ...optionals});
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toEqual({email, ...optionals});
         });
+
         testedMethods.push('create');
     });
+
     describe('somebodyAdapter.query', () => {
         const OPTIONS = {
             filter: [
@@ -78,47 +75,52 @@ describe('Somebody APIs', () => {
             max: 10,                    
             count: false,               
         };
+
         it('Should do a GET', async() => {
             await somebodyAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
+
         it('Should have authorization', async() => {
             await somebodyAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
+
         it('Should use the somebody URL', async() => {
             await somebodyAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/search`);
         });
+
         it('Should support generic URL options', async() => {
             await somebodyAdapter.query(OPTIONS, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/search`);
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/search`);
         });
+
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
             await somebodyAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            searchParams.get('filter').should.equal(OPTIONS.filter.join(';'));
-            searchParams.get('sort').should.equal(OPTIONS.sort.join(';'));
-            searchParams.get('first').should.equal(OPTIONS.first.toString());
-            searchParams.get('max').should.equal(OPTIONS.max.toString());
-            searchParams.get('count').should.equal(OPTIONS.count.toString());
+            expect(searchParams.get('filter')).toBe(OPTIONS.filter.join(';'));
+            expect(searchParams.get('sort')).toBe(OPTIONS.sort.join(';'));
+            expect(searchParams.get('first')).toBe(OPTIONS.first.toString());
+            expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
+            expect(searchParams.get('count')).toBe(OPTIONS.count.toString());
         });
-        testedMethods.push('query');
 
+        testedMethods.push('query');
     });
-    
+
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
         const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function');
-        chai.expect(actualMethods).to.have.members(testedMethods);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

@@ -1,46 +1,101 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION } from './constants';
-chai.use(require('sinon-chai'));
+import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
+import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, projectAdapter } from './common';
 
-describe('Project APIs', () => {
-    const { config, projectAdapter, authAdapter } = epicenter;
-    let fakeServer;
-    const testedMethods = [];
+describe('projectAdapter', () => {
+    let capturedRequests = [];
+    let mockSetup;
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        authAdapter.setLocalSession(SESSION);
-
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
+    beforeEach(() => {
+        capturedRequests.length = 0;
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
         authAdapter.setLocalSession(undefined);
     });
 
     describe('projectAdapter.channelsEnabled', () => {
-        // TODO -- flesh this out when you get the chance
+        it('Should do a GET', async() => {
+            await projectAdapter.channelsEnabled();
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should use the project/channel/isEnabled URL', async() => {
+            await projectAdapter.channelsEnabled();
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/project/channel/isEnabled`);
+        });
+
+        it('Should support generic URL options', async() => {
+            await projectAdapter.channelsEnabled(GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/project/channel/isEnabled`);
+        });
+
         testedMethods.push('channelsEnabled');
     });
 
     describe('projectAdapter.get', () => {
-        // TODO -- flesh this out when you get the chance
+        it('Should do a GET', async() => {
+            await projectAdapter.get();
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should use the project URL', async() => {
+            await projectAdapter.get();
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/project`);
+        });
+
+        it('Should support generic URL options', async() => {
+            await projectAdapter.get(GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/project`);
+        });
+
         testedMethods.push('get');
     });
 
     describe('projectAdapter.list', () => {
-        // TODO -- flesh this out when you get the chance
+        it('Should do a GET', async() => {
+            await projectAdapter.list(ACCOUNT);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should use the project/in URL with account context', async() => {
+            await projectAdapter.list(ACCOUNT);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/manager/project/in`);
+        });
+
+        it('Should support generic URL options', async() => {
+            const { accountShortName, server } = GENERIC_OPTIONS;
+            // For list method, only pass server and accountShortName, not projectShortName since it's hardcoded to 'manager'
+            const options = { server };
+            await projectAdapter.list(accountShortName, options);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/manager/project/in`);
+        });
+
         testedMethods.push('list');
     });
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
         const actualMethods = Object.keys(projectAdapter).filter((key) => typeof projectAdapter[key] === 'function');
-        chai.expect(actualMethods).to.have.members(testedMethods);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

@@ -48,7 +48,7 @@ class Identification {
 
     constructor(storeType: keyof typeof BROWSER_STORAGE_TYPE) {
         if (storeType !== COOKIE && storeType !== SESSION) {
-            throw new EpicenterError(`Invalid Storage Type: "${storeType}", please use "${COOKIE}" or "${SESSION}".`);
+            throw new EpicenterError(`Invalid Storage Type: "${String(storeType)}", please use "${String(COOKIE)}" or "${String(SESSION)}".`);
         }
         this.type = storeType;
         this.consumeSSO();
