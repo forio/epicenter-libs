@@ -1,14 +1,14 @@
 import type { RoutingOptions } from '../utils/router';
 import type { User } from './user';
 
-import { Router, identification } from '../utils';
+import { Router, identification, GROUP_ROLE } from '../utils';
 import cometdAdapter from './cometd';
 
 
 export interface Presence {
     lastUpdated: number,
     ttlSeconds: number,
-    groupRole: 'FACILITATOR' | 'REVIEWER' | 'LEADER' | 'PARTICIPANT',
+    groupRole: keyof typeof GROUP_ROLE,
     user: User,
 }
 
