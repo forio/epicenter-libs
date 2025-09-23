@@ -9,6 +9,7 @@ docs/
 # Parcel
 .parcel-cache/
 examples/**/dist/
+examples/**/.cache/
 
 # Rollup
 stats.html
