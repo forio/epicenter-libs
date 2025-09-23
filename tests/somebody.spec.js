@@ -1,6 +1,13 @@
 import sinon from 'sinon';
 import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, GENERIC_OPTIONS } from './constants';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    OK_CODE,
+    CREATED_CODE,
+    GENERIC_OPTIONS,
+} from './constants';
 chai.use(require('sinon-chai'));
 
 describe('Somebody APIs', () => {
@@ -16,12 +23,24 @@ describe('Somebody APIs', () => {
         authAdapter.setLocalSession(SESSION);
 
         fakeServer.respondWith('GET', /(.*)\/somebody/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(OK_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+            const RESPONSE = {
+                /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */
+            };
+            xhr.respond(
+                OK_CODE,
+                { 'Content-Type': 'application/json' },
+                JSON.stringify(RESPONSE)
+            );
         });
         fakeServer.respondWith('POST', /(.*)\/somebody/, function(xhr, id) {
-            const RESPONSE = { /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */ };
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(RESPONSE));
+            const RESPONSE = {
+                /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */
+            };
+            xhr.respond(
+                CREATED_CODE,
+                { 'Content-Type': 'application/json' },
+                JSON.stringify(RESPONSE)
+            );
         });
 
         fakeServer.respondImmediately = true;
@@ -38,87 +57,173 @@ describe('Somebody APIs', () => {
             givenName: 'Test',
             familyName: 'Person4',
         };
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
 
         it('Should do a POST', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('POST');
         });
         it('Should have authorization', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            req.requestHeaders.should.have.property(
+                'authorization',
+                `Bearer ${SESSION.token}`
+            );
         });
         it('Should use the somebody URL', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody`);
+            req.url.should.equal(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody`
+            );
         });
         it('Should support generic URL options', async() => {
-            await somebodyAdapter.create(email, { optionals, ...GENERIC_OPTIONS });
+            await somebodyAdapter.create(email, scope, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            req.url.should.equal(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody`
+            );
         });
         it('Should pass the arguments as part of the request body', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = fakeServer.requests.pop();
             const body = JSON.parse(req.requestBody);
-            body.should.be.deep.equal({email, ...optionals});
+            body.should.be.deep.equal({ email, scope, ...optionals });
         });
         testedMethods.push('create');
     });
-    describe('somebodyAdapter.query', () => {
-        const OPTIONS = {
-            filter: [
-                'email|=test4@test.com|test2@test.com',
-            ],
-            sort: ['-somebody.email'],    
-            first: 3,                   
-            max: 10,                    
-            count: false,               
-        };
+    describe('somebodyAdapter.get', () => {
+        const somebodyKey = 'user-12345';
+
         it('Should do a GET', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = fakeServer.requests.pop();
             req.method.toUpperCase().should.equal('GET');
         });
         it('Should have authorization', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            req.requestHeaders.should.have.property(
+                'authorization',
+                `Bearer ${SESSION.token}`
+            );
         });
         it('Should use the somebody URL', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = fakeServer.requests.pop();
-            const url = req.url.split('?')[0];
-            url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/search`);
+            req.url.should.equal(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/${somebodyKey}`
+            );
         });
         it('Should support generic URL options', async() => {
-            await somebodyAdapter.query(OPTIONS, GENERIC_OPTIONS);
+            await somebodyAdapter.get(somebodyKey, GENERIC_OPTIONS);
             const req = fakeServer.requests.pop();
-            const url = req.url.split('?')[0];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/search`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            req.url.should.equal(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/${somebodyKey}`
+            );
         });
-        it('Should pass in query options as a part of the search parameters (query string)', async() => {
-            await somebodyAdapter.query(OPTIONS);
-            const req = fakeServer.requests.pop();
-            const search = req.url.split('?')[1];
-            const searchParams = new URLSearchParams(search);
-            searchParams.get('filter').should.equal(OPTIONS.filter.join(';'));
-            searchParams.get('sort').should.equal(OPTIONS.sort.join(';'));
-            searchParams.get('first').should.equal(OPTIONS.first.toString());
-            searchParams.get('max').should.equal(OPTIONS.max.toString());
-            searchParams.get('count').should.equal(OPTIONS.count.toString());
-        });
-        testedMethods.push('query');
-
+        testedMethods.push('get');
     });
-    
+
+    describe('somebodyAdapter.byEmail', () => {
+        const email = 'test4@test.com';
+        const optionals = {
+            givenName: 'Test',
+            familyName: 'Person4',
+        };
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
+
+        it('Should do a GET', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property(
+                'authorization',
+                `Bearer ${SESSION.token}`
+            );
+        });
+        it('Should use the somebody URL', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`
+            );
+        });
+        it('Should support generic URL options', async() => {
+            await somebodyAdapter.byEmail(email, scope, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            req.url.should.equal(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`
+            );
+        });
+        testedMethods.push('byEmail');
+    });
+
+    describe('somebodyAdapter.inScope', () => {
+        const optionals = {
+            first: 0,
+            max: 10,
+        };
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
+
+        it('Should do a GET', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.method.toUpperCase().should.equal('GET');
+        });
+        it('Should have authorization', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.requestHeaders.should.have.property(
+                'authorization',
+                `Bearer ${SESSION.token}`
+            );
+        });
+        it('Should use the somebody URL', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = fakeServer.requests.pop();
+            req.url.should.equal(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/in/${scope.scopeBoundary}/${scope.scopeKey}?first=${optionals.first}&max=${optionals.max}`
+            );
+        });
+        it('Should support generic URL options', async() => {
+            await somebodyAdapter.inScope(scope, GENERIC_OPTIONS);
+            const req = fakeServer.requests.pop();
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            req.url.should.equal(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/in/${scope.scopeBoundary}/${scope.scopeKey}`
+            );
+        });
+        testedMethods.push('inScope');
+    });
+
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function');
+        const actualMethods = Object.keys(somebodyAdapter).filter(
+            (key) => typeof somebodyAdapter[key] === 'function'
+        );
         chai.expect(actualMethods).to.have.members(testedMethods);
     });
 });
