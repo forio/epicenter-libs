@@ -1,3 +1,18 @@
+## [3.31.1](https://github.com/forio/epicenter-libs/compare/v3.31.0...v3.31.1) (2025-10-02)
+
+
+### Bug Fixes
+
+* add parens/argument to catch block ([ce28d27](https://github.com/forio/epicenter-libs/commit/ce28d27bba12e310e1a37993668e1482a2c511b6))
+* prefix unused var with underscore ([1dc8a0b](https://github.com/forio/epicenter-libs/commit/1dc8a0b79daa5492c3647c7ae47e754adc49a128))
+
+
+### Features
+
+* added somebody endpoints ([4ae35e6](https://github.com/forio/epicenter-libs/commit/4ae35e63221b4ef902bde173c0fafb509d0beb53))
+
+
+
 # [3.31.0](https://github.com/forio/epicenter-libs/compare/v3.30.0...v3.31.0) (2025-09-18)
 
 
