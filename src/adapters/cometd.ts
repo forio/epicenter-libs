@@ -308,7 +308,7 @@ class CometdAdapter {
             if (typeof data === 'string') {
                 try {
                     data = JSON.parse(data);
-                } catch (error: unknown) {
+                } catch (_error: unknown) {
                     // If parsing fails, use raw string
                 }
             }
