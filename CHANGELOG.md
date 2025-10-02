@@ -1,4 +1,4 @@
-## [3.31.1](https://github.com/forio/epicenter-libs/compare/v3.31.0...v3.31.1) (2025-10-02)
+# [3.32.0](https://github.com/forio/epicenter-libs/compare/v3.31.0...v3.32.0) (2025-10-02)
 
 
 ### Bug Fixes
