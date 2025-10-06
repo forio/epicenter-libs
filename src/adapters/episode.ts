@@ -5,7 +5,7 @@ import type { RoutingOptions, Page } from '../utils/router';
 import { Router, identification } from '../utils';
 
 
-interface Episode {
+export interface Episode {
     name: string,
     episodeKey: string,
 }

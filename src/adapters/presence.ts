@@ -1,11 +1,11 @@
 import type { RoutingOptions } from '../utils/router';
 import type { User } from './user';
 
-import Router from '../utils/router';
+import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
 
 
-interface Presence {
+export interface Presence {
     lastUpdated: number,
     ttlSeconds: number,
     groupRole: 'FACILITATOR' | 'REVIEWER' | 'LEADER' | 'PARTICIPANT',
@@ -14,7 +14,10 @@ interface Presence {
 
 
 /**
- * Makes a connection request to the cometd server; effectively marking the user as online. This isn't required to be called in order to be considered online. Subscribe to a CometD channel will do the same as well. This is just a convenience method for when you don't need to utilize the channels expect specifically for presence.
+ * Makes a connection request to the cometd server; effectively marking the user as online.
+ * This isn't required to be called in order to be considered online. Subscribe to a CometD
+ * channel will do the same as well. This is just a convenience method for when you don't
+ * need to utilize the channels expect specifically for presence.
  * Using [logout](#authAdapter-logout) will automatically disconnect for you.
  * @example
  * epicenter.presenceAdapter.connect()
@@ -23,6 +26,27 @@ interface Presence {
 export async function connect(): Promise<void> {
     await cometdAdapter.handshake();
     return;
+}
+
+
+/**
+ * Disconnects from CometD and removes user presence.
+ * Using [logout](#authAdapter-logout) will automatically disconnect for you.
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise indicating whether or not the disconnection was successful
+ */
+export async function disconnect(optionals: RoutingOptions): Promise<void> {
+    const cleanup = [cometdAdapter.disconnect()];
+    const groupKey = identification?.session?.groupKey;
+    if (groupKey) {
+        cleanup.push(
+            new Router().delete(
+                `/presence/group/${groupKey}`,
+                optionals
+            )
+        );
+    }
+    await Promise.allSettled(cleanup);
 }
 
 

@@ -1,7 +1,7 @@
 import type { RoutingOptions } from 'utils/router';
 import Router from 'utils/router';
 
-interface Secret {
+export interface Secret {
     password: string;
 }
 
@@ -27,7 +27,7 @@ export interface User {
     objectType: 'external' | 'native',
 }
 
-interface UploadOptions extends RoutingOptions {
+export interface UploadOptions extends RoutingOptions {
     groupKey?: string,
     overwrite?: boolean,
 }
@@ -41,7 +41,7 @@ export interface ExternalUserCreateView extends UserCreateView {
     objectType: 'external';
 }
 
-type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
+export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
 
 export async function uploadCSV(
     file: File,

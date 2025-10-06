@@ -10,17 +10,17 @@ enum AUGMENT {
     QUANTIZED = 'QUANTIZED',
 }
 
-interface Pricing {
+export interface Pricing {
     amount: number
 }
 
-interface FlightRecorder {
+export interface FlightRecorder {
     start: number,
     stop: number,
     enabled: boolean,
 }
 
-interface GroupUpdate {
+export interface GroupUpdate {
     runLimit?: number,
     organization?: string,
     allowSelfRegistration?: boolean,
@@ -34,7 +34,7 @@ interface GroupUpdate {
     allowChannel?: boolean,
 }
 
-interface GroupPermission {
+export interface GroupPermission {
     available: boolean,
     objectType: 'group',
     role: keyof typeof ROLE,
@@ -50,7 +50,7 @@ export interface Group extends GroupUpdate {
     members?: Member[],
 }
 
-interface SelfRegistrationResult {
+export interface SelfRegistrationResult {
     redirectUrl: string,
     whoAmI: Session,
 }

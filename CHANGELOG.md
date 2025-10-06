@@ -1,3 +1,38 @@
+# [3.32.0](https://github.com/forio/epicenter-libs/compare/v3.31.0...v3.32.0) (2025-10-02)
+
+
+### Bug Fixes
+
+* add parens/argument to catch block ([ce28d27](https://github.com/forio/epicenter-libs/commit/ce28d27bba12e310e1a37993668e1482a2c511b6))
+* prefix unused var with underscore ([1dc8a0b](https://github.com/forio/epicenter-libs/commit/1dc8a0b79daa5492c3647c7ae47e754adc49a128))
+
+
+### Features
+
+* added somebody endpoints ([4ae35e6](https://github.com/forio/epicenter-libs/commit/4ae35e63221b4ef902bde173c0fafb509d0beb53))
+
+
+
+# [3.31.0](https://github.com/forio/epicenter-libs/compare/v3.30.0...v3.31.0) (2025-09-18)
+
+
+### Bug Fixes
+
+* add babel logical assignment plugin; export types ([0ef029d](https://github.com/forio/epicenter-libs/commit/0ef029d0b9bec61f441fc383df611a7772db1fd3))
+* add comments ([3f54e37](https://github.com/forio/epicenter-libs/commit/3f54e37d6f2f75da3c9c6ee11ffc531d8d877120))
+* fix babel config ([1b556d6](https://github.com/forio/epicenter-libs/commit/1b556d6b6e1f4a9b5d871dae7096eaa8244cf801))
+* resolve cometd reconnection issues and improve error handling ([f4d6429](https://github.com/forio/epicenter-libs/commit/f4d642915d119a6c2f4bf016aaac750fc2139865))
+* resolve sass deprecation warnings ([70181b2](https://github.com/forio/epicenter-libs/commit/70181b2afa1f48b0478fad4fb2b544757e87e852))
+* update phylogeny enum ([1e73898](https://github.com/forio/epicenter-libs/commit/1e738988a0ed13fcf3909d2353c07515db21e7c7))
+
+
+### Features
+
+* add presenceAdapter.disconnect method ([32d998b](https://github.com/forio/epicenter-libs/commit/32d998b4debe3f93e2e4216fe3a0052f4e1902e0))
+* add vaultAdapter.updateProperties method ([c5e4b15](https://github.com/forio/epicenter-libs/commit/c5e4b152a88034d26e2750beb337d2dc6ef4f457))
+
+
+
 # [3.30.0](https://github.com/forio/epicenter-libs/compare/v3.29.0...v3.30.0) (2025-07-18)
 
 

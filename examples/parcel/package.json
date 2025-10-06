@@ -4,17 +4,24 @@
   "description": "JavaScript implementation of a project using epicenter APIs",
   "private": true,
   "scripts": {
-    "cleanup": "rm -rf .cache dist",
+    "cleanup": "rm -rf .parcel-cache dist",
     "start": "parcel ./src/html/index.html --port 3913"
   },
   "author": "Forio",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.14.6",
-    "parcel": "^1.12.4",
+    "@parcel/packager-raw-url": "^2.15.4",
+    "@parcel/packager-xml": "^2.15.4",
+    "@parcel/source-map": "^2.1.1",
+    "@parcel/transformer-sass": "^2.15.4",
+    "@parcel/transformer-webmanifest": "^2.15.4",
+    "@parcel/transformer-xml": "^2.15.4",
+    "parcel": "^2.15.4",
     "sass": "^1.35.2"
   },
   "dependencies": {
-    "epicenter-libs": "file:../.."
+    "epicenter-libs": "file:../..",
+    "regenerator-runtime": "^0.14.1"
   }
 }

@@ -224,31 +224,40 @@ interface VensimModelTool {
   cinFiles?: string[];
 }
 
-interface ProcAction {
+export enum MORPHOLOGY {
+    MANY = 'MANY',
+    PROXY = 'PROXY',
+    SINGULAR = 'SINGULAR',
+}
+
+export interface ProcAction {
     name: string,
     arguments?: unknown[],
     objectType: 'execute',
 }
-interface GetAction {
+
+export interface GetAction {
     name: string,
     objectType: 'get',
 }
-interface SetAction {
+
+export interface SetAction {
     name: string,
     value: unknown,
     objectType: 'set',
 }
-type Action =
+
+export type Action =
     | ProcAction
     | GetAction
     | SetAction;
 
-interface Run {
+export interface Run {
     runKey: string,
     variables?: Record<string, unknown>,
 }
 
-type RunCreateOptions = {
+export type RunCreateOptions = {
     readLock?: keyof typeof ROLE,
     writeLock?: keyof typeof ROLE,
     ephemeral?: boolean,
@@ -258,7 +267,7 @@ type RunCreateOptions = {
     allowChannel?: boolean,
 } & RoutingOptions;
 
-type RunStrategy =
+export type RunStrategy =
     | 'reuse-across-sessions'
     | 'reuse-never'
     | 'reuse-by-tracking-key'

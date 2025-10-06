@@ -2,12 +2,12 @@ import type { RoutingOptions } from 'utils/router';
 import Router from 'utils/router';
 
 
-interface AccountReadView {
+export interface AccountReadView {
     name: string;
     objectType: string;
 }
 
-interface AccountCreateView {
+export interface AccountCreateView {
     adminKey: string;
     name: string;
     shortName: string;
@@ -16,27 +16,27 @@ interface AccountCreateView {
     active?: boolean;
 }
 
-interface PersonalAccountCreateView extends AccountCreateView {
+export interface PersonalAccountCreateView extends AccountCreateView {
     objectType: 'personal';
 }
 
-interface TeamAccountCreateView extends AccountCreateView {
+export interface TeamAccountCreateView extends AccountCreateView {
     objectType: 'team';
     billingInterval: string;
     subscriptionPlan: string;
 }
 
-interface AccountUpdateView {
+export interface AccountUpdateView {
     name?: string;
     workerPartition?: string;
     active?: boolean;
 }
 
-interface PersonalAccountUpdateView extends AccountUpdateView {
+export interface PersonalAccountUpdateView extends AccountUpdateView {
     objectType: 'personal';
 }
 
-interface TeamAccountUpdateView extends AccountUpdateView {
+export interface TeamAccountUpdateView extends AccountUpdateView {
     objectType: 'team';
     billingInterval?: string;
 }

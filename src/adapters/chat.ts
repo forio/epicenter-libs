@@ -3,7 +3,7 @@ import type { RoutingOptions, Page } from '../utils/router';
 
 import Router from '../utils/router';
 
-interface ChatMessage {
+export interface ChatMessage {
     senderKey: string,
     receiverKey: string,
     created: string,
@@ -11,7 +11,7 @@ interface ChatMessage {
     message: string,
 }
 
-interface Chat {
+export interface Chat {
     permit: Permit,
     chatKey: string,
     messages: ChatMessage[],

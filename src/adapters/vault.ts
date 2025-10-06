@@ -22,19 +22,19 @@ export interface Vault<Items> {
     changed?: boolean
 }
 
-interface Items {
+export interface Items {
     set?: Record<string, unknown>,
     push?: Record<string, unknown>,
     pop?: Record<string, unknown>,
 }
 
 /**
- * Updates a vault,
+ * Updates a vault's items
  * @example
  * // Change the name of the first student object in the list of students in the vault to "Bob"
  * epicenter.vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', { set: { 'students.0.name': 'Bob' } })
  * @param vaultKey      Vault key
- * @param items         Object with a set/push/pop field to update the vault with
+ * @param items         Object with a set/push/pop field to update the vault items with
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the vault
  */
@@ -59,6 +59,44 @@ export async function update(
             ...routingOptions,
         }).then(({ body }) => body);
 }
+
+
+/**
+ * Updates a vault's properties
+ * @example
+ * import { vaultAdapter, ROLE } from 'epicenter-libs';
+ * vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', {
+ *      allowChannel: true,
+ *      permit: {
+ *          readLock: ROLE.FACILITATOR,
+ *          writeLock: ROLE.FACILITATOR,
+ *      },
+ *      ttlSeconds: 3600,
+ * });
+ * @param vaultKey      Vault key
+ * @param update        Object with properties to update
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the vault
+ */
+export async function updateProperties(
+    vaultKey: string,
+    update: {
+        mutationKey?: string,
+        allowChannel?: boolean,
+        permit?: Permit,
+        ttlSeconds?: number,
+    },
+    optionals: RoutingOptions = {},
+): Promise<Vault<unknown>> {
+    return await new Router()
+        .patch(`/vault/${vaultKey}`, {
+            body: {
+                ...update,
+            },
+            ...optionals,
+        }).then(({ body }) => body);
+}
+
 
 const NOT_FOUND = 404;
 export async function get(
@@ -166,7 +204,7 @@ export async function define(
         items?: Items,
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        ttlSeconds?: string,
+        ttlSeconds?: number,
         mutationStrategy?: string,
         allowChannel?: boolean,
     } & RoutingOptions = {}
@@ -216,7 +254,7 @@ export async function create(
     optionals: {
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
-        ttlSeconds?: string,
+        ttlSeconds?: number,
         mutationStrategy?: string,
     } & RoutingOptions = {}
 ): Promise<Vault<unknown>> {

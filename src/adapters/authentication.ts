@@ -5,12 +5,12 @@ import { Router, identification } from '../utils';
 import cometdAdapter from './cometd';
 
 
-interface UserCredentials {
+export interface UserCredentials {
     handle: string,
     password: string,
     groupKey?: string,
 }
-interface AppCredentials {
+export interface AppCredentials {
     secretKey: string,
 }
 
@@ -151,7 +151,7 @@ export async function sso(
     optionals: RoutingOptions = {},
 ): Promise<Session> {
     const session = await new Router()
-        .get('/registration/sso', optionals)
+        .get('/registration/sso/user', optionals)
         .then(({ body }) => body);
 
     identification.session = session;
@@ -165,7 +165,7 @@ export async function getSAMLLink(
     optionals: RoutingOptions = {},
 ): Promise<string> {
     return await new Router()
-        .get('/registration/sso/saml', optionals)
+        .get('/registration/sso/user/saml', optionals)
         .then(({ body }) => body);
 }
 
@@ -175,7 +175,7 @@ export async function getSAMLLink(
 export function generateSAMLLINK(
     optionals: RoutingOptions = {},
 ): string {
-    return new Router().getURL('/registration/sso/saml', optionals).toString();
+    return new Router().getURL('/registration/sso/user/saml', optionals).toString();
 }
 
 /**
