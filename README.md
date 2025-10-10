@@ -129,7 +129,7 @@ Tests are written to preserve behavior across releases. These are unit tests and
 ```
 npm install             # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
-npm run single-test     # Runs the tests once
+npm run test:run        # Runs the tests once
 npm run test            # Runs the tests w/ a watch
 ```
 Logs during testing are sent to `browser.log` file
