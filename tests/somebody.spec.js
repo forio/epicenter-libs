@@ -1,5 +1,16 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, somebodyAdapter, getAuthHeader } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    testedMethods,
+    config,
+    authAdapter,
+    somebodyAdapter,
+    getAuthHeader,
+} from './common';
 
 describe('somebodyAdapter', () => {
     let capturedRequests = [];
@@ -25,102 +36,181 @@ describe('somebodyAdapter', () => {
 
     describe('somebodyAdapter.create', () => {
         const email = 'test4@test.com';
+
         const optionals = {
             givenName: 'Test',
             familyName: 'Person4',
         };
 
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
+
         it('Should do a POST', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
         it('Should have authorization', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the somebody URL', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/somebody`);
         });
 
         it('Should support generic URL options', async() => {
-            await somebodyAdapter.create(email, { optionals, ...GENERIC_OPTIONS });
+            await somebodyAdapter.create(email, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody`);
         });
 
         it('Should pass the arguments as part of the request body', async() => {
-            await somebodyAdapter.create(email, optionals);
+            await somebodyAdapter.create(email, scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
-            expect(body).toEqual({email, ...optionals});
+            expect(body).toEqual({ email, scope, ...optionals });
         });
 
         testedMethods.push('create');
     });
 
-    describe('somebodyAdapter.query', () => {
-        const OPTIONS = {
-            filter: [
-                'email|=test4@test.com|test2@test.com',
-            ],
-            sort: ['-somebody.email'],    
-            first: 3,                   
-            max: 10,                    
-            count: false,               
-        };
+    describe('somebodyAdapter.get', () => {
+        const somebodyKey = 'user-12345';
 
         it('Should do a GET', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the somebody URL', async() => {
-            await somebodyAdapter.query(OPTIONS);
+            await somebodyAdapter.get(somebodyKey);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/somebody/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/somebody/${somebodyKey}`);
         });
 
         it('Should support generic URL options', async() => {
-            await somebodyAdapter.query(OPTIONS, GENERIC_OPTIONS);
+            await somebodyAdapter.get(somebodyKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/search`);
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/${somebodyKey}`);
         });
 
-        it('Should pass in query options as a part of the search parameters (query string)', async() => {
-            await somebodyAdapter.query(OPTIONS);
+        testedMethods.push('get');
+    });
+
+    describe('somebodyAdapter.inScope', () => {
+        const optionals = {
+            first: 0,
+            max: 10,
+        };
+
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
+
+        it('Should do a GET', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should have authorization', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the somebody URL', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/somebody/in/${scope.scopeBoundary}/${scope.scopeKey}`);
+        });
+
+        it('Should pass search options in the URL search parameters', async() => {
+            await somebodyAdapter.inScope(scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
             const searchParams = new URLSearchParams(search);
-            expect(searchParams.get('filter')).toBe(OPTIONS.filter.join(';'));
-            expect(searchParams.get('sort')).toBe(OPTIONS.sort.join(';'));
-            expect(searchParams.get('first')).toBe(OPTIONS.first.toString());
-            expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
-            expect(searchParams.get('count')).toBe(OPTIONS.count.toString());
+            expect(searchParams.get('first')).toBe(optionals.first.toString());
+            expect(searchParams.get('max')).toBe(optionals.max.toString());
         });
 
-        testedMethods.push('query');
+        it('Should support generic URL options', async() => {
+            await somebodyAdapter.inScope(scope, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/in/${scope.scopeBoundary}/${scope.scopeKey}`);
+        });
+
+        testedMethods.push('inScope');
+    });
+
+    describe('somebodyAdapter.byEmail', () => {
+        const email = 'test4@test.com';
+
+        const optionals = {
+            givenName: 'Test',
+            familyName: 'Person4',
+        };
+
+        const scope = {
+            scopeBoundary: 'group',
+            scopeKey: 'test-group',
+        };
+
+        it('Should do a GET', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should have authorization', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the somebody URL', async() => {
+            await somebodyAdapter.byEmail(email, scope, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`);
+        });
+
+        it('Should support generic URL options', async() => {
+            await somebodyAdapter.byEmail(email, scope, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`);
+        });
+
+        testedMethods.push('byEmail');
     });
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function');
-        expect(actualMethods).toEqual(testedMethods);
+        const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function').sort();
+        expect(actualMethods).toEqual(testedMethods.sort());
     });
 });
