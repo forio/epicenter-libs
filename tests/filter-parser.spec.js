@@ -1,33 +1,31 @@
-import chai from 'chai';
-
-const { expect } = chai;
+import { describe, it, expect, beforeAll } from 'vitest';
 
 describe('Filter Parser', () => {
     describe('parseFilterInput', () => {
         let parseFilterInput;
 
-        before(() => {
+        beforeAll(() => {
             parseFilterInput = epicenter.utils.parseFilterInput;
         });
 
         it('should return undefined for falsy inputs', () => {
-            expect(parseFilterInput(undefined)).to.be.undefined;
-            expect(parseFilterInput(null)).to.be.undefined;
-            expect(parseFilterInput('')).to.be.undefined;
+            expect(parseFilterInput(undefined)).toBeUndefined();
+            expect(parseFilterInput(null)).toBeUndefined();
+            expect(parseFilterInput('')).toBeUndefined();
         });
 
         it('should handle empty string arrays', () => {
-            expect(parseFilterInput([])).to.be.undefined;
+            expect(parseFilterInput([])).toBeUndefined();
         });
 
         describe('string array input (backwards compatibility)', () => {
             it('should join single filter with semicolon', () => {
-                expect(parseFilterInput(['run.hidden=false'])).to.equal('run.hidden=false');
+                expect(parseFilterInput(['run.hidden=false'])).toBe('run.hidden=false');
             });
 
             it('should join multiple filters with semicolon', () => {
                 expect(parseFilterInput(['var.score>=24', 'run.hidden=false', 'var.certified*=true']))
-                    .to.equal('var.score>=24;run.hidden=false;var.certified*=true');
+                    .toBe('var.score>=24;run.hidden=false;var.certified*=true');
             });
 
             it('should handle complex filter expressions', () => {
@@ -37,23 +35,23 @@ describe('Filter Parser', () => {
                     'var.certified*=true',
                     'run.hidden=false',
                     'meta.classification~=bar-*',
-                ])).to.equal('var.foo|=1|2|3;var.score>=24;var.certified*=true;run.hidden=false;meta.classification~=bar-*');
+                ])).toBe('var.foo|=1|2|3;var.score>=24;var.certified*=true;run.hidden=false;meta.classification~=bar-*');
             });
         });
 
         describe('string input (raw boolean filter)', () => {
             it('should pass through simple filter strings', () => {
-                expect(parseFilterInput('var.score>=24;meta.classification~=bar-*')).to.equal('var.score>=24;meta.classification~=bar-*');
+                expect(parseFilterInput('var.score>=24;meta.classification~=bar-*')).toBe('var.score>=24;meta.classification~=bar-*');
             });
 
             it('should pass through complex boolean filter strings', () => {
                 const complexFilter = '(var.score>=24;run.hidden=false;[var.foo|=1|2|3])';
-                expect(parseFilterInput(complexFilter)).to.equal(complexFilter);
+                expect(parseFilterInput(complexFilter)).toBe(complexFilter);
             });
 
             it('should pass through taxonomy filters', () => {
                 const taxonomyFilter = '{meta.classification~=bar-*;[meta.categorization~=*-baz]}';
-                expect(parseFilterInput(taxonomyFilter)).to.equal(taxonomyFilter);
+                expect(parseFilterInput(taxonomyFilter)).toBe(taxonomyFilter);
             });
         });
 
@@ -64,7 +62,7 @@ describe('Filter Parser', () => {
                         type: 'and',
                         filters: ['var.score>=24', 'var.certified*=true'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('(var.score>=24;var.certified*=true)');
+                    expect(parseFilterInput(filterGroup)).toBe('(var.score>=24;var.certified*=true)');
                 });
 
                 it('should handle single filter without grouping', () => {
@@ -72,7 +70,7 @@ describe('Filter Parser', () => {
                         type: 'and',
                         filters: ['var.certified*=true'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('var.certified*=true');
+                    expect(parseFilterInput(filterGroup)).toBe('var.certified*=true');
                 });
 
                 it('should handle empty filters', () => {
@@ -80,7 +78,7 @@ describe('Filter Parser', () => {
                         type: 'and',
                         filters: [],
                     };
-                    expect(parseFilterInput(filterGroup)).to.be.undefined;
+                    expect(parseFilterInput(filterGroup)).toBeUndefined();
                 });
             });
 
@@ -90,7 +88,7 @@ describe('Filter Parser', () => {
                         type: 'or',
                         filters: ['var.foo|=1|2|3'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('var.foo|=1|2|3');
+                    expect(parseFilterInput(filterGroup)).toBe('var.foo|=1|2|3');
                 });
 
                 it('should handle single filter without grouping', () => {
@@ -98,7 +96,7 @@ describe('Filter Parser', () => {
                         type: 'or',
                         filters: ['meta.classification~=bar-*'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('meta.classification~=bar-*');
+                    expect(parseFilterInput(filterGroup)).toBe('meta.classification~=bar-*');
                 });
             });
 
@@ -108,7 +106,7 @@ describe('Filter Parser', () => {
                         type: 'taxonomy',
                         filters: ['meta.classification~=bar-*', 'meta.categorization~=*-baz'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('{meta.classification~=bar-*;meta.categorization~=*-baz}');
+                    expect(parseFilterInput(filterGroup)).toBe('{meta.classification~=bar-*;meta.categorization~=*-baz}');
                 });
 
                 it('should handle single taxonomy filter without grouping', () => {
@@ -116,7 +114,7 @@ describe('Filter Parser', () => {
                         type: 'taxonomy',
                         filters: ['run.hidden=false'],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('run.hidden=false');
+                    expect(parseFilterInput(filterGroup)).toBe('run.hidden=false');
                 });
             });
 
@@ -133,7 +131,7 @@ describe('Filter Parser', () => {
                             },
                         ],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('(var.score>=24;run.hidden=false;var.foo|=1|2|3)');
+                    expect(parseFilterInput(filterGroup)).toBe('(var.score>=24;run.hidden=false;var.foo|=1|2|3)');
                 });
 
                 it('should handle deeply nested groups', () => {
@@ -153,7 +151,7 @@ describe('Filter Parser', () => {
                             'var.certified*=true',
                         ],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('[(meta.classification~=bar-*;var.foo|=1|2|3);var.certified*=true]');
+                    expect(parseFilterInput(filterGroup)).toBe('[(meta.classification~=bar-*;var.foo|=1|2|3);var.certified*=true]');
                 });
 
                 it('should handle taxonomy groups with nested logic', () => {
@@ -173,7 +171,7 @@ describe('Filter Parser', () => {
                             },
                         ],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('{run.hidden=false;(var.score>=24;[meta.classification~=bar-*;meta.categorization~=*-baz])}');
+                    expect(parseFilterInput(filterGroup)).toBe('{run.hidden=false;(var.score>=24;[meta.classification~=bar-*;meta.categorization~=*-baz])}');
                 });
 
                 it('should handle complex example from documentation', () => {
@@ -186,7 +184,7 @@ describe('Filter Parser', () => {
                             'var.foo|=1|2|3',
                         ],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('(var.score>=24;run.hidden=false;var.foo|=1|2|3)');
+                    expect(parseFilterInput(filterGroup)).toBe('(var.score>=24;run.hidden=false;var.foo|=1|2|3)');
                 });
             });
 
@@ -196,14 +194,14 @@ describe('Filter Parser', () => {
                         type: 'invalid',
                         filters: ['name=Mike'],
                     };
-                    expect(() => parseFilterInput(invalidGroup)).to.throw('Invalid or missing filter group type: invalid');
+                    expect(() => parseFilterInput(invalidGroup)).toThrow('Invalid or missing filter group type: invalid');
                 });
 
                 it('should throw error for missing type', () => {
                     const groupWithoutType = {
                         filters: ['meta.classification~=bar-*', 'meta.categorization~=*-baz'],
                     };
-                    expect(() => parseFilterInput(groupWithoutType)).to.throw('Invalid or missing filter group type: undefined');
+                    expect(() => parseFilterInput(groupWithoutType)).toThrow('Invalid or missing filter group type: undefined');
                 });
 
                 it('should throw error for undefined type', () => {
@@ -211,14 +209,14 @@ describe('Filter Parser', () => {
                         type: undefined,
                         filters: ['var.certified*=true', 'run.hidden=false'],
                     };
-                    expect(() => parseFilterInput(groupWithUndefinedType)).to.throw('Invalid or missing filter group type: undefined');
+                    expect(() => parseFilterInput(groupWithUndefinedType)).toThrow('Invalid or missing filter group type: undefined');
                 });
 
                 it('should throw error for single filter with missing type', () => {
                     const groupWithoutType = {
                         filters: ['var.certified*=true'],
                     };
-                    expect(() => parseFilterInput(groupWithoutType)).to.throw('Invalid or missing filter group type: undefined');
+                    expect(() => parseFilterInput(groupWithoutType)).toThrow('Invalid or missing filter group type: undefined');
                 });
 
                 it('should filter out empty nested groups', () => {
@@ -233,7 +231,7 @@ describe('Filter Parser', () => {
                             'var.certified*=true',
                         ],
                     };
-                    expect(parseFilterInput(filterGroup)).to.equal('(var.score>=24;var.certified*=true)');
+                    expect(parseFilterInput(filterGroup)).toBe('(var.score>=24;var.certified*=true)');
                 });
             });
         });
@@ -248,7 +246,7 @@ describe('Filter Parser', () => {
                     'meta.classification~=bar-*',   // where the run metadata contains a 'classification' that begins with 'bar-',
                     'meta.categorization~=*-baz',    // where the run metadata contains a 'categorization' that does not end with '-baz',
                 ];
-                expect(parseFilterInput(filters)).to.equal(
+                expect(parseFilterInput(filters)).toBe(
                     'var.foo|=1|2|3;var.score>=24;var.certified*=true;run.hidden=false;meta.classification~=bar-*;meta.categorization~=*-baz'
                 );
             });
@@ -277,7 +275,7 @@ describe('Filter Parser', () => {
                         },
                     ],
                 };
-                expect(parseFilterInput(filterGroup)).to.equal(
+                expect(parseFilterInput(filterGroup)).toBe(
                     '[(var.score>=24;run.hidden=false;[meta.classification~=bar-*;meta.categorization~=*-baz]);(var.certified*=true;var.foo|=1|2|3)]'
                 );
             });
