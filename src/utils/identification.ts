@@ -1,7 +1,7 @@
 import EpicenterError from './error';
 import cookies from './cookies';
 import { NodeStore, SessionStore, CookieStore } from './store';
-import { BROWSER_STORAGE_TYPE, ROLE } from './constants';
+import { BROWSER_STORAGE_TYPE, ROLE, GROUP_ROLE } from './constants';
 import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
@@ -11,7 +11,7 @@ export interface UserSession {
     userKey: string,
     groupKey?: string,
     groupName?: string,
-    groupRole?: string,
+    groupRole?: keyof typeof GROUP_ROLE,
     multipleGroups?: boolean,
     accountShortName: string,
     projectShortName?: string, // undefined when multipleGroups: true
