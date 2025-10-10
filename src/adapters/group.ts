@@ -3,7 +3,7 @@ import type { RoutingOptions, Page } from '../utils/router';
 import type { GenericSearchOptions } from '../utils/constants';
 import type { User } from './user';
 
-import { Router, EpicenterError, identification, ROLE } from '../utils';
+import { Router, EpicenterError, identification, ROLE, parseFilterInput } from '../utils';
 
 enum AUGMENT {
     MEMBERS = 'MEMBERS',
@@ -294,10 +294,10 @@ export async function query(
     searchOptions: { quantized?: boolean } & GenericSearchOptions,
     optionals: RoutingOptions = {}
 ): Promise<Page<Group>> {
-    const { filter = [], sort = [], first, max, quantized } = searchOptions;
+    const { filter, sort = [], first, max, quantized } = searchOptions;
 
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(filter),
         sort: sort.join(';') || undefined,
         first, max,
     };

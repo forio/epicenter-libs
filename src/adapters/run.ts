@@ -6,6 +6,7 @@ import {
     Router, identification,
     ROLE, SCOPE_BOUNDARY, RITUAL,
     EpicenterError,
+    parseFilterInput,
 } from 'utils';
 
 interface ModelContext extends V2ModelContext {}
@@ -609,17 +610,35 @@ export async function query(
     optionals: RoutingOptions = {}
 ): Promise<Page<Run>> {
     const {
-        filter = [], sort = [], first, max, timeout, variables = [], metadata = [],
+        filter, sort = [], first, max, timeout, variables = [], metadata = [],
         scope, groupName, episodeName, includeEpisodes,
     } = searchOptions;
     const session = identification.session as UserSession;
     const uriComponent = scope ?
         `${scope.scopeBoundary}/${scope.scopeKey}` :
         `in/${groupName ?? session?.groupName}${episodeName ? `/${episodeName}` : ''}`;
-    if (scope?.userKey) filter.push(`run.userKey=${scope.userKey}`);
+
+    // Handle additional filters that need to be added programmatically
+    let finalFilter = filter;
+    if (scope?.userKey) {
+        const userKeyFilter = `run.userKey=${scope.userKey}`;
+        if (Array.isArray(filter)) {
+            finalFilter = [...filter, userKeyFilter];
+        } else if (typeof filter === 'string') {
+            finalFilter = filter ? `${filter};${userKeyFilter}` : userKeyFilter;
+        } else if (filter && typeof filter === 'object') {
+            // For FilterGroup objects, wrap the existing filter and the userKey filter in an AND group
+            finalFilter = {
+                type: 'and' as const,
+                filters: [filter, userKeyFilter],
+            };
+        } else {
+            finalFilter = [userKeyFilter];
+        }
+    }
 
     const searchParams = {
-        filter: filter.join(';') || undefined,
+        filter: parseFilterInput(finalFilter),
         sort: sort.join(';') || undefined,
         var: variables.join(';') || undefined,
         meta: metadata.join(';') || undefined,
