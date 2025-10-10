@@ -1,10 +1,8 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import {
     ACCOUNT,
     PROJECT,
     SESSION,
-    OK_CODE,
-    CREATED_CODE,
     createFetchMock,
     GENERIC_OPTIONS,
     testedMethods,
@@ -61,7 +59,7 @@ describe('leaderboardAdapter', () => {
         it('Should use the /leaderboard URL', async() => {
             await leaderboardAdapter.update(COLLECTION, SCOPE, SCORES);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/leaderboard`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/leaderboard`);
         });
 
         it('Should support generic URL options', async() => {
@@ -115,7 +113,7 @@ describe('leaderboardAdapter', () => {
             await leaderboardAdapter.list(COLLECTION, SCOPE, SEARCH_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/leaderboard/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/leaderboard/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -163,7 +161,7 @@ describe('leaderboardAdapter', () => {
             await leaderboardAdapter.getCount(COLLECTION, SCOPE, SEARCH_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/leaderboard/count/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/leaderboard/count/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${COLLECTION}`);
         });
 
         it('Should support generic URL options', async() => {

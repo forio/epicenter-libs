@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, Router } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import { ACCOUNT, PROJECT, createFetchMock, config, Router } from './common';
 
 describe('Error Manager', () => {
     let capturedRequests = [];

@@ -36,7 +36,7 @@ describe('Authentication', () => {
         it('Should use the authentication URL', async() => {
             await authAdapter.login(CREDENTIALS);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/authentication`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/authentication`);
         });
 
         it('Should support generic URL options', async() => {

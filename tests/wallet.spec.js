@@ -1,5 +1,17 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, walletAdapter, SCOPE_BOUNDARY, getAuthHeader } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    testedMethods,
+    config,
+    authAdapter,
+    walletAdapter,
+    SCOPE_BOUNDARY,
+    getAuthHeader,
+} from './common';
 
 describe('walletAdapter', () => {
     let capturedRequests = [];
@@ -47,7 +59,7 @@ describe('walletAdapter', () => {
         it('Should use the wallet URL', async() => {
             await walletAdapter.get(scope);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/wallet/${scopeBoundary}/${scopeKey}/${userKey}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet/${scopeBoundary}/${scopeKey}/${userKey}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -90,7 +102,7 @@ describe('walletAdapter', () => {
         it('Should use the wallet URL', async() => {
             await walletAdapter.update(scope, items);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/wallet`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet`);
         });
 
         it('Should support generic URL options', async() => {
@@ -140,7 +152,7 @@ describe('walletAdapter', () => {
         it('Should use the wallet URL', async() => {
             await walletAdapter.withScope(scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/wallet/with/${scopeBoundary}/${scopeKey}?first=${optionals.first}&max=${optionals.max}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet/with/${scopeBoundary}/${scopeKey}?first=${optionals.first}&max=${optionals.max}`);
         });
 
         it('Should support generic URL options', async() => {

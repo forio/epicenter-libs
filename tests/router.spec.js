@@ -69,7 +69,7 @@ describe('Router Tests', () => {
 
             await router.get('/run');
             const req2 = capturedRequests[capturedRequests.length - 1];
-            expect(req2.url).toBe(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
+            expect(req2.url).toBe(`https://forio.com/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
         it('Should route calls to the project proxy server', async() => {
@@ -77,13 +77,13 @@ describe('Router Tests', () => {
 
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://forio.com/proxy/${ACCOUNT}/${PROJECT}/api/v3/${ACCOUNT}/${PROJECT}/run`);
+            expect(req.url).toBe(`https://forio.com/proxy/${config.accountShortName}/${config.projectShortName}/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
 
             config.useProjectProxy = false;
 
             await router.get('/run');
             const req2 = capturedRequests[capturedRequests.length - 1];
-            expect(req2.url).toBe(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
+            expect(req2.url).toBe(`https://forio.com/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
         it('Should ignore configuration values when URI components are provided directly to the router', async() => {
@@ -133,7 +133,7 @@ describe('Router Tests', () => {
 
                 await router.get('/run', { useProjectProxy: true });
                 const req6 = capturedRequests[capturedRequests.length - 1];
-                expect(req6.url).toBe(`https://forio.com/proxy/${ACCOUNT}/${PROJECT}/api/v3/${ACCOUNT}/${PROJECT}/run`);
+                expect(req6.url).toBe(`https://forio.com/proxy/${config.accountShortName}/${config.projectShortName}/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
             });
 
             it('Should prioritize method overrides over router instance properties', async() => {
@@ -180,7 +180,7 @@ describe('Router Tests', () => {
 
                 await router.get('/run');
                 const req2 = capturedRequests[capturedRequests.length - 1];
-                expect(req2.url).toBe(`https://forio.com/api/v3/${ACCOUNT}/${PROJECT}/run`);
+                expect(req2.url).toBe(`https://forio.com/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
             });
         });
     });

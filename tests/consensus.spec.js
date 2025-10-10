@@ -1,5 +1,16 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, consensusAdapter, getAuthHeader } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    testedMethods,
+    config,
+    authAdapter,
+    consensusAdapter,
+    getAuthHeader,
+} from './common';
 
 describe('consensusAdapter', () => {
     let capturedRequests = [];
@@ -27,11 +38,13 @@ describe('consensusAdapter', () => {
         const worldKey = 'RUN_KEY';
         const name = 'CONSENSUS_NAME';
         const stage = 'CONSENSUS_STAGE';
+
         const expectedRoles = {
             ROLE1: 1,
             ROLE2: 1,
             ROLE3: 2,
         };
+
         const defaultActions = {
             ROLE1: [{ name: 'step', arguments: [] }],
             ROLE2: [{ name: 'step', arguments: [] }],
@@ -53,7 +66,7 @@ describe('consensusAdapter', () => {
         it('Should use the consensus URL', async() => {
             await consensusAdapter.create(worldKey, name, stage, expectedRoles, defaultActions);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/${worldKey}/${name}/${stage}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/${worldKey}/${name}/${stage}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -110,7 +123,7 @@ describe('consensusAdapter', () => {
         it('Should use the consensus/actions URL', async() => {
             await consensusAdapter.submitActions(worldKey, name, stage, actions);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/publish/${worldKey}/${name}/${stage}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/publish/${worldKey}/${name}/${stage}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -161,7 +174,7 @@ describe('consensusAdapter', () => {
         it('Should use the consensus/actions URL', async() => {
             await consensusAdapter.undoSubmitFor(worldKey, name, stage, userKey);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
         });
 
         it('Should support generic URL options', async() => {

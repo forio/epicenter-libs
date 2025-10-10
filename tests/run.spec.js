@@ -1,5 +1,21 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, runAdapter, SCOPE_BOUNDARY, ROLE, RITUAL, getAuthHeader, getPermitHeader } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    OK_CODE,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    testedMethods,
+    config,
+    authAdapter,
+    runAdapter,
+    SCOPE_BOUNDARY,
+    ROLE,
+    RITUAL,
+    getAuthHeader,
+    getPermitHeader,
+} from './common';
 
 describe('runAdapter', () => {
     let capturedRequests = [];
@@ -43,7 +59,7 @@ describe('runAdapter', () => {
         it('Should use the run URL', async() => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
         it('Should support generic URL options', async() => {
@@ -178,7 +194,7 @@ describe('runAdapter', () => {
         it('Should use the run/clone/runKey URL', async() => {
             await runAdapter.clone(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/clone/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/clone/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -222,7 +238,7 @@ describe('runAdapter', () => {
         it('Should use the run/restore/runKey URL', async() => {
             await runAdapter.restore(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/restore/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/restore/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -263,7 +279,7 @@ describe('runAdapter', () => {
         it('Should use the run/rewind/runKey URL', async() => {
             await runAdapter.rewind(RUN_KEY, STEPS);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/rewind/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/rewind/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -323,7 +339,7 @@ describe('runAdapter', () => {
         it('Should use the run/runKey URL', async() => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -372,7 +388,7 @@ describe('runAdapter', () => {
         it('Should use the run/runKey URL', async() => {
             await runAdapter.remove(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -403,7 +419,7 @@ describe('runAdapter', () => {
         it('Should use the run/runKey URL', async() => {
             await runAdapter.get(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -448,17 +464,17 @@ describe('runAdapter', () => {
             const EPISODE_NAME = 'myepisodename';
             await runAdapter.query(MODEL, OPTIONS);
             const req1 = capturedRequests[capturedRequests.length - 1];
-            expect(req1.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${MODEL}`);
+            expect(req1.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
             await runAdapter.query(MODEL, { episodeName: EPISODE_NAME });
             const req2 = capturedRequests[capturedRequests.length - 1];
-            expect(req2.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
+            expect(req2.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
         });
 
         it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
             await runAdapter.query(MODEL, { scope: SCOPE });
             const req = capturedRequests[capturedRequests.length - 1];
             const { scopeBoundary, scopeKey } = SCOPE;
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -518,7 +534,7 @@ describe('runAdapter', () => {
                 const req = capturedRequests[capturedRequests.length - 1];
                 const { scopeBoundary, scopeKey } = SCOPE;
                 const url = req.url.split('?')[0];
-                expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+                expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
             });
 
             it('Should query for the most recent run', async() => {
@@ -541,15 +557,16 @@ describe('runAdapter', () => {
                                 firstResult: 0,
                                 maxResults: 1,
                                 totalResults: 0,
-                                values: []
-                            }
-                        }
+                                values: [],
+                            },
+                        },
                     });
                     capturedRequests = mockSetup.capturedRequests;
                 });
 
                 it('Should do a GET then a POST', async() => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                    // eslint-disable-next-line no-magic-numbers
                     const [get, post] = capturedRequests.slice(-2);
                     expect(get.options.method.toUpperCase()).toBe('GET');
                     expect(post.options.method.toUpperCase()).toBe('POST');
@@ -557,11 +574,12 @@ describe('runAdapter', () => {
 
                 it('Should GET from run/scopeBoundary/scopeKey/modelFile URL, then POST to /run ', async() => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
+                    // eslint-disable-next-line no-magic-numbers
                     const [get, post] = capturedRequests.slice(-2);
                     const { scopeBoundary, scopeKey } = SCOPE;
                     const queryURL = get.url.split('?')[0];
-                    expect(queryURL).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
-                    expect(post.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+                    expect(queryURL).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
+                    expect(post.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run`);
                 });
             });
         });
@@ -580,7 +598,7 @@ describe('runAdapter', () => {
             it('Should use the run URL', async() => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
-                expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run`);
+                expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run`);
             });
 
             it('Should support generic URL options', async() => {
@@ -714,7 +732,7 @@ describe('runAdapter', () => {
         it('Should use the run/introspect/model/modelFile URL', async() => {
             await runAdapter.introspect(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/model/${MODEL}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/introspect/model/${MODEL}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -745,7 +763,7 @@ describe('runAdapter', () => {
         it('Should use the run/introspect/runKey URL', async() => {
             await runAdapter.introspectWithRunKey(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/introspect/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/introspect/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -778,7 +796,7 @@ describe('runAdapter', () => {
         it('Should use the run/operation/runKey URL', async() => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/operation/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/operation/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -802,7 +820,7 @@ describe('runAdapter', () => {
             await runAdapter.operation([RUN_KEY, '987654321'], NAME, ARGUMENTS, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/operation`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/operation`);
             const searchParams = new URLSearchParams(search);
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
@@ -847,14 +865,14 @@ describe('runAdapter', () => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}`);
         });
 
         it('Should use the run/variable URL for multiple runs', async() => {
             await runAdapter.getVariables([RUN_KEY, RUN_KEY_2], VARIABLES, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable`);
         });
 
         it('Should support generic URL options', async() => {
@@ -911,7 +929,7 @@ describe('runAdapter', () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}/${VARIABLE}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -942,7 +960,7 @@ describe('runAdapter', () => {
             await runAdapter.getVariable(RUN_KEY, [VARIABLE, 'var2']);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}`);
             const body = JSON.parse(req.options.body);
             expect(body.include).toBe([VARIABLE, 'var2'].join(';'));
         });
@@ -951,7 +969,7 @@ describe('runAdapter', () => {
             await runAdapter.getVariable([RUN_KEY, '987654321'], [VARIABLE, 'var2'], { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable`);
             const body = JSON.parse(req.options.body);
             expect(body.include).toBe([VARIABLE, 'var2'].join(';'));
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
@@ -984,7 +1002,7 @@ describe('runAdapter', () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable/${RUN_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1008,7 +1026,7 @@ describe('runAdapter', () => {
             await runAdapter.updateVariables([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/variable`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable`);
             const searchParams = new URLSearchParams(search);
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
@@ -1051,7 +1069,7 @@ describe('runAdapter', () => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1066,7 +1084,7 @@ describe('runAdapter', () => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta`);
             const body = JSON.parse(req.options.body);
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
         });
@@ -1098,7 +1116,7 @@ describe('runAdapter', () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta/${RUN_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1121,7 +1139,7 @@ describe('runAdapter', () => {
             await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/meta`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta`);
             const searchParams = new URLSearchParams(search);
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
@@ -1160,7 +1178,7 @@ describe('runAdapter', () => {
             await runAdapter.action(RUN_KEY, ACTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/action/${RUN_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/action/${RUN_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1184,7 +1202,7 @@ describe('runAdapter', () => {
             await runAdapter.action([RUN_KEY, '987654321'], ACTIONS, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/action`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/action`);
             const searchParams = new URLSearchParams(search);
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
@@ -1227,7 +1245,7 @@ describe('runAdapter', () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/world/${WORLD_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/world/${WORLD_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1346,7 +1364,7 @@ describe('runAdapter', () => {
             await runAdapter.removeFromWorld(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/world/${WORLD_KEY}`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/world/${WORLD_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1378,7 +1396,7 @@ describe('runAdapter', () => {
         it('Should use the singular run URL', async() => {
             await runAdapter.createSingular(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/singular`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/singular`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1488,7 +1506,7 @@ describe('runAdapter', () => {
         it('Should use the singular run URL', async() => {
             await runAdapter.getSingularRunKey();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/singular/key`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/singular/key`);
         });
 
         it('Should support generic URL options', async() => {
@@ -1521,7 +1539,7 @@ describe('runAdapter', () => {
         it('Should use the run/migrate/episodeKey/runKey URL', async() => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
         });
 
 

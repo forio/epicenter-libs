@@ -1,5 +1,14 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, projectAdapter } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    testedMethods,
+    config,
+    authAdapter,
+    projectAdapter,
+} from './common';
 
 describe('projectAdapter', () => {
     let capturedRequests = [];
@@ -32,7 +41,7 @@ describe('projectAdapter', () => {
         it('Should use the project/channel/isEnabled URL', async() => {
             await projectAdapter.channelsEnabled();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/project/channel/isEnabled`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/project/channel/isEnabled`);
         });
 
         it('Should support generic URL options', async() => {
@@ -55,7 +64,7 @@ describe('projectAdapter', () => {
         it('Should use the project URL', async() => {
             await projectAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/project`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/project`);
         });
 
         it('Should support generic URL options', async() => {

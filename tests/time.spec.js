@@ -1,13 +1,23 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE, CREATED_CODE, createFetchMock, GENERIC_OPTIONS, testedMethods, config, authAdapter, timeAdapter, getAuthHeader } from './common';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    GENERIC_OPTIONS,
+    config,
+    authAdapter,
+    timeAdapter,
+    getAuthHeader,
+} from './common';
 
 describe('timeAdapter', () => {
     let capturedRequests = [];
     let mockSetup;
-    
+
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
-    
+
     beforeAll(() => {
         mockSetup = createFetchMock();
         capturedRequests = mockSetup.capturedRequests;
@@ -39,7 +49,7 @@ describe('timeAdapter', () => {
         it('Should use the time URL', async() => {
             await timeAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/time`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/time`);
         });
 
         it('Should support generic URL options', async() => {

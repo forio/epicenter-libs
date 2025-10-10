@@ -1,5 +1,16 @@
 import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, createFetchMock, testedMethods, config, authAdapter, worldAdapter, SCOPE_BOUNDARY, getAuthHeader } from './common';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    testedMethods,
+    config,
+    authAdapter,
+    worldAdapter,
+    SCOPE_BOUNDARY,
+    getAuthHeader,
+} from './common';
 
 describe('worldAdapter', () => {
     let capturedRequests = [];
@@ -39,7 +50,7 @@ describe('worldAdapter', () => {
         it('Should use the world/{groupName} URL', async() => {
             await worldAdapter.create();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${SESSION.groupName}`);
         });
 
         it('Should forward world config in the request body', async() => {
@@ -80,7 +91,7 @@ describe('worldAdapter', () => {
         it('Should use the world/{worldKey} URL', async() => {
             await worldAdapter.update(WORLD_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${WORLD_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${WORLD_KEY}`);
         });
 
         it('Should send the update in the request body', async() => {
@@ -110,7 +121,7 @@ describe('worldAdapter', () => {
         it('Should use the world/{worldKey} URL', async() => {
             await worldAdapter.destroy(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${WORLD_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${WORLD_KEY}`);
         });
 
         testedMethods.push('destroy');
@@ -132,7 +143,7 @@ describe('worldAdapter', () => {
         it('Should use the world/{groupName} URL', async() => {
             await worldAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${SESSION.groupName}`);
         });
 
         testedMethods.push('get');
@@ -156,7 +167,7 @@ describe('worldAdapter', () => {
         it('Should use the world/persona/group URL', async() => {
             await worldAdapter.getPersonas(GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
         testedMethods.push('getPersonas');
     });
@@ -183,7 +194,7 @@ describe('worldAdapter', () => {
         it('Should use the world/persona/group URL', async() => {
             await worldAdapter.setPersonas(PERSONAS, GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
 
         it('Should send the personas in the request body', async() => {
@@ -213,7 +224,7 @@ describe('worldAdapter', () => {
         it('Should use the world/run/{worldKey} URL', async() => {
             await worldAdapter.assignRun(WORLD_KEY, RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/run/${WORLD_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/run/${WORLD_KEY}`);
         });
 
         it('Should send the runKey in the request body', async() => {
@@ -245,7 +256,7 @@ describe('worldAdapter', () => {
         it('Should use the world/assignment/{groupName} URL', async() => {
             await worldAdapter.autoAssignUsers(ASSIGNMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}`);
         });
 
         it('Should send the assignments in the request body', async() => {
@@ -296,7 +307,7 @@ describe('worldAdapter', () => {
         it('Should use the world/assignment/{groupName} URL', async() => {
             await worldAdapter.editAssignments(ASSIGNMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}`);
         });
 
         it('Should send the assignments in the request body', async() => {
@@ -326,7 +337,7 @@ describe('worldAdapter', () => {
         it('Should use the world/assignment/for/{groupName} URL', async() => {
             await worldAdapter.getAssignments();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/for/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/for/${SESSION.groupName}`);
         });
 
         testedMethods.push('getAssignments');
@@ -350,7 +361,7 @@ describe('worldAdapter', () => {
         it('Should use the world/assignment/{worldKey} URL', async() => {
             await worldAdapter.getAssignmentsByKey(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${WORLD_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${WORLD_KEY}`);
         });
 
         testedMethods.push('getAssignmentsByKey');
@@ -372,7 +383,7 @@ describe('worldAdapter', () => {
         it('Should use the world/assignment URL', async() => {
             await worldAdapter.getSessionWorlds();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment`);
         });
 
         testedMethods.push('getSessionWorlds');
@@ -397,7 +408,7 @@ describe('worldAdapter', () => {
             const keepEmptyWorlds = true;
             await worldAdapter.removeUsers(USER_KEYS, { keepEmptyWorlds});
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}?userKey=${USER_KEYS[0]}&userKey=${USER_KEYS[1]}&keepEmptyWorlds=${keepEmptyWorlds}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}?userKey=${USER_KEYS[0]}&userKey=${USER_KEYS[1]}&keepEmptyWorlds=${keepEmptyWorlds}`);
         });
 
         testedMethods.push('removeUsers');
@@ -419,7 +430,7 @@ describe('worldAdapter', () => {
         it('Should use the world/selfassign/{groupName} URL', async() => {
             await worldAdapter.selfAssign();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/selfassign/${SESSION.groupName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/selfassign/${SESSION.groupName}`);
         });
 
         it('Should send the world config in the request body', async() => {

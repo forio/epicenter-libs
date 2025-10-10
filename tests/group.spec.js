@@ -1,11 +1,9 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, vi } from 'vitest';
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
 import {
     ROLE,
     ACCOUNT,
     PROJECT,
     SESSION,
-    OK_CODE,
-    CREATED_CODE,
     GENERIC_OPTIONS,
     createFetchMock,
     getAuthHeader,
@@ -18,12 +16,11 @@ import {
 const DEPRECATED_METHODS = ['search'];
 
 describe('Group APIs', () => {
-
-    config.accountShortName = ACCOUNT;
-    config.projectShortName = PROJECT;
-
     let capturedRequests = [];
     let mockSetup;
+    
+    config.accountShortName = ACCOUNT;
+    config.projectShortName = PROJECT;
 
     beforeAll(() => {
         mockSetup = createFetchMock();
@@ -58,13 +55,13 @@ describe('Group APIs', () => {
         it('Should use the group/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/${GROUP_KEY}`);
         });
 
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.get({ groupKey: 'mygroupkey' });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/mygroupkey`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/mygroupkey`);
         });
 
         it('Should support generic URL options', async() => {
@@ -77,13 +74,13 @@ describe('Group APIs', () => {
         it('Should use an updated URL when provided the members augment', async() => {
             await groupAdapter.get({ augment: 'MEMBERS' });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}`);
         });
 
         it('Should use an updated URL when provided the quantized augment', async() => {
             await groupAdapter.get({ augment: 'QUANTIZED' });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/quantized/${GROUP_KEY}`);
         });
 
         testedMethods.push('get');
@@ -107,7 +104,7 @@ describe('Group APIs', () => {
         it('Should use the group/groupKey URL', async() => {
             await groupAdapter.destroy(GROUP_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/${GROUP_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -136,7 +133,7 @@ describe('Group APIs', () => {
         it('Should use the group URL', async() => {
             await groupAdapter.gather();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group`);
         });
 
         it('Should support generic URL options', async() => {
@@ -149,7 +146,7 @@ describe('Group APIs', () => {
         it('Should support sending an \'expired\' flag', async() => {
             await groupAdapter.gather({ includeExpired: true });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group?includeExpired=true`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group?includeExpired=true`);
         });
 
         testedMethods.push('gather');
@@ -191,7 +188,7 @@ describe('Group APIs', () => {
         it('Should use the group/groupKey URL', async() => {
             await groupAdapter.update(GROUP_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/${GROUP_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -247,7 +244,7 @@ describe('Group APIs', () => {
         it('Should use the group URL', async() => {
             await groupAdapter.create(GROUP);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group`);
         });
 
         it('Should support generic URL options', async() => {
@@ -295,7 +292,7 @@ describe('Group APIs', () => {
             await groupAdapter.query(OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/search`);
         });
 
         it('Should support generic URL options', async() => {
@@ -310,7 +307,7 @@ describe('Group APIs', () => {
             await groupAdapter.query({ ...OPTIONS, quantized: true });
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
-            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/quantized/search`);
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/quantized/search`);
         });
 
         it('Should pass in query options as a part of the search parameters (query string)', async() => {
@@ -352,7 +349,7 @@ describe('Group APIs', () => {
         it('Should use the group/with/groupName URL', async() => {
             await groupAdapter.withGroupName(GROUP_NAME);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/with/${GROUP_NAME}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/with/${GROUP_NAME}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -383,7 +380,7 @@ describe('Group APIs', () => {
         it('Should use the group/member/for/userKey URL', async() => {
             await groupAdapter.forUser(USER_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/for/${USER_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/for/${USER_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -436,7 +433,7 @@ describe('Group APIs', () => {
         it('Should use the group/member URL', async() => {
             await groupAdapter.getSessionGroups();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member`);
         });
 
         it('Should support generic URL options', async() => {
@@ -491,7 +488,7 @@ describe('Group APIs', () => {
         it('Should use the group/self URL', async() => {
             await groupAdapter.whitelistUsers(GROUP_KEY, { allow, emails });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/self/${GROUP_KEY}`);
         });
 
         it('Should by default set allow for all users', async() => {
@@ -530,7 +527,7 @@ describe('Group APIs', () => {
         it('Should use the group/self URL', async() => {
             await groupAdapter.getWhitelistedUsers(GROUP_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/self/${GROUP_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -556,7 +553,7 @@ describe('Group APIs', () => {
         it('Should use the /registration/self URL', async() => {
             await groupAdapter.sendRegistrationEmail(GROUP_KEY, email);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/registration/self/${GROUP_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -588,7 +585,7 @@ describe('Group APIs', () => {
         it('Should use the /registration/self URL', async() => {
             await groupAdapter.selfRegister(REGISTRATION_TOKEN, password);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/registration/self/${REGISTRATION_TOKEN}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/registration/self/${REGISTRATION_TOKEN}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -620,13 +617,13 @@ describe('Group APIs', () => {
         it('Should use the group/member/groupKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.addUser(USER_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}`);
         });
 
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.addUser(USER_KEY, { groupKey: 'mygroupkey' });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/mygroupkey`);
         });
 
         it('Should support generic URL options', async() => {
@@ -684,7 +681,7 @@ describe('Group APIs', () => {
         it('Should use the group/member/groupKey/userKey URL', async() => {
             await groupAdapter.updateUser(USER_KEY, update);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -726,7 +723,7 @@ describe('Group APIs', () => {
         it('Should use the group/status/groupKey URL', async() => {
             await groupAdapter.statusUpdate(code, message);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/status/${GROUP_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/status/${GROUP_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -766,13 +763,13 @@ describe('Group APIs', () => {
         it('Should use the group/member/groupKey/userKey URL (using session.groupKey by default)', async() => {
             await groupAdapter.removeUser(USER_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}/${USER_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}/${USER_KEY}`);
         });
 
         it('Should use a custom groupKey, if provided', async() => {
             await groupAdapter.removeUser(USER_KEY, { groupKey: 'mygroupkey' });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/mygroupkey/${USER_KEY}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/mygroupkey/${USER_KEY}`);
         });
 
         it('Should support generic URL options', async() => {
@@ -785,7 +782,7 @@ describe('Group APIs', () => {
         it('Should support multiple userKeys', async() => {
             await groupAdapter.removeUser([USER_KEY, 'anotheruserkey']);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
         });
 
         testedMethods.push('removeUser');
