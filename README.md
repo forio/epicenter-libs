@@ -80,7 +80,7 @@ A user's presence is now determined by their connection to the CometD server. Un
 * Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API REST call (**this includes the one that might show up before a search query**)
 
 # How to Contribute
-Prequisite Node version: 12+
+Prequisite Node version: 22
 
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
@@ -91,7 +91,7 @@ Prequisite Node version: 12+
 
 # How to Prepare a Release
 1. Build to the `dist/` folder: `npm run build`
-2. Test to make sure there are no breaking changes: `npm run single-test`
+2. Test to make sure there are no breaking changes: `npm run test:run`
 3. Update the version in the `package.json` to the value you'd like to release
 4. Generate a changelog entry using `conventional-changelog`
    - Entries are created based on the most recent git tag compared to the the version value in `package.json`
@@ -129,7 +129,7 @@ Tests are written to preserve behavior across releases. These are unit tests and
 ```
 npm install             # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
-npm run single-test     # Runs the tests once
+npm run test:run        # Runs the tests once
 npm run test            # Runs the tests w/ a watch
 ```
 Logs during testing are sent to `browser.log` file

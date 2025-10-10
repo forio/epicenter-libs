@@ -1,7 +1,5 @@
-import sinon from 'sinon';
-import chai from 'chai';
-import { CREATED_CODE, SESSION, ACCOUNT, PROJECT, GENERIC_OPTIONS } from './constants';
-chai.use(require('sinon-chai'));
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import { SESSION, ACCOUNT, PROJECT, GENERIC_OPTIONS, createFetchMock } from './common';
 
 describe('Authentication', () => {
     const { config, authAdapter } = epicenter;
@@ -9,70 +7,72 @@ describe('Authentication', () => {
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
 
-    let fakeServer;
+    let capturedRequests = [];
+    let mockSetup;
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        fakeServer.respondWith('POST', /(.*)\/authentication/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, JSON.stringify(SESSION));
-        });
-        fakeServer.respondWith('DELETE', /(.*)\/verification/, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
-        });
-        const presence = new RegExp(`(.*)\/presence\/group\/${SESSION.groupKey}`);
-        fakeServer.respondWith('DELETE', presence, (xhr, id) => {
-            xhr.respond(CREATED_CODE, { 'Content-Type': 'application/json' }, 'true');
-        });
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
+    beforeEach(() => {
+        capturedRequests.length = 0;
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
         authAdapter.removeLocalSession();
     });
 
     describe('authAdapter.login', () => {
         const CREDENTIALS = { handle: 'joe', password: 'pass', groupKey: 'groupkey' };
+
         it('Should do a POST', async() => {
             await authAdapter.login(CREDENTIALS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
+
         it('Should use the authentication URL', async() => {
             await authAdapter.login(CREDENTIALS);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/authentication`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/authentication`);
         });
+
         it('Should support generic URL options', async() => {
             await authAdapter.login(CREDENTIALS, GENERIC_OPTIONS);
-            const req = fakeServer.requests.pop();
+            const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            req.url.should.equal(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
         });
+
         it('Should pass login credentials to the request body', async() => {
             await authAdapter.login(CREDENTIALS);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.include(CREDENTIALS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toMatchObject(CREDENTIALS);
         });
+
         it('Should store the payload as the current session', async() => {
             await authAdapter.login(CREDENTIALS);
-            authAdapter.getLocalSession().should.deep.equal(SESSION);
+            expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
+
         it('Should set objectType as user when one is not provided', async() => {
             await authAdapter.login(CREDENTIALS);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.have.property('objectType', 'user');
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('objectType', 'user');
         });
     });
+
     describe('authAdapter.logout', () => {
         it('Should do a DELETE', async() => {
-            fakeServer.requests = [];
+            capturedRequests.length = 0;
             await authAdapter.logout();
-            Boolean(authAdapter.getLocalSession()).should.equal(false);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            expect(Boolean(authAdapter.getLocalSession())).toBe(false);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
     });
 });

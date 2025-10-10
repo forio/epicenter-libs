@@ -1,51 +1,56 @@
-// Largely Claude Opus
+import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    createFetchMock,
+    testedMethods,
+    config,
+    authAdapter,
+    worldAdapter,
+    SCOPE_BOUNDARY,
+    getAuthHeader,
+} from './common';
 
-import sinon from 'sinon';
-import chai from 'chai';
-import { ACCOUNT, PROJECT, SESSION, OK_CODE } from './constants';
-chai.use(require('sinon-chai'));
-
-describe('World APIs', () => {
-    const { config, worldAdapter, authAdapter, SCOPE_BOUNDARY } = epicenter;
-    let fakeServer;
+describe('worldAdapter', () => {
+    let capturedRequests = [];
+    let mockSetup;
+    
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
-    const testedMethods = [];
 
-    before(() => {
-        fakeServer = sinon.fakeServer.create();
-        authAdapter.setLocalSession(SESSION);
-        fakeServer.respondWith(/(.*)\/world/, function(xhr, id) {
-            const RESPONSE = {
-                /* Doesn't matter what goes here -- just need the fakeServer to respond w/ something */
-            };
-            xhr.respond(OK_CODE, { 'content-type': 'application/json' }, JSON.stringify(RESPONSE));
-        });
-        fakeServer.respondImmediately = true;
+    beforeAll(() => {
+        mockSetup = createFetchMock();
+        capturedRequests = mockSetup.capturedRequests;
     });
 
-    after(() => {
-        fakeServer.restore();
+    beforeEach(() => {
+        capturedRequests.length = 0;
+        authAdapter.setLocalSession(SESSION);
+    });
+
+    afterAll(() => {
+        mockSetup.restore();
         authAdapter.setLocalSession(undefined);
     });
 
     describe('worldAdapter.create', () => {
         it('Should do a POST to world', async() => {
             await worldAdapter.create();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.create();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/{groupName} URL', async() => {
             await worldAdapter.create();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${SESSION.groupName}`);
         });
 
         it('Should forward world config in the request body', async() => {
@@ -56,9 +61,9 @@ describe('World APIs', () => {
                 worldNameGenerator: { objectType: 'color-animal' },
             };
             await worldAdapter.create(config);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.should.deep.equal(config);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toEqual(config);
         });
 
         testedMethods.push('create');
@@ -73,26 +78,26 @@ describe('World APIs', () => {
 
         it('Should do a PATCH to world', async() => {
             await worldAdapter.update(WORLD_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PATCH');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.update(WORLD_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/{worldKey} URL', async() => {
             await worldAdapter.update(WORLD_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${WORLD_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${WORLD_KEY}`);
         });
 
         it('Should send the update in the request body', async() => {
             await worldAdapter.update(WORLD_KEY, UPDATE);
-            const req = fakeServer.requests.pop();
-            JSON.parse(req.requestBody).should.deep.equal(UPDATE);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(JSON.parse(req.options.body)).toEqual(UPDATE);
         });
 
         testedMethods.push('update');
@@ -103,20 +108,20 @@ describe('World APIs', () => {
 
         it('Should do a DELETE to world', async() => {
             await worldAdapter.destroy(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.destroy(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/{worldKey} URL', async() => {
             await worldAdapter.destroy(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${WORLD_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${WORLD_KEY}`);
         });
 
         testedMethods.push('destroy');
@@ -125,20 +130,20 @@ describe('World APIs', () => {
     describe('worldAdapter.get', () => {
         it('Should do a GET to world', async() => {
             await worldAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/{groupName} URL', async() => {
             await worldAdapter.get();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${SESSION.groupName}`);
         });
 
         testedMethods.push('get');
@@ -149,20 +154,20 @@ describe('World APIs', () => {
 
         it('Should do a GET to persona', async() => {
             await worldAdapter.getPersonas(GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.getPersonas(GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/persona/group URL', async() => {
             await worldAdapter.getPersonas(GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
         testedMethods.push('getPersonas');
     });
@@ -176,26 +181,26 @@ describe('World APIs', () => {
 
         it('Should do a PUT to persona', async() => {
             await worldAdapter.setPersonas(PERSONAS, GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PUT');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PUT');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.setPersonas(PERSONAS, GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/persona/group URL', async() => {
             await worldAdapter.setPersonas(PERSONAS, GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
 
         it('Should send the personas in the request body', async() => {
             await worldAdapter.setPersonas(PERSONAS, GROUP_SCOPE);
-            const req = fakeServer.requests.pop();
-            JSON.parse(req.requestBody).should.deep.equal(PERSONAS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(JSON.parse(req.options.body)).toEqual(PERSONAS);
         });
         testedMethods.push('setPersonas');
     });
@@ -206,26 +211,26 @@ describe('World APIs', () => {
 
         it('Should do a PATCH to world/run', async() => {
             await worldAdapter.assignRun(WORLD_KEY, RUN_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PATCH');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.assignRun(WORLD_KEY, RUN_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/run/{worldKey} URL', async() => {
             await worldAdapter.assignRun(WORLD_KEY, RUN_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/run/${WORLD_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/run/${WORLD_KEY}`);
         });
 
         it('Should send the runKey in the request body', async() => {
             await worldAdapter.assignRun(WORLD_KEY, RUN_KEY);
-            const req = fakeServer.requests.pop();
-            JSON.parse(req.requestBody).should.deep.equal({ runKey: RUN_KEY });
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(JSON.parse(req.options.body)).toEqual({ runKey: RUN_KEY });
         });
         testedMethods.push('assignRun');
     });
@@ -238,26 +243,27 @@ describe('World APIs', () => {
 
         it('Should do a POST to world/assignment', async() => {
             await worldAdapter.autoAssignUsers(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.autoAssignUsers(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment/{groupName} URL', async() => {
             await worldAdapter.autoAssignUsers(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}`);
         });
 
         it('Should send the assignments in the request body', async() => {
             await worldAdapter.autoAssignUsers(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            JSON.parse(req.requestBody).should.have.property('assignments').that.deep.equals(ASSIGNMENTS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(JSON.parse(req.options.body)).toHaveProperty('assignments');
+            expect(JSON.parse(req.options.body).assignments).toEqual(ASSIGNMENTS);
         });
 
         it('Should send the world config in the request body', async() => {
@@ -267,11 +273,11 @@ describe('World APIs', () => {
                 worldNameGenerator: { objectType: 'color-animal' },
             };
             await worldAdapter.autoAssignUsers(ASSIGNMENTS, optionals);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.allowChannel.should.equal(optionals.allowChannel);
-            body.objective.should.equal(optionals.objective);
-            body.worldNameGenerator.should.deep.equal(optionals.worldNameGenerator);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.allowChannel).toBe(optionals.allowChannel);
+            expect(body.objective).toBe(optionals.objective);
+            expect(body.worldNameGenerator).toEqual(optionals.worldNameGenerator);
         });
 
         testedMethods.push('autoAssignUsers');
@@ -288,27 +294,27 @@ describe('World APIs', () => {
 
         it('Should do a PUT to world/assignment', async() => {
             await worldAdapter.editAssignments(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('PUT');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PUT');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.editAssignments(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment/{groupName} URL', async() => {
             await worldAdapter.editAssignments(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}`);
         });
 
         it('Should send the assignments in the request body', async() => {
             await worldAdapter.editAssignments(ASSIGNMENTS);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.assignments.should.deep.equal(ASSIGNMENTS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.assignments).toEqual(ASSIGNMENTS);
         });
 
         testedMethods.push('editAssignments');
@@ -318,20 +324,20 @@ describe('World APIs', () => {
     describe('worldAdapter.getAssignments', () => {
         it('Should do a GET to world/assignment/for', async() => {
             await worldAdapter.getAssignments();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.getAssignments();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment/for/{groupName} URL', async() => {
             await worldAdapter.getAssignments();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/for/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/for/${SESSION.groupName}`);
         });
 
         testedMethods.push('getAssignments');
@@ -342,20 +348,20 @@ describe('World APIs', () => {
 
         it('Should do a GET to world/assignment/{worldKey}', async() => {
             await worldAdapter.getAssignmentsByKey(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.getAssignmentsByKey(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment/{worldKey} URL', async() => {
             await worldAdapter.getAssignmentsByKey(WORLD_KEY);
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${WORLD_KEY}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${WORLD_KEY}`);
         });
 
         testedMethods.push('getAssignmentsByKey');
@@ -364,20 +370,20 @@ describe('World APIs', () => {
     describe('worldAdapter.getSessionWorlds', () => {
         it('Should do a GET to world/assignment', async() => {
             await worldAdapter.getSessionWorlds();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('GET');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.getSessionWorlds();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment URL', async() => {
             await worldAdapter.getSessionWorlds();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment`);
         });
 
         testedMethods.push('getSessionWorlds');
@@ -388,21 +394,21 @@ describe('World APIs', () => {
 
         it('Should do a DELETE to world/assignment', async() => {
             await worldAdapter.removeUsers(USER_KEYS);
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('DELETE');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.removeUsers(USER_KEYS);
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/assignment/{groupName} URL', async() => {
             const keepEmptyWorlds = true;
             await worldAdapter.removeUsers(USER_KEYS, { keepEmptyWorlds});
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/assignment/${SESSION.groupName}?userKey=${USER_KEYS[0]}&userKey=${USER_KEYS[1]}&keepEmptyWorlds=${keepEmptyWorlds}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}?userKey=${USER_KEYS[0]}&userKey=${USER_KEYS[1]}&keepEmptyWorlds=${keepEmptyWorlds}`);
         });
 
         testedMethods.push('removeUsers');
@@ -411,20 +417,20 @@ describe('World APIs', () => {
     describe('worldAdapter.selfAssign', () => {
         it('Should do a POST to world/selfassign', async() => {
             await worldAdapter.selfAssign();
-            const req = fakeServer.requests.pop();
-            req.method.toUpperCase().should.equal('POST');
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
         it('Should have authorization', async() => {
             await worldAdapter.selfAssign();
-            const req = fakeServer.requests.pop();
-            req.requestHeaders.should.have.property('authorization', `Bearer ${SESSION.token}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the world/selfassign/{groupName} URL', async() => {
             await worldAdapter.selfAssign();
-            const req = fakeServer.requests.pop();
-            req.url.should.equal(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/${PROJECT}/world/selfassign/${SESSION.groupName}`);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/selfassign/${SESSION.groupName}`);
         });
 
         it('Should send the world config in the request body', async() => {
@@ -434,11 +440,11 @@ describe('World APIs', () => {
                 worldNameGenerator: { objectType: 'color-animal' },
             };
             await worldAdapter.selfAssign(optionals);
-            const req = fakeServer.requests.pop();
-            const body = JSON.parse(req.requestBody);
-            body.allowChannel.should.equal(optionals.allowChannel);
-            body.role.should.equal(optionals.role);
-            body.worldNameGenerator.should.deep.equal(optionals.worldNameGenerator);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.allowChannel).toBe(optionals.allowChannel);
+            expect(body.role).toBe(optionals.role);
+            expect(body.worldNameGenerator).toEqual(optionals.worldNameGenerator);
         });
 
         testedMethods.push('selfAssign');
@@ -447,6 +453,7 @@ describe('World APIs', () => {
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
         const actualMethods = Object.keys(worldAdapter).filter((key) => typeof worldAdapter[key] === 'function');
-        chai.expect(actualMethods).to.have.members(testedMethods);
+        expect(actualMethods).toEqual(expect.arrayContaining(testedMethods));
+        expect(testedMethods).toEqual(expect.arrayContaining(actualMethods));
     });
 });

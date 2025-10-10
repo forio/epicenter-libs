@@ -44,7 +44,7 @@ export async function create(
     optionals: {
         givenName?: string;
         familyName?: string;
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Somebody> {
     const {
         givenName,
@@ -62,7 +62,7 @@ export async function create(
                     scope,
                 },
                 ...routingOptions,
-            }
+            },
         )
         .then(({ body }) => body);
 }
@@ -70,7 +70,7 @@ export async function create(
 const NOT_FOUND = 404;
 export async function get(
     somebodyKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Somebody | undefined> {
     return await new Router()
         .get(`/somebody/${somebodyKey}`, optionals)
@@ -85,7 +85,7 @@ export async function inScope(
     optionals: {
         first?: number,
         max?: number, // max of 300; default of 300
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Page<Somebody> | undefined> {
     const { scopeBoundary, scopeKey } = scope;
     const {
@@ -111,7 +111,7 @@ export async function inScope(
 export async function byEmail(
     email: string,
     scope: GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Somebody | undefined> {
     const { scopeBoundary, scopeKey } = scope;
     return await new Router()
