@@ -9,12 +9,226 @@ import {
     parseFilterInput,
 } from 'utils';
 
+interface ModelContext extends V2ModelContext {}
 
-export interface ModelContext {
-    version: string,
+interface V2ModelContext {
+    variables?: Record<string, VariableOptions>;
+    externalFunctions?: Record<string, WireExternalFunction>;
+    modelVersion?: number;
+    mappedFiles?: Record<string, string>;
+    control?: ExcelModelControl | JavaModelControl | PowersimModelControl | VensimModelControl;
+    language?: string;
+    protections?: Protections;
+    restorations?: Restorations;
+    version: string;
+    workerImage?: string;
+    dependencies?: (AptExternalDependency | CranExternalDependency | GitExternalDependency | JuliaExternalDependency | NpmExternalDependency | PypiExternalDependency | ShellExternalDependency)[];
+    operations?: Record<string, OperationOptions>;
+    defaults?: ModelContextDefaults;
+    enableStateCache?: boolean;
+    redirectStandardOut?: boolean;
+    startDebugger?: boolean;
+    inceptionGracePeriodSeconds?: number;
+    minimumLogLevel?: string;
+    events?: Record<string, EventOptions>;
 }
-export interface ExecutionContext {
-    version: string,
+
+interface VariableOptions {
+    resetDecision?: boolean;
+    dialect?: string;
+    save?: boolean;
+    reportPer?: number;
+    sensitivity?: boolean;
+    reportOffset?: number;
+}
+
+interface WireExternalFunction {
+    route?: Route;
+    arguments?: string;
+    objectType: 'wire';
+}
+
+interface Route {
+    service?: string;
+    version?: number;
+}
+
+interface ExcelModelControl {
+    autoRecalculate?: boolean;
+    objectType: 'excel';
+}
+
+interface JavaModelControl {
+    executable?: string;
+    objectType: 'java';
+}
+
+interface PowersimModelControl {
+    minimizeMemoryFootprint?: boolean;
+    objectType: 'powersim';
+}
+
+interface VensimModelControl {
+    sensitivityControl?: 'SensitivityControl';
+    extensionModule?: string;
+    objectType: 'vensim';
+}
+
+interface Protections {
+    guards: (InputGuard | OverwriteGuard | PrivilegeGuard | RelativeGuard | RoleGuard)[];
+}
+
+interface InputGuard {
+    regex: string;
+    operand?: string;
+    operator?: string;
+    objectType: 'input';
+}
+
+interface OverwriteGuard {
+    regex: string;
+    dialect?: string;
+    initial: string;
+    objectType: 'overwrite';
+}
+
+interface PrivilegeGuard {
+    regex: string;
+    read: string;
+    domain: string;
+    grant: string;
+    write: string;
+    execute: string;
+    objectType: 'privilege';
+}
+
+interface RelativeGuard {
+    regex: string;
+    dialect?: string;
+    value: string;
+    operator: string;
+    key: string;
+    objectType: 'relative';
+}
+
+interface RoleGuard {
+    regex: string;
+    role: string;
+    domain: string;
+    grant: string;
+    objectType: 'role';
+}
+
+interface Restorations {
+    rewind?: RewindMarker;
+    log?: string;
+    assembly?: (ReplayRestoration | SnapshotRestoration)[];
+}
+
+interface RewindMarker {
+    name?: string;
+    destructible?: boolean;
+    arguments?: Record<string, unknown>;
+}
+
+interface ReplayRestoration {
+    replay: {
+        operations?: ReplayOperation[];
+    };
+}
+
+interface ReplayOperation {
+    targetType: string;
+    operationType: string;
+    targetKey: string;
+}
+
+interface SnapshotRestoration {
+    variables?: string[];
+    objectType: 'snapshot';
+}
+
+interface AptExternalDependency {
+    package?: string;
+    repository?: string;
+    version?: string;
+    objectType: 'apt';
+}
+
+interface CranExternalDependency {
+    package?: string;
+    version?: string;
+    objectType: 'cran';
+}
+
+interface GitExternalDependency {
+    url?: string;
+    script?: string;
+    objectType: 'git';
+}
+
+interface JuliaExternalDependency {
+    package?: string;
+    version?: string;
+    objectType: 'julia';
+}
+
+interface NpmExternalDependency {
+    package?: string;
+    version?: string;
+    objectType: 'npm';
+}
+
+interface PypiExternalDependency {
+    package?: string;
+    version?: string;
+    objectType: 'pypi';
+}
+
+interface ShellExternalDependency {
+    script?: string;
+    objectType: 'shell';
+}
+
+interface OperationOptions {
+    timeoutSeconds?: number;
+    inert?: boolean;
+}
+
+interface ModelContextDefaults {
+    variables?: VariableOptions;
+    operations?: OperationOptions;
+    events?: EventOptions;
+}
+
+interface EventOptions {
+    timeoutSeconds?: number;
+}
+
+interface ExecutionContext extends V1ExecutionContext {}
+
+type V1ExecutionContext = {
+  presets?: Record<string, Record<string, unknown>>;
+  mappedFiles?: Record<string, string>;
+  version: string;
+  tool?: StellaModelTool | VensimModelTool;
+};
+
+interface StellaModelTool {
+  objectType: 'stella';
+  gameMode?: boolean;
+}
+
+interface VensimModelTool {
+  objectType: 'vensim';
+  sensitivityMode?: boolean;
+  cinFiles?: string[];
+}
+
+export enum MORPHOLOGY {
+    MANY = 'MANY',
+    PROXY = 'PROXY',
+    SINGULAR = 'SINGULAR',
 }
 
 export interface ProcAction {
