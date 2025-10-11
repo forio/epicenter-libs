@@ -6,6 +6,7 @@ export default class Result {
     headers;
     body;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     constructor(body: any, response: Response) {
         const { status, headers } = response;
         this.status = status;

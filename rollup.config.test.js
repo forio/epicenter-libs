@@ -42,7 +42,7 @@ export default {
 
         // Allow bundling cjs modules except cross-fetch
         commonjs({
-            exclude: ['node_modules/cross-fetch/**']
+            exclude: ['node_modules/cross-fetch/**'],
         }),
 
         // Handle JSON imports
@@ -78,6 +78,6 @@ export default {
         dir: 'dist/test',
         format: 'esm',
         preserveModules: true,
-        preserveModulesRoot: 'src'
-    }
+        preserveModulesRoot: 'src',
+    },
 };

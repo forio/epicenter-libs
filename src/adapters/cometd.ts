@@ -276,7 +276,7 @@ class CometdAdapter {
     async add(
         channel: Channel,
         update: (data: unknown) => unknown,
-        options: { inert?: boolean } = {}
+        options: { inert?: boolean } = {},
     ): Promise<SubscriptionHandle> {
         await this.init();
 
@@ -352,7 +352,7 @@ class CometdAdapter {
     async publish(
         channel: Channel,
         content: Record<string, unknown>,
-        options: { inert?: boolean } = {}
+        options: { inert?: boolean } = {},
     ): Promise<Message> {
         await this.init();
         if (this.cometd.getStatus() !== CONNECTED) {

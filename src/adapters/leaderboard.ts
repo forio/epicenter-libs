@@ -51,9 +51,9 @@ export async function update(
     scope: { userKey?: string } & GenericScope,
     scores: Score[],
     optionals: {
-      tags?: Tag[],
-      allowChannel?: boolean,
-    } & RoutingOptions = {}
+        tags?: Tag[],
+        allowChannel?: boolean,
+    } & RoutingOptions = {},
 ): Promise<Leaderboard> {
     const { tags, allowChannel, ...routingOptions } = optionals;
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -104,7 +104,7 @@ export async function list(
     collection: string,
     scope: GenericScope,
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Leaderboard[]> {
     const { scopeBoundary, scopeKey } = scope;
     const { filter, sort = [], first, max } = searchOptions;
@@ -124,7 +124,7 @@ export async function get(
     collection: string,
     scope: GenericScope,
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Leaderboard[]> {
     console.warn('DEPRECATION WARNING: leaderboardAdapter.get is deprecated and will be removed with the next release. Use leaderboardAdapter.list instead.');
     return await list(collection, scope, searchOptions, optionals);
@@ -154,7 +154,7 @@ export async function getCount(
     collection: string,
     scope: GenericScope,
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<number> {
     const { scopeBoundary, scopeKey } = scope;
     const { filter } = searchOptions;

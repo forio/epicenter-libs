@@ -1,7 +1,7 @@
 import cookies from './cookies';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-type NodeMap = Record<any, any>
+type NodeMap = Record<any, any>;
 type JavaScriptObject = Record<string, any>;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 

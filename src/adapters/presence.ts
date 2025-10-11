@@ -42,8 +42,8 @@ export async function disconnect(optionals: RoutingOptions): Promise<void> {
         cleanup.push(
             new Router().delete(
                 `/presence/group/${groupKey}`,
-                optionals
-            )
+                optionals,
+            ),
         );
     }
     await Promise.allSettled(cleanup);
@@ -60,7 +60,7 @@ export async function disconnect(optionals: RoutingOptions): Promise<void> {
  */
 export async function forGroup(
     groupKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Presence[]> {
     return await new Router()
         .get(`/presence/group/${groupKey}`, optionals)

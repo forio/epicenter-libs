@@ -83,7 +83,7 @@ export async function getURL(
         affiliate?: keyof typeof AFFILIATE,
         family?: string,
         videoKey?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<string> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {
@@ -130,7 +130,7 @@ export async function getDirectoryURL(
         affiliate?: keyof typeof AFFILIATE,
         family?: string,
         videoKey?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<VIDEO_DIR> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {
@@ -182,7 +182,7 @@ export async function processVideo(
     }[],
     optionals: {
         log?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<boolean> {
     const { log, ...routingOptions } = optionals;
     const body = {
@@ -211,7 +211,7 @@ export async function download(
         affiliate?: keyof typeof AFFILIATE,
         family?: string,
         videoKey?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {

@@ -34,7 +34,7 @@ export interface AppCredentials {
  */
 export async function logout(
     verificationOptionals: RoutingOptions = {},
-    presenceOptionals: RoutingOptions = verificationOptionals
+    presenceOptionals: RoutingOptions = verificationOptionals,
 ): Promise<void> {
     const cleanup = [cometdAdapter.disconnect()];
     const groupKey = identification?.session?.groupKey;
@@ -42,8 +42,8 @@ export async function logout(
         cleanup.push(
             new Router().delete(
                 `/presence/group/${groupKey}`,
-                presenceOptionals
-            )
+                presenceOptionals,
+            ),
         );
     }
     await Promise.allSettled(cleanup);
@@ -76,7 +76,7 @@ export async function removeLocalSession(): Promise<void> {
 // this prevents login issues when trying to access other simulations
 export async function login(
     credentials: UserCredentials | AppCredentials,
-    optionals: { objectType?: string, forcePathInclusion?: boolean } & RoutingOptions = {}
+    optionals: { objectType?: string, forcePathInclusion?: boolean } & RoutingOptions = {},
 ): Promise<Session> {
     const { objectType, forcePathInclusion, ...routingOptions } = optionals;
     let payload;
@@ -119,7 +119,7 @@ export async function regenerate(
     optionals: {
         objectType?: string,
         forcePathInclusion?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Session> {
     const {
         objectType = 'user',
@@ -194,7 +194,7 @@ export async function ssoOutcome(
         sourcedId: string,
         outcomeServiceUrl: string,
     },
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { ...routingOptions } = optionals;
     return await new Router()
@@ -222,7 +222,7 @@ export async function resetPassword(
     optionals: {
         redirectURL?: string,
         subject?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const {
         redirectURL, subject,

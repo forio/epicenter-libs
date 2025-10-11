@@ -31,7 +31,7 @@ export interface AdminSession {
     objectType: 'admin'
     teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT,
     teamAccountShortName: string,
-    projectShortName?:string,
+    projectShortName?: string,
     projectKey?: string,
     groupKey?: string,
     timeoutMinutes: number,
@@ -44,7 +44,7 @@ export type Session = UserSession | AdminSession;
 const SESSION_KEY = 'com.forio.epicenter.session';
 const EPI_SSO_KEY = 'epicenter.v3.sso';
 class Identification {
-    type
+    type;
 
     constructor(storeType: keyof typeof BROWSER_STORAGE_TYPE) {
         if (storeType !== COOKIE && storeType !== SESSION) {

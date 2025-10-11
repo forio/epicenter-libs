@@ -2,7 +2,7 @@ import type { RoutingOptions } from 'utils/router';
 import type { GenericScope } from 'utils/constants';
 import { Router } from 'utils/index';
 
-enum RETRY_POLICY {
+export enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
     RESCHEDULE = 'RESCHEDULE', //If the task fails retry at the next scheduled time point
     FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', //Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
@@ -78,7 +78,7 @@ export async function create(
         retryPolicy?: keyof typeof RETRY_POLICY;
         failSafeTermination?: number;
         ttlSeconds?: number;
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         retryPolicy,
@@ -100,7 +100,7 @@ export async function create(
                     name,
                 },
                 ...routingOptions,
-            }
+            },
         )
         .then(({ body }) => body);
 }
@@ -165,7 +165,7 @@ export async function get(taskKey: string, optionals: RoutingOptions = {}): Prom
  */
 export async function getHistory(
     taskKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     return await new Router()
         .get(`/task/history/${taskKey}`, optionals)
@@ -199,7 +199,7 @@ export async function getHistory(
  */
 export async function getTaskIn(
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     return await new Router()
@@ -207,7 +207,7 @@ export async function getTaskIn(
             `/task/in/${scopeBoundary}/${scopeKey}${
                 userKey ? `/${userKey}` : ''
             }`,
-            optionals
+            optionals,
         )
         .then(({ body }) => body);
 }

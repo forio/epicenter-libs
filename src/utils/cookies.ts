@@ -61,6 +61,8 @@ export default {
         return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[-.+*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);
     },
     clear(): string[] {
+        // TODO: potentially replace this regex with simpler implementation
+        // eslint-disable-next-line no-useless-backreference
         const aKeys = document.cookie.replace(/((?:^|\s*;)[^=]+)(?=;|$)|^\s*|\s*(?:=[^;]*)?(?:\1|$)/g, '').split(/\s*(?:=[^;]*)?;\s*/);
         for (let nLen = aKeys.length, nIdx = 0; nIdx < nLen; nIdx++) {
             aKeys[nIdx] = decodeURIComponent(aKeys[nIdx]);

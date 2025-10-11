@@ -45,7 +45,7 @@ export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
 
 export async function uploadCSV(
     file: File,
-    optionals: UploadOptions = {}
+    optionals: UploadOptions = {},
 ): Promise<void> {
     const {
         overwrite,
@@ -66,7 +66,7 @@ export async function uploadCSV(
 
 export async function createUser(
     view: ExternalUserCreateView | NativeUserCreateView,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<User> {
     return await new Router()
         .post('/user', {
@@ -87,7 +87,7 @@ export async function createUser(
  */
 export async function get(
     userKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<User> {
     return await new Router()
         .get(`/user/${userKey}`, optionals)

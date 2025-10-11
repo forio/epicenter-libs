@@ -165,7 +165,7 @@ export enum PUSH_CATEGORY {
 }
 
 export enum INTERNAL_ROLE {
-        /**
+    /**
      * System -- Epicenter Manager
      * @constant
      * @type {string}

@@ -22,7 +22,7 @@ import * as vonageAPI from '../apis/vonage';
  * @returns promise that resolves to the Vonage project ID (otherwise known as the Vonage API key)
  */
 export async function getProjectID(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<APIKey> {
     return (await vonageAPI.getInfo(optionals)).apiKey;
 }
@@ -43,7 +43,7 @@ export async function getProjectID(
  * @returns promise that resolves to an object containing the Vonage session ID
  */
 export async function createSession(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<VonageSession> {
     return vonageAPI.getSession(optionals);
 }
@@ -60,7 +60,7 @@ export async function createSession(
  */
 export async function generateToken(
     sessionID: SessionID,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Token> {
     return (await vonageAPI.postToken({ sessionId: sessionID }, optionals)).token;
 }
@@ -96,7 +96,7 @@ export async function startArchive(
         writeLock?: keyof typeof ROLE,
         resolution?: string,
         ttlSeconds?: number,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<VonageArchive> {
     const { readLock, writeLock, ttlSeconds, resolution, ...routingOptions } = optionals;
     const { PARTICIPANT, USER } = ROLE;
@@ -126,7 +126,7 @@ export async function startArchive(
  */
 export async function stopArchive(
     archiveID: ArchiveID,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {
     return vonageAPI.deleteArchiveByID(archiveID, optionals);
 }

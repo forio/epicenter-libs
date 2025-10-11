@@ -5,7 +5,7 @@ import { parseFilterInput } from './utils/filter-parser';
 import type { FilterGroup, FilterInput } from './utils/filter-parser';
 
 
-export const proxy = async(
+export const proxy = async (
     resource: string,
     options?: RequestInit,
 ): Promise<Response> => {

@@ -60,6 +60,7 @@ export default class Channel {
      * @param update function that is called whenever a channel update occurs.
      * @returns the subscription object returned by CometD after a sucessful subscribe.
      */
+    // eslint-disable-next-line complexity
     async subscribe(
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         update: (data: any) => unknown,

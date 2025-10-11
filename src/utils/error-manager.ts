@@ -2,9 +2,9 @@ import type { RetryFunction } from './router';
 import Fault from './fault';
 
 
-type Identifier = (error: Fault) => boolean
+type Identifier = (error: Fault) => boolean;
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>
+type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>;
 /* eslint-enable  @typescript-eslint/no-explicit-any */
 
 export interface Handler {
@@ -26,7 +26,7 @@ class ErrorManager {
 
     registerHandler(
         identifier: Identifier,
-        handleFn: HandleFunction
+        handleFn: HandleFunction,
     ) {
         const handler = {
             identifier,
@@ -45,7 +45,7 @@ class ErrorManager {
     async handle<Output>(
         error: Fault,
         retryFn: RetryFunction<Output>,
-        handlers?: Handler[]
+        handlers?: Handler[],
     ): Promise<Output> {
         handlers = handlers || this.handlers;
         const index = handlers.findIndex(({ identifier }) => identifier(error));

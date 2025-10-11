@@ -32,7 +32,7 @@ export async function create(
         draft?: boolean,
         runLimit?: number,
         category?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Episode> {
     const {
         draft, runLimit, category,
@@ -56,7 +56,7 @@ export async function create(
  */
 export async function get(
     episodeKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Episode> {
     return await new Router()
         .get(`/episode/${episodeKey}`, optionals)
@@ -91,7 +91,7 @@ export async function get(
  */
 export async function query(
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Page<Episode>> {
     const { filter, sort = [], first = 0, max } = searchOptions;
 
@@ -119,7 +119,7 @@ export async function query(
  */
 export async function forGroup(
     groupKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Episode[]> {
     return await new Router()
         .get(`/episode/in/${groupKey}`, optionals)
@@ -137,7 +137,7 @@ export async function forGroup(
  */
 export async function withName(
     name: string,
-    optionals: { groupName?: string } & RoutingOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {},
 ): Promise<Episode> {
     const {
         groupName,
@@ -159,7 +159,7 @@ export async function withName(
  */
 export async function remove(
     episodeKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .delete(`/episode/${episodeKey}`, optionals)
