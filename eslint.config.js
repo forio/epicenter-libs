@@ -18,8 +18,6 @@ export default [
                 sourceType: 'module',
                 project: './tsconfig.json',
             },
-            ecmaVersion: 2020,
-            sourceType: 'module',
             globals: {
                 ...globals.browser,
                 ...globals.node,
