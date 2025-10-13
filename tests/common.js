@@ -118,7 +118,7 @@ export const createFetchMock = (additionalResponses = {}) => {
         }
 
         // Handle run queries (pagination endpoints for runs)
-        if (url.includes('/run/') && (url.includes('/in/') || url.match(/\/run\/[^\/]+\/[^\/]+\//))) {
+        if (url.includes('/run/') && (url.includes('/in/') || url.match(/\/run\/[^/]+\/[^/]+\//))) {
             const urlObj = new URL(url);
             const first = parseInt(urlObj.searchParams.get('first') || '0', 10);
             const max = parseInt(urlObj.searchParams.get('max') || '10', 10);

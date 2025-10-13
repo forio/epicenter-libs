@@ -903,7 +903,7 @@ describe('runAdapter', () => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
-            expect(body.hasOwnProperty('ritual')).toBe(false);
+            expect(Object.hasOwn(body, 'ritual')).toBe(false);
         });
 
         testedMethods.push('getVariables');

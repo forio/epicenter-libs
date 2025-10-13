@@ -6,7 +6,7 @@ import globals from 'globals';
 
 export default [
     {
-        ignores: ['**/dist/**', 'eslint.config.js'],
+        ignores: ['**/dist/**', '**.config.js', '**/examples/**'],
     },
     js.configs.recommended,
     {
@@ -229,7 +229,7 @@ export default [
     {
         files: ['tests/**/*.js', 'tests/**/*.spec.js'],
         languageOptions: {
-            ecmaVersion: 2020,
+            ecmaVersion: 2022,
             sourceType: 'module',
             globals: {
                 ...globals.browser,
@@ -260,6 +260,10 @@ export default [
             'complexity': [1, 10],
             'no-unused-vars': [1, {
                 args: 'none',
+                argsIgnorePattern: '^_',
+                varsIgnorePattern: '^_',
+                caughtErrorsIgnorePattern: '^_',
+                ignoreRestSiblings: true,
             }],
             'no-undefined': 0,
         },

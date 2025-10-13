@@ -447,14 +447,14 @@ describe('Router Tests', () => {
             const handleSpy = vi.spyOn(errorManager, 'handle');
             try {
                 await router.get('/unauthorized', { inert: true });
-            } catch (error) {
+            } catch (_error) {
                 /* Do nothing, it should error here */
             }
             expect(handleSpy).not.toHaveBeenCalled();
 
             try {
                 await router.get('/unauthorized');
-            } catch (error) {
+            } catch (_error) {
                 /* Do nothing, it should error here */
             }
             expect(handleSpy).toHaveBeenCalled();
