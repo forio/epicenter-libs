@@ -2,6 +2,7 @@
   "name": "epicenter-libs",
   "version": "3.32.0",
   "main": "dist/cjs/epicenter.js",
+  "type": "module",
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
   "types": "dist/types/epicenter.d.ts",
@@ -44,10 +45,6 @@
         72
       ]
     }
-  },
-  "simple-git-hooks": {
-    "pre-push": "npm run test:run",
-    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
   },
   "dependencies": {
     "cometd": "^8.0.9",
