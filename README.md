@@ -80,7 +80,7 @@ A user's presence is now determined by their connection to the CometD server. Un
 * Trailing slashes in URL pathnames are meaningful in v3; so where applicable: always omit the slash at the end of the URLs of your API REST call (**this includes the one that might show up before a search query**)
 
 # How to Contribute
-Prequisite Node version: 22
+Prequisite Node version: 24
 
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
