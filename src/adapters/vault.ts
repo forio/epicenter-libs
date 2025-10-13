@@ -102,7 +102,7 @@ export async function updateProperties(
 const NOT_FOUND = 404;
 export async function get(
     vaultKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     return await new Router()
         .get(`/vault/${vaultKey}`, optionals)
@@ -116,7 +116,7 @@ export async function get(
 export async function withScope(
     name: string,
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -135,7 +135,7 @@ export async function byName(
         episodeName?: string,
         userKey?: string,
         includeEpisodes?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Vault<unknown>[]> {
     const {
         groupName, episodeName,
@@ -159,7 +159,7 @@ export async function byName(
 
 export async function remove(
     vaultKey: string,
-    optionals: { mutationKey?: string } & RoutingOptions = {}
+    optionals: { mutationKey?: string } & RoutingOptions = {},
 ): Promise<void> {
     const {
         mutationKey,
@@ -208,7 +208,7 @@ export async function define(
         ttlSeconds?: number,
         mutationStrategy?: string,
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -257,7 +257,7 @@ export async function create(
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
         mutationStrategy?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     console.warn('DEPRECATION WARNING: vaultAdapter.create is deprecated and will be removed with the next release. Use vaultAdapter.define instead.');
     return await define(name, scope, { items, ...optionals });
@@ -289,7 +289,7 @@ export async function create(
  */
 export async function list(
     searchOptions: GenericSearchOptions,
-    optionals: { groupName?: string } & RoutingOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {},
 ): Promise<Vault<unknown>[]> {
     const { first, filter, max } = searchOptions;
     const searchParams = {
@@ -329,7 +329,7 @@ export async function list(
  */
 export async function count(
     searchOptions: GenericSearchOptions,
-    optionals: { groupName?: string } & RoutingOptions = {}
+    optionals: { groupName?: string } & RoutingOptions = {},
 ): Promise<Vault<unknown>[]> {
     const { first, filter, max } = searchOptions;
     const searchParams = {

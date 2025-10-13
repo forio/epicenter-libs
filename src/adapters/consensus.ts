@@ -61,7 +61,7 @@ export async function create(
         ttlSeconds?: number,
         transparent?: boolean,
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Consensus> {
     const {
         ttlSeconds,
@@ -100,7 +100,7 @@ export async function load(
     worldKey: string,
     name: string,
     stage: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}/${stage}`, optionals)
@@ -121,7 +121,7 @@ export async function load(
 export async function list(
     worldKey: string,
     name: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}`, optionals)
@@ -146,7 +146,7 @@ export async function forceClose(
     stage: string,
     optionals: {
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
         ritual,
@@ -185,7 +185,7 @@ export async function updateDefaults(
     name: string,
     stage: string,
     actions: Record<string, Record<string, number>[]>,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     const {
         ...routingOptions
@@ -229,12 +229,12 @@ export async function submitActions(
     stage: string,
     actions: {
         name: string,
-        arguments: string|number|Record<string, unknown>[],
+        arguments: string | number | Record<string, unknown>[],
     }[],
     optionals: {
         message?: string,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
         message,
@@ -274,7 +274,7 @@ export async function deleteBarrier(
     worldKey: string,
     name: string,
     stage: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     const {
         ...routingOptions
@@ -305,7 +305,7 @@ export async function deleteBarrier(
 export async function deleteAll(
     worldKey: string,
     name: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     const {
         ...routingOptions
@@ -339,7 +339,7 @@ export async function undoSubmit(
     worldKey: string,
     name: string,
     stage: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Consensus> {
     const {
         ...routingOptions
@@ -381,12 +381,12 @@ export async function triggerFor(
     userKey: string,
     actions: {
         name: string,
-        arguments: string|number|Record<string, unknown>[],
+        arguments: string | number | Record<string, unknown>[],
     }[],
     optionals: {
         message?: string,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
         ritual,
@@ -430,7 +430,7 @@ export async function undoSubmitFor(
     name: string,
     stage: string,
     userKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const {
         ...routingOptions

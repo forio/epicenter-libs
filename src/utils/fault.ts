@@ -21,7 +21,7 @@ export default class Fault extends EpicenterError {
     constructor(body: ErrorBody, response?: Response) {
         super(
             body.message,
-            body.information?.code
+            body.information?.code,
         );
 
         const { information, message, cause, status } = body;

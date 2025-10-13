@@ -15,7 +15,7 @@ export async function create(
     name: string,
     partners: number,
     scope: GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
 
@@ -41,7 +41,7 @@ export async function create(
 export async function edit(
     udomeKey: string,
     closed: boolean,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
 
@@ -64,7 +64,7 @@ export async function edit(
  */
 export async function addUser(
     udomeKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
 
@@ -88,7 +88,7 @@ const NOT_FOUND = 404;
  */
 export async function get(
     udomeKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
 
@@ -115,7 +115,7 @@ export async function get(
 export async function byName(
     name: string,
     scope: GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const { accountShortName, projectShortName, server } = optionals;
     const { scopeBoundary, scopeKey } = scope;

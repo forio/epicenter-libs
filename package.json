@@ -2,6 +2,7 @@
   "name": "epicenter-libs",
   "version": "3.32.0",
   "main": "dist/cjs/epicenter.js",
+  "type": "module",
   "module": "dist/module/epicenter.js",
   "browser": "dist/browser/epicenter.js",
   "types": "dist/types/epicenter.d.ts",
@@ -45,10 +46,6 @@
       ]
     }
   },
-  "simple-git-hooks": {
-    "pre-push": "npm run test:run",
-    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-  },
   "dependencies": {
     "cometd": "^8.0.9",
     "cross-fetch": "^3.0.6"
@@ -74,12 +71,13 @@
     "@rollup/plugin-node-resolve": "^15.3.0",
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
+    "@stylistic/eslint-plugin": "^5.4.0",
     "@types/cometd": "^4.0.8",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
     "@typescript-eslint/parser": "^8.20.0",
     "babel-loader": "^9.2.1",
     "conventional-changelog-cli": "^2.1.1",
-    "eslint": "^8.57.1",
+    "eslint": "^9.37.0",
     "husky": "^9.1.7",
     "jsdom": "^26.1.0",
     "regenerator-runtime": "^0.14.1",

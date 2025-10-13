@@ -1,13 +1,13 @@
 import type { RoutingOptions } from '../utils/router';
 import { ROLE, Router } from '../utils';
 
-enum ACCESS_TYPE {
+export enum ACCESS_TYPE {
     PUBLIC = 'PUBLIC',
     PRIVATE = 'PRIVATE',
     AUTHENTICATED = 'AUTHENTICATED',
 }
 
-enum WORKER_PARTITION {
+export enum WORKER_PARTITION {
     NONE = 'NONE',
     ALL = 'ALL',
     FREE = 'FREE',
@@ -15,7 +15,7 @@ enum WORKER_PARTITION {
     ACCOUNT = 'ACCOUNT',
 }
 
-enum PHYLOGENY {
+export enum PHYLOGENY {
     ORIGINAL = 'ORIGINAL',
     HISTORICAL = 'HISTORICAL',
     REFERENTIAL = 'REFERENTIAL',
@@ -41,7 +41,7 @@ enum PHYLOGENY {
     SILENT = 'SILENT',
 }
 
-enum FILE_TYPE {
+export enum FILE_TYPE {
     INSENSITIVE = 'INSENSITIVE',
     SENSITIVE = 'SENSITIVE',
 }
@@ -128,7 +128,7 @@ type Project =
  * @returns promise resolving true/false whether or not the project supports the use of push channels
  */
 export async function channelsEnabled(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<boolean> {
     return await new Router()
         .get('/project/channel/isEnabled', optionals)
@@ -136,7 +136,7 @@ export async function channelsEnabled(
 }
 
 export async function get(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Project> {
     return await new Router()
         .get('/project', optionals)
@@ -145,7 +145,7 @@ export async function get(
 
 export async function list(
     accountShortName: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Project[]> {
     return await new Router()
         .withAccountShortName(accountShortName)

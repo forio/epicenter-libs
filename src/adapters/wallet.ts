@@ -67,7 +67,7 @@ const NOT_FOUND = 404;
  */
 export async function get(
     scope: { userKey: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Wallet> {
     const { scopeBoundary, scopeKey } = scope;
     let { userKey } = scope;
@@ -98,7 +98,7 @@ export async function withScope(
     optionals: {
         first?: number,
         max?: number,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Page<Wallet>> {
     const { scopeBoundary, scopeKey } = scope;
     const { first = 0, max, ...routingOptions } = optionals;

@@ -69,12 +69,12 @@ export enum LANGUAGE_CODE {
 export type VIDEO_DIR = {
     contents: string[],
     videoKey: string,
-}
+};
 
 export async function getVideoURLByKey(
     file: string,
     videoKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<string> {
     return await new Router()
         .get(`/video/url/${videoKey}/${file}`, optionals)
@@ -86,7 +86,7 @@ export async function getVideoURLWith(
     family: string,
     affiliate: keyof typeof AFFILIATE,
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<string> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const userKeyURIComponent = userKey ? `/${userKey}` : '';
@@ -97,7 +97,7 @@ export async function getVideoURLWith(
 
 export async function getVideoDirectoryByKey(
     videoKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<VIDEO_DIR> {
     return await new Router()
         .get(`/video/url/${videoKey}`, optionals)
@@ -108,7 +108,7 @@ export async function getVideoDirectoryWith(
     family: string,
     affiliate: keyof typeof AFFILIATE,
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<VIDEO_DIR> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const userKeyURIComponent = userKey ? `/${userKey}` : '';
@@ -118,7 +118,7 @@ export async function getVideoDirectoryWith(
 }
 
 export async function getVideoSearch(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Page<Video>> {
     return await new Router()
         .get('/video/search', optionals)
@@ -127,7 +127,7 @@ export async function getVideoSearch(
 
 export async function deleteVideoByKey(
     videoKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .delete(`/video/${videoKey}`, optionals)
@@ -157,7 +157,7 @@ export async function postVideoProcessor(
 export async function downloadVideoByKey(
     file: string,
     videoKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .get(`/video/download/${videoKey}/${file}`, optionals)
@@ -169,7 +169,7 @@ export async function downloadVideoWith(
     family: string,
     affiliate: keyof typeof AFFILIATE,
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const userKeyURIComponent = userKey ? `/${userKey}` : '';

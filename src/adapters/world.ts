@@ -72,7 +72,7 @@ export async function update(
         runKey?: string,
         allowChannel?: boolean
     },
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<World> {
     const {
         displayName,
@@ -103,7 +103,7 @@ export async function update(
  */
 export async function destroy(
     worldKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
 
     return await new Router()
@@ -134,7 +134,7 @@ export async function create(
         episodeName?: string,
         worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World> {
     const {
         name,
@@ -177,7 +177,7 @@ export async function get(
         groupName?: string,
         episodeName?: string,
         mine?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World> {
     const {
         groupName, episodeName, mine,
@@ -208,7 +208,7 @@ export async function getAssignments(
         groupName?: string,
         episodeName?: string,
         mine?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
         groupName, episodeName, mine,
@@ -222,7 +222,7 @@ export async function getAssignments(
 }
 
 export async function getSessionWorlds(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<World> {
     return await new Router()
         .get('/world/assignment', optionals)
@@ -262,7 +262,7 @@ export async function selfAssign(
         worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
         populace?: Persona[],
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World> {
     const {
         role,
@@ -324,7 +324,7 @@ export async function autoAssignUsers(
         keepEmptyWorlds?: boolean,
         populace?: Persona[],
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
         groupName,
@@ -363,7 +363,7 @@ export async function editAssignments(
         objective?: keyof typeof OBJECTIVE,
         keepEmptyWorlds?: boolean,
         requireAllAssignments?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
@@ -392,7 +392,7 @@ export async function editAssignments(
  */
 export async function getAssignmentsByKey(
     worldKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<World> {
 
     return await new Router()
@@ -419,7 +419,7 @@ export async function removeUsers(
         groupName?: string,
         episodeName?: string,
         keepEmptyWorlds?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const {
         groupName, episodeName, keepEmptyWorlds,
@@ -448,7 +448,7 @@ export async function removeUsers(
  */
 export async function getPersonas(
     scope: GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
@@ -487,7 +487,7 @@ export async function getPersonas(
 export async function setPersonas(
     personas: { role: string, minimum?: number, maximum?: number, marginal?: number }[],
     scope: GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
@@ -517,7 +517,7 @@ export async function setPersonas(
 export async function assignRun(
     worldKey: string,
     runKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<World> {
 
     return await new Router()

@@ -30,7 +30,7 @@ export interface Chat {
 export async function updatePermit(
     chatKey: string,
     permit: Permit,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Chat> {
     return new Router()
         .patch(`/chat/${chatKey}`, {
@@ -58,7 +58,7 @@ export async function create(
     room: string,
     scope: GenericScope,
     permit: Permit,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Chat> {
     return new Router()
         .post('/chat', {
@@ -85,7 +85,7 @@ export async function create(
  */
 export async function get(
     chatKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Chat> {
     return new Router()
         .get(`/chat/${chatKey}`, optionals)
@@ -118,7 +118,7 @@ export async function get(
  */
 export async function query(
     searchOptions: GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Page<Chat>> {
     const { filter, sort = [], first = 0, max } = searchOptions;
     const searchParams = {
@@ -149,7 +149,7 @@ export async function query(
 export async function sendMessage(
     chatKey: string,
     message: string,
-    optionals: { userKey?: string } & RoutingOptions = {}
+    optionals: { userKey?: string } & RoutingOptions = {},
 ): Promise<ChatMessage> {
     const { userKey, ...routingOptions } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -178,7 +178,7 @@ export async function getMessages(
     optionals: {
         maxRecords?: number,
         horizon?: number,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<ChatMessage[]> {
     const { maxRecords, horizon, ...routingOptions } = optionals;
     return new Router()

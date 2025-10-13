@@ -14,7 +14,7 @@ export type VonageSession = {
 export type VonageArchive = {
     archiveId: string,
     status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired',
-}
+};
 
 export async function getSession(
     optionals: RoutingOptions = {},
@@ -53,7 +53,7 @@ export async function postArchive(
 }
 
 export async function getInfo(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<{ apiKey: APIKey }> {
     return await new Router()
         .get('/vonage/info', optionals)
@@ -62,7 +62,7 @@ export async function getInfo(
 
 export async function deleteArchiveByID(
     archiveID: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {
     return await new Router()
         .delete(`/vonage/archive/${archiveID}`, optionals)

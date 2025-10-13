@@ -15,11 +15,11 @@ export const DEFAULT_ERROR_HANDLERS: Record<string, Handler> = {};
 
 DEFAULT_ERROR_HANDLERS.cometdReconnected = errorManager.registerHandler(
     (error) => error.code === 'COMETD_RECONNECTED',
-    async(error: Fault) => {
+    async (error: Fault) => {
         if (isBrowser()) {
             console.warn('Cometd Reconnected. If you wish to react to this reconnection, register an error handler with identifier: error.code === "COMETD_RECONNECTED".', error);
         }
-    }
+    },
 );
 
 DEFAULT_ERROR_HANDLERS.cometdError = errorManager.registerHandler(
@@ -28,12 +28,12 @@ DEFAULT_ERROR_HANDLERS.cometdError = errorManager.registerHandler(
         console.warn('Cometd error. Attempting to reconnect.', error);
         await cometdAdapter.disconnect();
         return await retry();
-    }
+    },
 );
 
 DEFAULT_ERROR_HANDLERS.authExpired = errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_EXPIRED',
-    async(error: Fault) => {
+    async (error: Fault) => {
         await authAdapter.removeLocalSession();
         if (isBrowser()) {
             // eslint-disable-next-line no-alert
@@ -45,7 +45,7 @@ DEFAULT_ERROR_HANDLERS.authExpired = errorManager.registerHandler(
 
 DEFAULT_ERROR_HANDLERS.authGroupExpired = errorManager.registerHandler(
     (error: Fault) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_GROUP_EXPIRED',
-    async(error: Fault) => {
+    async (error: Fault) => {
         if (isBrowser()) {
             // eslint-disable-next-line no-alert
             alert('This group has expired. Try logging into a different group');
@@ -65,11 +65,11 @@ DEFAULT_ERROR_HANDLERS.authInvalidated = errorManager.registerHandler(
             const groupKey = session?.groupKey ?? '';
             await authAdapter.regenerate(groupKey, { objectType: 'user', inert: true });
             return await retry();
-        } catch (e) {
+        } catch (_error) {
             await authAdapter.removeLocalSession();
             throw error;
         }
-    }
+    },
 );
 
 Object.freeze(DEFAULT_ERROR_HANDLERS);

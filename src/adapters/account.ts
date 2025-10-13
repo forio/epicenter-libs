@@ -49,7 +49,6 @@ export async function getAccount(accountShortName: string): Promise<AccountReadV
 }
 
 export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
-
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
@@ -70,7 +69,7 @@ export async function updateAccount(
 }
 
 export async function removeAccount(
-    accountShortName: string
+    accountShortName: string,
 ): Promise<void> {
     return await new Router()
         .withAccountShortName(accountShortName)

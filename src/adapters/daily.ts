@@ -7,16 +7,16 @@ import {
 import type { GenericScope } from '../utils/constants';
 import * as videoAdapter from './video';
 
-enum RECORDING_TYPES {
-    'CLOUD',
+export enum RECORDING_TYPES {
+    CLOUD = 'CLOUD',
 }
 
-enum PRIVACY {
-    'PRIVATE',
+export enum PRIVACY {
+    PRIVATE = 'PRIVATE',
 }
 
-enum STREAM_TYPES {
-    'HLS',
+export enum STREAM_TYPES {
+    HLS = 'HLS',
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -56,7 +56,7 @@ async function handleRateLimit(requestFunction: () => Promise<{status: number}>,
  * @returns promise that resolves to the daily object
  */
 export async function getConfig(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<number> {
     return await new Router()
         .get('/daily/v1', optionals)
@@ -121,7 +121,7 @@ export async function createRoom(
                 save_hls_recording?: boolean,
             },
         }],
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         readLock,
@@ -135,7 +135,7 @@ export async function createRoom(
         ...routingOptions
     } = optionals;
     const { PARTICIPANT } = ROLE;
-    const callAPI = async() => {
+    const callAPI = async () => {
         return await new Router()
             .post(
                 '/daily/v1/room',
@@ -157,7 +157,7 @@ export async function createRoom(
                         privacy,
                     },
                     ...routingOptions,
-                }
+                },
             )
             .then(({ body }) => body);
     };
@@ -194,7 +194,7 @@ export async function createToken(
         enable_recording?: keyof typeof RECORDING_TYPES,
         disableRateLimitHandling?: boolean,
         selfSign?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         start_video_off,
@@ -207,7 +207,7 @@ export async function createToken(
         selfSign = true,
         ...routingOptions
     } = optionals;
-    const callAPI = async() => {
+    const callAPI = async () => {
         return await new Router()
             .withSearchParams({ selfSign })
             .post(
@@ -225,7 +225,7 @@ export async function createToken(
                         },
                     },
                     ...routingOptions,
-                }
+                },
             )
             .then(({ body }) => body);
     };
@@ -244,7 +244,7 @@ export async function getVideoByRecordingId(
     room_name: string,
     recordingId: string,
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<string | null> {
     const filePathInfo = await videoAdapter.getDirectoryURL({
         scope, 
@@ -275,7 +275,7 @@ export async function getVideoByRecordingId(
  * dailyAdapter.updateRecordingStatus(room_name);
  */
 export async function updateRecordingStatus(room_name : string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<number> {
     return await new Router()
         .delete(`/daily/v1/meetingToken/${room_name}`, optionals)

@@ -32,7 +32,7 @@ export async function create(
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -65,7 +65,7 @@ export async function update(
         readLock?: keyof typeof ROLE,
         writeLock?: keyof typeof ROLE,
         ttlSeconds?: number,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -93,7 +93,7 @@ export async function update(
 
 export async function remove(
     assetKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .delete(`/asset/${assetKey}`, optionals)
@@ -102,7 +102,7 @@ export async function remove(
 
 export async function removeFromScope(
     scope: AssetScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -113,7 +113,7 @@ export async function removeFromScope(
 
 export async function get(
     assetKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Asset> {
     const { server, accountShortName, projectShortName } = optionals;
     return await new Router()
@@ -128,7 +128,7 @@ export async function list(
     scope: AssetScope,
     optionals: {
         filter?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Asset[]> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
@@ -143,7 +143,7 @@ export async function list(
 
 export async function getURL(
     assetKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<string> {
     return await new Router()
         .get(`/asset/url/${assetKey}`, optionals)
@@ -153,7 +153,7 @@ export async function getURL(
 export async function getURLWithScope(
     file: string,
     scope: AssetScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<string> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -164,7 +164,7 @@ export async function getURLWithScope(
 
 export async function download(
     assetKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .get(`/asset/download/${assetKey}`, optionals)
@@ -174,7 +174,7 @@ export async function download(
 export async function downloadWithScope(
     file: string,
     scope: AssetScope,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const uriComponent = userKey ? `/${userKey}` : '';
@@ -193,7 +193,7 @@ export async function store(
         ttlSeconds?: number,
         overwrite?: boolean,
         fileName?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;
     const name = fileName ?? file.name;

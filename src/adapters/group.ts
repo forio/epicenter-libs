@@ -74,7 +74,7 @@ export async function get(
     optionals: {
         augment?: keyof typeof AUGMENT,
         groupKey?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Group> {
     const {
         groupKey, augment,
@@ -118,7 +118,7 @@ export async function destroy(
  * @returns promise that resolves to a list of groups
  */
 export async function gather(
-    optionals: { includeExpired?: boolean } & RoutingOptions = {}
+    optionals: { includeExpired?: boolean } & RoutingOptions = {},
 ): Promise<Group[]> {
     const {
         includeExpired,
@@ -159,7 +159,7 @@ export async function gather(
 export async function update(
     groupKey: string,
     update: GroupUpdate,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Group> {
     const {
         runLimit,
@@ -224,7 +224,7 @@ export async function update(
  */
 export async function create(
     group: Group,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Group> {
     const {
         name,
@@ -292,7 +292,7 @@ export async function create(
  */
 export async function query(
     searchOptions: { quantized?: boolean } & GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Page<Group>> {
     const { filter, sort = [], first, max, quantized } = searchOptions;
 
@@ -312,7 +312,7 @@ export async function query(
 }
 /** DEPRECATED -- use groupAdapter.query instead */
 export async function search(
-    optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {}
+    optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {},
 ): Promise<Page<Group>> {
     console.warn('DEPRECATION WARNING: groupAdapter.search is deprecated and will be removed with the next release. Use groupAdapter.query instead.');
     const { filter = [], sort = [], first, max, quantized, ...routingOptions } = optionals;
@@ -331,7 +331,7 @@ export async function search(
  */
 export async function withGroupName(
     name: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Group> {
 
     return await new Router()
@@ -434,7 +434,7 @@ export async function whitelistUsers(
     optionals: {
         allow?: boolean,
         emails?: string[]
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const {
         allow = true,
@@ -463,7 +463,7 @@ export async function whitelistUsers(
  */
 export async function getWhitelistedUsers(
     groupKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<User[]> {
 
     return await new Router()
@@ -495,7 +495,7 @@ export async function sendRegistrationEmail(
         linkURL?: string,
         redirectURL?: string,
         subject?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<void> {
     const { redirectURL, linkURL, subject, ...routingOptions } = optionals;
 
@@ -539,7 +539,7 @@ export async function selfRegister(
         givenName?: string,
         familyName?: string,
         handle?: string,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<SelfRegistrationResult> {
     const { displayName, givenName, familyName, handle, ...routingOptions } = optionals;
 
@@ -578,7 +578,7 @@ type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available
  */
 export async function addUser(
     usersInput: UserInput | UserInput[],
-    optionals: { groupKey?: string } & RoutingOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {},
 ):Promise<Group> {
     const { groupKey, ...routingOptions } = optionals;
 
@@ -618,7 +618,7 @@ export async function addUser(
 export async function updateUser(
     userKey: string,
     update: { role?: keyof typeof ROLE, available?: boolean },
-    optionals: { groupKey?: string } & RoutingOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {},
 ):Promise<GroupPermission> {
     const { role, available } = update;
     const { groupKey, ...routingOptions } = optionals;
@@ -648,7 +648,7 @@ export async function updateUser(
  */
 export async function removeUser(
     userKey: string | string[],
-    optionals: { groupKey?: string } & RoutingOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {},
 ): Promise<void> {
     const { groupKey, ...routingOptions } = optionals;
     const hasMultiple = Array.isArray(userKey) && userKey.length > 1;
@@ -665,7 +665,7 @@ export async function removeUser(
 export async function statusUpdate(
     code: string,
     message: string,
-    optionals: { groupKey?: string } & RoutingOptions = {}
+    optionals: { groupKey?: string } & RoutingOptions = {},
 ): Promise<Group> {
     const { groupKey, ...routingOptions } = optionals;
     const session = identification.session as UserSession;

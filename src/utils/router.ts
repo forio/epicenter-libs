@@ -207,7 +207,7 @@ async function request(
     if ((response.status >= OK) && (response.status < BAD_REQUEST)) {
         const result = new Result(
             paginated ? paginate(json, url, options) : json,
-            response
+            response,
         );
         return result;
     }
@@ -229,8 +229,8 @@ async function request(
  * Used to make the network calls in all API adapters
  */
 export default class Router {
-    _version: Version = undefined
-    _server: Server = undefined
+    _version: Version = undefined;
+    _server: Server = undefined;
     _useProjectProxy: UseProjectProxy = undefined;
     _accountShortName: AccountShortName = undefined;
     _projectShortName: ProjectShortName = undefined;
@@ -438,7 +438,7 @@ export default class Router {
             projectShortName?: string,
             version?: number
             query?: SearchParams,
-        } = {}
+        } = {},
     ): URL {
         const server = overrides.server ?? this.server ?? `${config.apiProtocol}://${config.apiHost}`;
         const useProjectProxy = overrides.useProjectProxy ?? this.useProjectProxy ?? config.useProjectProxy;

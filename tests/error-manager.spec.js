@@ -29,7 +29,7 @@ describe('Error Manager', () => {
         it('Should by default handle invalidated authentication via a PATCH to upgrade the session and retrying after', async() => {
             try {
                 await new Router().get('/unauthorized');
-            } catch (error) {
+            } catch (_error) {
                 /* Do nothing, it should error here */
             }
             // TODO: Fix this test - authentication invalidation behavior may have changed

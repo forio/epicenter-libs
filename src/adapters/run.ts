@@ -9,8 +9,6 @@ import {
     parseFilterInput,
 } from 'utils';
 
-interface ModelContext extends V2ModelContext {}
-
 interface V2ModelContext {
     variables?: Record<string, VariableOptions>;
     externalFunctions?: Record<string, WireExternalFunction>;
@@ -32,6 +30,8 @@ interface V2ModelContext {
     minimumLogLevel?: string;
     events?: Record<string, EventOptions>;
 }
+
+interface ModelContext extends V2ModelContext {}
 
 interface VariableOptions {
     resetDecision?: boolean;
@@ -205,24 +205,24 @@ interface EventOptions {
     timeoutSeconds?: number;
 }
 
-interface ExecutionContext extends V1ExecutionContext {}
-
 type V1ExecutionContext = {
-  presets?: Record<string, Record<string, unknown>>;
-  mappedFiles?: Record<string, string>;
-  version: string;
-  tool?: StellaModelTool | VensimModelTool;
+    presets?: Record<string, Record<string, unknown>>;
+    mappedFiles?: Record<string, string>;
+    version: string;
+    tool?: StellaModelTool | VensimModelTool;
 };
 
+interface ExecutionContext extends V1ExecutionContext {}
+
 interface StellaModelTool {
-  objectType: 'stella';
-  gameMode?: boolean;
+    objectType: 'stella';
+    gameMode?: boolean;
 }
 
 interface VensimModelTool {
-  objectType: 'vensim';
-  sensitivityMode?: boolean;
-  cinFiles?: string[];
+    objectType: 'vensim';
+    sensitivityMode?: boolean;
+    cinFiles?: string[];
 }
 
 export enum MORPHOLOGY {
@@ -272,7 +272,7 @@ export type RunStrategy =
     | 'reuse-across-sessions'
     | 'reuse-never'
     | 'reuse-by-tracking-key'
-    | 'multiplayer'
+    | 'multiplayer';
 
 /**
  * Creates a run. By default, all runs are created with the user's ID (`userKey`), except in the case of world-scoped runs.
@@ -323,7 +323,7 @@ export async function create(
     const headers = Object.assign(
         {},
         routingOptions.headers,
-        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+        hasPermit ? { 'X-Forio-Confirmation': true } : {},
     );
     const permit = hasPermit ? { readLock, writeLock } : undefined;
 
@@ -380,7 +380,7 @@ export async function createSingular(
     const headers = Object.assign(
         {},
         routingOptions.headers,
-        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+        hasPermit ? { 'X-Forio-Confirmation': true } : {},
     );
     const permit = hasPermit ? { readLock, writeLock } : undefined;
 
@@ -406,7 +406,7 @@ export async function createSingular(
  * @returns promise that resolves to a runKey
  */
 export async function getSingularRunKey(
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<number> {
     return await new Router()
         .get('/run/singular/key', optionals)
@@ -430,7 +430,7 @@ export async function clone(
         trackingKey?: string,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Run> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
@@ -454,7 +454,7 @@ export async function restore(
         ephemeral?: boolean,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Run> {
     const {
         ephemeral, modelContext = {}, executionContext = {},
@@ -477,7 +477,7 @@ export async function rewind(
     optionals: {
         ephemeral?: boolean,
         modelContext?: ModelContext,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Run> {
     const {
         ephemeral, modelContext = {},
@@ -505,7 +505,7 @@ export async function update(
         closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
         allowChannel?: boolean, /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
     },
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Run> {
     const {
         readLock,
@@ -546,7 +546,7 @@ export async function update(
  */
 export async function remove(
     runKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<void> {
     return await new Router()
         .delete(`/run/${runKey}`, optionals)
@@ -555,7 +555,7 @@ export async function remove(
 
 export async function get(
     runKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Run> {
     return await new Router()
         .get(`/run/${runKey}`, optionals)
@@ -607,7 +607,7 @@ export async function query(
         episodeName?: string,
         includeEpisodes?: boolean,
     } & GenericSearchOptions,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Page<Run>> {
     const {
         filter, sort = [], first, max, timeout, variables = [], metadata = [],
@@ -666,7 +666,7 @@ export async function query(
 
 export async function introspect(
     model: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
 
     return await new Router()
@@ -676,7 +676,7 @@ export async function introspect(
 
 export async function introspectWithRunKey(
     runKey: string,
-    optionals: RoutingOptions = {}
+    optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
 
     return await new Router()
@@ -691,7 +691,7 @@ export async function operation(
     optionals: {
         timeout?: number,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
         timeout, ritual,
@@ -724,7 +724,7 @@ export async function getVariables(
         timeout?: number,
         ritual?: keyof typeof RITUAL,
         ignorable?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown> | Record<string, unknown>[]> {
     const {
         timeout, ritual, ignorable,
@@ -770,7 +770,7 @@ export async function getVariable(
     optionals: {
         timeout?: number,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
         timeout, ritual,
@@ -803,7 +803,7 @@ export async function updateVariables(
     optionals: {
         timeout?: number,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
@@ -832,7 +832,7 @@ export async function getMetadata(
     metadata: string[],
     optionals: {
         timeout?: number
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         ...routingOptions
@@ -865,7 +865,7 @@ export async function updateMetadata(
     update: Record<string, unknown>,
     optionals: {
         timeout?: number
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         timeout,
@@ -890,7 +890,7 @@ export async function action(
     optionals: {
         timeout?: number,
         ritual?: keyof typeof RITUAL,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
         timeout, ritual,
@@ -942,7 +942,7 @@ export async function retrieveFromWorld(
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
         allowChannel?: boolean,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Run> {
     const {
         readLock,
@@ -959,7 +959,7 @@ export async function retrieveFromWorld(
     const headers = Object.assign(
         {},
         routingOptions.headers,
-        hasPermit ? { 'X-Forio-Confirmation': true } : {}
+        hasPermit ? { 'X-Forio-Confirmation': true } : {},
     );
     const permit = hasPermit ? { readLock, writeLock } : undefined;
 
@@ -1051,7 +1051,7 @@ export async function getWithStrategy(
     scope: GenericScope,
     optionals: {
         // initOperations?: Array<string | { name: string, params?: unknown[]}>,
-    } & RunCreateOptions = {}
+    } & RunCreateOptions = {},
 ): Promise<Run> {
     // const { initOperations = [] } = optionals;
     if (strategy === 'reuse-across-sessions') {
@@ -1100,7 +1100,7 @@ export async function migrate(
         trackingKey?: string,
         modelContext?: ModelContext,
         executionContext?: ExecutionContext,
-    } & RoutingOptions = {}
+    } & RoutingOptions = {},
 ): Promise<Run> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
