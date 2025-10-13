@@ -98,7 +98,7 @@ Prerequisite Node version: 24
 1. Create a new branch for your change; if there's a JIRA ticket associated use that, e.g., `git checkout -b EPILIBS-42`
 2. Make your changes
 3. Create a [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) describing your changes
-   - If you feel your change breaks the existing usage of the library be sure to indicate this in the commit message by adding a note in the commit footer starting with: `BREAKING CHANGE:`, and this will be automatically reflected in the changelog when it's generated.
+   - If you feel your change breaks the existing usage of the library be sure to indicate this in the commit message by adding a note in the commit footer starting with: `BREAKING CHANGE: `, and this will be automatically reflected in the changelog when it's generated.
 4. Push up your branch and make sure it passes the tests in the pre-push hook
 5. Make a pull request on github, or if you're confident: merge your branch into `master`
 
