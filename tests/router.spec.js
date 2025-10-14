@@ -1,6 +1,22 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll, afterEach, vi } from 'vitest';
-import { ACCOUNT, PROJECT, SESSION, createFetchMock, config, authAdapter, Router, errorManager, getAuthHeader } from './common';
-
+import {
+    it,
+    expect,
+    describe,
+    afterAll,
+    beforeAll,
+    beforeEach,
+} from 'vitest';
+import {
+    ACCOUNT,
+    PROJECT,
+    SESSION,
+    getAuthHeader,
+    createFetchMock,
+    config,
+    Router,
+    authAdapter,
+    errorManager,
+} from './common';
 
 describe('Router Tests', () => {
     let capturedRequests = [];

@@ -127,6 +127,7 @@ export {
     matchmakerAdapter,
     walletAdapter,
     Channel,
+    cometdAdapter,
 } from './adapters';
 
 /* APIs */

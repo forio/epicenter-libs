@@ -1,14 +1,22 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    it,
+    expect,
+    describe,
+    afterAll,
+    beforeAll,
+    beforeEach,
+} from 'vitest';
 import {
     ACCOUNT,
     PROJECT,
     SESSION,
-    createFetchMock,
     GENERIC_OPTIONS,
+    createFetchMock,
+    getAuthHeader,
+    testedMethods,
     config,
     authAdapter,
     timeAdapter,
-    getAuthHeader,
 } from './common';
 
 describe('timeAdapter', () => {
@@ -58,5 +66,13 @@ describe('timeAdapter', () => {
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/time`);
         });
+
+        testedMethods.push('get');
+    });
+
+    it('Should not have any untested methods', () => {
+        // Filter out non-function exports (enums, interfaces, etc.)
+        const actualMethods = Object.keys(timeAdapter).filter((key) => typeof timeAdapter[key] === 'function').sort();
+        expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

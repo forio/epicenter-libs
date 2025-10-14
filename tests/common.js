@@ -176,24 +176,39 @@ export const createFetchMock = (additionalResponses = {}) => {
     };
 };
 
-export const { 
+export const {
     ROLE,
     RITUAL,
-    config, 
+    config,
     SCOPE_BOUNDARY,
     Router,
-    runAdapter, 
-    authAdapter, 
-    timeAdapter, 
+    runAdapter,
+    authAdapter,
+    timeAdapter,
     vaultAdapter,
     errorManager,
-    groupAdapter, 
-    worldAdapter, 
+    groupAdapter,
+    worldAdapter,
     walletAdapter,
-    projectAdapter, 
+    projectAdapter,
     consensusAdapter,
-    somebodyAdapter, 
+    somebodyAdapter,
     leaderboardAdapter,
+    accountAdapter,
+    adminAdapter,
+    assetAdapter,
+    chatAdapter,
+    dailyAdapter,
+    emailAdapter,
+    episodeAdapter,
+    matchmakerAdapter,
+    presenceAdapter,
+    taskAdapter,
+    userAdapter,
+    recaptchaAdapter,
+    videoAdapter,
+    vonageAdapter,
+    cometdAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = [];
