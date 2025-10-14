@@ -88,6 +88,8 @@ describe('adminAdapter', () => {
             expect(body.familyName).toBe(externalAdmin.familyName);
             expect(body).toHaveProperty('verified');
             expect(body.verified).toBe(true);
+            expect(body).toHaveProperty('active');
+            expect(body.active).toBe(true);
         });
 
         it('Should pass the admin details to the request body for native admin', async() => {
@@ -97,6 +99,18 @@ describe('adminAdapter', () => {
             const body = JSON.parse(req.options.body);
             expect(body).toHaveProperty('objectType');
             expect(body.objectType).toBe('native');
+            expect(body).toHaveProperty('handle');
+            expect(body.handle).toBe(nativeAdmin.handle);
+            expect(body).toHaveProperty('email');
+            expect(body.email).toBe(nativeAdmin.email);
+            expect(body).toHaveProperty('givenName');
+            expect(body.givenName).toBe(nativeAdmin.givenName);
+            expect(body).toHaveProperty('familyName');
+            expect(body.familyName).toBe(nativeAdmin.familyName);
+            expect(body).toHaveProperty('verified');
+            expect(body.verified).toBe(true);
+            expect(body).toHaveProperty('active');
+            expect(body.active).toBe(true);
             expect(body).toHaveProperty('secret');
             expect(body.secret).toHaveProperty('password');
             expect(body.secret.password).toBe(nativeAdmin.secret.password);

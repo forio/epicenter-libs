@@ -107,6 +107,12 @@ describe('accountAdapter', () => {
             const body = JSON.parse(req.options.body);
             expect(body).toHaveProperty('objectType');
             expect(body.objectType).toBe('team');
+            expect(body).toHaveProperty('adminKey');
+            expect(body.adminKey).toBe(teamView.adminKey);
+            expect(body).toHaveProperty('name');
+            expect(body.name).toBe(teamView.name);
+            expect(body).toHaveProperty('shortName');
+            expect(body.shortName).toBe(teamView.shortName);
             expect(body).toHaveProperty('billingInterval');
             expect(body.billingInterval).toBe(teamView.billingInterval);
             expect(body).toHaveProperty('subscriptionPlan');
