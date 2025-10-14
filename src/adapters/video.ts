@@ -215,10 +215,10 @@ export async function download(
 ): Promise<void> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {
-        videoAPI.downloadVideoWith(file, family, affiliate, scope, routingOptions);
+        return videoAPI.downloadVideoWith(file, family, affiliate, scope, routingOptions);
     }
     if (videoKey) {
-        videoAPI.downloadVideoByKey(file, videoKey, routingOptions);
+        return videoAPI.downloadVideoByKey(file, videoKey, routingOptions);
     }
     throw new EpicenterError('Cannot download video -- either a video key or scope/affiliate/family specification is required.');
 }
