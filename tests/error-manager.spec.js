@@ -1,4 +1,11 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    it,
+    expect,
+    describe,
+    afterAll,
+    beforeAll,
+    beforeEach,
+} from 'vitest';
 import { ACCOUNT, PROJECT, createFetchMock, config, Router } from './common';
 
 describe('Error Manager', () => {

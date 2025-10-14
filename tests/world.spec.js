@@ -1,15 +1,22 @@
-import { describe, it, expect, beforeAll, beforeEach, afterAll } from 'vitest';
+import {
+    it,
+    expect,
+    describe,
+    afterAll,
+    beforeAll,
+    beforeEach,
+} from 'vitest';
 import {
     ACCOUNT,
     PROJECT,
     SESSION,
+    SCOPE_BOUNDARY,
     createFetchMock,
+    getAuthHeader,
     testedMethods,
     config,
     authAdapter,
     worldAdapter,
-    SCOPE_BOUNDARY,
-    getAuthHeader,
 } from './common';
 
 describe('worldAdapter', () => {
