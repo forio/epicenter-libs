@@ -41,13 +41,13 @@ describe('accountAdapter', () => {
     describe('accountAdapter.getAccount', () => {
         const accountShortName = 'test-account';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await accountAdapter.getAccount(accountShortName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the account URL', async() => {
+        it('Should use the account URL', async () => {
             await accountAdapter.getAccount(accountShortName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${accountShortName}/${config.projectShortName}/account`);
@@ -73,19 +73,19 @@ describe('accountAdapter', () => {
             subscriptionPlan: 'standard',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await accountAdapter.createAccount(personalView);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the epicenter/manager account URL', async() => {
+        it('Should use the epicenter/manager account URL', async () => {
             await accountAdapter.createAccount(personalView);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/epicenter/manager/account`);
         });
 
-        it('Should pass the account details to the request body for personal account', async() => {
+        it('Should pass the account details to the request body for personal account', async () => {
             await accountAdapter.createAccount(personalView);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -100,7 +100,7 @@ describe('accountAdapter', () => {
             expect(body.shortName).toBe(personalView.shortName);
         });
 
-        it('Should pass the account details to the request body for team account', async() => {
+        it('Should pass the account details to the request body for team account', async () => {
             await accountAdapter.createAccount(teamView);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -134,26 +134,26 @@ describe('accountAdapter', () => {
             billingInterval: 'yearly',
         };
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await accountAdapter.updateAccount(personalView);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should use the account URL', async() => {
+        it('Should use the account URL', async () => {
             await accountAdapter.updateAccount(personalView);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/account`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await accountAdapter.updateAccount(personalView, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/account`);
         });
 
-        it('Should pass the account details to the request body for personal account', async() => {
+        it('Should pass the account details to the request body for personal account', async () => {
             await accountAdapter.updateAccount(personalView);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -164,7 +164,7 @@ describe('accountAdapter', () => {
             expect(body.name).toBe(personalView.name);
         });
 
-        it('Should pass the account details to the request body for team account', async() => {
+        it('Should pass the account details to the request body for team account', async () => {
             await accountAdapter.updateAccount(teamView);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -181,13 +181,13 @@ describe('accountAdapter', () => {
     describe('accountAdapter.removeAccount', () => {
         const accountShortName = 'test-account';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await accountAdapter.removeAccount(accountShortName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should use the account URL', async() => {
+        it('Should use the account URL', async () => {
             await accountAdapter.removeAccount(accountShortName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${accountShortName}/${config.projectShortName}/account`);
@@ -199,26 +199,26 @@ describe('accountAdapter', () => {
     describe('accountAdapter.teamForAdmin', () => {
         const adminKey = 'ADMIN_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await accountAdapter.teamForAdmin(adminKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the epicenter/manager account URL', async() => {
+        it('Should use the epicenter/manager account URL', async () => {
             await accountAdapter.teamForAdmin(adminKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/epicenter/manager/account/team/for/${adminKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await accountAdapter.teamForAdmin(adminKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/account/team/for/${adminKey}`);
         });
 
-        it('Should pass query parameters', async() => {
+        it('Should pass query parameters', async () => {
             const optionals = {
                 includeAllMembers: true,
                 filter: 'test',
@@ -241,7 +241,7 @@ describe('accountAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(accountAdapter).filter((key) => typeof accountAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(accountAdapter).filter(key => typeof accountAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

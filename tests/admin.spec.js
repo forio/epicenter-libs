@@ -61,19 +61,19 @@ describe('adminAdapter', () => {
             },
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await adminAdapter.createAdmin(externalAdmin);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the epicenter/manager admin URL', async() => {
+        it('Should use the epicenter/manager admin URL', async () => {
             await adminAdapter.createAdmin(externalAdmin);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/epicenter/manager/admin`);
         });
 
-        it('Should pass the admin details to the request body for external admin', async() => {
+        it('Should pass the admin details to the request body for external admin', async () => {
             await adminAdapter.createAdmin(externalAdmin);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -92,7 +92,7 @@ describe('adminAdapter', () => {
             expect(body.active).toBe(true);
         });
 
-        it('Should pass the admin details to the request body for native admin', async() => {
+        it('Should pass the admin details to the request body for native admin', async () => {
             await adminAdapter.createAdmin(nativeAdmin);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -122,19 +122,19 @@ describe('adminAdapter', () => {
     describe('adminAdapter.getWithHandle', () => {
         const handle = 'testuser';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await adminAdapter.getWithHandle(handle);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the epicenter/manager admin URL', async() => {
+        it('Should use the epicenter/manager admin URL', async () => {
             await adminAdapter.getWithHandle(handle);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/epicenter/manager/admin/with/${handle}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await adminAdapter.getWithHandle(handle, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -146,7 +146,7 @@ describe('adminAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(adminAdapter).filter((key) => typeof adminAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(adminAdapter).filter(key => typeof adminAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

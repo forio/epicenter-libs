@@ -45,7 +45,7 @@ export async function getAccount(accountShortName: string): Promise<AccountReadV
     return await new Router()
         .withAccountShortName(accountShortName)
         .get('/account')
-        .then(({body}) => body);
+        .then(({ body }) => body);
 }
 
 export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
@@ -54,7 +54,7 @@ export async function createAccount(view: PersonalAccountCreateView | TeamAccoun
         .withProjectShortName('manager')
         .post('/account', {
             body: view,
-        }).then(({body}) => body);
+        }).then(({ body }) => body);
 }
 
 export async function updateAccount(
@@ -65,7 +65,7 @@ export async function updateAccount(
         .patch('/account', {
             body: view,
             ...optionals,
-        }).then(({body}) => body);
+        }).then(({ body }) => body);
 }
 
 export async function removeAccount(
@@ -74,16 +74,16 @@ export async function removeAccount(
     return await new Router()
         .withAccountShortName(accountShortName)
         .delete('/account')
-        .then(({body}) => body);
+        .then(({ body }) => body);
 }
 
 export async function teamForAdmin(
     adminKey: string,
     optionals: {
-        includeAllMembers?: boolean,
-        filter?: string,
-        first?: number,
-        max?: number,
+        includeAllMembers?: boolean;
+        filter?: string;
+        first?: number;
+        max?: number;
     } & RoutingOptions = {},
 ): Promise<AccountReadView[]> {
     const {
@@ -99,5 +99,5 @@ export async function teamForAdmin(
         .withProjectShortName('manager')
         .withSearchParams(searchParams)
         .get(`/account/team/for/${adminKey}`, routingOptions)
-        .then(({body}) => body);
+        .then(({ body }) => body);
 }

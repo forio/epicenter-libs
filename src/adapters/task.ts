@@ -3,10 +3,11 @@ import type { GenericScope } from 'utils/constants';
 import { Router } from 'utils/index';
 
 export enum RETRY_POLICY {
-    DO_NOTHING = 'DO_NOTHING', //If the task fails, do nothing (this is the default)
-    RESCHEDULE = 'RESCHEDULE', //If the task fails retry at the next scheduled time point
-    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', //Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
+    DO_NOTHING = 'DO_NOTHING', // If the task fails, do nothing (this is the default)
+    RESCHEDULE = 'RESCHEDULE', // If the task fails retry at the next scheduled time point
+    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', // Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
 }
+
 /**
  * Creates a task; requires support level authentication
  *
@@ -121,7 +122,7 @@ export async function create(
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {undefined}
  */
-export async function destroy(taskKey: string, optionals: RoutingOptions = {}):Promise<void> {
+export async function destroy(taskKey: string, optionals: RoutingOptions = {}): Promise<void> {
     return await new Router()
         .delete(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);

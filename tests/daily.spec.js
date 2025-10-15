@@ -44,25 +44,25 @@ describe('dailyAdapter', () => {
     });
 
     describe('dailyAdapter.getConfig', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await dailyAdapter.getConfig();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await dailyAdapter.getConfig();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the daily/v1 URL', async() => {
+        it('Should use the daily/v1 URL', async () => {
             await dailyAdapter.getConfig();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await dailyAdapter.getConfig(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -78,32 +78,32 @@ describe('dailyAdapter', () => {
             scopeKey: 'GROUP_KEY',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await dailyAdapter.createRoom(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await dailyAdapter.createRoom(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the daily/v1/room URL', async() => {
+        it('Should use the daily/v1/room URL', async () => {
             await dailyAdapter.createRoom(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/room`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await dailyAdapter.createRoom(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/room`);
         });
 
-        it('Should pass scope and permit to the request body', async() => {
+        it('Should pass scope and permit to the request body', async () => {
             await dailyAdapter.createRoom(scope);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -117,7 +117,7 @@ describe('dailyAdapter', () => {
             expect(body.epicenter.permit.writeLock).toBe(ROLE.PARTICIPANT);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 readLock: ROLE.FACILITATOR,
                 writeLock: ROLE.FACILITATOR,
@@ -138,7 +138,7 @@ describe('dailyAdapter', () => {
             expect(body.privacy).toBe(optionals.privacy);
         });
 
-        it('Should include userKey in scope if provided', async() => {
+        it('Should include userKey in scope if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -157,32 +157,32 @@ describe('dailyAdapter', () => {
     describe('dailyAdapter.createToken', () => {
         const roomName = 'my-room';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await dailyAdapter.createToken(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await dailyAdapter.createToken(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the daily/v1/meetingToken URL', async() => {
+        it('Should use the daily/v1/meetingToken URL', async () => {
             await dailyAdapter.createToken(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/meetingToken`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await dailyAdapter.createToken(roomName, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/meetingToken`);
         });
 
-        it('Should pass room_name to the request body', async() => {
+        it('Should pass room_name to the request body', async () => {
             await dailyAdapter.createToken(roomName);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -191,7 +191,7 @@ describe('dailyAdapter', () => {
             expect(body.properties.room_name).toBe(roomName);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 start_video_off: true,
                 is_owner: true,
@@ -212,13 +212,13 @@ describe('dailyAdapter', () => {
             expect(body.properties.enable_recording).toBe(optionals.enable_recording);
         });
 
-        it('Should include selfSign query parameter by default', async() => {
+        it('Should include selfSign query parameter by default', async () => {
             await dailyAdapter.createToken(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain('selfSign=true');
         });
 
-        it('Should allow selfSign to be disabled', async() => {
+        it('Should allow selfSign to be disabled', async () => {
             await dailyAdapter.createToken(roomName, { selfSign: false });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain('selfSign=false');
@@ -230,25 +230,25 @@ describe('dailyAdapter', () => {
     describe('dailyAdapter.updateRecordingStatus', () => {
         const roomName = 'my-room';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await dailyAdapter.updateRecordingStatus(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await dailyAdapter.updateRecordingStatus(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the daily/v1/meetingToken URL with room name', async() => {
+        it('Should use the daily/v1/meetingToken URL with room name', async () => {
             await dailyAdapter.updateRecordingStatus(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/meetingToken/${roomName}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await dailyAdapter.updateRecordingStatus(roomName, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -271,7 +271,7 @@ describe('dailyAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(dailyAdapter).filter((key) => typeof dailyAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(dailyAdapter).filter(key => typeof dailyAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

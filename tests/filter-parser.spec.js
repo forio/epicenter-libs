@@ -239,15 +239,15 @@ describe('Filter Parser', () => {
         describe('Real-world examples', () => {
             it('should handle run query example', () => {
                 const filters = [
-                    'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
-                    'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
-                    'var.certified*=true',          // looks for runs where the variable 'certified' exists,
-                    'run.hidden=false',             // where the run's 'hidden' attribute is false
-                    'meta.classification~=bar-*',   // where the run metadata contains a 'classification' that begins with 'bar-',
-                    'meta.categorization~=*-baz',    // where the run metadata contains a 'categorization' that does not end with '-baz',
+                    'var.foo|=1|2|3', // look for runs with a variable 'foo' with the values 1, 2, or 3
+                    'var.score>=24', // looks for runs with a variable 'score' higher than or equal to 24
+                    'var.certified*=true', // looks for runs where the variable 'certified' exists,
+                    'run.hidden=false', // where the run's 'hidden' attribute is false
+                    'meta.classification~=bar-*', // where the run metadata contains a 'classification' that begins with 'bar-',
+                    'meta.categorization~=*-baz', // where the run metadata contains a 'categorization' that does not end with '-baz',
                 ];
                 expect(parseFilterInput(filters)).toBe(
-                    'var.foo|=1|2|3;var.score>=24;var.certified*=true;run.hidden=false;meta.classification~=bar-*;meta.categorization~=*-baz'
+                    'var.foo|=1|2|3;var.score>=24;var.certified*=true;run.hidden=false;meta.classification~=bar-*;meta.categorization~=*-baz',
                 );
             });
 
@@ -276,7 +276,7 @@ describe('Filter Parser', () => {
                     ],
                 };
                 expect(parseFilterInput(filterGroup)).toBe(
-                    '[(var.score>=24;run.hidden=false;[meta.classification~=bar-*;meta.categorization~=*-baz]);(var.certified*=true;var.foo|=1|2|3)]'
+                    '[(var.score>=24;run.hidden=false;[meta.classification~=bar-*;meta.categorization~=*-baz]);(var.certified*=true;var.foo|=1|2|3)]',
                 );
             });
         });

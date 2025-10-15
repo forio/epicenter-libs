@@ -19,7 +19,7 @@ export enum STREAM_TYPES {
     HLS = 'HLS',
 }
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
 const randRange = (min: number, max: number) => {
     return min + Math.random() * (max - min);
@@ -29,10 +29,10 @@ const randRange = (min: number, max: number) => {
 const RETRY_RANGES = [[6_000, 10_000], [11_000, 20_000], [30_000, 45_000]];
 
 const RATE_LIMIT_REACHED = 429;
-async function handleRateLimit(requestFunction: () => Promise<{status: number}>, retryNumber = 0) : Promise<Record<string, unknown>> {
+async function handleRateLimit(requestFunction: () => Promise<{ status: number }>, retryNumber = 0): Promise<Record<string, unknown>> {
     let response;
     try {
-        response = await requestFunction(); 
+        response = await requestFunction();
     } catch (error) {
         if (error instanceof Fault && error.status === RATE_LIMIT_REACHED && retryNumber <= RETRY_RANGES.length) {
             const [min, max] = RETRY_RANGES[retryNumber];
@@ -47,9 +47,9 @@ async function handleRateLimit(requestFunction: () => Promise<{status: number}>,
 
 /**
  * Gets the daily configuration for the epicenter account. Requires Support auth
- * 
+ *
  * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1`
- * 
+ *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
  * dailyAdapter.getConfig();
@@ -101,26 +101,26 @@ export async function getConfig(
 export async function createRoom(
     scope: { userKey?: string } & GenericScope,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        privacy?: keyof typeof PRIVACY,
-        ttlSeconds?: number,
-        exp?: number,
-        enable_recording?: keyof typeof RECORDING_TYPES,
-        disableRateLimitHandling?: boolean,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        privacy?: keyof typeof PRIVACY;
+        ttlSeconds?: number;
+        exp?: number;
+        enable_recording?: keyof typeof RECORDING_TYPES;
+        disableRateLimitHandling?: boolean;
         streaming_endpoints?: [{
-            name: string,
-            type: keyof typeof STREAM_TYPES,
+            name: string;
+            type: keyof typeof STREAM_TYPES;
             hls_config: {
                 storage: {
-                    path: string,
-                    bucket_region?: string,
-                    assume_role_arn?: string,
-                    bucket_name?: string,
-                },
-                save_hls_recording?: boolean,
-            },
-        }],
+                    path: string;
+                    bucket_region?: string;
+                    assume_role_arn?: string;
+                    bucket_name?: string;
+                };
+                save_hls_recording?: boolean;
+            };
+        }];
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -186,14 +186,14 @@ export async function createRoom(
 export async function createToken(
     room_name: string,
     optionals: {
-        start_video_off?: boolean,
-        is_owner?: boolean,
-        user_name?: string,
-        close_tab_on_exit?: boolean,
-        exp?: number,
-        enable_recording?: keyof typeof RECORDING_TYPES,
-        disableRateLimitHandling?: boolean,
-        selfSign?: boolean,
+        start_video_off?: boolean;
+        is_owner?: boolean;
+        user_name?: string;
+        close_tab_on_exit?: boolean;
+        exp?: number;
+        enable_recording?: keyof typeof RECORDING_TYPES;
+        disableRateLimitHandling?: boolean;
+        selfSign?: boolean;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -234,7 +234,7 @@ export async function createToken(
 
 /**
  * Convenience function for retrieving the most recent recording for a Daily room
- * 
+ *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
  * dailyAdapter.getVideoByRecordingId('recording_instance_id');
@@ -247,15 +247,15 @@ export async function getVideoByRecordingId(
     optionals: RoutingOptions = {},
 ): Promise<string | null> {
     const filePathInfo = await videoAdapter.getDirectoryURL({
-        scope, 
-        affiliate: 'DAILY', 
+        scope,
+        affiliate: 'DAILY',
         family: room_name,
         ...optionals,
     });
     const filePaths = filePathInfo.contents;
     if (!filePaths?.length) return null;
     filePaths.sort((a, b) => Number(b.split('.')[0]) - Number(a.split('.')[0]));
-    const filePath = filePaths.find((p) => p.includes(recordingId) && p.includes('.mp4'));
+    const filePath = filePaths.find(p => p.includes(recordingId) && p.includes('.mp4'));
     if (!filePath) return null;
     return await videoAdapter.getURL(filePath, {
         scope,
@@ -267,14 +267,14 @@ export async function getVideoByRecordingId(
 
 /**
  * Sets the daily family/room to a recording status of recorded; necessary to prevent videos from deleting automatically within 1 hour
- * 
+ *
  * Base URL: DELETE `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1/meetingToken/{room_name}`
- * 
+ *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
  * dailyAdapter.updateRecordingStatus(room_name);
  */
-export async function updateRecordingStatus(room_name : string,
+export async function updateRecordingStatus(room_name: string,
     optionals: RoutingOptions = {},
 ): Promise<number> {
     return await new Router()

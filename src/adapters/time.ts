@@ -26,7 +26,7 @@ import Router from 'utils/router';
 const NOT_FOUND = 404;
 export async function get(
     optionals: RoutingOptions = {},
-):Promise<void | string> {
+): Promise<void | string> {
     return await new Router()
         .get('/time', optionals)
         .catch((error) => {

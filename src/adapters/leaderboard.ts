@@ -6,21 +6,21 @@ import { identification, Router, parseFilterInput } from '../utils';
 
 
 export interface Score {
-    name: string,
-    quantity: number,
+    name: string;
+    quantity: number;
 }
 
 export interface Tag {
-    label: string,
-    content: string,
+    label: string;
+    content: string;
 }
 
 export interface Leaderboard {
-    lastUpdated: Date,
-    scores: Score[],
-    scope: { userKey?: string } & GenericScope,
-    collection: string,
-    tags: Tag[],
+    lastUpdated: Date;
+    scores: Score[];
+    scope: { userKey?: string } & GenericScope;
+    collection: string;
+    tags: Tag[];
 }
 
 
@@ -51,8 +51,8 @@ export async function update(
     scope: { userKey?: string } & GenericScope,
     scores: Score[],
     optionals: {
-        tags?: Tag[],
-        allowChannel?: boolean,
+        tags?: Tag[];
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<Leaderboard> {
     const { tags, allowChannel, ...routingOptions } = optionals;

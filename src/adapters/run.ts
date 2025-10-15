@@ -232,20 +232,20 @@ export enum MORPHOLOGY {
 }
 
 export interface ProcAction {
-    name: string,
-    arguments?: unknown[],
-    objectType: 'execute',
+    name: string;
+    arguments?: unknown[];
+    objectType: 'execute';
 }
 
 export interface GetAction {
-    name: string,
-    objectType: 'get',
+    name: string;
+    objectType: 'get';
 }
 
 export interface SetAction {
-    name: string,
-    value: unknown,
-    objectType: 'set',
+    name: string;
+    value: unknown;
+    objectType: 'set';
 }
 
 export type Action =
@@ -254,18 +254,18 @@ export type Action =
     | SetAction;
 
 export interface Run {
-    runKey: string,
-    variables?: Record<string, unknown>,
+    runKey: string;
+    variables?: Record<string, unknown>;
 }
 
 export type RunCreateOptions = {
-    readLock?: keyof typeof ROLE,
-    writeLock?: keyof typeof ROLE,
-    ephemeral?: boolean,
-    trackingKey?: string,
-    modelContext?: ModelContext,
-    executionContext?: ExecutionContext,
-    allowChannel?: boolean,
+    readLock?: keyof typeof ROLE;
+    writeLock?: keyof typeof ROLE;
+    ephemeral?: boolean;
+    trackingKey?: string;
+    modelContext?: ModelContext;
+    executionContext?: ExecutionContext;
+    allowChannel?: boolean;
 } & RoutingOptions;
 
 export type RunStrategy =
@@ -426,10 +426,10 @@ export async function getSingularRunKey(
 export async function clone(
     runKey: string,
     optionals: {
-        ephemeral?: boolean,
-        trackingKey?: string,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
+        ephemeral?: boolean;
+        trackingKey?: string;
+        modelContext?: ModelContext;
+        executionContext?: ExecutionContext;
     } & RoutingOptions = {},
 ): Promise<Run> {
     const {
@@ -451,9 +451,9 @@ export async function clone(
 export async function restore(
     runKey: string,
     optionals: {
-        ephemeral?: boolean,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
+        ephemeral?: boolean;
+        modelContext?: ModelContext;
+        executionContext?: ExecutionContext;
     } & RoutingOptions = {},
 ): Promise<Run> {
     const {
@@ -475,8 +475,8 @@ export async function rewind(
     runKey: string,
     steps: number,
     optionals: {
-        ephemeral?: boolean,
-        modelContext?: ModelContext,
+        ephemeral?: boolean;
+        modelContext?: ModelContext;
     } & RoutingOptions = {},
 ): Promise<Run> {
     const {
@@ -497,13 +497,13 @@ export async function rewind(
 export async function update(
     runKey: string,
     update: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        trackingKey?: string,
-        marked?: boolean, /* analogous to v2's 'saved' */
-        hidden?: boolean, /* analogous to v2's 'trashed' */
-        closed?: boolean, /* Closed is a flag that means do not restore, the run is done, no more play */
-        allowChannel?: boolean, /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        trackingKey?: string;
+        marked?: boolean; /* analogous to v2's 'saved' */
+        hidden?: boolean; /* analogous to v2's 'trashed' */
+        closed?: boolean; /* Closed is a flag that means do not restore, the run is done, no more play */
+        allowChannel?: boolean; /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
     },
     optionals: RoutingOptions = {},
 ): Promise<Run> {
@@ -599,13 +599,13 @@ export async function get(
 export async function query(
     model: string,
     searchOptions: {
-        timeout?: number,
-        variables?: string[],
-        metadata?: string[],
-        scope?: { userKey?: string } & GenericScope,
-        groupName?: string,
-        episodeName?: string,
-        includeEpisodes?: boolean,
+        timeout?: number;
+        variables?: string[];
+        metadata?: string[];
+        scope?: { userKey?: string } & GenericScope;
+        groupName?: string;
+        episodeName?: string;
+        includeEpisodes?: boolean;
     } & GenericSearchOptions,
     optionals: RoutingOptions = {},
 ): Promise<Page<Run>> {
@@ -668,7 +668,6 @@ export async function introspect(
     model: string,
     optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
-
     return await new Router()
         .get(`/run/introspect/model/${model}`, optionals)
         .then(({ body }) => body);
@@ -678,7 +677,6 @@ export async function introspectWithRunKey(
     runKey: string,
     optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
-
     return await new Router()
         .get(`/run/introspect/${runKey}`, optionals)
         .then(({ body }) => body);
@@ -689,8 +687,8 @@ export async function operation(
     name: string,
     args: unknown[] = [],
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
@@ -721,9 +719,9 @@ export async function getVariables(
     runKey: string | string[],
     variables: string[],
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
-        ignorable?: boolean,
+        timeout?: number;
+        ritual?: keyof typeof RITUAL;
+        ignorable?: boolean;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown> | Record<string, unknown>[]> {
     const {
@@ -755,7 +753,7 @@ export async function getVariables(
         })
         .then(({ body }) => {
             if (hasMultiple) {
-                return Object.keys(body).map((runKey) => ({
+                return Object.keys(body).map(runKey => ({
                     runKey,
                     variables: mappify(body[runKey]),
                 }));
@@ -768,8 +766,8 @@ export async function getVariable(
     runKey: string | string[],
     variable: string | string[],
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
@@ -786,7 +784,6 @@ export async function getVariable(
         .withSearchParams({ timeout, ritual })
         .get(`/run/variable/${runKey}/${variable}`, routingOptions)
         .then(({ body }) => body);
-
 }
 /**
  * Updates model variables for the run
@@ -801,8 +798,8 @@ export async function updateVariables(
     runKey: string | string[],
     update: Record<string, unknown>,
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -824,14 +821,13 @@ export async function updateVariables(
             ...routingOptions,
         })
         .then(({ body }) => body);
-
 }
 
 export async function getMetadata(
     runKey: string | string[],
     metadata: string[],
     optionals: {
-        timeout?: number
+        timeout?: number;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -850,7 +846,7 @@ export async function getMetadata(
             ...routingOptions,
         })
         .then(({ body }) => {
-            const bodyAsArray = Object.keys(body).map((runKey) => ({
+            const bodyAsArray = Object.keys(body).map(runKey => ({
                 runKey,
                 data: body[runKey],
             }));
@@ -864,7 +860,7 @@ export async function updateMetadata(
     runKey: string | string[],
     update: Record<string, unknown>,
     optionals: {
-        timeout?: number
+        timeout?: number;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -888,8 +884,8 @@ export async function action(
     runKey: string | string[],
     actionList: Action[],
     optionals: {
-        timeout?: number,
-        ritual?: keyof typeof RITUAL,
+        timeout?: number;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
@@ -935,13 +931,13 @@ export async function retrieveFromWorld(
     worldKey: string,
     model: string,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ephemeral?: boolean,
-        trackingKey?: string,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
-        allowChannel?: boolean,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ephemeral?: boolean;
+        trackingKey?: string;
+        modelContext?: ModelContext;
+        executionContext?: ExecutionContext;
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<Run> {
     const {
@@ -993,7 +989,6 @@ export async function removeFromWorld(
     worldKey: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-
     return await new Router()
         .delete(`/run/world/${worldKey}`, optionals)
         .then(({ body }) => body);
@@ -1072,11 +1067,11 @@ export async function getWithStrategy(
         // await serial(newRun.runKey, initOperations, optionals = {});
         return newRun;
     } else if (strategy === 'reuse-by-tracking-key') {
-        //TBD write out if needed
-        //Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
+        // TBD write out if needed
+        // Platform plans to introduce run limits into episode scope, differing from v2's implementation of runLimit via 'reuse-by-tracking-key'
     } else if (strategy === 'multiplayer') {
-        //TODO when multiplayer API is ready
-        //check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
+        // TODO when multiplayer API is ready
+        // check the current world for this end user, return the current run for that world (if there is none, create a run for the world)
     }
     throw new EpicenterError('Invalid run strategy.');
 }
@@ -1096,10 +1091,10 @@ export async function migrate(
     runKey: string,
     episodeKey: string,
     optionals: {
-        ephemeral?: boolean,
-        trackingKey?: string,
-        modelContext?: ModelContext,
-        executionContext?: ExecutionContext,
+        ephemeral?: boolean;
+        trackingKey?: string;
+        modelContext?: ModelContext;
+        executionContext?: ExecutionContext;
     } & RoutingOptions = {},
 ): Promise<Run> {
     const {

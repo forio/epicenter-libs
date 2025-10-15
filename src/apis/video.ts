@@ -67,8 +67,8 @@ export enum LANGUAGE_CODE {
 }
 
 export type VIDEO_DIR = {
-    contents: string[],
-    videoKey: string,
+    contents: string[];
+    videoKey: string;
 };
 
 export async function getVideoURLByKey(
@@ -138,14 +138,14 @@ export async function postVideoProcessor(
     videoKey: string,
     body: {
         processors: {
-            jobName?: string,
-            mediaFormat: keyof typeof MEDIA_FORMAT,
-            languageCode: keyof typeof LANGUAGE_CODE,
-            timeoutMinutes?: number,
-            mediaFile?: string,
-            objectType: keyof typeof PROCESSING_TYPE,
-        }[],
-        log?: string,
+            jobName?: string;
+            mediaFormat: keyof typeof MEDIA_FORMAT;
+            languageCode: keyof typeof LANGUAGE_CODE;
+            timeoutMinutes?: number;
+            mediaFile?: string;
+            objectType: keyof typeof PROCESSING_TYPE;
+        }[];
+        log?: string;
     },
     optionals: RoutingOptions = {},
 ): Promise<boolean> {

@@ -8,9 +8,9 @@ type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>
 /* eslint-enable  @typescript-eslint/no-explicit-any */
 
 export interface Handler {
-    identifier: Identifier,
-    handle: HandleFunction,
-    unregister: () => void,
+    identifier: Identifier;
+    handle: HandleFunction;
+    unregister: () => void;
 }
 
 class ErrorManager {
@@ -38,7 +38,7 @@ class ErrorManager {
     }
 
     unregisterHandler(identifier: Identifier) {
-        const index = this.handlers.findIndex((handler) => handler.identifier === identifier);
+        const index = this.handlers.findIndex(handler => handler.identifier === identifier);
         if (index > -1) this.handlers.splice(index, 1);
     }
 

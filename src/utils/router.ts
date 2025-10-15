@@ -18,44 +18,44 @@ type QueryObject = Record<string, unknown>;
 type SearchParams = string | string[][] | URLSearchParams | QueryObject;
 
 export interface RoutingOptions {
-    authorization?: Authorization,
-    server?: Server,
-    useProjectProxy?: UseProjectProxy,
-    accountShortName?: AccountShortName,
-    projectShortName?: ProjectShortName,
-    query?: SearchParams,
-    headers?: Record<string, string>,
-    body?: unknown,
-    includeAuthorization?: boolean,
-    inert?: boolean | ((fault: Fault) => boolean),
-    paginated?: boolean,
+    authorization?: Authorization;
+    server?: Server;
+    useProjectProxy?: UseProjectProxy;
+    accountShortName?: AccountShortName;
+    projectShortName?: ProjectShortName;
+    query?: SearchParams;
+    headers?: Record<string, string>;
+    body?: unknown;
+    includeAuthorization?: boolean;
+    inert?: boolean | ((fault: Fault) => boolean);
+    paginated?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    parsePage?: (values: any[]) => any[],
+    parsePage?: (values: any[]) => any[];
 }
 
 interface RequestOptions extends RoutingOptions {
-    method: string,
+    method: string;
 }
 
 export interface RetryFunction<Output> {
-    (): Promise<Output>,
-    requestArguments?: { url: URL } & RequestOptions,
+    (): Promise<Output>;
+    requestArguments?: { url: URL } & RequestOptions;
 }
 
 export interface Page<Item> {
-    firstResult: number,
-    maxResults: number,
-    totalResults: number,
-    values: Item[],
-    prev: () => Promise<Item[]>,
-    next: () => Promise<Item[]>,
-    all: (first?: number, allValues?: Item[]) => Promise<Item[]>,
+    firstResult: number;
+    maxResults: number;
+    totalResults: number;
+    values: Item[];
+    prev: () => Promise<Item[]>;
+    next: () => Promise<Item[]>;
+    all: (first?: number, allValues?: Item[]) => Promise<Item[]>;
 }
 
 const MAX_URL_LENGTH = 2048;
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
-    const page = {...json, values: parsePage(json.values)};
+    const page = { ...json, values: parsePage(json.values) };
     const prev = async function() {
         const searchParams = new URLSearchParams(url.search);
         if (page.firstResult === 0) {
@@ -70,7 +70,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.set('max', max.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const prevPage = await request(url, {...options, paginated: false}).then(({body}) => body);
+        const prevPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         prevPage.values = parsePage(prevPage.values);
         Object.assign(page, prevPage);
         return page.values;
@@ -87,7 +87,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.set('first', first.toString());
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
+        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         nextPage.values = parsePage(nextPage.values);
         Object.assign(page, nextPage);
         return page.values;
@@ -102,7 +102,7 @@ function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
         searchParams.delete('max');
         url.search = searchParams.toString();
         // eslint-disable-next-line no-use-before-define
-        const nextPage = await request(url, {...options, paginated: false}).then(({body}) => body);
+        const nextPage = await request(url, { ...options, paginated: false }).then(({ body }) => body);
         allValues.push(...parsePage(nextPage.values));
         return all(first + nextPage.maxResults, allValues);
     };
@@ -123,7 +123,7 @@ const parseQuery = (query: SearchParams) => {
         query = Object.entries(query).reduce((arr, [key, value]) => {
             if (Array.isArray(value)) {
                 /* Special case for arrayed param values: use duplicated params here */
-                return [...arr, ...value.map((v) => [key, v])];
+                return [...arr, ...value.map(v => [key, v])];
             }
             if (value === undefined || value === null) {
                 /* Skip nullish values */
@@ -138,8 +138,8 @@ const parseQuery = (query: SearchParams) => {
 
 
 interface Message {
-    headers: HeadersInit,
-    body: BodyInit | null,
+    headers: HeadersInit;
+    body: BodyInit | null;
 }
 
 const createMessage = (
@@ -163,10 +163,10 @@ const createMessage = (
     }
 
     const { session } = identification;
-    if (!headers.Authorization) {                                               // "headers" option as primary everything
-        if (session) headers.Authorization = `Bearer ${session.token}`;         // session token should be default
-        if (authorization) headers.Authorization = authorization;               // Router option as tertiary override
-        if (config.authOverride) headers.Authorization = config.authOverride;   // config fallback as secondary override
+    if (!headers.Authorization) { // "headers" option as primary everything
+        if (session) headers.Authorization = `Bearer ${session.token}`; // session token should be default
+        if (authorization) headers.Authorization = authorization; // Router option as tertiary override
+        if (config.authOverride) headers.Authorization = config.authOverride; // config fallback as secondary override
     }
     return { headers, body };
 };
@@ -216,7 +216,7 @@ async function request(
     if (inert === true) throw fault;
     if (typeof inert === 'function' && inert(fault)) throw fault;
 
-    const retryOptions = {...options, inert: true};
+    const retryOptions = { ...options, inert: true };
     const retry = () => request(url, retryOptions);
     retry.requestArguments = {
         url,
@@ -432,12 +432,12 @@ export default class Router {
     getURL(
         uriComponent: string,
         overrides: {
-            server?: string,
-            useProjectProxy?: boolean,
-            accountShortName?: string,
-            projectShortName?: string,
-            version?: number
-            query?: SearchParams,
+            server?: string;
+            useProjectProxy?: boolean;
+            accountShortName?: string;
+            projectShortName?: string;
+            version?: number;
+            query?: SearchParams;
         } = {},
     ): URL {
         const server = overrides.server ?? this.server ?? `${config.apiProtocol}://${config.apiHost}`;
@@ -460,7 +460,7 @@ export default class Router {
         return url;
     }
 
-    //Network Requests
+    // Network Requests
     async get(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
             accountShortName, projectShortName, authorization, server, query, useProjectProxy,
@@ -544,7 +544,7 @@ export default class Router {
             headers, body, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy});
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
         return request(url, {
             method: 'POST',
             headers,
@@ -561,7 +561,7 @@ export default class Router {
             headers, body, includeAuthorization, inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy});
+        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
         return request(url, {
             method: 'PUT',
             headers,

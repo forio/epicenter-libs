@@ -50,32 +50,32 @@ describe('matchmakerAdapter', () => {
             scopeKey: 'GROUP_KEY',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await matchmakerAdapter.create(name, partners, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await matchmakerAdapter.create(name, partners, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the matchmaker/udome URL with name', async() => {
+        it('Should use the matchmaker/udome URL with name', async () => {
             await matchmakerAdapter.create(name, partners, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/matchmaker/udome/${name}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await matchmakerAdapter.create(name, partners, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/matchmaker/udome/${name}`);
         });
 
-        it('Should pass scope and partners to the request body', async() => {
+        it('Should pass scope and partners to the request body', async () => {
             await matchmakerAdapter.create(name, partners, scope);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -93,32 +93,32 @@ describe('matchmakerAdapter', () => {
         const udomeKey = 'UDOME_KEY';
         const closed = true;
 
-        it('Should do a PUT', async() => {
+        it('Should do a PUT', async () => {
             await matchmakerAdapter.edit(udomeKey, closed);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PUT');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await matchmakerAdapter.edit(udomeKey, closed);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the matchmaker/udome URL with udomeKey', async() => {
+        it('Should use the matchmaker/udome URL with udomeKey', async () => {
             await matchmakerAdapter.edit(udomeKey, closed);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/matchmaker/udome/${udomeKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await matchmakerAdapter.edit(udomeKey, closed, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/matchmaker/udome/${udomeKey}`);
         });
 
-        it('Should pass closed status to the request body', async() => {
+        it('Should pass closed status to the request body', async () => {
             await matchmakerAdapter.edit(udomeKey, closed);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -132,32 +132,32 @@ describe('matchmakerAdapter', () => {
     describe('matchmakerAdapter.addUser', () => {
         const udomeKey = 'UDOME_KEY';
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await matchmakerAdapter.addUser(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await matchmakerAdapter.addUser(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the matchmaker/udome URL', async() => {
+        it('Should use the matchmaker/udome URL', async () => {
             await matchmakerAdapter.addUser(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/matchmaker/udome`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await matchmakerAdapter.addUser(udomeKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/matchmaker/udome`);
         });
 
-        it('Should pass udomeKey to the request body', async() => {
+        it('Should pass udomeKey to the request body', async () => {
             await matchmakerAdapter.addUser(udomeKey);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -171,25 +171,25 @@ describe('matchmakerAdapter', () => {
     describe('matchmakerAdapter.get', () => {
         const udomeKey = 'UDOME_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await matchmakerAdapter.get(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await matchmakerAdapter.get(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the matchmaker/udome URL with udomeKey', async() => {
+        it('Should use the matchmaker/udome URL with udomeKey', async () => {
             await matchmakerAdapter.get(udomeKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/matchmaker/udome/${udomeKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await matchmakerAdapter.get(udomeKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -206,25 +206,25 @@ describe('matchmakerAdapter', () => {
             scopeKey: 'GROUP_KEY',
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await matchmakerAdapter.byName(name, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await matchmakerAdapter.byName(name, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the matchmaker/udome URL with scope and name', async() => {
+        it('Should use the matchmaker/udome URL with scope and name', async () => {
             await matchmakerAdapter.byName(name, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/matchmaker/udome/${scope.scopeBoundary}/${scope.scopeKey}/${name}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await matchmakerAdapter.byName(name, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -236,7 +236,7 @@ describe('matchmakerAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(matchmakerAdapter).filter((key) => typeof matchmakerAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(matchmakerAdapter).filter(key => typeof matchmakerAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

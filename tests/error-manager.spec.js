@@ -33,7 +33,7 @@ describe('Error Manager', () => {
     });
 
     describe('Error Handlers', () => {
-        it('Should by default handle invalidated authentication via a PATCH to upgrade the session and retrying after', async() => {
+        it('Should by default handle invalidated authentication via a PATCH to upgrade the session and retrying after', async () => {
             try {
                 await new Router().get('/unauthorized');
             } catch (_error) {
@@ -43,7 +43,7 @@ describe('Error Manager', () => {
             // For now, just check that at least one request was made
             expect(capturedRequests.length).toBeGreaterThan(0);
             const request = capturedRequests[0];
-            
+
             // Just verify basic request was made for now
             expect(request.url).toContain('/unauthorized');
             expect(request.options.method.toUpperCase()).toBe('GET');

@@ -38,7 +38,6 @@ export const createFetchMock = (additionalResponses = {}) => {
 
     fetchStub.mockClear();
 
-    // eslint-disable-next-line complexity
     fetchStub.mockImplementation((url, options = {}) => {
         // Normalize options and add missing properties for compatibility
         const normalizedOptions = {
@@ -62,11 +61,11 @@ export const createFetchMock = (additionalResponses = {}) => {
             if (url.includes(pattern)) {
                 const response = additionalResponses[pattern];
                 return Promise.resolve(new Response(
-                    typeof response.body === 'string' ? response.body : JSON.stringify(response.body), 
+                    typeof response.body === 'string' ? response.body : JSON.stringify(response.body),
                     {
                         status: response.status || OK_CODE,
                         headers: response.headers || { 'Content-Type': 'application/json' },
-                    }
+                    },
                 ));
             }
         }
@@ -124,8 +123,8 @@ export const createFetchMock = (additionalResponses = {}) => {
             const max = parseInt(urlObj.searchParams.get('max') || '10', 10);
 
             // For getWithStrategy tests, return results with existing runs by default
-            if (urlObj.searchParams.get('max') === '1' && 
-                urlObj.searchParams.get('sort') === '-run.created') {
+            if (urlObj.searchParams.get('max') === '1'
+                && urlObj.searchParams.get('sort') === '-run.created') {
                 const queryResponse = {
                     firstResult: 0,
                     maxResults: 1,
@@ -168,7 +167,7 @@ export const createFetchMock = (additionalResponses = {}) => {
             headers: { 'Content-Type': 'application/json' },
         }));
     });
-    
+
     return {
         fetchStub,
         capturedRequests,
@@ -220,7 +219,7 @@ export const getAuthHeader = (requestHeaders) => {
 
 // Helper function to get permit confirmation header (case-insensitive)
 export const getPermitHeader = (requestHeaders) => {
-    return requestHeaders['x-forio-confirmation'] ||
-        requestHeaders['X-Forio-Confirmation'] ||
-        requestHeaders['X-FORIO-CONFIRMATION'];
+    return requestHeaders['x-forio-confirmation']
+        || requestHeaders['X-Forio-Confirmation']
+        || requestHeaders['X-FORIO-CONFIRMATION'];
 };

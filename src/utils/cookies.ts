@@ -23,11 +23,11 @@ const getExpiration = (vEnd: End) => {
 };
 
 interface EditCookieOptions {
-    path?: string,
-    domain?: string,
-    end?: End,
-    secure?: boolean,
-    samesite?: boolean,
+    path?: string;
+    domain?: string;
+    end?: End;
+    secure?: boolean;
+    samesite?: boolean;
 }
 
 export default {

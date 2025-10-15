@@ -5,19 +5,19 @@ import Router from '../utils/router';
 import { parseFilterInput } from '../utils/filter-parser';
 
 export interface ChatMessage {
-    senderKey: string,
-    receiverKey: string,
-    created: string,
-    id: string,
-    message: string,
+    senderKey: string;
+    receiverKey: string;
+    created: string;
+    id: string;
+    message: string;
 }
 
 export interface Chat {
-    permit: Permit,
-    chatKey: string,
-    messages: ChatMessage[],
-    room: string,
-    scope: GenericScope,
+    permit: Permit;
+    chatKey: string;
+    messages: ChatMessage[];
+    room: string;
+    scope: GenericScope;
 }
 
 /**
@@ -176,8 +176,8 @@ export async function sendMessage(
 export async function getMessages(
     chatKey: string,
     optionals: {
-        maxRecords?: number,
-        horizon?: number,
+        maxRecords?: number;
+        horizon?: number;
     } & RoutingOptions = {},
 ): Promise<ChatMessage[]> {
     const { maxRecords, horizon, ...routingOptions } = optionals;

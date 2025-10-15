@@ -1,14 +1,14 @@
 import EpicenterError from './error';
 
 export interface ErrorBody {
-    status?: number,
-    message: string,
+    status?: number;
+    message: string;
     information?: {
-        code: string,
-        [key: string]: unknown,
-    },
-    cause?: unknown,
-    code?: string,
+        code: string;
+        [key: string]: unknown;
+    };
+    cause?: unknown;
+    code?: string;
 }
 
 

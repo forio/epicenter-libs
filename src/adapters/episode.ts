@@ -6,8 +6,8 @@ import { Router, identification, parseFilterInput } from '../utils';
 
 
 export interface Episode {
-    name: string,
-    episodeKey: string,
+    name: string;
+    episodeKey: string;
 }
 
 /**
@@ -29,9 +29,9 @@ export async function create(
     name: string,
     groupName: string,
     optionals: {
-        draft?: boolean,
-        runLimit?: number,
-        category?: string,
+        draft?: boolean;
+        runLimit?: number;
+        category?: string;
     } & RoutingOptions = {},
 ): Promise<Episode> {
     const {

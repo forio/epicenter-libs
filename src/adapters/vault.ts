@@ -10,23 +10,23 @@ import {
 
 
 export interface Vault<Items> {
-    created: string,
-    lastUpdated: string,
-    mutationKey: string,
-    address: unknown,
-    scope: { userKey?: string } & GenericScope,
-    name: string,
-    permit: Permit,
-    vaultKey: string,
-    expiration: string,
-    items?: Items,
-    changed?: boolean
+    created: string;
+    lastUpdated: string;
+    mutationKey: string;
+    address: unknown;
+    scope: { userKey?: string } & GenericScope;
+    name: string;
+    permit: Permit;
+    vaultKey: string;
+    expiration: string;
+    items?: Items;
+    changed?: boolean;
 }
 
 export interface Items {
-    set?: Record<string, unknown>,
-    push?: Record<string, unknown>,
-    pop?: Record<string, unknown>,
+    set?: Record<string, unknown>;
+    push?: Record<string, unknown>;
+    pop?: Record<string, unknown>;
 }
 
 /**
@@ -82,10 +82,10 @@ export async function update(
 export async function updateProperties(
     vaultKey: string,
     update: {
-        mutationKey?: string,
-        allowChannel?: boolean,
-        permit?: Permit,
-        ttlSeconds?: number,
+        mutationKey?: string;
+        allowChannel?: boolean;
+        permit?: Permit;
+        ttlSeconds?: number;
     },
     optionals: RoutingOptions = {},
 ): Promise<Vault<unknown>> {
@@ -131,10 +131,10 @@ export async function withScope(
 export async function byName(
     name: string,
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        userKey?: string,
-        includeEpisodes?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        userKey?: string;
+        includeEpisodes?: boolean;
     } & RoutingOptions = {},
 ): Promise<Vault<unknown>[]> {
     const {
@@ -202,12 +202,12 @@ export async function define(
     name: string,
     scope: { userKey?: string } & GenericScope,
     optionals: {
-        items?: Items,
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ttlSeconds?: number,
-        mutationStrategy?: string,
-        allowChannel?: boolean,
+        items?: Items;
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ttlSeconds?: number;
+        mutationStrategy?: string;
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -253,10 +253,10 @@ export async function create(
     scope: { userKey?: string } & GenericScope,
     items: Items,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ttlSeconds?: number,
-        mutationStrategy?: string,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ttlSeconds?: number;
+        mutationStrategy?: string;
     } & RoutingOptions = {},
 ): Promise<Vault<unknown>> {
     console.warn('DEPRECATION WARNING: vaultAdapter.create is deprecated and will be removed with the next release. Use vaultAdapter.define instead.');
@@ -281,7 +281,7 @@ export async function create(
  * }, {
  *      groupName: 'my-group-name',                             // search within a group
  * });
- * 
+ *
  * @param searchOptions             Search options
  * @param [optionals]               Optional arguments; pass network call options overrides here.
  * @param [optionals.groupName]     Name of the group

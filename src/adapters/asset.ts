@@ -5,23 +5,23 @@ import fetch from 'cross-fetch';
 import { Fault, Router, ROLE } from '../utils';
 
 export interface AssetScope extends GenericScope {
-    userKey?: string,
+    userKey?: string;
 }
 
 export interface Asset {
-    file: string,
+    file: string;
     address: {
-        projectShortName: string,
-        groupName: string,
-        accountShortName: string,
-        worldKey: string,
-        episodeName: string,
-    },
-    scope: AssetScope,
+        projectShortName: string;
+        groupName: string;
+        accountShortName: string;
+        worldKey: string;
+        episodeName: string;
+    };
+    scope: AssetScope;
 }
 
 export interface AssetTicket {
-    url: string,
+    url: string;
 }
 
 
@@ -29,9 +29,9 @@ export async function create(
     file: string,
     scope: AssetScope,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ttlSeconds?: number,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ttlSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -62,9 +62,9 @@ export async function update(
     file: string,
     scope: AssetScope,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ttlSeconds?: number,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ttlSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -127,7 +127,7 @@ export async function get(
 export async function list(
     scope: AssetScope,
     optionals: {
-        filter?: string,
+        filter?: string;
     } & RoutingOptions = {},
 ): Promise<Asset[]> {
     const { scopeBoundary, scopeKey, userKey } = scope;
@@ -188,18 +188,18 @@ export async function store(
     file: File,
     scope: AssetScope,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        ttlSeconds?: number,
-        overwrite?: boolean,
-        fileName?: string,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        ttlSeconds?: number;
+        overwrite?: boolean;
+        fileName?: string;
     } & RoutingOptions = {},
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;
     const name = fileName ?? file.name;
     let presignedUrl = '';
     try {
-        const response = await create(name, scope, {inert: true, ...remaining});
+        const response = await create(name, scope, { inert: true, ...remaining });
         presignedUrl = response.url;
     } catch (error) {
         if (error instanceof Fault) {

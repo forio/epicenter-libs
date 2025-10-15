@@ -46,26 +46,26 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await assetAdapter.create(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the asset URL', async() => {
+        it('Should use the asset URL', async () => {
             await assetAdapter.create(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.create(file, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset`);
         });
 
-        it('Should pass the asset details to the request body', async() => {
+        it('Should pass the asset details to the request body', async () => {
             const optionals = {
                 readLock: 'FACILITATOR',
                 writeLock: 'FACILITATOR',
@@ -87,7 +87,7 @@ describe('assetAdapter', () => {
             expect(body.ttlSeconds).toBe(optionals.ttlSeconds);
         });
 
-        it('Should include userKey in scope if provided', async() => {
+        it('Should include userKey in scope if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -110,26 +110,26 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await assetAdapter.update(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should use the asset URL', async() => {
+        it('Should use the asset URL', async () => {
             await assetAdapter.update(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.update(file, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset`);
         });
 
-        it('Should pass the asset details to the request body', async() => {
+        it('Should pass the asset details to the request body', async () => {
             const optionals = {
                 readLock: 'FACILITATOR',
                 writeLock: 'FACILITATOR',
@@ -157,19 +157,19 @@ describe('assetAdapter', () => {
     describe('assetAdapter.remove', () => {
         const assetKey = 'ASSET_KEY';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await assetAdapter.remove(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should use the asset URL with assetKey', async() => {
+        it('Should use the asset URL with assetKey', async () => {
             await assetAdapter.remove(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/${assetKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.remove(assetKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -185,19 +185,19 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await assetAdapter.removeFromScope(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should use the asset/in URL', async() => {
+        it('Should use the asset/in URL', async () => {
             await assetAdapter.removeFromScope(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}`);
         });
 
-        it('Should include userKey in URL if provided', async() => {
+        it('Should include userKey in URL if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -207,7 +207,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}/USER_KEY`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.removeFromScope(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -220,19 +220,19 @@ describe('assetAdapter', () => {
     describe('assetAdapter.get', () => {
         const assetKey = 'ASSET_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.get(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset URL with assetKey', async() => {
+        it('Should use the asset URL with assetKey', async () => {
             await assetAdapter.get(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/${assetKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.get(assetKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -248,19 +248,19 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.list(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset/in URL with wildcard filter', async() => {
+        it('Should use the asset/in URL with wildcard filter', async () => {
             await assetAdapter.list(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}/*`);
         });
 
-        it('Should include userKey in URL if provided', async() => {
+        it('Should include userKey in URL if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -270,13 +270,13 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}/USER_KEY/*`);
         });
 
-        it('Should use custom filter if provided', async() => {
+        it('Should use custom filter if provided', async () => {
             await assetAdapter.list(scope, { filter: '*.txt' });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}/*.txt`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.list(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -289,19 +289,19 @@ describe('assetAdapter', () => {
     describe('assetAdapter.getURL', () => {
         const assetKey = 'ASSET_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.getURL(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset/url URL', async() => {
+        it('Should use the asset/url URL', async () => {
             await assetAdapter.getURL(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/url/${assetKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.getURL(assetKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -318,19 +318,19 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.getURLWithScope(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset/url/with URL', async() => {
+        it('Should use the asset/url/with URL', async () => {
             await assetAdapter.getURLWithScope(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/url/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
         });
 
-        it('Should include userKey in URL if provided', async() => {
+        it('Should include userKey in URL if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -340,7 +340,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/url/with/${scope.scopeBoundary}/${scope.scopeKey}/USER_KEY/${file}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.getURLWithScope(file, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -353,19 +353,19 @@ describe('assetAdapter', () => {
     describe('assetAdapter.download', () => {
         const assetKey = 'ASSET_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.download(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset/download URL', async() => {
+        it('Should use the asset/download URL', async () => {
             await assetAdapter.download(assetKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/download/${assetKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.download(assetKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -382,19 +382,19 @@ describe('assetAdapter', () => {
             scopeKey: 'WORLD_KEY',
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await assetAdapter.downloadWithScope(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the asset/download/with URL', async() => {
+        it('Should use the asset/download/with URL', async () => {
             await assetAdapter.downloadWithScope(file, scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/download/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
         });
 
-        it('Should include userKey in URL if provided', async() => {
+        it('Should include userKey in URL if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -404,7 +404,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/asset/download/with/${scope.scopeBoundary}/${scope.scopeKey}/USER_KEY/${file}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await assetAdapter.downloadWithScope(file, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -427,7 +427,7 @@ describe('assetAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(assetAdapter).filter((key) => typeof assetAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(assetAdapter).filter(key => typeof assetAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -11,48 +11,48 @@ enum AUGMENT {
 }
 
 export interface Pricing {
-    amount: number
+    amount: number;
 }
 
 export interface FlightRecorder {
-    start: number,
-    stop: number,
-    enabled: boolean,
+    start: number;
+    stop: number;
+    enabled: boolean;
 }
 
 export interface GroupUpdate {
-    runLimit?: number,
-    organization?: string,
-    allowSelfRegistration?: boolean,
-    flightRecorder?: FlightRecorder,
-    event?: string,
-    allowMembershipChanges?: boolean,
-    pricing?: Pricing,
-    startDate?: Date,
-    expirationDate?: Date,
-    capacity?: number,
-    allowChannel?: boolean,
+    runLimit?: number;
+    organization?: string;
+    allowSelfRegistration?: boolean;
+    flightRecorder?: FlightRecorder;
+    event?: string;
+    allowMembershipChanges?: boolean;
+    pricing?: Pricing;
+    startDate?: Date;
+    expirationDate?: Date;
+    capacity?: number;
+    allowChannel?: boolean;
 }
 
 export interface GroupPermission {
-    available: boolean,
-    objectType: 'group',
-    role: keyof typeof ROLE,
+    available: boolean;
+    objectType: 'group';
+    role: keyof typeof ROLE;
 }
 
 export interface Member extends GroupPermission {
-    user: User,
+    user: User;
 }
 
 export interface Group extends GroupUpdate {
-    name: string,
-    groupKey: string,
-    members?: Member[],
+    name: string;
+    groupKey: string;
+    members?: Member[];
 }
 
 export interface SelfRegistrationResult {
-    redirectUrl: string,
-    whoAmI: Session,
+    redirectUrl: string;
+    whoAmI: Session;
 }
 
 
@@ -72,8 +72,8 @@ export interface SelfRegistrationResult {
  */
 export async function get(
     optionals: {
-        augment?: keyof typeof AUGMENT,
-        groupKey?: string,
+        augment?: keyof typeof AUGMENT;
+        groupKey?: string;
     } & RoutingOptions = {},
 ): Promise<Group> {
     const {
@@ -102,7 +102,6 @@ export async function destroy(
     groupKey: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-
     return await new Router()
         .delete(`/group/${groupKey}`, optionals)
         .then(({ body }) => body);
@@ -333,7 +332,6 @@ export async function withGroupName(
     name: string,
     optionals: RoutingOptions = {},
 ): Promise<Group> {
-
     return await new Router()
         .get(`/group/with/${name}`, optionals)
         .then(({ body }) => body);
@@ -357,9 +355,9 @@ export async function withGroupName(
 export async function forUser(
     userKey: string,
     optionals: {
-        includeAllMembers?: boolean,
-        includeExpired?: boolean,
-        role?: string | string[],
+        includeAllMembers?: boolean;
+        includeExpired?: boolean;
+        role?: string | string[];
     } & RoutingOptions = {},
 ): Promise<Group[]> {
     const {
@@ -393,9 +391,9 @@ export async function forUser(
  */
 export async function getSessionGroups(
     optionals: {
-        includeAllMembers?: boolean,
-        includeExpired?: boolean,
-        role?: string | string[],
+        includeAllMembers?: boolean;
+        includeExpired?: boolean;
+        role?: string | string[];
     } & RoutingOptions = {},
 ): Promise<Group[]> {
     const {
@@ -432,8 +430,8 @@ export async function getSessionGroups(
 export async function whitelistUsers(
     groupKey: string,
     optionals: {
-        allow?: boolean,
-        emails?: string[]
+        allow?: boolean;
+        emails?: string[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
@@ -465,7 +463,6 @@ export async function getWhitelistedUsers(
     groupKey: string,
     optionals: RoutingOptions = {},
 ): Promise<User[]> {
-
     return await new Router()
         .get(`/group/self/${groupKey}`, optionals)
         .then(({ body }) => body);
@@ -492,9 +489,9 @@ export async function sendRegistrationEmail(
     groupKey: string,
     email: string,
     optionals: {
-        linkURL?: string,
-        redirectURL?: string,
-        subject?: string,
+        linkURL?: string;
+        redirectURL?: string;
+        subject?: string;
     } & RoutingOptions = {},
 ): Promise<void> {
     const { redirectURL, linkURL, subject, ...routingOptions } = optionals;
@@ -535,10 +532,10 @@ export async function selfRegister(
     token: string,
     password: string,
     optionals: {
-        displayName?: string,
-        givenName?: string,
-        familyName?: string,
-        handle?: string,
+        displayName?: string;
+        givenName?: string;
+        familyName?: string;
+        handle?: string;
     } & RoutingOptions = {},
 ): Promise<SelfRegistrationResult> {
     const { displayName, givenName, familyName, handle, ...routingOptions } = optionals;
@@ -558,7 +555,7 @@ export async function selfRegister(
 }
 
 
-type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available?: boolean };
+type UserInput = string | { userKey: string; role?: keyof typeof ROLE; available?: boolean };
 /**
  * Adds user(s) to the group
  * @example
@@ -579,7 +576,7 @@ type UserInput = string | { userKey: string, role?: keyof typeof ROLE, available
 export async function addUser(
     usersInput: UserInput | UserInput[],
     optionals: { groupKey?: string } & RoutingOptions = {},
-):Promise<Group> {
+): Promise<Group> {
     const { groupKey, ...routingOptions } = optionals;
 
     const users = Array.isArray(usersInput) ? usersInput : [usersInput];
@@ -617,9 +614,9 @@ export async function addUser(
  */
 export async function updateUser(
     userKey: string,
-    update: { role?: keyof typeof ROLE, available?: boolean },
+    update: { role?: keyof typeof ROLE; available?: boolean },
     optionals: { groupKey?: string } & RoutingOptions = {},
-):Promise<GroupPermission> {
+): Promise<GroupPermission> {
     const { role, available } = update;
     const { groupKey, ...routingOptions } = optionals;
     const session = identification.session as UserSession;

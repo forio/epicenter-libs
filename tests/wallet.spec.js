@@ -51,25 +51,25 @@ describe('walletAdapter', () => {
             userKey, scopeKey, scopeBoundary,
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await walletAdapter.get(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await walletAdapter.get(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the wallet URL', async() => {
+        it('Should use the wallet URL', async () => {
             await walletAdapter.get(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet/${scopeBoundary}/${scopeKey}/${userKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await walletAdapter.get(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -94,32 +94,32 @@ describe('walletAdapter', () => {
             { label: 'item3', value: 'value3' },
         ];
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await walletAdapter.update(scope, items);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await walletAdapter.update(scope, items);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the wallet URL', async() => {
+        it('Should use the wallet URL', async () => {
             await walletAdapter.update(scope, items);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await walletAdapter.update(scope, items, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/wallet`);
         });
 
-        it('Should pass the wallet details to the request body', async() => {
+        it('Should pass the wallet details to the request body', async () => {
             await walletAdapter.update(scope, items);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -144,25 +144,25 @@ describe('walletAdapter', () => {
             max: 10,
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await walletAdapter.withScope(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await walletAdapter.withScope(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the wallet URL', async() => {
+        it('Should use the wallet URL', async () => {
             await walletAdapter.withScope(scope, optionals);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/wallet/with/${scopeBoundary}/${scopeKey}?first=${optionals.first}&max=${optionals.max}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             const options = { ...GENERIC_OPTIONS, ...optionals };
             await walletAdapter.withScope(scope, options);
             const req = capturedRequests[capturedRequests.length - 1];
@@ -175,7 +175,7 @@ describe('walletAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(walletAdapter).filter((key) => typeof walletAdapter[key] === 'function');
+        const actualMethods = Object.keys(walletAdapter).filter(key => typeof walletAdapter[key] === 'function');
         expect(actualMethods).toEqual(testedMethods);
     });
 });

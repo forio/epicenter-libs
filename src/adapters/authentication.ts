@@ -6,12 +6,12 @@ import cometdAdapter from './cometd';
 
 
 export interface UserCredentials {
-    handle: string,
-    password: string,
-    groupKey?: string,
+    handle: string;
+    password: string;
+    groupKey?: string;
 }
 export interface AppCredentials {
-    secretKey: string,
+    secretKey: string;
 }
 
 /**
@@ -76,7 +76,10 @@ export async function removeLocalSession(): Promise<void> {
 // this prevents login issues when trying to access other simulations
 export async function login(
     credentials: UserCredentials | AppCredentials,
-    optionals: { objectType?: string, forcePathInclusion?: boolean } & RoutingOptions = {},
+    optionals: {
+        objectType?: string;
+        forcePathInclusion?: boolean;
+    } & RoutingOptions = {},
 ): Promise<Session> {
     const { objectType, forcePathInclusion, ...routingOptions } = optionals;
     let payload;
@@ -117,8 +120,8 @@ export async function login(
 export async function regenerate(
     groupOrAccount: string,
     optionals: {
-        objectType?: string,
-        forcePathInclusion?: boolean,
+        objectType?: string;
+        forcePathInclusion?: boolean;
     } & RoutingOptions = {},
 ): Promise<Session> {
     const {
@@ -188,11 +191,11 @@ export function generateSAMLLINK(
  * @returns promise that resolves to undefined (indicating success)
  */
 export async function ssoOutcome(
-    ltiVersion : string,
+    ltiVersion: string,
     outcomeInformation: {
-        value: number,
-        sourcedId: string,
-        outcomeServiceUrl: string,
+        value: number;
+        sourcedId: string;
+        outcomeServiceUrl: string;
     },
     optionals: RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
@@ -220,8 +223,8 @@ export async function ssoOutcome(
 export async function resetPassword(
     handle: string,
     optionals: {
-        redirectURL?: string,
-        subject?: string,
+        redirectURL?: string;
+        subject?: string;
     } & RoutingOptions = {},
 ): Promise<void> {
     const {

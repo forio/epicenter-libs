@@ -10,15 +10,15 @@ import { UserSession } from 'epicenter';
 
 
 export interface Item {
-    label: string,
-    value: string | null,
+    label: string;
+    value: string | null;
 }
 
 export interface Wallet {
-    items: Item[],
-    user: User,
-    walletKey: string,
-    scope: { userKey: string } & GenericScope,
+    items: Item[];
+    user: User;
+    walletKey: string;
+    scope: { userKey: string } & GenericScope;
 }
 
 /**
@@ -96,8 +96,8 @@ export async function get(
 export async function withScope(
     scope: GenericScope,
     optionals: {
-        first?: number,
-        max?: number,
+        first?: number;
+        max?: number;
     } & RoutingOptions = {},
 ): Promise<Page<Wallet>> {
     const { scopeBoundary, scopeKey } = scope;
