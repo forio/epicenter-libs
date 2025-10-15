@@ -73,8 +73,6 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@stylistic/eslint-plugin": "^5.4.0",
     "@types/cometd": "^4.0.8",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
     "babel-loader": "^9.2.1",
     "conventional-changelog-cli": "^2.1.1",
     "eslint": "^9.37.0",
@@ -88,6 +86,7 @@
     "sinon": "^21.0.0",
     "typedoc": "^0.28.2",
     "typescript": "^5.9.2",
+    "typescript-eslint": "^8.46.1",
     "vitest": "^3.2.4"
   }
 }
