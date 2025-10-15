@@ -5,7 +5,7 @@ import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
 export interface ChannelScope extends GenericScope {
-    pushCategory: string,
+    pushCategory: string;
 }
 
 const validateScope = (scope: ChannelScope) => {
@@ -22,7 +22,6 @@ const validateScope = (scope: ChannelScope) => {
  * Used to subscribe to CometD channels. Pass in a channel scope to instantiate, if a subscription to that scope already exists it will use it.
  * */
 export default class Channel {
-
     path: string;
     update: Callback | undefined;
     subscription: SubscriptionHandle | null = null;
@@ -103,7 +102,7 @@ export default class Channel {
                     // Wait a moment before retrying
                     const retryDelay = 1000;
                     const currentRetry = retryCount;
-                    await new Promise((resolve) => setTimeout(resolve, retryDelay * currentRetry));
+                    await new Promise(resolve => setTimeout(resolve, retryDelay * currentRetry));
                     continue;
                 }
 

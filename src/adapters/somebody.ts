@@ -83,13 +83,13 @@ export async function get(
 export async function inScope(
     scope: GenericScope,
     optionals: {
-        first?: number,
-        max?: number, // max of 300; default of 300
+        first?: number;
+        max?: number; // max of 300; default of 300
     } & RoutingOptions = {},
 ): Promise<Page<Somebody> | undefined> {
     const { scopeBoundary, scopeKey } = scope;
     const {
-        first, 
+        first,
         max,
         ...routingOptions
     } = optionals;

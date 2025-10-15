@@ -53,32 +53,32 @@ describe('vaultAdapter', () => {
             push: {},
         };
 
-        it('Should do a PUT', async() => {
+        it('Should do a PUT', async () => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PUT');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/vaultKey URL', async() => {
+        it('Should use the vault/vaultKey URL', async () => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.update(VAULT_KEY, UPDATE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should send the update in the request body', async() => {
+        it('Should send the update in the request body', async () => {
             await vaultAdapter.update(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -99,32 +99,32 @@ describe('vaultAdapter', () => {
             ttlSeconds: 3600,
         };
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/vaultKey URL', async() => {
+        it('Should use the vault/vaultKey URL', async () => {
             await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.updateProperties(VAULT_KEY, UPDATE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should send the update in the request body', async() => {
+        it('Should send the update in the request body', async () => {
             await vaultAdapter.updateProperties(VAULT_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -137,25 +137,25 @@ describe('vaultAdapter', () => {
     describe('vaultAdapter.get', () => {
         const VAULT_KEY = 'MOCK_VAULT_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await vaultAdapter.get(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.get(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/vaultKey URL', async() => {
+        it('Should use the vault/vaultKey URL', async () => {
             await vaultAdapter.get(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.get(VAULT_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -170,31 +170,31 @@ describe('vaultAdapter', () => {
         const USER_KEY = 'myuserkey';
         const SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await vaultAdapter.withScope(NAME, SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.withScope(NAME, SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/with/scopeBoundary/scopeKey/name URL', async() => {
+        it('Should use the vault/with/scopeBoundary/scopeKey/name URL', async () => {
             await vaultAdapter.withScope(NAME, SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${NAME}`);
         });
 
-        it('Should use insert userKey into URL when provided', async() => {
+        it('Should use insert userKey into URL when provided', async () => {
             await vaultAdapter.withScope(NAME, { ...SCOPE, userKey: USER_KEY });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${USER_KEY}/${NAME}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.withScope(NAME, SCOPE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -207,19 +207,19 @@ describe('vaultAdapter', () => {
     describe('vaultAdapter.byName', () => {
         const NAME = 'myvaultname';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await vaultAdapter.byName(NAME);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.byName(NAME);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/in/groupName[/episodeName]/name URL', async() => {
+        it('Should use the vault/in/groupName[/episodeName]/name URL', async () => {
             const EPISODE_NAME = 'myepisodename';
             await vaultAdapter.byName(NAME);
             const req1 = capturedRequests[capturedRequests.length - 1];
@@ -229,14 +229,14 @@ describe('vaultAdapter', () => {
             expect(req2.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/in/${SESSION.groupName}/${EPISODE_NAME}/${NAME}`);
         });
 
-        it('Should use a custom group name in the URL if provided', async() => {
+        it('Should use a custom group name in the URL if provided', async () => {
             const GROUP_NAME = 'mygroupname';
             await vaultAdapter.byName(NAME, { groupName: GROUP_NAME });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/in/${GROUP_NAME}/${NAME}`);
         });
 
-        it('Should pass the userKey and includeEpisodes to the search params if provided', async() => {
+        it('Should pass the userKey and includeEpisodes to the search params if provided', async () => {
             const USER_KEY = 'myuserkey';
             const RANDOM_THING = { something: 'random' };
             await vaultAdapter.byName(NAME, {
@@ -252,7 +252,7 @@ describe('vaultAdapter', () => {
             expect(searchParams.has('something')).toBe(false);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.byName(NAME, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -265,25 +265,25 @@ describe('vaultAdapter', () => {
     describe('vaultAdapter.remove', () => {
         const VAULT_KEY = 'myvaultkey';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await vaultAdapter.remove(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.remove(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/vaultKey URL', async() => {
+        it('Should use the vault/vaultKey URL', async () => {
             await vaultAdapter.remove(VAULT_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        it('Should pass the mutationKey to the search params if provided', async() => {
+        it('Should pass the mutationKey to the search params if provided', async () => {
             const MUTATION_KEY = 'mymutationkey';
             await vaultAdapter.remove(VAULT_KEY, { mutationKey: MUTATION_KEY });
             const req = capturedRequests[capturedRequests.length - 1];
@@ -292,7 +292,7 @@ describe('vaultAdapter', () => {
             expect(searchParams.get('mutationKey')).toBe(MUTATION_KEY);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.remove(VAULT_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -309,38 +309,38 @@ describe('vaultAdapter', () => {
         const ITEMS = { set: { foo: 'bar' } };
         const DEFAULT_MUTATION_STRATEGY = '?mutationStrategy=ERROR';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault URL', async() => {
+        it('Should use the vault URL', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${NAME}${DEFAULT_MUTATION_STRATEGY}`);
         });
 
-        it('Should pass on the mutationStrategy to the URL', async() => {
+        it('Should pass on the mutationStrategy to the URL', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE, { mutationStrategy: 'DISALLOW' });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/${NAME}?mutationStrategy=DISALLOW`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${NAME}${DEFAULT_MUTATION_STRATEGY}`);
         });
 
-        it('Should pass the scope and items to the body', async() => {
+        it('Should pass the scope and items to the body', async () => {
             await vaultAdapter.define(NAME, GROUP_SCOPE, { items: ITEMS });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -348,14 +348,14 @@ describe('vaultAdapter', () => {
             expect(body.scope).toEqual(GROUP_SCOPE);
         });
 
-        it('Should default the readLock to ‘participant’ when provided world scope', async() => {
+        it('Should default the readLock to ‘participant’ when provided world scope', async () => {
             await vaultAdapter.define(NAME, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body.permit.readLock).toBe(ROLE.PARTICIPANT);
         });
 
-        it('Should use readLock and writeLock when explicitly provided', async() => {
+        it('Should use readLock and writeLock when explicitly provided', async () => {
             await vaultAdapter.define(NAME, WORLD_SCOPE, { readLock: ROLE.ANONYMOUS, writeLock: ROLE.ANONYMOUS });
             const req = capturedRequests[capturedRequests.length - 1];
 
@@ -364,7 +364,7 @@ describe('vaultAdapter', () => {
             expect(body.permit.writeLock).toBe(ROLE.ANONYMOUS);
         });
 
-        it('Should use accept optionals provided', async() => {
+        it('Should use accept optionals provided', async () => {
             const USER_KEY = 'myuserkey';
             const TTL_SECONDS = 20;
             const MUTATION_STRATEGY = 'ALLOW';
@@ -405,25 +405,25 @@ describe('vaultAdapter', () => {
             max: 10,
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await vaultAdapter.list(searchOptions);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.list(searchOptions);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the vault/search URL', async() => {
+        it('Should use the vault/search URL', async () => {
             await vaultAdapter.list(searchOptions);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/search?filter=name%3DtestVault%3Bscope.userKey%3D${SESSION.userKey}&first=0&max=10`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await vaultAdapter.list(searchOptions, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -440,25 +440,25 @@ describe('vaultAdapter', () => {
             max: 15,
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await vaultAdapter.count(OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await vaultAdapter.count(OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the /vault/count URL', async() => {
+        it('Should use the /vault/count URL', async () => {
             await vaultAdapter.count(OPTIONS);
             const req1 = capturedRequests[capturedRequests.length - 1];
             expect(req1.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vault/count`);
         });
 
-        it('Should pass in query options as a part of the search parameters (query string)', async() => {
+        it('Should pass in query options as a part of the search parameters (query string)', async () => {
             await vaultAdapter.count(OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -473,7 +473,7 @@ describe('vaultAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(vaultAdapter).filter((key) => typeof vaultAdapter[key] === 'function');
+        const actualMethods = Object.keys(vaultAdapter).filter(key => typeof vaultAdapter[key] === 'function');
         expect(actualMethods.sort()).toEqual(testedMethods.sort());
     });
 });

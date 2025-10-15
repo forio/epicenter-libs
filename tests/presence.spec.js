@@ -44,25 +44,25 @@ describe('presenceAdapter', () => {
     describe('presenceAdapter.forGroup', () => {
         const groupKey = 'GROUP_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await presenceAdapter.forGroup(groupKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await presenceAdapter.forGroup(groupKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the presence/group URL with groupKey', async() => {
+        it('Should use the presence/group URL with groupKey', async () => {
             await presenceAdapter.forGroup(groupKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/presence/group/${groupKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await presenceAdapter.forGroup(groupKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -75,25 +75,25 @@ describe('presenceAdapter', () => {
     describe('presenceAdapter.forWorld', () => {
         const worldKey = 'WORLD_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await presenceAdapter.forWorld(worldKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await presenceAdapter.forWorld(worldKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the presence/world URL with worldKey', async() => {
+        it('Should use the presence/world URL with worldKey', async () => {
             await presenceAdapter.forWorld(worldKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/presence/world/${worldKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await presenceAdapter.forWorld(worldKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -126,7 +126,7 @@ describe('presenceAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(presenceAdapter).filter((key) => typeof presenceAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(presenceAdapter).filter(key => typeof presenceAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

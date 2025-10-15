@@ -7,35 +7,35 @@ import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
 export interface UserSession {
-    token: string,
-    userKey: string,
-    groupKey?: string,
-    groupName?: string,
-    groupRole?: keyof typeof GROUP_ROLE,
-    multipleGroups?: boolean,
-    accountShortName: string,
-    projectShortName?: string, // undefined when multipleGroups: true
-    projectKey?: string,
-    displayName: string,
-    objectType: 'user',
+    token: string;
+    userKey: string;
+    groupKey?: string;
+    groupName?: string;
+    groupRole?: keyof typeof GROUP_ROLE;
+    multipleGroups?: boolean;
+    accountShortName: string;
+    projectShortName?: string; // undefined when multipleGroups: true
+    projectKey?: string;
+    displayName: string;
+    objectType: 'user';
     loginMethod: {
-        objectType: string,
-    },
+        objectType: string;
+    };
 }
 
 export interface AdminSession {
-    adminHandle: string,
-    adminKey: string,
-    expires: boolean,
-    multipleAccounts: boolean,
-    objectType: 'admin'
-    teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT,
-    teamAccountShortName: string,
-    projectShortName?: string,
-    projectKey?: string,
-    groupKey?: string,
-    timeoutMinutes: number,
-    token: string,
+    adminHandle: string;
+    adminKey: string;
+    expires: boolean;
+    multipleAccounts: boolean;
+    objectType: 'admin';
+    teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT;
+    teamAccountShortName: string;
+    projectShortName?: string;
+    projectKey?: string;
+    groupKey?: string;
+    timeoutMinutes: number;
+    token: string;
 }
 
 export type Session = UserSession | AdminSession;
@@ -53,10 +53,12 @@ class Identification {
         this.type = storeType;
         this.consumeSSO();
     }
+
     get session() {
         const Store = this.getStore();
         return new Store().getItem(SESSION_KEY) as Session;
     }
+
     set session(session: Session | undefined) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session);
@@ -67,6 +69,7 @@ class Identification {
             new Store(options).removeItem(SESSION_KEY);
         }
     }
+
     setSessionWithOptions(session: Session | undefined, forcePathInclusion: boolean) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session, forcePathInclusion);
@@ -77,6 +80,7 @@ class Identification {
             new Store(options).removeItem(SESSION_KEY);
         }
     }
+
     getStore() {
         if (isNode()) return NodeStore;
         switch (this.type) {
@@ -85,6 +89,7 @@ class Identification {
             default: return CookieStore;
         }
     }
+
     /* Generates the appropriate path for storing your session (applicable only to cookies) */
     getStoreOptions(session?: Session, forcePathInclusion?: boolean) {
         const mySession = session || this.session;
@@ -104,6 +109,7 @@ class Identification {
         /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
         return { ...base, path: '/' };
     }
+
     consumeSSO() {
         if (isNode()) return;
 

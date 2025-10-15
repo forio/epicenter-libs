@@ -9,11 +9,11 @@ export type ArchiveID = string;
 export type APIKey = string;
 export type Token = string;
 export type VonageSession = {
-    sessionId: SessionID,
+    sessionId: SessionID;
 };
 export type VonageArchive = {
-    archiveId: string,
-    status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired',
+    archiveId: string;
+    status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired';
 };
 
 export async function getSession(
@@ -32,18 +32,18 @@ export async function postToken(
         // The initialLayoutClassList is a temporary fix for existing simulations;
         // This should likely be implemented differently if we decide to continue using Vonage;
         // We are currently investigating alternatives due to performance issues, so this solution just prevents API errors;
-        .post('/vonage/token', { body: {...body, initialLayoutClassList: ['placeholder']}, ...optionals })
+        .post('/vonage/token', { body: { ...body, initialLayoutClassList: ['placeholder'] }, ...optionals })
         .then(({ body }) => body);
 }
 
 export async function postArchive(
     body: {
-        name: string,
-        scope: { userKey?: string } & GenericScope,
-        sessionId: SessionID,
-        permit?: Permit,
-        ttlSeconds?: number,
-        resolution?: string,
+        name: string;
+        scope: { userKey?: string } & GenericScope;
+        sessionId: SessionID;
+        permit?: Permit;
+        ttlSeconds?: number;
+        resolution?: string;
     },
     optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {

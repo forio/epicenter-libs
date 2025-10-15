@@ -6,10 +6,10 @@ import cometdAdapter from './cometd';
 
 
 export interface Presence {
-    lastUpdated: number,
-    ttlSeconds: number,
-    groupRole: keyof typeof GROUP_ROLE,
-    user: User,
+    lastUpdated: number;
+    ttlSeconds: number;
+    groupRole: keyof typeof GROUP_ROLE;
+    user: User;
 }
 
 

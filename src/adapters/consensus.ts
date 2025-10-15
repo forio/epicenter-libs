@@ -6,19 +6,19 @@ import {
 } from 'utils';
 
 export interface Consensus {
-    instantiated: boolean,
-    triggered: boolean,
-    closed: boolean,
-    transparent: boolean,
-    worldKey: string,
-    name: string,
-    stage: string,
-    ttlSeconds: number,
-    secondsLeft: number,
-    expectedRoles: Record<string, unknown>,
-    impendingRoles: Record<string, unknown>,
-    arrivedRoles: Record<string, unknown>,
-    allowChannel: boolean,
+    instantiated: boolean;
+    triggered: boolean;
+    closed: boolean;
+    transparent: boolean;
+    worldKey: string;
+    name: string;
+    stage: string;
+    ttlSeconds: number;
+    secondsLeft: number;
+    expectedRoles: Record<string, unknown>;
+    impendingRoles: Record<string, unknown>;
+    arrivedRoles: Record<string, unknown>;
+    allowChannel: boolean;
 }
 
 /**
@@ -58,9 +58,9 @@ export async function create(
     expectedRoles: Record<string, number>,
     defaultActions: Record<string, Record<string, number>[]>,
     optionals: {
-        ttlSeconds?: number,
-        transparent?: boolean,
-        allowChannel?: boolean,
+        ttlSeconds?: number;
+        transparent?: boolean;
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<Consensus> {
     const {
@@ -145,7 +145,7 @@ export async function forceClose(
     name: string,
     stage: string,
     optionals: {
-        ritual?: keyof typeof RITUAL,
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
@@ -228,12 +228,12 @@ export async function submitActions(
     name: string,
     stage: string,
     actions: {
-        name: string,
-        arguments: string | number | Record<string, unknown>[],
+        name: string;
+        arguments: string | number | Record<string, unknown>[];
     }[],
     optionals: {
-        message?: string,
-        ritual?: keyof typeof RITUAL,
+        message?: string;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<unknown> {
     const {
@@ -380,12 +380,12 @@ export async function triggerFor(
     stage: string,
     userKey: string,
     actions: {
-        name: string,
-        arguments: string | number | Record<string, unknown>[],
+        name: string;
+        arguments: string | number | Record<string, unknown>[];
     }[],
     optionals: {
-        message?: string,
-        ritual?: keyof typeof RITUAL,
+        message?: string;
+        ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
 ): Promise<unknown> {
     const {

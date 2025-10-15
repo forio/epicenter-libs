@@ -13,11 +13,11 @@ vi.mock('cross-fetch', () => ({
 vi.stubGlobal('fetch', mockFetch);
 
 // Set a default implementation
-mockFetch.mockImplementation(() => 
+mockFetch.mockImplementation(() =>
     Promise.resolve(new Response(JSON.stringify({}), {
         status: 200,
         headers: { 'Content-Type': 'application/json' },
-    }))
+    })),
 );
 
 // Now import epicenter test build that has cross-fetch as external

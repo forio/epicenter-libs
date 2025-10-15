@@ -7,10 +7,10 @@ type JSONValue =
     | boolean
     | null
     | JSONValue[]
-    | {[key: string]: JSONValue};
+    | { [key: string]: JSONValue };
 
 interface JSONObject {
-    [k: string]: JSONValue
+    [k: string]: JSONValue;
 }
 
 type JSONArray = Array<JSONValue>;

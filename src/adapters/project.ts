@@ -47,73 +47,73 @@ export enum FILE_TYPE {
 }
 
 interface Member {
-    role: ROLE.AUTHOR,
-    adminKey: string,
-    objectType: 'project',
+    role: ROLE.AUTHOR;
+    adminKey: string;
+    objectType: 'project';
 }
 
 interface Deployment {
-    defaultGroupName: string,
-    autoCreatePlayer: boolean,
-    loginFile: string,
-    welcomeFile: string,
-    groupFile: string,
+    defaultGroupName: string;
+    autoCreatePlayer: boolean;
+    loginFile: string;
+    welcomeFile: string;
+    groupFile: string;
 }
 
 interface TeamProject {
-    concurrentRunLimit: number,
-    modelFile: string,
-    available: boolean,
-    allowWorldSelfAssign: boolean,
+    concurrentRunLimit: number;
+    modelFile: string;
+    available: boolean;
+    allowWorldSelfAssign: boolean;
     legacySettings: {
-        blockDirectApiCalls: boolean,
-        channelAuthorizationRequired: boolean,
-        filePermissionsActive: boolean,
-        showEmail: boolean,
-        transmogrifierActive: boolean,
-        dataApiAllowAnonymousAccess: boolean,
-        channelVersion: number,
-        authorizationMode: 'LEGACY' | 'USER',
-        dataApiEnforceScope: boolean,
-    },
-    objectType: 'team',
-    accessType: keyof typeof ACCESS_TYPE,
-    sessionTimeoutSeconds: number,
-    projectKey: string,
-    members: Member[],
-    channelEnabled: boolean,
-    workerPartition: keyof typeof WORKER_PARTITION,
-    name: string,
-    phylogeny: keyof typeof PHYLOGENY,
-    multiPlayerEnabled: boolean,
-    shortName: string,
-    approximateRunCount: number,
+        blockDirectApiCalls: boolean;
+        channelAuthorizationRequired: boolean;
+        filePermissionsActive: boolean;
+        showEmail: boolean;
+        transmogrifierActive: boolean;
+        dataApiAllowAnonymousAccess: boolean;
+        channelVersion: number;
+        authorizationMode: 'LEGACY' | 'USER';
+        dataApiEnforceScope: boolean;
+    };
+    objectType: 'team';
+    accessType: keyof typeof ACCESS_TYPE;
+    sessionTimeoutSeconds: number;
+    projectKey: string;
+    members: Member[];
+    channelEnabled: boolean;
+    workerPartition: keyof typeof WORKER_PARTITION;
+    name: string;
+    phylogeny: keyof typeof PHYLOGENY;
+    multiPlayerEnabled: boolean;
+    shortName: string;
+    approximateRunCount: number;
     pricing: {
-        amount: number,
-    },
-    dataRetentionDays: number,
-    fileType: keyof typeof FILE_TYPE,
-    dimensions: 'UNIVERSE' | 'MULTIVERSE',
-    deployment: Deployment,
-    channelProtocol: 'OUMUAMUA' | 'COMETD',
+        amount: number;
+    };
+    dataRetentionDays: number;
+    fileType: keyof typeof FILE_TYPE;
+    dimensions: 'UNIVERSE' | 'MULTIVERSE';
+    deployment: Deployment;
+    channelProtocol: 'OUMUAMUA' | 'COMETD';
 }
 
 interface PersonalProject {
-    concurrentRunLimit: number,
-    available: boolean,
-    objectType: 'personal',
-    accessType: keyof typeof ACCESS_TYPE,
-    sessionTimeoutSeconds: number,
-    projectKey: string,
-    workerPartition: keyof typeof WORKER_PARTITION,
-    name: string,
-    phylogeny: keyof typeof PHYLOGENY,
-    shortName: string,
-    approximateRunCount: number,
-    fileType: keyof typeof FILE_TYPE,
-    deployment: Deployment,
-    channelProtocol: 'OUMUAMUA' | 'COMETD',
-    channelEnabled: boolean,
+    concurrentRunLimit: number;
+    available: boolean;
+    objectType: 'personal';
+    accessType: keyof typeof ACCESS_TYPE;
+    sessionTimeoutSeconds: number;
+    projectKey: string;
+    workerPartition: keyof typeof WORKER_PARTITION;
+    name: string;
+    phylogeny: keyof typeof PHYLOGENY;
+    shortName: string;
+    approximateRunCount: number;
+    fileType: keyof typeof FILE_TYPE;
+    deployment: Deployment;
+    channelProtocol: 'OUMUAMUA' | 'COMETD';
+    channelEnabled: boolean;
 }
 
 type Project =
@@ -151,5 +151,5 @@ export async function list(
         .withAccountShortName(accountShortName)
         .withProjectShortName('manager')
         .get('/project/in', optionals)
-        .then(({body}) => body);
+        .then(({ body }) => body);
 }

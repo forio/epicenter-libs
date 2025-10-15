@@ -6,7 +6,7 @@ export interface Secret {
 }
 
 export interface UserCreateView {
-    [key: string]: unknown,
+    [key: string]: unknown;
     handle: string;
     email?: string;
     givenName?: string;
@@ -15,21 +15,21 @@ export interface UserCreateView {
 }
 
 export interface User {
-    lastUpdated: string,
-    displayName: string,
-    givenName: string,
-    familyName: string,
-    handle: string,
-    created: string,
-    detail: Record<string, unknown>,
-    userId: number,
-    userKey: string,
-    objectType: 'external' | 'native',
+    lastUpdated: string;
+    displayName: string;
+    givenName: string;
+    familyName: string;
+    handle: string;
+    created: string;
+    detail: Record<string, unknown>;
+    userId: number;
+    userKey: string;
+    objectType: 'external' | 'native';
 }
 
 export interface UploadOptions extends RoutingOptions {
-    groupKey?: string,
-    overwrite?: boolean,
+    groupKey?: string;
+    overwrite?: boolean;
 }
 
 export interface NativeUserCreateView extends UserCreateView {
@@ -97,7 +97,7 @@ export async function get(
 export async function getWithHandle(
     handle: string,
     optionals: {
-        modality?: Modality,
+        modality?: Modality;
     } & RoutingOptions = {},
 ): Promise<User> {
     const { modality, ...routingOptions } = optionals;

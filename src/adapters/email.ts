@@ -52,18 +52,18 @@ export async function sendEmail(
     subject: string,
     emailBody: string,
     optionals: {
-        familyNameFirst?: string,
-        html?: boolean,
-        body?: string,
-        from?: string,
-        replyTo?: string,
-        fromUserKey?: string,
+        familyNameFirst?: string;
+        html?: boolean;
+        body?: string;
+        from?: string;
+        replyTo?: string;
+        fromUserKey?: string;
         attachments?: {
-            encoding: keyof typeof ENCODING,
-            data: string,
-            name: string,
-            contentType: string,
-        }[]
+            encoding: keyof typeof ENCODING;
+            data: string;
+            name: string;
+            contentType: string;
+        }[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const { accountShortName, projectShortName, server, familyNameFirst, html, attachments, from, replyTo, fromUserKey } =
@@ -115,15 +115,15 @@ export async function sendEmailToAdmin(
     subject: string,
     emailBody: string,
     optionals: {
-        familyNameFirst?: string,
-        html?: boolean,
-        body?: string,
+        familyNameFirst?: string;
+        html?: boolean;
+        body?: string;
         attachments?: {
-            encoding: keyof typeof ENCODING,
-            data: string,
-            name: string,
-            contentType: string,
-        }
+            encoding: keyof typeof ENCODING;
+            data: string;
+            name: string;
+            contentType: string;
+        };
     } & RoutingOptions = {},
 ): Promise<void> {
     const { accountShortName, projectShortName, server, familyNameFirst, html, attachments } =

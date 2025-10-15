@@ -79,10 +79,10 @@ export async function query(
 export async function getURL(
     file: string,
     optionals: {
-        scope?: { userKey?: string } & GenericScope,
-        affiliate?: keyof typeof AFFILIATE,
-        family?: string,
-        videoKey?: string,
+        scope?: { userKey?: string } & GenericScope;
+        affiliate?: keyof typeof AFFILIATE;
+        family?: string;
+        videoKey?: string;
     } & RoutingOptions = {},
 ): Promise<string> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
@@ -126,10 +126,10 @@ export async function getURL(
  */
 export async function getDirectoryURL(
     optionals: {
-        scope?: { userKey?: string } & GenericScope,
-        affiliate?: keyof typeof AFFILIATE,
-        family?: string,
-        videoKey?: string,
+        scope?: { userKey?: string } & GenericScope;
+        affiliate?: keyof typeof AFFILIATE;
+        family?: string;
+        videoKey?: string;
     } & RoutingOptions = {},
 ): Promise<VIDEO_DIR> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
@@ -173,15 +173,15 @@ export async function getDirectoryURL(
 export async function processVideo(
     videoKey: string,
     processors: {
-        jobName: string,
-        mediaFormat: keyof typeof MEDIA_FORMAT,
-        languageCode: keyof typeof LANGUAGE_CODE,
-        timeoutMinutes?: number,
-        mediaFile: string,
-        objectType: keyof typeof PROCESSING_TYPE,
+        jobName: string;
+        mediaFormat: keyof typeof MEDIA_FORMAT;
+        languageCode: keyof typeof LANGUAGE_CODE;
+        timeoutMinutes?: number;
+        mediaFile: string;
+        objectType: keyof typeof PROCESSING_TYPE;
     }[],
     optionals: {
-        log?: string,
+        log?: string;
     } & RoutingOptions = {},
 ): Promise<boolean> {
     const { log, ...routingOptions } = optionals;
@@ -207,10 +207,10 @@ export async function processVideo(
 export async function download(
     file: string,
     optionals: {
-        scope?: { userKey?: string } & GenericScope,
-        affiliate?: keyof typeof AFFILIATE,
-        family?: string,
-        videoKey?: string,
+        scope?: { userKey?: string } & GenericScope;
+        affiliate?: keyof typeof AFFILIATE;
+        family?: string;
+        videoKey?: string;
     } & RoutingOptions = {},
 ): Promise<void> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;

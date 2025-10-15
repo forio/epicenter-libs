@@ -51,32 +51,32 @@ describe('runAdapter', () => {
         const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
         const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run URL', async() => {
+        it('Should use the run URL', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run`);
         });
 
-        it('Should pass the run to the request body', async() => {
+        it('Should pass the run to the request body', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE, {
                 readLock: ROLE.AUTHOR,
                 writeLock: ROLE.AUTHOR,
@@ -102,14 +102,14 @@ describe('runAdapter', () => {
             expect(body.allowChannel).toBe(true);
         });
 
-        it('Should not provide a userKey with a world scope', async() => {
+        it('Should not provide a userKey with a world scope', async () => {
             await runAdapter.create(MODEL, WORLD_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body.scope).not.toHaveProperty('userKey');
         });
 
-        it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
+        it('Should use the session\'s user key as when one is not provided one for group scope ', async () => {
             await runAdapter.create(MODEL, GROUP_SCOPE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -117,7 +117,7 @@ describe('runAdapter', () => {
         });
 
         describe('Permits', () => {
-            it('Should include a confirmation header if permit specified', async() => {
+            it('Should include a confirmation header if permit specified', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 expect(getPermitHeader(req1.requestHeaders)).toBeTruthy();
@@ -127,7 +127,7 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req2.requestHeaders)).toBeTruthy();
             });
 
-            it('Should forward only the specified parts of a permit', async() => {
+            it('Should forward only the specified parts of a permit', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 const body1 = JSON.parse(req1.options.body);
@@ -141,7 +141,7 @@ describe('runAdapter', () => {
                 expect(body2.permit).not.toHaveProperty('readLock');
             });
 
-            it('Should forward full permit with confirmation header if specified', async() => {
+            it('Should forward full permit with confirmation header if specified', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -153,14 +153,14 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req.requestHeaders)).toBeTruthy();
             });
 
-            it('Should send no permit if none specified', async() => {
+            it('Should send no permit if none specified', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const body = JSON.parse(req.options.body);
                 expect(body).not.toHaveProperty('permit');
             });
 
-            it('Should merge confirmation header with provided headers if permit specified', async() => {
+            it('Should merge confirmation header with provided headers if permit specified', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -171,7 +171,7 @@ describe('runAdapter', () => {
                 expect(req.requestHeaders['accept-language']).toBe('en-US');
             });
 
-            it('Should forward provided headers if no permit specified', async() => {
+            it('Should forward provided headers if no permit specified', async () => {
                 await runAdapter.create(MODEL, GROUP_SCOPE, {
                     headers: { 'accept-language': 'en-US' },
                 });
@@ -186,32 +186,32 @@ describe('runAdapter', () => {
     describe('runAdapter.clone', () => {
         const RUN_KEY = 'runkey';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.clone(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.clone(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/clone/runKey URL', async() => {
+        it('Should use the run/clone/runKey URL', async () => {
             await runAdapter.clone(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/clone/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.clone(RUN_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/clone/${RUN_KEY}`);
         });
 
-        it('Should pass the appropriate options to the request body', async() => {
+        it('Should pass the appropriate options to the request body', async () => {
             await runAdapter.clone(RUN_KEY, {
                 trackingKey: 'trackingkey',
                 ephemeral: true,
@@ -230,32 +230,32 @@ describe('runAdapter', () => {
     describe('runAdapter.restore', () => {
         const RUN_KEY = 'runkey';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.restore(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.restore(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/restore/runKey URL', async() => {
+        it('Should use the run/restore/runKey URL', async () => {
             await runAdapter.restore(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/restore/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.restore(RUN_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/restore/${RUN_KEY}`);
         });
 
-        it('Should pass the appropriate options to the request body', async() => {
+        it('Should pass the appropriate options to the request body', async () => {
             await runAdapter.restore(RUN_KEY, { ephemeral: true });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -271,32 +271,32 @@ describe('runAdapter', () => {
         const RUN_KEY = 'runkey';
         const STEPS = 2;
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.rewind(RUN_KEY, STEPS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.rewind(RUN_KEY, STEPS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/rewind/runKey URL', async() => {
+        it('Should use the run/rewind/runKey URL', async () => {
             await runAdapter.rewind(RUN_KEY, STEPS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/rewind/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.rewind(RUN_KEY, STEPS, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/rewind/${RUN_KEY}`);
         });
 
-        it('Should pass the appropriate options to the request body', async() => {
+        it('Should pass the appropriate options to the request body', async () => {
             await runAdapter.rewind(RUN_KEY, STEPS, { ephemeral: true });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -331,39 +331,39 @@ describe('runAdapter', () => {
         };
         const RUN_KEY = 'runkey';
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/runKey URL', async() => {
+        it('Should use the run/runKey URL', async () => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.update(RUN_KEY, UPDATE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
 
-        it('Should pass the update to the request body in the appropriate format', async() => {
+        it('Should pass the update to the request body in the appropriate format', async () => {
             await runAdapter.update(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body).toEqual(PARSED_UPDATE);
         });
 
-        it('Should properly omit options that aren\'t passed in', async() => {
+        it('Should properly omit options that aren\'t passed in', async () => {
             await runAdapter.update(RUN_KEY, { marked: true });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -380,25 +380,25 @@ describe('runAdapter', () => {
     describe('runAdapter.remove', () => {
         const RUN_KEY = 'runkey';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await runAdapter.remove(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.remove(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/runKey URL', async() => {
+        it('Should use the run/runKey URL', async () => {
             await runAdapter.remove(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.remove(RUN_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -411,25 +411,25 @@ describe('runAdapter', () => {
     describe('runAdapter.get', () => {
         const RUN_KEY = 'runkey';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.get(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.get(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/runKey URL', async() => {
+        it('Should use the run/runKey URL', async () => {
             await runAdapter.get(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.get(RUN_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -455,19 +455,19 @@ describe('runAdapter', () => {
             metadata: ['meta1', 'meta2'],
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.query(MODEL, OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.query(MODEL, OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/in/groupName[/episodeName]/modelFile URL', async() => {
+        it('Should use the run/in/groupName[/episodeName]/modelFile URL', async () => {
             const EPISODE_NAME = 'myepisodename';
             await runAdapter.query(MODEL, OPTIONS);
             const req1 = capturedRequests[capturedRequests.length - 1];
@@ -477,21 +477,21 @@ describe('runAdapter', () => {
             expect(req2.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/in/${SESSION.groupName}/${EPISODE_NAME}/${MODEL}`);
         });
 
-        it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async() => {
+        it('Should use the run/scopeBoundary/scopeKey/modelFile URL when a scope is provided', async () => {
             await runAdapter.query(MODEL, { scope: SCOPE });
             const req = capturedRequests[capturedRequests.length - 1];
             const { scopeBoundary, scopeKey } = SCOPE;
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.query(MODEL, OPTIONS, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/in/${SESSION.groupName}/${MODEL}`);
         });
 
-        it('Should pass in query options as a part of the search parameters (query string)', async() => {
+        it('Should pass in query options as a part of the search parameters (query string)', async () => {
             await runAdapter.query(MODEL, OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -520,7 +520,7 @@ describe('runAdapter', () => {
         ];
 
         STRATEGIES.forEach((strategy) => {
-            it('Should have authorization', async() => {
+            it('Should have authorization', async () => {
                 await runAdapter.getWithStrategy(strategy, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
@@ -530,13 +530,13 @@ describe('runAdapter', () => {
         describe('reuse-across-sessions', () => {
             const STRATEGY = 'reuse-across-sessions';
 
-            it('Should do a GET', async() => {
+            it('Should do a GET', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const res = capturedRequests[capturedRequests.length - 1];
                 expect(res.options.method.toUpperCase()).toBe('GET');
             });
 
-            it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async() => {
+            it('Should use the run/scopeBoundary/scopeKey/modelFile URL', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const { scopeBoundary, scopeKey } = SCOPE;
@@ -544,7 +544,7 @@ describe('runAdapter', () => {
                 expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/${scopeBoundary}/${scopeKey}/${MODEL}`);
             });
 
-            it('Should query for the most recent run', async() => {
+            it('Should query for the most recent run', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const search = req.url.split('?')[1];
@@ -571,7 +571,7 @@ describe('runAdapter', () => {
                     capturedRequests = mockSetup.capturedRequests;
                 });
 
-                it('Should do a GET then a POST', async() => {
+                it('Should do a GET then a POST', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                     // eslint-disable-next-line no-magic-numbers
                     const [get, post] = capturedRequests.slice(-2);
@@ -579,7 +579,7 @@ describe('runAdapter', () => {
                     expect(post.options.method.toUpperCase()).toBe('POST');
                 });
 
-                it('Should GET from run/scopeBoundary/scopeKey/modelFile URL, then POST to /run ', async() => {
+                it('Should GET from run/scopeBoundary/scopeKey/modelFile URL, then POST to /run ', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                     // eslint-disable-next-line no-magic-numbers
                     const [get, post] = capturedRequests.slice(-2);
@@ -596,26 +596,26 @@ describe('runAdapter', () => {
             const WORLD_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.WORLD, scopeKey: 123456789123456 };
             const GROUP_SCOPE = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: 123456789123456 };
 
-            it('Should do a POST', async() => {
+            it('Should do a POST', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 expect(req.options.method.toUpperCase()).toBe('POST');
             });
 
-            it('Should use the run URL', async() => {
+            it('Should use the run URL', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run`);
             });
 
-            it('Should support generic URL options', async() => {
+            it('Should support generic URL options', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE, GENERIC_OPTIONS);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
                 expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run`);
             });
 
-            it('Should pass the run to the request body', async() => {
+            it('Should pass the run to the request body', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE, {
                     readLock: ROLE.AUTHOR,
                     writeLock: ROLE.AUTHOR,
@@ -639,14 +639,14 @@ describe('runAdapter', () => {
                 expect(body.executionContext).toEqual({});
             });
 
-            it('Should not provide a userKey with a world scope', async() => {
+            it('Should not provide a userKey with a world scope', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, WORLD_SCOPE);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const body = JSON.parse(req.options.body);
                 expect(body.scope).not.toHaveProperty('userKey');
             });
 
-            it('Should use the session\'s user key as when one is not provided one for group scope ', async() => {
+            it('Should use the session\'s user key as when one is not provided one for group scope ', async () => {
                 await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const body = JSON.parse(req.options.body);
@@ -654,7 +654,7 @@ describe('runAdapter', () => {
             });
 
             describe('Permits', () => {
-                it('Should include a confirmation header if permit specified', async() => {
+                it('Should include a confirmation header if permit specified', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
                     const req1 = capturedRequests[capturedRequests.length - 1];
                     expect(getPermitHeader(req1.requestHeaders)).toBeTruthy();
@@ -664,7 +664,7 @@ describe('runAdapter', () => {
                     expect(getPermitHeader(req2.requestHeaders)).toBeTruthy();
                 });
 
-                it('Should forward only the specified parts of a permit', async() => {
+                it('Should forward only the specified parts of a permit', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, { readLock: ROLE.USER });
                     const req1 = capturedRequests[capturedRequests.length - 1];
                     const body1 = JSON.parse(req1.options.body);
@@ -678,7 +678,7 @@ describe('runAdapter', () => {
                     expect(body2.permit).not.toHaveProperty('readLock');
                 });
 
-                it('Should forward full permit with confirmation header if specified', async() => {
+                it('Should forward full permit with confirmation header if specified', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
                         readLock: ROLE.USER,
                         writeLock: ROLE.PARTICIPANT,
@@ -690,14 +690,14 @@ describe('runAdapter', () => {
                     expect(getPermitHeader(req.requestHeaders)).toBeTruthy();
                 });
 
-                it('Should send no permit if none specified', async() => {
+                it('Should send no permit if none specified', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE);
                     const req = capturedRequests[capturedRequests.length - 1];
                     const body = JSON.parse(req.options.body);
                     expect(body).not.toHaveProperty('permit');
                 });
 
-                it('Should merge confirmation header with provided headers if permit specified', async() => {
+                it('Should merge confirmation header with provided headers if permit specified', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
                         readLock: ROLE.USER,
                         writeLock: ROLE.PARTICIPANT,
@@ -708,7 +708,7 @@ describe('runAdapter', () => {
                     expect(req.requestHeaders['accept-language']).toBe('en-US');
                 });
 
-                it('Should forward provided headers if no permit specified', async() => {
+                it('Should forward provided headers if no permit specified', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, MODEL, GROUP_SCOPE, {
                         headers: { 'accept-language': 'en-US' },
                     });
@@ -724,25 +724,25 @@ describe('runAdapter', () => {
     describe('runAdapter.introspect', () => {
         const MODEL = 'test-model.py';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.introspect(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.introspect(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/introspect/model/modelFile URL', async() => {
+        it('Should use the run/introspect/model/modelFile URL', async () => {
             await runAdapter.introspect(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/introspect/model/${MODEL}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.introspect(MODEL, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -755,25 +755,25 @@ describe('runAdapter', () => {
     describe('runAdapter.introspectWithRunKey', () => {
         const RUN_KEY = 'runKey';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.introspectWithRunKey(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.introspectWithRunKey(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/introspect/runKey URL', async() => {
+        it('Should use the run/introspect/runKey URL', async () => {
             await runAdapter.introspectWithRunKey(RUN_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/introspect/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.introspectWithRunKey(RUN_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -788,32 +788,32 @@ describe('runAdapter', () => {
         const NAME = 'test-operation';
         const ARGUMENTS = ['arg1', 'arg2', 'arg3'];
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/operation/runKey URL', async() => {
+        it('Should use the run/operation/runKey URL', async () => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/operation/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/operation/${RUN_KEY}`);
         });
 
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters', async () => {
             const OPTIONS = { timeout: 300, ritual: RITUAL.REANIMATE };
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS, OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
@@ -823,7 +823,7 @@ describe('runAdapter', () => {
             expect(searchParams.get('ritual')).toBe(OPTIONS.ritual.toString());
         });
 
-        it('Should handle the use of multiple run keys in the URL search parameters', async() => {
+        it('Should handle the use of multiple run keys in the URL search parameters', async () => {
             await runAdapter.operation([RUN_KEY, '987654321'], NAME, ARGUMENTS, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
@@ -832,7 +832,7 @@ describe('runAdapter', () => {
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
+        it('Should set ritual to undefined when using mutiple run keys', async () => {
             await runAdapter.operation([RUN_KEY, '987654321'], NAME, ARGUMENTS, { ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -840,7 +840,7 @@ describe('runAdapter', () => {
             expect(searchParams.has('ritual')).toBe(false);
         });
 
-        it('Should pass the operation to the request body', async() => {
+        it('Should pass the operation to the request body', async () => {
             await runAdapter.operation(RUN_KEY, NAME, ARGUMENTS);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -856,33 +856,33 @@ describe('runAdapter', () => {
         const RUN_KEY_2 = '123456789';
         const VARIABLES = ['var1', 'var2', 'var3'];
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/variable/runkey URL for single runs', async() => {
+        it('Should use the run/variable/runkey URL for single runs', async () => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}`);
         });
 
-        it('Should use the run/variable URL for multiple runs', async() => {
+        it('Should use the run/variable URL for multiple runs', async () => {
             await runAdapter.getVariables([RUN_KEY, RUN_KEY_2], VARIABLES, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.getVariables(RUN_KEY, VARIABLES, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -890,7 +890,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
         });
 
-        it('Should pass non-generic options to body', async() => {
+        it('Should pass non-generic options to body', async () => {
             const TIMEOUT = 300;
             await runAdapter.getVariables(RUN_KEY, VARIABLES, { timeout: TIMEOUT, ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
@@ -899,14 +899,14 @@ describe('runAdapter', () => {
             expect(body.timeout).toBe(TIMEOUT);
         });
 
-        it('Should handle the use of multiple run keys in the request body', async() => {
+        it('Should handle the use of multiple run keys in the request body', async () => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
+        it('Should set ritual to undefined when using mutiple run keys', async () => {
             await runAdapter.getVariables([RUN_KEY, '987654321'], VARIABLES, { ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -920,26 +920,26 @@ describe('runAdapter', () => {
         const RUN_KEY = '123456789';
         const VARIABLE = 'var1';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/variable/runKey/variableName URL', async() => {
+        it('Should use the run/variable/runKey/variableName URL', async () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -947,7 +947,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}/${VARIABLE}`);
         });
 
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters', async () => {
             await runAdapter.getVariable(RUN_KEY, VARIABLE, { timeout: 300, ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -956,14 +956,14 @@ describe('runAdapter', () => {
             expect(searchParams.get('ritual')).toBe(RITUAL.REANIMATE);
         });
 
-        it('Should handle multiple run keys in the request body', async() => {
+        it('Should handle multiple run keys in the request body', async () => {
             await runAdapter.getVariable([RUN_KEY, '987654321'], VARIABLE, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should handle multiple variables in the request body', async() => {
+        it('Should handle multiple variables in the request body', async () => {
             await runAdapter.getVariable(RUN_KEY, [VARIABLE, 'var2']);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
@@ -972,7 +972,7 @@ describe('runAdapter', () => {
             expect(body.include).toBe([VARIABLE, 'var2'].join(';'));
         });
 
-        it('Should handle multiple run keys and multiple variables in the request body', async() => {
+        it('Should handle multiple run keys and multiple variables in the request body', async () => {
             await runAdapter.getVariable([RUN_KEY, '987654321'], [VARIABLE, 'var2'], { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
@@ -993,26 +993,26 @@ describe('runAdapter', () => {
         };
         const RUN_KEY = '123456789';
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/variable/runKey URL', async() => {
+        it('Should use the run/variable/runKey URL', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/variable/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1020,7 +1020,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/variable/${RUN_KEY}`);
         });
 
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE, { timeout: 300, ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -1029,7 +1029,7 @@ describe('runAdapter', () => {
             expect(searchParams.get('ritual')).toBe(RITUAL.REANIMATE);
         });
 
-        it('Should handle multiple run keys in the URL search parameters', async() => {
+        it('Should handle multiple run keys in the URL search parameters', async () => {
             await runAdapter.updateVariables([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
@@ -1038,7 +1038,7 @@ describe('runAdapter', () => {
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
+        it('Should set ritual to undefined when using mutiple run keys', async () => {
             await runAdapter.updateVariables([RUN_KEY, '987654321'], UPDATE, { ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -1046,7 +1046,7 @@ describe('runAdapter', () => {
             expect(searchParams.has('ritual')).toBe(false);
         });
 
-        it('Should pass the variables update to the request body', async() => {
+        it('Should pass the variables update to the request body', async () => {
             await runAdapter.updateVariables(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -1060,26 +1060,26 @@ describe('runAdapter', () => {
         const RUN_KEY = '123456789';
         const METADATA = ['meta1', 'meta2', 'meta3'];
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/meta URL', async() => {
+        it('Should use the run/meta URL', async () => {
             await runAdapter.getMetadata(RUN_KEY, METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.getMetadata(RUN_KEY, METADATA, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1087,7 +1087,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta`);
         });
 
-        it('Should handle multiple run keys in the request body', async() => {
+        it('Should handle multiple run keys in the request body', async () => {
             await runAdapter.getMetadata([RUN_KEY, '987654321'], METADATA);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url] = req.url.split('?');
@@ -1107,26 +1107,26 @@ describe('runAdapter', () => {
             meta3: 987654,
         };
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/meta/runKey URL', async() => {
+        it('Should use the run/meta/runKey URL', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/meta/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1134,7 +1134,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/meta/${RUN_KEY}`);
         });
 
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE, { timeout: 300 });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -1142,7 +1142,7 @@ describe('runAdapter', () => {
             expect(searchParams.get('timeout')).toBe('300');
         });
 
-        it('Should handle multiple run keys in the URL search parameters', async() => {
+        it('Should handle multiple run keys in the URL search parameters', async () => {
             await runAdapter.updateMetadata([RUN_KEY, '987654321'], UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
@@ -1151,7 +1151,7 @@ describe('runAdapter', () => {
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should pass the metadata update to the request body', async() => {
+        it('Should pass the metadata update to the request body', async () => {
             await runAdapter.updateMetadata(RUN_KEY, UPDATE);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -1169,26 +1169,26 @@ describe('runAdapter', () => {
             { objectType: 'execute', name: 'name1' },
         ];
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/action/runKey URL', async() => {
+        it('Should use the run/action/runKey URL', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/action/${RUN_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1196,7 +1196,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/action/${RUN_KEY}`);
         });
 
-        it('Should pass non-generic options to URL search parameters', async() => {
+        it('Should pass non-generic options to URL search parameters', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS, { timeout: 300, ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -1205,7 +1205,7 @@ describe('runAdapter', () => {
             expect(searchParams.get('ritual')).toBe(RITUAL.REANIMATE);
         });
 
-        it('Should handle multiple run keys in the URL search parameters', async() => {
+        it('Should handle multiple run keys in the URL search parameters', async () => {
             await runAdapter.action([RUN_KEY, '987654321'], ACTIONS, { ritual: RITUAL.EXORCISE });
             const req = capturedRequests[capturedRequests.length - 1];
             const [url, search] = req.url.split('?');
@@ -1214,7 +1214,7 @@ describe('runAdapter', () => {
             expect(searchParams.getAll('runKey')).toEqual([RUN_KEY, '987654321']);
         });
 
-        it('Should set ritual to undefined when using mutiple run keys', async() => {
+        it('Should set ritual to undefined when using mutiple run keys', async () => {
             await runAdapter.action([RUN_KEY, '987654321'], ACTIONS, { ritual: RITUAL.REANIMATE });
             const req = capturedRequests[capturedRequests.length - 1];
             const search = req.url.split('?')[1];
@@ -1222,7 +1222,7 @@ describe('runAdapter', () => {
             expect(searchParams.has('ritual')).toBe(false);
         });
 
-        it('Should pass the action list to the request body', async() => {
+        it('Should pass the action list to the request body', async () => {
             await runAdapter.action(RUN_KEY, ACTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -1236,26 +1236,26 @@ describe('runAdapter', () => {
         const WORLD_KEY = 'worldkey';
         const MODEL = 'model.py';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/world/worldKey URL', async() => {
+        it('Should use the run/world/worldKey URL', async () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/world/${WORLD_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1263,7 +1263,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
         });
 
-        it('Should pass creation options to the request body', async() => {
+        it('Should pass creation options to the request body', async () => {
             await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
                 readLock: ROLE.AUTHOR,
                 writeLock: ROLE.AUTHOR,
@@ -1286,7 +1286,7 @@ describe('runAdapter', () => {
         });
 
         describe('Permits', () => {
-            it('Should include a confirmation header if permit specified', async() => {
+            it('Should include a confirmation header if permit specified', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 expect(getPermitHeader(req1.requestHeaders)).toBeTruthy();
@@ -1296,7 +1296,7 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req2.requestHeaders)).toBeTruthy();
             });
 
-            it('Should forward only the specified parts of a permit', async() => {
+            it('Should forward only the specified parts of a permit', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 const body1 = JSON.parse(req1.options.body);
@@ -1310,7 +1310,7 @@ describe('runAdapter', () => {
                 expect(body2.permit).not.toHaveProperty('readLock');
             });
 
-            it('Should forward full permit with confirmation header if specified', async() => {
+            it('Should forward full permit with confirmation header if specified', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -1322,14 +1322,14 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req.requestHeaders)).toBeTruthy();
             });
 
-            it('Should send no permit if none specified', async() => {
+            it('Should send no permit if none specified', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const body = JSON.parse(req.options.body);
                 expect(body).not.toHaveProperty('permit');
             });
 
-            it('Should merge confirmation header with provided headers if permit specified', async() => {
+            it('Should merge confirmation header with provided headers if permit specified', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -1340,7 +1340,7 @@ describe('runAdapter', () => {
                 expect(req.requestHeaders['accept-language']).toBe('en-US');
             });
 
-            it('Should forward provided headers if no permit specified', async() => {
+            it('Should forward provided headers if no permit specified', async () => {
                 await runAdapter.retrieveFromWorld(WORLD_KEY, MODEL, {
                     headers: { 'accept-language': 'en-US' },
                 });
@@ -1355,26 +1355,26 @@ describe('runAdapter', () => {
     describe('runAdapter.removeFromWorld', () => {
         const WORLD_KEY = 'worldkey';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await runAdapter.removeFromWorld(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.removeFromWorld(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/world/worldKey URL', async() => {
+        it('Should use the run/world/worldKey URL', async () => {
             await runAdapter.removeFromWorld(WORLD_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
             expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/world/${WORLD_KEY}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.removeFromWorld(WORLD_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const url = req.url.split('?')[0];
@@ -1388,32 +1388,32 @@ describe('runAdapter', () => {
     describe('runAdapter.createSingular', () => {
         const MODEL = 'model.vmf';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.createSingular(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.createSingular(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the singular run URL', async() => {
+        it('Should use the singular run URL', async () => {
             await runAdapter.createSingular(MODEL);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/singular`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.createSingular(MODEL, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/singular`);
         });
 
-        it('Should pass the run to the request body', async() => {
+        it('Should pass the run to the request body', async () => {
             await runAdapter.createSingular(MODEL, {
                 readLock: ROLE.AUTHOR,
                 writeLock: ROLE.AUTHOR,
@@ -1431,7 +1431,7 @@ describe('runAdapter', () => {
         });
 
         describe('Permits', () => {
-            it('Should include a confirmation header if permit specified', async() => {
+            it('Should include a confirmation header if permit specified', async () => {
                 await runAdapter.createSingular(MODEL, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 expect(getPermitHeader(req1.requestHeaders)).toBeTruthy();
@@ -1441,7 +1441,7 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req2.requestHeaders)).toBeTruthy();
             });
 
-            it('Should forward only the specified parts of a permit', async() => {
+            it('Should forward only the specified parts of a permit', async () => {
                 await runAdapter.createSingular(MODEL, { readLock: ROLE.USER });
                 const req1 = capturedRequests[capturedRequests.length - 1];
                 const body1 = JSON.parse(req1.options.body);
@@ -1455,7 +1455,7 @@ describe('runAdapter', () => {
                 expect(body2.permit).not.toHaveProperty('readLock');
             });
 
-            it('Should forward full permit with confirmation header if specified', async() => {
+            it('Should forward full permit with confirmation header if specified', async () => {
                 await runAdapter.createSingular(MODEL, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -1467,14 +1467,14 @@ describe('runAdapter', () => {
                 expect(getPermitHeader(req.requestHeaders)).toBeTruthy();
             });
 
-            it('Should send no permit if none specified', async() => {
+            it('Should send no permit if none specified', async () => {
                 await runAdapter.createSingular(MODEL);
                 const req = capturedRequests[capturedRequests.length - 1];
                 const body = JSON.parse(req.options.body);
                 expect(body).not.toHaveProperty('permit');
             });
 
-            it('Should merge confirmation header with provided headers if permit specified', async() => {
+            it('Should merge confirmation header with provided headers if permit specified', async () => {
                 await runAdapter.createSingular(MODEL, {
                     readLock: ROLE.USER,
                     writeLock: ROLE.PARTICIPANT,
@@ -1485,7 +1485,7 @@ describe('runAdapter', () => {
                 expect(req.requestHeaders['accept-language']).toBe('en-US');
             });
 
-            it('Should forward provided headers if no permit specified', async() => {
+            it('Should forward provided headers if no permit specified', async () => {
                 await runAdapter.createSingular(MODEL, {
                     headers: { 'accept-language': 'en-US' },
                 });
@@ -1498,25 +1498,25 @@ describe('runAdapter', () => {
     });
 
     describe('runAdapter.getSingularRunKey', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await runAdapter.getSingularRunKey();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.getSingularRunKey();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the singular run URL', async() => {
+        it('Should use the singular run URL', async () => {
             await runAdapter.getSingularRunKey();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/singular/key`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.getSingularRunKey(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -1526,38 +1526,36 @@ describe('runAdapter', () => {
         testedMethods.push('getSingularRunKey');
     });
 
-
     describe('runAdapter.migrate', () => {
         const RUN_KEY = 'testRunKey123';
         const EPISODE_KEY = 'testEpisodeKey123';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the run/migrate/episodeKey/runKey URL', async() => {
+        it('Should use the run/migrate/episodeKey/runKey URL', async () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
         });
 
-
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/migrate/to/${EPISODE_KEY}/${RUN_KEY}`);
         });
 
-        it('Should pass the appropriate options to the request body', async() => {
+        it('Should pass the appropriate options to the request body', async () => {
             await runAdapter.migrate(RUN_KEY, EPISODE_KEY, {
                 trackingKey: 'trackingkey',
                 ephemeral: true,
@@ -1575,7 +1573,7 @@ describe('runAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(runAdapter).filter((key) => typeof runAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(runAdapter).filter(key => typeof runAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -42,25 +42,25 @@ describe('timeAdapter', () => {
     });
 
     describe('timeAdapter.get', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await timeAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await timeAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the time URL', async() => {
+        it('Should use the time URL', async () => {
             await timeAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/time`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await timeAdapter.get(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -72,7 +72,7 @@ describe('timeAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(timeAdapter).filter((key) => typeof timeAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(timeAdapter).filter(key => typeof timeAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

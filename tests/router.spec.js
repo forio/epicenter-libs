@@ -62,14 +62,14 @@ describe('Router Tests', () => {
             expect(typeof router.version).toBe('undefined');
         });
 
-        it('Should use the configuration values when no URI components are set', async() => {
+        it('Should use the configuration values when no URI components are set', async () => {
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             const { apiProtocol, apiHost, apiVersion, accountShortName, projectShortName } = config;
             expect(req.url).toBe(`${apiProtocol}://${apiHost}/api/v${apiVersion}/${accountShortName}/${projectShortName}/run`);
         });
 
-        it('Should also use configuration values retroactively', async() => {
+        it('Should also use configuration values retroactively', async () => {
             config.apiProtocol = 'http';
             config.apiHost = 'mydomain.com';
             config.accountShortName = 'something';
@@ -88,7 +88,7 @@ describe('Router Tests', () => {
             expect(req2.url).toBe(`https://forio.com/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
-        it('Should route calls to the project proxy server', async() => {
+        it('Should route calls to the project proxy server', async () => {
             config.useProjectProxy = true;
 
             await router.get('/run');
@@ -102,7 +102,7 @@ describe('Router Tests', () => {
             expect(req2.url).toBe(`https://forio.com/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
         });
 
-        it('Should ignore configuration values when URI components are provided directly to the router', async() => {
+        it('Should ignore configuration values when URI components are provided directly to the router', async () => {
             router.server = 'https://mydomain.com';
             router.accountShortName = 'anything';
             router.projectShortName = 'else';
@@ -123,7 +123,7 @@ describe('Router Tests', () => {
         });
 
         describe('Routing Options', () => {
-            it('Should accept routing options overrides from adapter methods', async() => {
+            it('Should accept routing options overrides from adapter methods', async () => {
                 config.accountShortName = ACCOUNT;
                 config.projectShortName = PROJECT;
 
@@ -152,7 +152,7 @@ describe('Router Tests', () => {
                 expect(req6.url).toBe(`https://forio.com/proxy/${config.accountShortName}/${config.projectShortName}/api/v3/${config.accountShortName}/${config.projectShortName}/run`);
             });
 
-            it('Should prioritize method overrides over router instance properties', async() => {
+            it('Should prioritize method overrides over router instance properties', async () => {
                 router.accountShortName = 'something';
                 router.projectShortName = 'else';
                 router.apiHost = 'mydomain.com';
@@ -162,7 +162,7 @@ describe('Router Tests', () => {
                 expect(req.url).toBe('https://forio.com/api/v3/foo/bar/run');
             });
 
-            it('Should prioritize method overrides over configuration values', async() => {
+            it('Should prioritize method overrides over configuration values', async () => {
                 config.accountShortName = 'something';
                 config.projectShortName = 'else';
 
@@ -177,7 +177,7 @@ describe('Router Tests', () => {
                 expect(req2.url).toBe('https://forio.com/proxy/foo/bar/api/v3/foo/bar/run');
             });
 
-            it('Should accept configuration from config, router instance, and method overrides', async() => {
+            it('Should accept configuration from config, router instance, and method overrides', async () => {
                 config.accountShortName = 'something';
                 router.projectShortName = 'else';
 
@@ -186,7 +186,7 @@ describe('Router Tests', () => {
                 expect(req.url).toBe('https://mydomain.com/api/v3/something/else/run');
             });
 
-            it('Should not affect subsequent requests', async() => {
+            it('Should not affect subsequent requests', async () => {
                 config.accountShortName = ACCOUNT;
                 config.projectShortName = PROJECT;
 
@@ -202,40 +202,39 @@ describe('Router Tests', () => {
     });
 
     describe('Network Calls', () => {
-        it('Should make a GET call when calling \'get\'', async() => {
+        it('Should make a GET call when calling \'get\'', async () => {
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should make a POST call when calling \'post\'', async() => {
+        it('Should make a POST call when calling \'post\'', async () => {
             await router.post('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should make a DELETE call when calling \'delete\'', async() => {
+        it('Should make a DELETE call when calling \'delete\'', async () => {
             await router.delete('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should make a PATCH call when calling \'patch\'', async() => {
+        it('Should make a PATCH call when calling \'patch\'', async () => {
             await router.patch('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should make a PUT call when calling \'put\'', async() => {
+        it('Should make a PUT call when calling \'put\'', async () => {
             await router.put('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PUT');
         });
     });
-    
-    describe('Search Parameters', () => {
 
-        it('Should accept URLSearchParams', async() => {
+    describe('Search Parameters', () => {
+        it('Should accept URLSearchParams', async () => {
             router.searchParams = new URLSearchParams('?foo=foo&bar=bar');
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
@@ -243,7 +242,7 @@ describe('Router Tests', () => {
             expect(search).toBe('foo=foo&bar=bar');
         });
 
-        it('Should accept strings for search parameters', async() => {
+        it('Should accept strings for search parameters', async () => {
             router.searchParams = '?foo=foo&bar=bar';
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
@@ -251,7 +250,7 @@ describe('Router Tests', () => {
             expect(search).toBe('foo=foo&bar=bar');
         });
 
-        it('Should accept arrayed tuples', async() => {
+        it('Should accept arrayed tuples', async () => {
             router.searchParams = [['foo', 'foo'], ['bar', 'bar']];
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
@@ -259,7 +258,7 @@ describe('Router Tests', () => {
             expect(search).toBe('foo=foo&bar=bar');
         });
 
-        it('Should accept objects', async() => {
+        it('Should accept objects', async () => {
             router.searchParams = { foo: 'foo', bar: 'bar' };
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
@@ -267,7 +266,7 @@ describe('Router Tests', () => {
             expect(search).toBe('foo=foo&bar=bar');
         });
 
-        it('Should accept objects with arrayed values', async() => {
+        it('Should accept objects with arrayed values', async () => {
             router.searchParams = { foo: 'foo', bar: ['bar', 'baz'] };
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
@@ -293,7 +292,7 @@ describe('Router Tests', () => {
             expect(router.withSearchParams()).toBe(router);
         });
 
-        it('Should set any values that are not undefined', async() => {
+        it('Should set any values that are not undefined', async () => {
             router.accountShortName = 'something';
             router.projectShortName = 'else';
             router.withAccountShortName(undefined);
@@ -322,7 +321,7 @@ describe('Router Tests', () => {
     });
 
     describe('Authorization', () => {
-        it('Should use a \'Authorization\' header by default if a session exists', async() => {
+        it('Should use a \'Authorization\' header by default if a session exists', async () => {
             await router.get('/run');
             const req1 = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req1.requestHeaders)).toBeFalsy();
@@ -332,21 +331,21 @@ describe('Router Tests', () => {
             expect(getAuthHeader(req2.requestHeaders)).toBeTruthy();
         });
 
-        it('Should use the auth token in the session', async() => {
+        it('Should use the auth token in the session', async () => {
             authAdapter.setLocalSession(SESSION);
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should support overrides from the config', async() => {
+        it('Should support overrides from the config', async () => {
             config.authOverride = 'bananas';
             await router.get('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe('bananas');
         });
 
-        it('Should support includeAuthorization: false', async() => {
+        it('Should support includeAuthorization: false', async () => {
             await router.get('/run', { includeAuthorization: false });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBeFalsy();
@@ -354,7 +353,7 @@ describe('Router Tests', () => {
     });
 
     describe('Pagination', () => {
-        it('Should return payloads with \'prev\', \'next\', and \'all\' functions', async() => {
+        it('Should return payloads with \'prev\', \'next\', and \'all\' functions', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', { paginated: true })
@@ -365,7 +364,7 @@ describe('Router Tests', () => {
             expect(typeof page.all).toBe('function');
         });
 
-        it('Should return contain the values for the first page in .values', async() => {
+        it('Should return contain the values for the first page in .values', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', { paginated: true })
@@ -374,7 +373,7 @@ describe('Router Tests', () => {
             expect(page.values).toEqual(['one', 'two', 'three']);
         });
 
-        it('Should return the next page when calling .next', async() => {
+        it('Should return the next page when calling .next', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', { paginated: true })
@@ -385,7 +384,7 @@ describe('Router Tests', () => {
             expect(page.values).toEqual(['four', 'five', 'six']);
         });
 
-        it('Should return the previous page when calling .prev', async() => {
+        it('Should return the previous page when calling .prev', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', { paginated: true })
@@ -398,7 +397,7 @@ describe('Router Tests', () => {
             expect(page.values).toEqual(['four', 'five', 'six']);
         });
 
-        it('Should return all values when calling .all (regardless of what page you\'re currently on)', async() => {
+        it('Should return all values when calling .all (regardless of what page you\'re currently on)', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', { paginated: true })
@@ -414,7 +413,7 @@ describe('Router Tests', () => {
             ]);
         });
 
-        it('Should return all values after an index, if one is provided in .all', async() => {
+        it('Should return all values after an index, if one is provided in .all', async () => {
             const MAX = 3;
             const page = await router
                 .withSearchParams({ first: 0, max: MAX })
@@ -429,7 +428,7 @@ describe('Router Tests', () => {
             ]);
         });
 
-        it('Should append to an array if one is provided', async() => {
+        it('Should append to an array if one is provided', async () => {
             const MAX = 3;
             const page = await router
                 .withSearchParams({ first: 0, max: MAX })
@@ -445,12 +444,12 @@ describe('Router Tests', () => {
             ]);
         });
 
-        it('Should use the parsePage function if one is provided', async() => {
+        it('Should use the parsePage function if one is provided', async () => {
             const page = await router
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', {
                     paginated: true,
-                    parsePage: (strings) => strings.map((s) => s.length),
+                    parsePage: strings => strings.map(s => s.length),
                 })
                 .then(({ body }) => body);
 
@@ -459,7 +458,7 @@ describe('Router Tests', () => {
     });
 
     describe('Inert Requests', () => {
-        it('Should call the errorManager to handle non-inert requests', async() => {
+        it('Should call the errorManager to handle non-inert requests', async () => {
             const handleSpy = vi.spyOn(errorManager, 'handle');
             try {
                 await router.get('/unauthorized', { inert: true });

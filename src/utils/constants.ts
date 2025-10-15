@@ -340,30 +340,30 @@ export enum ROLE {
 
 
 export interface Permit {
-    readLock: keyof typeof ROLE,
-    writeLock: keyof typeof ROLE,
+    readLock: keyof typeof ROLE;
+    writeLock: keyof typeof ROLE;
 }
 
 export interface GenericScope {
-    scopeBoundary: keyof typeof SCOPE_BOUNDARY,
-    scopeKey: string,
+    scopeBoundary: keyof typeof SCOPE_BOUNDARY;
+    scopeKey: string;
 }
 
 /**
  * Generic search options for adapter methods. All adapter methods
  * will take `filter` and `sort` as a list of strings, and join with a ";"
- * 
+ *
  * Enhanced filter support allows:
  * - string[] (legacy): ['name=Mike', 'count<=3'] -> 'name=Mike;count<=3'
  * - string (raw): '(name=Mike;count<=3;[id=1;id=2])' -> passed through as-is
  * - FilterGroup (object): { type: 'and', filters: [...] } -> parsed to boolean syntax
  */
 export interface GenericSearchOptions {
-    filter?: FilterInput,
-    sort?: string[],
-    first?: number,
-    max?: number,
-    count?: boolean,
+    filter?: FilterInput;
+    sort?: string[];
+    first?: number;
+    max?: number;
+    count?: boolean;
 }
 
 /**
@@ -371,8 +371,8 @@ export interface GenericSearchOptions {
  * any kind of open search on a resource.
  */
 export interface APISearchOptions {
-    filter?: string,
-    sort?: string,
-    first?: number,
-    max?: number,
+    filter?: string;
+    sort?: string;
+    first?: number;
+    max?: number;
 }

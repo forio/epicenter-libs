@@ -6,7 +6,7 @@ export interface Secret {
 }
 
 export interface AdminCreateView {
-    [key: string]: unknown,
+    [key: string]: unknown;
     handle: string;
     email: string;
     givenName?: string;
@@ -16,17 +16,17 @@ export interface AdminCreateView {
 }
 
 export interface Admin {
-    lastUpdated: string,
-    lastLogin: string,
-    created: string,
-    familyName: string,
-    givenName: string,
-    verified: boolean,
-    handle: string,
-    active: boolean,
-    adminKey: string,
-    email: string,
-    objectType: 'external' | 'native',
+    lastUpdated: string;
+    lastLogin: string;
+    created: string;
+    familyName: string;
+    givenName: string;
+    verified: boolean;
+    handle: string;
+    active: boolean;
+    adminKey: string;
+    email: string;
+    objectType: 'external' | 'native';
 }
 
 export interface NativeAdminCreateView extends AdminCreateView {
@@ -35,13 +35,12 @@ export interface NativeAdminCreateView extends AdminCreateView {
 }
 
 export async function createAdmin(view: AdminCreateView): Promise<Admin> {
-
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .post('/admin', {
             body: view,
-        }).then(({body}) => body);
+        }).then(({ body }) => body);
 }
 
 export async function getWithHandle(handle: string, optionals: RoutingOptions = {}) {
@@ -49,5 +48,5 @@ export async function getWithHandle(handle: string, optionals: RoutingOptions = 
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
         .get(`/admin/with/${handle}`, optionals)
-        .then(({body}) => body);
+        .then(({ body }) => body);
 }

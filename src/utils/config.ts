@@ -111,6 +111,7 @@ class Config {
     set accountShortName(accountShortName) {
         this._accountShortName = accountShortName;
     }
+
     /**
      * Project name used for making network requests. This is the default value used by Epicenter API adapters when making network requests without explicitly defining an account to use. It is defined on-load based on your browser's URL, and can be overwritten for local development.
      * @example
@@ -175,11 +176,11 @@ class Config {
     }
 
     setContext(context: {
-        apiProtocol?: string,
-        apiHost?: string,
-        useProjectProxy?: boolean,
-        accountShortName?: string,
-        projectShortName?: string,
+        apiProtocol?: string;
+        apiHost?: string;
+        useProjectProxy?: boolean;
+        accountShortName?: string;
+        projectShortName?: string;
     }) {
         if (context.apiProtocol) this.apiProtocol = context.apiProtocol;
         if (context.apiHost) this.apiHost = context.apiHost;

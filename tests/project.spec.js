@@ -39,19 +39,19 @@ describe('projectAdapter', () => {
     });
 
     describe('projectAdapter.channelsEnabled', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await projectAdapter.channelsEnabled();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the project/channel/isEnabled URL', async() => {
+        it('Should use the project/channel/isEnabled URL', async () => {
             await projectAdapter.channelsEnabled();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/project/channel/isEnabled`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await projectAdapter.channelsEnabled(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -62,19 +62,19 @@ describe('projectAdapter', () => {
     });
 
     describe('projectAdapter.get', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await projectAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the project URL', async() => {
+        it('Should use the project URL', async () => {
             await projectAdapter.get();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/project`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await projectAdapter.get(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -85,19 +85,19 @@ describe('projectAdapter', () => {
     });
 
     describe('projectAdapter.list', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await projectAdapter.list(ACCOUNT);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the project/in URL with account context', async() => {
+        it('Should use the project/in URL with account context', async () => {
             await projectAdapter.list(ACCOUNT);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${ACCOUNT}/manager/project/in`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             const { accountShortName, server } = GENERIC_OPTIONS;
             // For list method, only pass server and accountShortName, not projectShortName since it's hardcoded to 'manager'
             const options = { server };
@@ -111,7 +111,7 @@ describe('projectAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(projectAdapter).filter((key) => typeof projectAdapter[key] === 'function');
+        const actualMethods = Object.keys(projectAdapter).filter(key => typeof projectAdapter[key] === 'function');
         expect(actualMethods).toEqual(testedMethods);
     });
 });

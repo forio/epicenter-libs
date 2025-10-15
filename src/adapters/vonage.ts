@@ -92,10 +92,10 @@ export async function startArchive(
     sessionID: SessionID,
     scope: { userKey?: string } & GenericScope,
     optionals: {
-        readLock?: keyof typeof ROLE,
-        writeLock?: keyof typeof ROLE,
-        resolution?: string,
-        ttlSeconds?: number,
+        readLock?: keyof typeof ROLE;
+        writeLock?: keyof typeof ROLE;
+        resolution?: string;
+        ttlSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<VonageArchive> {
     const { readLock, writeLock, ttlSeconds, resolution, ...routingOptions } = optionals;

@@ -47,32 +47,32 @@ describe('emailAdapter', () => {
         const subject = 'Test Subject';
         const emailBody = 'Test email body';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the email/user URL', async() => {
+        it('Should use the email/user URL', async () => {
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/email/user/${groupKey}/${userKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/email/user/${groupKey}/${userKey}`);
         });
 
-        it('Should pass subject and body to the request body', async() => {
+        it('Should pass subject and body to the request body', async () => {
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -81,7 +81,7 @@ describe('emailAdapter', () => {
             expect(body).toHaveProperty('body', emailBody);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 familyNameFirst: 'true',
                 html: true,
@@ -103,21 +103,21 @@ describe('emailAdapter', () => {
             expect(body.attachments[0].encoding).toBe('BASE_64');
         });
 
-        it('Should append fromUserKey to URL when provided', async() => {
+        it('Should append fromUserKey to URL when provided', async () => {
             const fromUserKey = 'FROM_USER_KEY';
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody, { fromUserKey });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain(`/email/user/${groupKey}/${userKey}/as/${fromUserKey}`);
         });
 
-        it('Should append from address to URL when provided', async() => {
+        it('Should append from address to URL when provided', async () => {
             const from = 'sender@example.com';
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody, { from });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain(`/email/user/${groupKey}/${userKey}/from/${from}`);
         });
 
-        it('Should append from and replyTo addresses to URL when both provided', async() => {
+        it('Should append from and replyTo addresses to URL when both provided', async () => {
             const from = 'sender@example.com';
             const replyTo = 'reply@example.com';
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody, { from, replyTo });
@@ -125,7 +125,7 @@ describe('emailAdapter', () => {
             expect(req.url).toContain(`/email/user/${groupKey}/${userKey}/from/${from}/${replyTo}`);
         });
 
-        it('Should prioritize fromUserKey over from when both provided', async() => {
+        it('Should prioritize fromUserKey over from when both provided', async () => {
             const fromUserKey = 'FROM_USER_KEY';
             const from = 'sender@example.com';
             await emailAdapter.sendEmail(groupKey, userKey, subject, emailBody, { fromUserKey, from });
@@ -142,32 +142,32 @@ describe('emailAdapter', () => {
         const subject = 'Test Subject';
         const emailBody = 'Test email body';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the email/admin URL', async() => {
+        it('Should use the email/admin URL', async () => {
             await emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/email/admin/${adminKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/email/admin/${adminKey}`);
         });
 
-        it('Should pass subject and body to the request body', async() => {
+        it('Should pass subject and body to the request body', async () => {
             await emailAdapter.sendEmailToAdmin(adminKey, subject, emailBody);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -176,7 +176,7 @@ describe('emailAdapter', () => {
             expect(body).toHaveProperty('body', emailBody);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 familyNameFirst: 'true',
                 html: true,
@@ -203,7 +203,7 @@ describe('emailAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(emailAdapter).filter((key) => typeof emailAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(emailAdapter).filter(key => typeof emailAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -41,38 +41,38 @@ describe('Authentication', () => {
     describe('authAdapter.login', () => {
         const CREDENTIALS = { handle: 'joe', password: 'pass', groupKey: 'groupkey' };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await authAdapter.login(CREDENTIALS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the authentication URL', async() => {
+        it('Should use the authentication URL', async () => {
             await authAdapter.login(CREDENTIALS);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/authentication`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.login(CREDENTIALS, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
         });
 
-        it('Should pass login credentials to the request body', async() => {
+        it('Should pass login credentials to the request body', async () => {
             await authAdapter.login(CREDENTIALS);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body).toMatchObject(CREDENTIALS);
         });
 
-        it('Should store the payload as the current session', async() => {
+        it('Should store the payload as the current session', async () => {
             await authAdapter.login(CREDENTIALS);
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
 
-        it('Should set objectType as user when one is not provided', async() => {
+        it('Should set objectType as user when one is not provided', async () => {
             await authAdapter.login(CREDENTIALS);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -83,7 +83,7 @@ describe('Authentication', () => {
     });
 
     describe('authAdapter.logout', () => {
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             capturedRequests.length = 0;
             await authAdapter.logout();
             expect(Boolean(authAdapter.getLocalSession())).toBe(false);
@@ -95,19 +95,19 @@ describe('Authentication', () => {
     });
 
     describe('authAdapter.getSession', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await authAdapter.getSession({});
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the verification URL', async() => {
+        it('Should use the verification URL', async () => {
             await authAdapter.getSession({});
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/verification`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.getSession(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -123,7 +123,7 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toBeUndefined();
         });
 
-        it('Should return the current session when set', async() => {
+        it('Should return the current session when set', async () => {
             authAdapter.setLocalSession(SESSION);
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
@@ -142,7 +142,7 @@ describe('Authentication', () => {
     });
 
     describe('authAdapter.removeLocalSession', () => {
-        it('Should remove the local session', async() => {
+        it('Should remove the local session', async () => {
             authAdapter.setLocalSession(SESSION);
             await authAdapter.removeLocalSession();
             expect(authAdapter.getLocalSession()).toBeUndefined();
@@ -154,26 +154,26 @@ describe('Authentication', () => {
     describe('authAdapter.regenerate', () => {
         const groupKey = 'GROUP_KEY';
 
-        it('Should do a PATCH', async() => {
+        it('Should do a PATCH', async () => {
             await authAdapter.regenerate(groupKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PATCH');
         });
 
-        it('Should use the authentication URL', async() => {
+        it('Should use the authentication URL', async () => {
             await authAdapter.regenerate(groupKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/authentication`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.regenerate(groupKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/authentication`);
         });
 
-        it('Should pass groupKey to the request body for user objectType', async() => {
+        it('Should pass groupKey to the request body for user objectType', async () => {
             await authAdapter.regenerate(groupKey, { objectType: 'user' });
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -181,7 +181,7 @@ describe('Authentication', () => {
             expect(body).toHaveProperty('groupKey', groupKey);
         });
 
-        it('Should use account context for admin objectType', async() => {
+        it('Should use account context for admin objectType', async () => {
             const accountName = 'test-account';
             await authAdapter.regenerate(accountName, { objectType: 'admin' });
             const req = capturedRequests[capturedRequests.length - 1];
@@ -190,7 +190,7 @@ describe('Authentication', () => {
             expect(body).toHaveProperty('objectType', 'admin');
         });
 
-        it('Should store the new session locally', async() => {
+        it('Should store the new session locally', async () => {
             await authAdapter.regenerate(groupKey);
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
@@ -199,19 +199,19 @@ describe('Authentication', () => {
     });
 
     describe('authAdapter.sso', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await authAdapter.sso();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the registration/sso/user URL', async() => {
+        it('Should use the registration/sso/user URL', async () => {
             await authAdapter.sso();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/registration/sso/user`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.sso(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -222,19 +222,19 @@ describe('Authentication', () => {
     });
 
     describe('authAdapter.getSAMLLink', () => {
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await authAdapter.getSAMLLink();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the registration/sso/user/saml URL', async() => {
+        it('Should use the registration/sso/user/saml URL', async () => {
             await authAdapter.getSAMLLink();
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/registration/sso/user/saml`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.getSAMLLink(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -276,26 +276,26 @@ describe('Authentication', () => {
             outcomeServiceUrl: 'https://example.com/outcome',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await authAdapter.ssoOutcome(ltiVersion, outcomeInfo);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the lti outcome URL with version', async() => {
+        it('Should use the lti outcome URL with version', async () => {
             await authAdapter.ssoOutcome(ltiVersion, outcomeInfo);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/lti/${ltiVersion}/outcome`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.ssoOutcome(ltiVersion, outcomeInfo, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/lti/${ltiVersion}/outcome`);
         });
 
-        it('Should pass outcome information to the request body', async() => {
+        it('Should pass outcome information to the request body', async () => {
             await authAdapter.ssoOutcome(ltiVersion, outcomeInfo);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
@@ -310,26 +310,26 @@ describe('Authentication', () => {
     describe('authAdapter.resetPassword', () => {
         const handle = 'testuser@example.com';
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await authAdapter.resetPassword(handle);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should use the verification/password/user URL', async() => {
+        it('Should use the verification/password/user URL', async () => {
             await authAdapter.resetPassword(handle);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/verification/password/user/${handle}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.resetPassword(handle, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/verification/password/user/${handle}`);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 redirectURL: 'https://example.com/reset',
                 subject: 'Reset your password',
@@ -347,26 +347,26 @@ describe('Authentication', () => {
     describe('authAdapter.verify', () => {
         const token = 'test-token-12345';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await authAdapter.verify(token);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should use the verification URL', async() => {
+        it('Should use the verification URL', async () => {
             await authAdapter.verify(token);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/verification`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await authAdapter.verify(token, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/verification`);
         });
 
-        it('Should include Bearer token in authorization header', async() => {
+        it('Should include Bearer token in authorization header', async () => {
             await authAdapter.verify(token);
             const req = capturedRequests[capturedRequests.length - 1];
             const authHeader = req.requestHeaders.authorization || req.requestHeaders.Authorization;
@@ -378,7 +378,7 @@ describe('Authentication', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(authAdapter).filter((key) => typeof authAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(authAdapter).filter(key => typeof authAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -13,12 +13,15 @@ class Store {
     constructor(store: EpicenterStore) {
         this._store = store;
     }
+
     clear() {
         this._store.clear();
     }
+
     get store() {
         return this._store;
     }
+
     set store(store) {
         this._store = store;
     }
@@ -29,12 +32,15 @@ export class NodeStore extends Store {
     constructor() {
         super(nodeMap);
     }
+
     getItem(key: string): NodeMap {
         return super.store.get(key);
     }
+
     setItem(key: string, value: JavaScriptObject): NodeMap {
         return super.store.set(key, value);
     }
+
     removeItem(key: string): boolean {
         return super.store.delete(key);
     }
@@ -44,13 +50,16 @@ export class SessionStore extends Store {
     constructor() {
         super(window.sessionStorage);
     }
+
     getItem(key: string): JavaScriptObject | null {
         const item = super.store.getItem(key);
         return item ? JSON.parse(item) : null;
     }
+
     setItem(key: string, value: JavaScriptObject): void {
         return super.store.setItem(key, JSON.stringify(value));
     }
+
     removeItem(key: string): void {
         return super.store.removeItem(key);
     }
@@ -67,16 +76,20 @@ export class CookieStore {
             { path: '/' };
         this.options = { ...defaults, ...options };
     }
+
     getItem(key: string): JavaScriptObject | null {
         const item = cookies.getItem(key);
         return item ? JSON.parse(item) : null;
     }
+
     setItem(key: string, value: JavaScriptObject): boolean {
         return cookies.setItem(key, JSON.stringify(value), this.options);
     }
+
     removeItem(key: string): boolean {
         return cookies.removeItem(key, this.options);
     }
+
     clear(): string[] {
         return cookies.clear();
     }

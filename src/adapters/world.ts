@@ -26,31 +26,31 @@ export enum WORLD_NAME_GENERATOR {
 }
 
 export interface UserAssignment {
-    userKey: string,
-    role?: string,
+    userKey: string;
+    role?: string;
 }
 
 export interface Persona {
-    role: string,
-    minimum: number,
-    maximum?: number,
-    marginal?: number,
+    role: string;
+    minimum: number;
+    maximum?: number;
+    marginal?: number;
 }
 
 export interface Assignment {
-    role: string,
-    user: User,
+    role: string;
+    user: User;
 }
 
 export interface World {
-    lastUpdated: string,
-    personae: Persona[],
-    assignments: Assignment[],
-    orbitKey: string,
-    worldKey: string,
-    created: string,
-    orbitType: keyof typeof ORBIT_TYPE,
-    runKey: string,
+    lastUpdated: string;
+    personae: Persona[];
+    assignments: Assignment[];
+    orbitKey: string;
+    worldKey: string;
+    created: string;
+    orbitType: keyof typeof ORBIT_TYPE;
+    runKey: string;
 }
 
 /**
@@ -68,9 +68,9 @@ export interface World {
 export async function update(
     worldKey: string,
     update: {
-        displayName?: string,
-        runKey?: string,
-        allowChannel?: boolean
+        displayName?: string;
+        runKey?: string;
+        allowChannel?: boolean;
     },
     optionals: RoutingOptions = {},
 ): Promise<World> {
@@ -105,7 +105,6 @@ export async function destroy(
     worldKey: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-
     return await new Router()
         .delete(`/world/${worldKey}`, optionals)
         .then(({ body }) => body);
@@ -128,12 +127,12 @@ export async function destroy(
  */
 export async function create(
     optionals: {
-        name?: string,
-        displayName?: string,
-        groupName?: string,
-        episodeName?: string,
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
-        allowChannel?: boolean,
+        name?: string;
+        displayName?: string;
+        groupName?: string;
+        episodeName?: string;
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<World> {
     const {
@@ -174,9 +173,9 @@ export async function create(
  */
 export async function get(
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        mine?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        mine?: boolean;
     } & RoutingOptions = {},
 ): Promise<World> {
     const {
@@ -205,9 +204,9 @@ export async function get(
  */
 export async function getAssignments(
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        mine?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        mine?: boolean;
     } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
@@ -255,13 +254,13 @@ export async function getSessionWorlds(
  */
 export async function selfAssign(
     optionals: {
-        role?: string,
-        groupName?: string,
-        episodeName?: string,
-        objective?: keyof typeof OBJECTIVE,
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
-        populace?: Persona[],
-        allowChannel?: boolean,
+        role?: string;
+        groupName?: string;
+        episodeName?: string;
+        objective?: keyof typeof OBJECTIVE;
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
+        populace?: Persona[];
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<World> {
     const {
@@ -316,14 +315,14 @@ export async function selfAssign(
 export async function autoAssignUsers(
     assignments: UserAssignment[],
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        objective?: keyof typeof OBJECTIVE,
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR },
-        requireAllAssignments?: boolean,
-        keepEmptyWorlds?: boolean,
-        populace?: Persona[],
-        allowChannel?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        objective?: keyof typeof OBJECTIVE;
+        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
+        requireAllAssignments?: boolean;
+        keepEmptyWorlds?: boolean;
+        populace?: Persona[];
+        allowChannel?: boolean;
     } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
@@ -358,11 +357,11 @@ type WorldKey = string;
 export async function editAssignments(
     assignments: Record<WorldKey, UserAssignment[]>,
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        objective?: keyof typeof OBJECTIVE,
-        keepEmptyWorlds?: boolean,
-        requireAllAssignments?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        objective?: keyof typeof OBJECTIVE;
+        keepEmptyWorlds?: boolean;
+        requireAllAssignments?: boolean;
     } & RoutingOptions = {},
 ): Promise<World[]> {
     const {
@@ -394,7 +393,6 @@ export async function getAssignmentsByKey(
     worldKey: string,
     optionals: RoutingOptions = {},
 ): Promise<World> {
-
     return await new Router()
         .get(`/world/assignment/${worldKey}`, optionals)
         .then(({ body }) => body);
@@ -416,9 +414,9 @@ export async function getAssignmentsByKey(
 export async function removeUsers(
     userKeys: string[],
     optionals: {
-        groupName?: string,
-        episodeName?: string,
-        keepEmptyWorlds?: boolean,
+        groupName?: string;
+        episodeName?: string;
+        keepEmptyWorlds?: boolean;
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
@@ -485,7 +483,7 @@ export async function getPersonas(
  * @returns promise that resolves with undefined when successful
  */
 export async function setPersonas(
-    personas: { role: string, minimum?: number, maximum?: number, marginal?: number }[],
+    personas: { role: string; minimum?: number; maximum?: number; marginal?: number }[],
     scope: GenericScope,
     optionals: RoutingOptions = {},
 ): Promise<void> {
@@ -519,7 +517,6 @@ export async function assignRun(
     runKey: string,
     optionals: RoutingOptions = {},
 ): Promise<World> {
-
     return await new Router()
         .patch(`/world/run/${worldKey}`, {
             body: { runKey },

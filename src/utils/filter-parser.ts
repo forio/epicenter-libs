@@ -28,7 +28,7 @@ function parseFilterGroup(group: FilterGroup): string {
             }
             return parseFilterGroup(filter);
         })
-        .filter((filter) => filter.length > 0);
+        .filter(filter => filter.length > 0);
 
     if (parsedFilters.length === 0) {
         return '';

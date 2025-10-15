@@ -57,32 +57,32 @@ describe('taskAdapter', () => {
             objectType: 'cron',
         };
 
-        it('Should do a POST', async() => {
+        it('Should do a POST', async () => {
             await taskAdapter.create(scope, name, payload, trigger);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await taskAdapter.create(scope, name, payload, trigger);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the task URL', async() => {
+        it('Should use the task URL', async () => {
             await taskAdapter.create(scope, name, payload, trigger);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await taskAdapter.create(scope, name, payload, trigger, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task`);
         });
 
-        it('Should pass scope, name, payload, and trigger to the request body', async() => {
+        it('Should pass scope, name, payload, and trigger to the request body', async () => {
             await taskAdapter.create(scope, name, payload, trigger);
 
             const req = capturedRequests[capturedRequests.length - 1];
@@ -100,7 +100,7 @@ describe('taskAdapter', () => {
             expect(body.trigger.objectType).toBe(trigger.objectType);
         });
 
-        it('Should pass optional parameters to the request body', async() => {
+        it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 retryPolicy: 'RESCHEDULE',
                 failSafeTermination: 1234567890,
@@ -115,7 +115,7 @@ describe('taskAdapter', () => {
             expect(body).toHaveProperty('ttlSeconds', optionals.ttlSeconds);
         });
 
-        it('Should include userKey in scope if provided', async() => {
+        it('Should include userKey in scope if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -134,25 +134,25 @@ describe('taskAdapter', () => {
     describe('taskAdapter.destroy', () => {
         const taskKey = 'TASK_KEY';
 
-        it('Should do a DELETE', async() => {
+        it('Should do a DELETE', async () => {
             await taskAdapter.destroy(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await taskAdapter.destroy(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the task URL with taskKey', async() => {
+        it('Should use the task URL with taskKey', async () => {
             await taskAdapter.destroy(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/${taskKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await taskAdapter.destroy(taskKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -165,25 +165,25 @@ describe('taskAdapter', () => {
     describe('taskAdapter.get', () => {
         const taskKey = 'TASK_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await taskAdapter.get(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await taskAdapter.get(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the task URL with taskKey', async() => {
+        it('Should use the task URL with taskKey', async () => {
             await taskAdapter.get(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/${taskKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await taskAdapter.get(taskKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -196,25 +196,25 @@ describe('taskAdapter', () => {
     describe('taskAdapter.getHistory', () => {
         const taskKey = 'TASK_KEY';
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await taskAdapter.getHistory(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await taskAdapter.getHistory(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the task/history URL with taskKey', async() => {
+        it('Should use the task/history URL with taskKey', async () => {
             await taskAdapter.getHistory(taskKey);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/history/${taskKey}`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await taskAdapter.getHistory(taskKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -230,25 +230,25 @@ describe('taskAdapter', () => {
             scopeKey: 'GROUP_KEY',
         };
 
-        it('Should do a GET', async() => {
+        it('Should do a GET', async () => {
             await taskAdapter.getTaskIn(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('GET');
         });
 
-        it('Should have authorization', async() => {
+        it('Should have authorization', async () => {
             await taskAdapter.getTaskIn(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
-        it('Should use the task/in URL with scope', async() => {
+        it('Should use the task/in URL with scope', async () => {
             await taskAdapter.getTaskIn(scope);
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/in/${scope.scopeBoundary}/${scope.scopeKey}`);
         });
 
-        it('Should include userKey in URL if provided', async() => {
+        it('Should include userKey in URL if provided', async () => {
             const scopeWithUser = {
                 ...scope,
                 userKey: 'USER_KEY',
@@ -258,7 +258,7 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/in/${scope.scopeBoundary}/${scope.scopeKey}/USER_KEY`);
         });
 
-        it('Should support generic URL options', async() => {
+        it('Should support generic URL options', async () => {
             await taskAdapter.getTaskIn(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
@@ -270,7 +270,7 @@ describe('taskAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(taskAdapter).filter((key) => typeof taskAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(taskAdapter).filter(key => typeof taskAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });
