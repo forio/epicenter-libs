@@ -11,11 +11,11 @@ const uploadEl = document.getElementById('upload');
 const fileInputEl = document.getElementById('file-input');
 const assetListEl = document.getElementById('asset-list');
 
-const scope = {
-    scopeBoundary: SCOPE_BOUNDARY.GROUP,
-    scopeKey: session.groupKey,
-};
 const initialize = () => {
+    const scope = {
+        scopeBoundary: SCOPE_BOUNDARY.GROUP,
+        scopeKey: session.groupKey,
+    };
     assetAdapter.list(scope, { userKey: session.userKey, filter: 'testfile*' }).then((assets) => {
         assetListEl.innerHTML = '';
         if (assets.length === 0) assetListEl.innerHTML = 'No assets were found';

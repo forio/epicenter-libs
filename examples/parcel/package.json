@@ -10,15 +10,15 @@
   "author": "Forio",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.14.6",
-    "@parcel/packager-raw-url": "^2.15.4",
-    "@parcel/packager-xml": "^2.15.4",
+    "@babel/core": "^7.28.4",
+    "@parcel/packager-raw-url": "^2.16.0",
+    "@parcel/packager-xml": "^2.16.0",
     "@parcel/source-map": "^2.1.1",
-    "@parcel/transformer-sass": "^2.15.4",
-    "@parcel/transformer-webmanifest": "^2.15.4",
-    "@parcel/transformer-xml": "^2.15.4",
-    "parcel": "^2.15.4",
-    "sass": "^1.35.2"
+    "@parcel/transformer-sass": "^2.16.0",
+    "@parcel/transformer-webmanifest": "^2.16.0",
+    "@parcel/transformer-xml": "^2.16.0",
+    "parcel": "^2.16.0",
+    "sass": "^1.93.2"
   },
   "dependencies": {
     "epicenter-libs": "file:../..",
