@@ -1,0 +1,4 @@
+#isnt-admin:not(.hidden) ~ * {
+    pointer-events: none;
+    opacity: 0.5;
+}

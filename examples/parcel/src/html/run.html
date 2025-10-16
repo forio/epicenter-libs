@@ -21,48 +21,49 @@
     <main>
         <h1>Run</h1>
         <a href="index.html"><< Back</a>
-                <section id="get-with-strategy">
-                    <h2>Get run with strategy</h2>
-                    <div class="content">
-                        <div class="controls">
-                            <h3>Strategy</h3>
-                            <div id="select-strategy" class="radio-group">
-                                <label for="reuse-across-sessions">
-                                    <code>reuse-across-sessions</code>
-                                </label>
-                                <input type="radio" name="run-strategy" value="reuse-across-sessions"
-                                    id="reuse-across-sessions" checked />
-                                <label for="reuse-never">
-                                    <code>reuse-never</code>
-                                </label>
-                                <input type="radio" name="run-strategy" value="reuse-never" id="reuse-never" />
-                            </div>
-                            <button id="get-run-with-strategy">Get run with strategy</button>
-                        </div>
-                        <div id="response-dumps">
-                            <div id="current-res" class="no-content">
-                                <h3>Response</h3>
-                                <p class="summary" contenteditable></p>
-                                <details>
-                                    <summary>
-                                        Full response
-                                    </summary>
-                                    <pre contenteditable></pre>
-                                </details>
-                            </div>
-                            <div id="previous-res" class="no-content">
-                                <h3>Previous call</h3>
-                                <p class="summary" contenteditable></p>
-                                <details>
-                                    <summary>
-                                        Full response
-                                    </summary>
-                                    <pre contenteditable></pre>
-                                </details>
-                            </div>
-                        </div>
+        <p id="unauthed" class="hidden">Sorry! You need an authenticated session in order to use this page.</p>
+        <section id="get-with-strategy">
+            <h2>Get run with strategy</h2>
+            <div class="content">
+                <div class="controls">
+                    <h3>Strategy</h3>
+                    <div id="select-strategy" class="radio-group">
+                        <label for="reuse-across-sessions">
+                            <code>reuse-across-sessions</code>
+                        </label>
+                        <input type="radio" name="run-strategy" value="reuse-across-sessions"
+                            id="reuse-across-sessions" checked />
+                        <label for="reuse-never">
+                            <code>reuse-never</code>
+                        </label>
+                        <input type="radio" name="run-strategy" value="reuse-never" id="reuse-never" />
                     </div>
-                </section>
+                    <button id="get-run-with-strategy">Get run with strategy</button>
+                </div>
+                <div id="response-dumps">
+                    <div id="current-res" class="no-content">
+                        <h3>Response</h3>
+                        <p class="summary" contenteditable></p>
+                        <details>
+                            <summary>
+                                Full response
+                            </summary>
+                            <pre contenteditable></pre>
+                        </details>
+                    </div>
+                    <div id="previous-res" class="no-content">
+                        <h3>Previous call</h3>
+                        <p class="summary" contenteditable></p>
+                        <details>
+                            <summary>
+                                Full response
+                            </summary>
+                            <pre contenteditable></pre>
+                        </details>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 </body>
 <script src="../js/run.js" type="module"></script>

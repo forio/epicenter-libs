@@ -108,6 +108,11 @@ a.link-button {
     display: none;
 }
 
+#unauthed:not(.hidden) ~ * {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 .inputs {
     display: grid;
     grid-template-columns: auto 1fr;

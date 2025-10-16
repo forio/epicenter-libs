@@ -1,9 +1,4 @@
 
-#unauthed:not(.hidden) ~ * {
-    pointer-events: none;
-    opacity: 0.5;
-}
-
 #update-leaderboard-form,
 #get-leaderboard-form {
     margin: 1rem 0;
