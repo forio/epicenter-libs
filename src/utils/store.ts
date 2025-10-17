@@ -68,12 +68,7 @@ export class SessionStore extends Store {
 export class CookieStore {
     options = {};
     constructor(options = {}) {
-        const hostname = window.location.hostname;
-        // We have to explicitly not set domain in the cookie when it's localhost (for Chrome)
-        // https://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain
-        const defaults = hostname !== 'localhost' ?
-            { path: '/', domain: `.${hostname}` } :
-            { path: '/' };
+        const defaults = { path: '/' };
         this.options = { ...defaults, ...options };
     }
 

@@ -135,7 +135,7 @@ class Identification {
             const account = accountShortName ? `/${accountShortName}` : '';
             const project = account && projectShortName ? `/${projectShortName}` : '';
             this.session = session;
-            cookies.removeItem(EPI_SSO_KEY, { domain: `.${window.location.hostname}`, path: `/app${account}${project}` });
+            cookies.removeItem(EPI_SSO_KEY, { path: `/app${account}${project}` });
         }
     }
 }
