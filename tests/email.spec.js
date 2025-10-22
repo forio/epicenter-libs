@@ -202,6 +202,76 @@ describe('emailAdapter', () => {
         testedMethods.add('sendEmailToAdmin');
     });
 
+    describe('emailAdapter.sendEmailToSupport', () => {
+        const subject = 'Test Support Subject';
+        const emailBody = 'Test support email body';
+
+        it('Should do a POST', async () => {
+            await emailAdapter.sendEmailToSupport(subject, emailBody);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
+        });
+
+        it('Should have authorization', async () => {
+            await emailAdapter.sendEmailToSupport(subject, emailBody);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the email/to/support URL', async () => {
+            await emailAdapter.sendEmailToSupport(subject, emailBody);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/email/to/support`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await emailAdapter.sendEmailToSupport(subject, emailBody, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/email/to/support`);
+        });
+
+        it('Should pass subject and body to the request body', async () => {
+            await emailAdapter.sendEmailToSupport(subject, emailBody);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('subject', subject);
+            expect(body).toHaveProperty('body', emailBody);
+        });
+
+        it('Should pass optional parameters to the request body', async () => {
+            const optionals = {
+                familyNameFirst: 'true',
+                html: true,
+                attachments: [{
+                    encoding: 'BASE_64',
+                    data: 'test-support-data',
+                    name: 'support.txt',
+                    contentType: 'text/plain',
+                }],
+            };
+            await emailAdapter.sendEmailToSupport(subject, emailBody, optionals);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('familyNameFirst', optionals.familyNameFirst);
+            expect(body).toHaveProperty('html', optionals.html);
+            expect(body).toHaveProperty('attachments');
+            expect(body.attachments).toHaveLength(1);
+            expect(body.attachments[0].encoding).toBe('BASE_64');
+        });
+
+        it('Should include supportType as query parameter when provided', async () => {
+            const supportType = 'technical';
+            await emailAdapter.sendEmailToSupport(subject, emailBody, { supportType });
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toContain(`?supportType=${supportType}`);
+        });
+
+        testedMethods.add('sendEmailToSupport');
+    });
+
     it('Should not have any untested methods', () => {
         const actualMethods = getFunctionKeys(emailAdapter);
         expect(actualMethods).toEqual(testedMethods);

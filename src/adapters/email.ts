@@ -164,3 +164,62 @@ export async function sendEmailToAdmin(
         })
         .then(({ body }) => body);
 }
+
+/**
+ * Sends an email to Epicenter support; Requires participant authentication
+ * @param subject                               The subject line for the email.
+ * @param emailBody                             The body for the email
+ * @param [optionals]                           Optional parameters
+ * @param [optionals.supportType]               A string indicating the type of support request
+ * @param [optionals.familyNameFirst]           Specifies whether email target's family name will come before their given name. Defaults to false.
+ * @param [optionals.html]                      Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
+ * @param [optionals.attachments]               An array of (binary) objects to include as attachments. All four properties must be included.
+ * @param [optionals.attachments[].encoding]    A string specifying the encoding method. See ENCODING for possible values.
+ * @param [optionals.attachments[].data]        A string containing the data for the attachment.
+ * @param [optionals.attachments[].name]        A string containing the name of the attachment.
+ * @param [optionals.attachments[].contentType] A string specifying the attachment MIME Type.
+ * @returns undefined indicating success
+ */
+export async function sendEmailToSupport(
+    subject: string,
+    emailBody: string,
+    optionals: {
+        supportType?: string;
+        familyNameFirst?: string;
+        html?: boolean;
+        attachments?: {
+            encoding: keyof typeof ENCODING;
+            data: string;
+            name: string;
+            contentType: string;
+        };
+    } & RoutingOptions = {},
+): Promise<void> {
+    const {
+        accountShortName,
+        projectShortName,
+        server,
+        supportType,
+        familyNameFirst,
+        html,
+        attachments,
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .withServer(server)
+        .withAccountShortName(accountShortName)
+        .withProjectShortName(projectShortName)
+        .withSearchParams({ supportType })
+        .post('/email/to/support', {
+            body: {
+                subject,
+                body: emailBody,
+                familyNameFirst,
+                html,
+                attachments,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
