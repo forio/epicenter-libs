@@ -15,6 +15,7 @@ import {
     config,
     authAdapter,
     adminAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('adminAdapter', () => {
@@ -116,7 +117,7 @@ describe('adminAdapter', () => {
             expect(body.secret.password).toBe(nativeAdmin.secret.password);
         });
 
-        testedMethods.push('createAdmin');
+        testedMethods.add('createAdmin');
     });
 
     describe('adminAdapter.getWithHandle', () => {
@@ -141,12 +142,11 @@ describe('adminAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/admin/with/${handle}`);
         });
 
-        testedMethods.push('getWithHandle');
+        testedMethods.add('getWithHandle');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(adminAdapter).filter((key) => typeof adminAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(adminAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

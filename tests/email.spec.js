@@ -17,6 +17,7 @@ import {
     authAdapter,
     emailAdapter,
     config,
+    getFunctionKeys,
 } from './common';
 
 describe('emailAdapter', () => {
@@ -134,7 +135,7 @@ describe('emailAdapter', () => {
             expect(req.url).not.toContain(`/from/${from}`);
         });
 
-        testedMethods.push('sendEmail');
+        testedMethods.add('sendEmail');
     });
 
     describe('emailAdapter.sendEmailToAdmin', () => {
@@ -198,12 +199,11 @@ describe('emailAdapter', () => {
             expect(body.attachments[0].encoding).toBe('HEX');
         });
 
-        testedMethods.push('sendEmailToAdmin');
+        testedMethods.add('sendEmailToAdmin');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(emailAdapter).filter((key) => typeof emailAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(emailAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

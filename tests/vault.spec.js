@@ -19,6 +19,7 @@ import {
     vaultAdapter,
     authAdapter,
     config,
+    getFunctionKeys,
 } from './common';
 
 const DEPRECATED_METHODS = ['create'];
@@ -85,7 +86,7 @@ describe('vaultAdapter', () => {
             expect(body).toEqual(UPDATE);
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('vaultAdapter.updateProperties', () => {
@@ -131,7 +132,7 @@ describe('vaultAdapter', () => {
             expect(body).toEqual(UPDATE);
         });
 
-        testedMethods.push('updateProperties');
+        testedMethods.add('updateProperties');
     });
 
     describe('vaultAdapter.get', () => {
@@ -162,7 +163,7 @@ describe('vaultAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('vaultAdapter.withScope', () => {
@@ -201,7 +202,7 @@ describe('vaultAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/with/${SCOPE.scopeBoundary}/${SCOPE.scopeKey}/${NAME}`);
         });
 
-        testedMethods.push('withScope');
+        testedMethods.add('withScope');
     });
 
     describe('vaultAdapter.byName', () => {
@@ -259,7 +260,7 @@ describe('vaultAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/in/${SESSION.groupName}/${NAME}`);
         });
 
-        testedMethods.push('byName');
+        testedMethods.add('byName');
     });
 
     describe('vaultAdapter.remove', () => {
@@ -299,7 +300,7 @@ describe('vaultAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/${VAULT_KEY}`);
         });
 
-        testedMethods.push('remove');
+        testedMethods.add('remove');
     });
 
     describe('vaultAdapter.define', () => {
@@ -387,7 +388,7 @@ describe('vaultAdapter', () => {
             expect(searchParams.get('mutationStrategy')).toBe(MUTATION_STRATEGY);
         });
 
-        testedMethods.push('define');
+        testedMethods.add('define');
     });
 
     describe('vaultAdapter.create', () => {
@@ -395,7 +396,7 @@ describe('vaultAdapter', () => {
             expect(DEPRECATED_METHODS).toContain('create');
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('vaultAdapter.list', () => {
@@ -430,7 +431,7 @@ describe('vaultAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vault/search?filter=name%3DtestVault%3Bscope.userKey%3D${SESSION.userKey}&first=0&max=10`);
         });
 
-        testedMethods.push('list');
+        testedMethods.add('list');
     });
 
     describe('vaultAdapter.count', () => {
@@ -468,12 +469,11 @@ describe('vaultAdapter', () => {
             expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
         });
 
-        testedMethods.push('count');
+        testedMethods.add('count');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(vaultAdapter).filter((key) => typeof vaultAdapter[key] === 'function');
-        expect(actualMethods.sort()).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(vaultAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

@@ -18,6 +18,7 @@ import {
     config,
     authAdapter,
     walletAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('walletAdapter', () => {
@@ -76,7 +77,7 @@ describe('walletAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/wallet/${scopeBoundary}/${scopeKey}/${userKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('walletAdapter.update', () => {
@@ -127,7 +128,7 @@ describe('walletAdapter', () => {
             expect(body).toHaveProperty('scope');
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('walletAdapter.withScope', () => {
@@ -170,12 +171,11 @@ describe('walletAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/wallet/with/${scopeBoundary}/${scopeKey}?first=${optionals.first}&max=${optionals.max}`);
         });
 
-        testedMethods.push('withScope');
+        testedMethods.add('withScope');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(walletAdapter).filter((key) => typeof walletAdapter[key] === 'function');
+        const actualMethods = getFunctionKeys(walletAdapter);
         expect(actualMethods).toEqual(testedMethods);
     });
 });

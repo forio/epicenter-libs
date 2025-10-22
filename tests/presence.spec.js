@@ -17,6 +17,7 @@ import {
     config,
     authAdapter,
     presenceAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('presenceAdapter', () => {
@@ -69,7 +70,7 @@ describe('presenceAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/presence/group/${groupKey}`);
         });
 
-        testedMethods.push('forGroup');
+        testedMethods.add('forGroup');
     });
 
     describe('presenceAdapter.forWorld', () => {
@@ -100,7 +101,7 @@ describe('presenceAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/presence/world/${worldKey}`);
         });
 
-        testedMethods.push('forWorld');
+        testedMethods.add('forWorld');
     });
 
     describe('presenceAdapter.connect', () => {
@@ -110,7 +111,7 @@ describe('presenceAdapter', () => {
             expect(presenceAdapter.connect).toBeDefined();
         });
 
-        testedMethods.push('connect');
+        testedMethods.add('connect');
     });
 
     describe('presenceAdapter.disconnect', () => {
@@ -121,12 +122,11 @@ describe('presenceAdapter', () => {
             expect(presenceAdapter.disconnect).toBeDefined();
         });
 
-        testedMethods.push('disconnect');
+        testedMethods.add('disconnect');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(presenceAdapter).filter((key) => typeof presenceAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(presenceAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

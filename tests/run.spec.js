@@ -22,6 +22,7 @@ import {
     RITUAL,
     getAuthHeader,
     getPermitHeader,
+    getFunctionKeys,
 } from './common';
 
 describe('runAdapter', () => {
@@ -180,7 +181,7 @@ describe('runAdapter', () => {
             });
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('runAdapter.clone', () => {
@@ -224,7 +225,7 @@ describe('runAdapter', () => {
             expect(body.executionContext).toEqual({});
         });
 
-        testedMethods.push('clone');
+        testedMethods.add('clone');
     });
 
     describe('runAdapter.restore', () => {
@@ -264,7 +265,7 @@ describe('runAdapter', () => {
             expect(body.executionContext).toEqual({});
         });
 
-        testedMethods.push('restore');
+        testedMethods.add('restore');
     });
 
     describe('runAdapter.rewind', () => {
@@ -305,7 +306,7 @@ describe('runAdapter', () => {
             expect(body.modelContext).toEqual({});
         });
 
-        testedMethods.push('rewind');
+        testedMethods.add('rewind');
     });
 
     describe('runAdapter.update', () => {
@@ -374,7 +375,7 @@ describe('runAdapter', () => {
             expect(body).not.toHaveProperty('closed');
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('runAdapter.remove', () => {
@@ -405,7 +406,7 @@ describe('runAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
 
-        testedMethods.push('remove');
+        testedMethods.add('remove');
     });
 
     describe('runAdapter.get', () => {
@@ -436,7 +437,7 @@ describe('runAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/${RUN_KEY}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('runAdapter.query', () => {
@@ -505,7 +506,7 @@ describe('runAdapter', () => {
             expect(searchParams.get('timeout')).toBe(OPTIONS.timeout.toString());
         });
 
-        testedMethods.push('query');
+        testedMethods.add('query');
     });
 
     describe('runAdapter.getWithStrategy', () => {
@@ -718,7 +719,7 @@ describe('runAdapter', () => {
             });
         });
 
-        testedMethods.push('getWithStrategy');
+        testedMethods.add('getWithStrategy');
     });
 
     describe('runAdapter.introspect', () => {
@@ -749,7 +750,7 @@ describe('runAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/model/${MODEL}`);
         });
 
-        testedMethods.push('introspect');
+        testedMethods.add('introspect');
     });
 
     describe('runAdapter.introspectWithRunKey', () => {
@@ -780,7 +781,7 @@ describe('runAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/introspect/${RUN_KEY}`);
         });
 
-        testedMethods.push('introspectWithRunKey');
+        testedMethods.add('introspectWithRunKey');
     });
 
     describe('runAdapter.operation', () => {
@@ -848,7 +849,7 @@ describe('runAdapter', () => {
             expect(body.arguments).toEqual(ARGUMENTS);
         });
 
-        testedMethods.push('operation');
+        testedMethods.add('operation');
     });
 
     describe('runAdapter.getVariables', () => {
@@ -913,7 +914,7 @@ describe('runAdapter', () => {
             expect(Object.hasOwn(body, 'ritual')).toBe(false);
         });
 
-        testedMethods.push('getVariables');
+        testedMethods.add('getVariables');
     });
 
     describe('runAdapter.getVariable', () => {
@@ -982,7 +983,7 @@ describe('runAdapter', () => {
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
         });
 
-        testedMethods.push('getVariable');
+        testedMethods.add('getVariable');
     });
 
     describe('runAdapter.updateVariables', () => {
@@ -1053,7 +1054,7 @@ describe('runAdapter', () => {
             expect(body).toEqual(UPDATE);
         });
 
-        testedMethods.push('updateVariables');
+        testedMethods.add('updateVariables');
     });
 
     describe('runAdapter.getMetadata', () => {
@@ -1096,7 +1097,7 @@ describe('runAdapter', () => {
             expect(body.runKey).toEqual([RUN_KEY, '987654321']);
         });
 
-        testedMethods.push('getMetadata');
+        testedMethods.add('getMetadata');
     });
 
     describe('runAdapter.updateMetadata', () => {
@@ -1158,7 +1159,7 @@ describe('runAdapter', () => {
             expect(body).toEqual(UPDATE);
         });
 
-        testedMethods.push('updateMetadata');
+        testedMethods.add('updateMetadata');
     });
 
     describe('runAdapter.action', () => {
@@ -1229,7 +1230,7 @@ describe('runAdapter', () => {
             expect(body).toEqual(ACTIONS);
         });
 
-        testedMethods.push('action');
+        testedMethods.add('action');
     });
 
     describe('runAdapter.retrieveFromWorld', () => {
@@ -1349,7 +1350,7 @@ describe('runAdapter', () => {
             });
         });
 
-        testedMethods.push('retrieveFromWorld');
+        testedMethods.add('retrieveFromWorld');
     });
 
     describe('runAdapter.removeFromWorld', () => {
@@ -1382,7 +1383,7 @@ describe('runAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/world/${WORLD_KEY}`);
         });
 
-        testedMethods.push('removeFromWorld');
+        testedMethods.add('removeFromWorld');
     });
 
     describe('runAdapter.createSingular', () => {
@@ -1494,7 +1495,7 @@ describe('runAdapter', () => {
             });
         });
 
-        testedMethods.push('createSingular');
+        testedMethods.add('createSingular');
     });
 
     describe('runAdapter.getSingularRunKey', () => {
@@ -1523,7 +1524,7 @@ describe('runAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/run/singular/key`);
         });
 
-        testedMethods.push('getSingularRunKey');
+        testedMethods.add('getSingularRunKey');
     });
 
     describe('runAdapter.migrate', () => {
@@ -1568,12 +1569,11 @@ describe('runAdapter', () => {
             expect(body.executionContext).toEqual({});
         });
 
-        testedMethods.push('migrate');
+        testedMethods.add('migrate');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(runAdapter).filter((key) => typeof runAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(runAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

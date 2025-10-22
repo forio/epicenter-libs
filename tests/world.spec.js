@@ -17,6 +17,7 @@ import {
     config,
     authAdapter,
     worldAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('worldAdapter', () => {
@@ -73,7 +74,7 @@ describe('worldAdapter', () => {
             expect(body).toEqual(config);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('worldAdapter.update', () => {
@@ -107,7 +108,7 @@ describe('worldAdapter', () => {
             expect(JSON.parse(req.options.body)).toEqual(UPDATE);
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('worldAdapter.destroy', () => {
@@ -131,7 +132,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${WORLD_KEY}`);
         });
 
-        testedMethods.push('destroy');
+        testedMethods.add('destroy');
     });
 
     describe('worldAdapter.get', () => {
@@ -153,7 +154,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/${SESSION.groupName}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('worldAdapter.getPersonas', () => {
@@ -176,7 +177,7 @@ describe('worldAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/persona/group/${GROUP_SCOPE.scopeKey}`);
         });
-        testedMethods.push('getPersonas');
+        testedMethods.add('getPersonas');
     });
 
     describe('worldAdapter.setPersonas', () => {
@@ -209,7 +210,7 @@ describe('worldAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             expect(JSON.parse(req.options.body)).toEqual(PERSONAS);
         });
-        testedMethods.push('setPersonas');
+        testedMethods.add('setPersonas');
     });
 
     describe('worldAdapter.assignRun', () => {
@@ -239,7 +240,7 @@ describe('worldAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             expect(JSON.parse(req.options.body)).toEqual({ runKey: RUN_KEY });
         });
-        testedMethods.push('assignRun');
+        testedMethods.add('assignRun');
     });
 
     describe('worldAdapter.autoAssignUsers', () => {
@@ -287,7 +288,7 @@ describe('worldAdapter', () => {
             expect(body.worldNameGenerator).toEqual(optionals.worldNameGenerator);
         });
 
-        testedMethods.push('autoAssignUsers');
+        testedMethods.add('autoAssignUsers');
     });
 
     describe('worldAdapter.editAssignments', () => {
@@ -324,7 +325,7 @@ describe('worldAdapter', () => {
             expect(body.assignments).toEqual(ASSIGNMENTS);
         });
 
-        testedMethods.push('editAssignments');
+        testedMethods.add('editAssignments');
     });
 
     describe('worldAdapter.getAssignments', () => {
@@ -346,7 +347,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/for/${SESSION.groupName}`);
         });
 
-        testedMethods.push('getAssignments');
+        testedMethods.add('getAssignments');
     });
 
     describe('worldAdapter.getAssignmentsByKey', () => {
@@ -370,7 +371,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${WORLD_KEY}`);
         });
 
-        testedMethods.push('getAssignmentsByKey');
+        testedMethods.add('getAssignmentsByKey');
     });
 
     describe('worldAdapter.getSessionWorlds', () => {
@@ -392,7 +393,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment`);
         });
 
-        testedMethods.push('getSessionWorlds');
+        testedMethods.add('getSessionWorlds');
     });
 
     describe('worldAdapter.removeUsers', () => {
@@ -417,7 +418,7 @@ describe('worldAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/world/assignment/${SESSION.groupName}?userKey=${USER_KEYS[0]}&userKey=${USER_KEYS[1]}&keepEmptyWorlds=${keepEmptyWorlds}`);
         });
 
-        testedMethods.push('removeUsers');
+        testedMethods.add('removeUsers');
     });
 
     describe('worldAdapter.selfAssign', () => {
@@ -453,13 +454,11 @@ describe('worldAdapter', () => {
             expect(body.worldNameGenerator).toEqual(optionals.worldNameGenerator);
         });
 
-        testedMethods.push('selfAssign');
+        testedMethods.add('selfAssign');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(worldAdapter).filter((key) => typeof worldAdapter[key] === 'function');
-        expect(actualMethods).toEqual(expect.arrayContaining(testedMethods));
-        expect(testedMethods).toEqual(expect.arrayContaining(actualMethods));
+        const actualMethods = getFunctionKeys(worldAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

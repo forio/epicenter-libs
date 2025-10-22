@@ -17,6 +17,7 @@ import {
     config,
     authAdapter,
     somebodyAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('somebodyAdapter', () => {
@@ -86,7 +87,7 @@ describe('somebodyAdapter', () => {
             expect(body).toEqual({ email, scope, ...optionals });
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('somebodyAdapter.get', () => {
@@ -119,7 +120,7 @@ describe('somebodyAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/${somebodyKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('somebodyAdapter.inScope', () => {
@@ -169,7 +170,7 @@ describe('somebodyAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/in/${scope.scopeBoundary}/${scope.scopeKey}`);
         });
 
-        testedMethods.push('inScope');
+        testedMethods.add('inScope');
     });
 
     describe('somebodyAdapter.byEmail', () => {
@@ -212,12 +213,11 @@ describe('somebodyAdapter', () => {
             expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/somebody/with/${scope.scopeBoundary}/${scope.scopeKey}/${email}`);
         });
 
-        testedMethods.push('byEmail');
+        testedMethods.add('byEmail');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(somebodyAdapter).filter((key) => typeof somebodyAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(somebodyAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

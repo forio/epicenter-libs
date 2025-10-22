@@ -17,6 +17,7 @@ import {
     authAdapter,
     leaderboardAdapter,
     getAuthHeader,
+    getFunctionKeys,
 } from './common';
 
 const DEPRECATED_METHODS = ['get'];
@@ -27,6 +28,7 @@ describe('leaderboardAdapter', () => {
 
     config.accountShortName = ACCOUNT;
     config.projectShortName = PROJECT;
+
     beforeAll(() => {
         mockSetup = createFetchMock();
         capturedRequests = mockSetup.capturedRequests;
@@ -91,7 +93,7 @@ describe('leaderboardAdapter', () => {
             });
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('leaderboardAdapter.list', () => {
@@ -142,7 +144,7 @@ describe('leaderboardAdapter', () => {
             expect(searchParams.get('max')).toBe(SEARCH_OPTIONS.max.toString());
         });
 
-        testedMethods.push('list');
+        testedMethods.add('list');
     });
 
     describe('leaderboardAdapter.getCount', () => {
@@ -187,14 +189,19 @@ describe('leaderboardAdapter', () => {
             expect(searchParams.get('filter')).toBe(SEARCH_OPTIONS.filter.join(';'));
         });
 
-        testedMethods.push('getCount');
+        testedMethods.add('getCount');
+    });
+
+    describe('leaderboardAdapter.get', () => {
+        it('Should be deprecated', () => {
+            expect(DEPRECATED_METHODS).toContain('get');
+        });
+
+        testedMethods.add('get');
     });
 
     it('Should not have any untested methods', () => {
-        const exportedMethods = Object.keys(leaderboardAdapter);
-        const untestedMethods = exportedMethods.filter((method) =>
-            !testedMethods.includes(method) && !DEPRECATED_METHODS.includes(method),
-        );
-        expect(untestedMethods).toEqual([]);
+        const actualMethods = getFunctionKeys(leaderboardAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

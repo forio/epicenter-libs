@@ -18,6 +18,7 @@ import {
     authAdapter,
     matchmakerAdapter,
     SCOPE_BOUNDARY,
+    getFunctionKeys,
 } from './common';
 
 describe('matchmakerAdapter', () => {
@@ -86,7 +87,7 @@ describe('matchmakerAdapter', () => {
             expect(body).toHaveProperty('partners', partners);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('matchmakerAdapter.edit', () => {
@@ -126,7 +127,7 @@ describe('matchmakerAdapter', () => {
             expect(body).toHaveProperty('closed', closed);
         });
 
-        testedMethods.push('edit');
+        testedMethods.add('edit');
     });
 
     describe('matchmakerAdapter.addUser', () => {
@@ -165,7 +166,7 @@ describe('matchmakerAdapter', () => {
             expect(body).toHaveProperty('udomeKey', udomeKey);
         });
 
-        testedMethods.push('addUser');
+        testedMethods.add('addUser');
     });
 
     describe('matchmakerAdapter.get', () => {
@@ -196,7 +197,7 @@ describe('matchmakerAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/matchmaker/udome/${udomeKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('matchmakerAdapter.byName', () => {
@@ -231,12 +232,11 @@ describe('matchmakerAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/matchmaker/udome/${scope.scopeBoundary}/${scope.scopeKey}/${name}`);
         });
 
-        testedMethods.push('byName');
+        testedMethods.add('byName');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(matchmakerAdapter).filter((key) => typeof matchmakerAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(matchmakerAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

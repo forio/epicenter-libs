@@ -18,6 +18,7 @@ import {
     authAdapter,
     taskAdapter,
     SCOPE_BOUNDARY,
+    getFunctionKeys,
 } from './common';
 
 describe('taskAdapter', () => {
@@ -128,7 +129,7 @@ describe('taskAdapter', () => {
             expect(body.scope.userKey).toBe('USER_KEY');
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('taskAdapter.destroy', () => {
@@ -159,7 +160,7 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/${taskKey}`);
         });
 
-        testedMethods.push('destroy');
+        testedMethods.add('destroy');
     });
 
     describe('taskAdapter.get', () => {
@@ -190,7 +191,7 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/${taskKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('taskAdapter.getHistory', () => {
@@ -221,7 +222,7 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/history/${taskKey}`);
         });
 
-        testedMethods.push('getHistory');
+        testedMethods.add('getHistory');
     });
 
     describe('taskAdapter.getTaskIn', () => {
@@ -265,12 +266,11 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/in/${scope.scopeBoundary}/${scope.scopeKey}`);
         });
 
-        testedMethods.push('getTaskIn');
+        testedMethods.add('getTaskIn');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(taskAdapter).filter((key) => typeof taskAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(taskAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

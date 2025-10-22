@@ -17,6 +17,7 @@ import {
     config,
     authAdapter,
     userAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('userAdapter', () => {
@@ -108,7 +109,7 @@ describe('userAdapter', () => {
             expect(body.secret).toHaveProperty('password', nativeUser.secret.password);
         });
 
-        testedMethods.push('createUser');
+        testedMethods.add('createUser');
     });
 
     describe('userAdapter.get', () => {
@@ -139,7 +140,7 @@ describe('userAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/user/${userKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('userAdapter.getWithHandle', () => {
@@ -177,7 +178,7 @@ describe('userAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/user/with/${handle}`);
         });
 
-        testedMethods.push('getWithHandle');
+        testedMethods.add('getWithHandle');
     });
 
     describe('userAdapter.uploadCSV', () => {
@@ -187,12 +188,11 @@ describe('userAdapter', () => {
             expect(userAdapter.uploadCSV).toBeDefined();
         });
 
-        testedMethods.push('uploadCSV');
+        testedMethods.add('uploadCSV');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(userAdapter).filter((key) => typeof userAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(userAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });
