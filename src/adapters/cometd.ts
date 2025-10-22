@@ -42,7 +42,7 @@ const SESSION_INVALIDATION_ERRORS = [
 function isSessionInvalidationError(errorMessage: string): boolean {
     const lowerError = errorMessage.toLowerCase();
     return SESSION_INVALIDATION_ERRORS.some((pattern) => {
-        return lowerError.includes(pattern.toLowerCase());
+        return lowerError.includes(pattern);
     });
 }
 
