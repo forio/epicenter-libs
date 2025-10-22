@@ -123,7 +123,7 @@ const parseQuery = (query: SearchParams) => {
         query = Object.entries(query).reduce((arr, [key, value]) => {
             if (Array.isArray(value)) {
                 /* Special case for arrayed param values: use duplicated params here */
-                return [...arr, ...value.map(v => [key, v])];
+                return [...arr, ...value.map((v) => [key, v])];
             }
             if (value === undefined || value === null) {
                 /* Skip nullish values */

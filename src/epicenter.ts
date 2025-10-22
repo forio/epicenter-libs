@@ -14,7 +14,7 @@ const FORBIDDEN = 403;
 export const DEFAULT_ERROR_HANDLERS: Record<string, Handler> = {};
 
 DEFAULT_ERROR_HANDLERS.cometdReconnected = errorManager.registerHandler(
-    error => error.code === 'COMETD_RECONNECTED',
+    (error) => error.code === 'COMETD_RECONNECTED',
     async (error: Fault) => {
         if (isBrowser()) {
             console.warn('Cometd Reconnected. If you wish to react to this reconnection, register an error handler with identifier: error.code === "COMETD_RECONNECTED".', error);
@@ -23,7 +23,7 @@ DEFAULT_ERROR_HANDLERS.cometdReconnected = errorManager.registerHandler(
 );
 
 DEFAULT_ERROR_HANDLERS.cometdError = errorManager.registerHandler(
-    error => error.status === FORBIDDEN && error.code === 'COMETD_ERROR',
+    (error) => error.status === FORBIDDEN && error.code === 'COMETD_ERROR',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         console.warn('Cometd error. Attempting to reconnect.', error);
         await cometdAdapter.disconnect();
@@ -55,7 +55,7 @@ DEFAULT_ERROR_HANDLERS.authGroupExpired = errorManager.registerHandler(
 );
 
 DEFAULT_ERROR_HANDLERS.authInvalidated = errorManager.registerHandler(
-    error => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
+    (error) => error.status === UNAUTHORIZED && error.code === 'AUTHENTICATION_INVALIDATED',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
         try {
             const session = identification.session;

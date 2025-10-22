@@ -102,7 +102,7 @@ export default class Channel {
                     // Wait a moment before retrying
                     const retryDelay = 1000;
                     const currentRetry = retryCount;
-                    await new Promise(resolve => setTimeout(resolve, retryDelay * currentRetry));
+                    await new Promise((resolve) => setTimeout(resolve, retryDelay * currentRetry));
                     continue;
                 }
 

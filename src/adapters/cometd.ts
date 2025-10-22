@@ -156,7 +156,7 @@ class CometdAdapter {
         this.pendingOperations = [];
 
         try {
-            await Promise.all(operations.map(op => op().catch(console.error)));
+            await Promise.all(operations.map((op) => op().catch(console.error)));
         } finally {
             this.processingQueue = false;
         }
@@ -289,7 +289,7 @@ class CometdAdapter {
                 if (errorObj?.message?.includes('already connecting')) {
                     // Wait a moment and try again
                     const retryDelay = 500;
-                    await new Promise(resolve => setTimeout(resolve, retryDelay));
+                    await new Promise((resolve) => setTimeout(resolve, retryDelay));
                     if (this.cometd?.getStatus() === CONNECTED) {
                         // Connection succeeded while we waited, continue to subscription
                         // Don't return here since we need to continue with the subscription logic
