@@ -39,8 +39,8 @@ export enum ENCODING {
  * @param [optionals]                           Optional parameters
  * @param [optionals.familyNameFirst]           Specifies whether email target's family name will come before their given name. Defaults to false.
  * @param [optionals.html]                      Whether to treat the body as HTML (true) or as plain text (false). Defaults to false.
- * @param [optionals.from]                      The email address from which the message will appear to have been sent from. Will be overriden by fromUserKey.
- * @param [optionals.replyTo]                   The email address that will be replyed to by the recipient. Must be used in conjunction with optionals.from.
+ * @param [optionals.from]                      The email address from which the message will appear to have been sent from. Will be overridden by fromUserKey.
+ * @param [optionals.replyTo]                   The email address that will be replied to by the recipient. Must be used in conjunction with optionals.from.
  * @param [optionals.fromUserKey]               The userKey from which the email will appear to have been sent. The default response address will also be this email.
  * @param [optionals.attachments]               An array of (binary) objects to include as attachments. All four properties must be included.
  * @param [optionals.attachments[].encoding]    A string specifying the encoding method. See ENCODING for possible values.
