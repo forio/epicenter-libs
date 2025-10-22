@@ -458,7 +458,7 @@ describe('worldAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(worldAdapter).filter(key => typeof worldAdapter[key] === 'function');
+        const actualMethods = Object.keys(worldAdapter).filter((key) => typeof worldAdapter[key] === 'function');
         expect(actualMethods).toEqual(expect.arrayContaining(testedMethods));
         expect(testedMethods).toEqual(expect.arrayContaining(actualMethods));
     });

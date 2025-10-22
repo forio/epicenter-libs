@@ -192,7 +192,7 @@ describe('leaderboardAdapter', () => {
 
     it('Should not have any untested methods', () => {
         const exportedMethods = Object.keys(leaderboardAdapter);
-        const untestedMethods = exportedMethods.filter(method =>
+        const untestedMethods = exportedMethods.filter((method) =>
             !testedMethods.includes(method) && !DEPRECATED_METHODS.includes(method),
         );
         expect(untestedMethods).toEqual([]);

@@ -497,7 +497,7 @@ describe('consensusAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(consensusAdapter).filter(key => typeof consensusAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(consensusAdapter).filter((key) => typeof consensusAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

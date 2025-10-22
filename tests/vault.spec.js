@@ -473,7 +473,7 @@ describe('vaultAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(vaultAdapter).filter(key => typeof vaultAdapter[key] === 'function');
+        const actualMethods = Object.keys(vaultAdapter).filter((key) => typeof vaultAdapter[key] === 'function');
         expect(actualMethods.sort()).toEqual(testedMethods.sort());
     });
 });

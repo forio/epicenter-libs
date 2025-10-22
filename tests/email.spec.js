@@ -203,7 +203,7 @@ describe('emailAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(emailAdapter).filter(key => typeof emailAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(emailAdapter).filter((key) => typeof emailAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -176,6 +176,7 @@ export default [
                 caughtErrorsIgnorePattern: '^_',
                 ignoreRestSiblings: true,
             }],
+            '@stylistic/arrow-parens': [2, 'always'],
         },
     },
 ];

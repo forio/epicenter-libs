@@ -64,7 +64,7 @@ describe('recaptchaAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(recaptchaAdapter).filter(key => typeof recaptchaAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(recaptchaAdapter).filter((key) => typeof recaptchaAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

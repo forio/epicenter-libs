@@ -378,7 +378,7 @@ describe('Authentication', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(authAdapter).filter(key => typeof authAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(authAdapter).filter((key) => typeof authAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

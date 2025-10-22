@@ -271,7 +271,7 @@ describe('dailyAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(dailyAdapter).filter(key => typeof dailyAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(dailyAdapter).filter((key) => typeof dailyAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -175,7 +175,7 @@ describe('walletAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(walletAdapter).filter(key => typeof walletAdapter[key] === 'function');
+        const actualMethods = Object.keys(walletAdapter).filter((key) => typeof walletAdapter[key] === 'function');
         expect(actualMethods).toEqual(testedMethods);
     });
 });

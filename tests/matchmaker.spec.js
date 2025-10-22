@@ -236,7 +236,7 @@ describe('matchmakerAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(matchmakerAdapter).filter(key => typeof matchmakerAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(matchmakerAdapter).filter((key) => typeof matchmakerAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

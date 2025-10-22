@@ -442,7 +442,7 @@ describe('videoAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(videoAdapter).filter(key => typeof videoAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(videoAdapter).filter((key) => typeof videoAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

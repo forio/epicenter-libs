@@ -645,15 +645,15 @@ describe('Group APIs', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(Array.isArray(body)).toBe(true);
-            expect(body.map(u => u.userKey)).toEqual([USER_KEY]);
+            expect(body.map((u) => u.userKey)).toEqual([USER_KEY]);
         });
 
         it('Should by default set user as an available participant', async () => {
             await groupAdapter.addUser(USER_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
-            expect(body.every(u => u.available)).toBe(true);
-            expect(body.every(u => u.role === ROLE.PARTICIPANT)).toBe(true);
+            expect(body.every((u) => u.available)).toBe(true);
+            expect(body.every((u) => u.role === ROLE.PARTICIPANT)).toBe(true);
         });
 
         it('Should support adding multiple users', async () => {
@@ -662,7 +662,7 @@ describe('Group APIs', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(Array.isArray(body)).toBe(true);
-            expect(body.map(u => u.userKey)).toEqual(USER_KEYS);
+            expect(body.map((u) => u.userKey)).toEqual(USER_KEYS);
         });
 
         testedMethods.push('addUser');
@@ -797,7 +797,7 @@ describe('Group APIs', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(groupAdapter).filter(key => typeof groupAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(groupAdapter).filter((key) => typeof groupAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

@@ -268,7 +268,7 @@ describe('vonageAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(vonageAdapter).filter(key => typeof vonageAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(vonageAdapter).filter((key) => typeof vonageAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });

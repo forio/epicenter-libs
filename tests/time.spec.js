@@ -72,7 +72,7 @@ describe('timeAdapter', () => {
 
     it('Should not have any untested methods', () => {
         // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(timeAdapter).filter(key => typeof timeAdapter[key] === 'function').sort();
+        const actualMethods = Object.keys(timeAdapter).filter((key) => typeof timeAdapter[key] === 'function').sort();
         expect(actualMethods).toEqual(testedMethods.sort());
     });
 });
