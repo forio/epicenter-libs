@@ -101,6 +101,14 @@ describe('assetAdapter', () => {
             expect(body.scope.userKey).toBe('USER_KEY');
         });
 
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.create(file, scope, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
+        });
+
         testedMethods.add('create');
     });
 
@@ -150,6 +158,14 @@ describe('assetAdapter', () => {
             expect(body.permit.writeLock).toBe(optionals.writeLock);
             expect(body).toHaveProperty('ttlSeconds');
             expect(body.ttlSeconds).toBe(optionals.ttlSeconds);
+        });
+
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.update(file, scope, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
         });
 
         testedMethods.add('update');
@@ -309,6 +325,14 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/url/${assetKey}`);
         });
 
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.getURL(assetKey, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
+        });
+
         testedMethods.add('getURL');
     });
 
@@ -348,6 +372,14 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/url/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
         });
 
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.getURLWithScope(file, scope, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
+        });
+
         testedMethods.add('getURLWithScope');
     });
 
@@ -371,6 +403,14 @@ describe('assetAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/download/${assetKey}`);
+        });
+
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.download(assetKey, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
         });
 
         testedMethods.add('download');
@@ -410,6 +450,14 @@ describe('assetAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/download/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
+        });
+
+        it('Should include tokenAccessSeconds as query param if provided', async () => {
+            await assetAdapter.downloadWithScope(file, scope, { tokenAccessSeconds: 600 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
         });
 
         testedMethods.add('downloadWithScope');

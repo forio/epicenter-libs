@@ -32,14 +32,19 @@ export async function create(
         readLock?: keyof typeof ROLE;
         writeLock?: keyof typeof ROLE;
         ttlSeconds?: number;
+        tokenAccessSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, ttlSeconds,
+        readLock,
+        writeLock,
+        ttlSeconds,
+        tokenAccessSeconds,
         ...routingOptions
     } = optionals;
     return await new Router()
+        .withSearchParams({ tokenAccessSeconds })
         .post('/asset', {
             body: {
                 file,
@@ -65,14 +70,19 @@ export async function update(
         readLock?: keyof typeof ROLE;
         writeLock?: keyof typeof ROLE;
         ttlSeconds?: number;
+        tokenAccessSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<AssetTicket> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
-        readLock, writeLock, ttlSeconds,
+        readLock,
+        writeLock,
+        ttlSeconds,
+        tokenAccessSeconds,
         ...routingOptions
     } = optionals;
     return await new Router()
+        .withSearchParams({ tokenAccessSeconds })
         .patch('/asset', {
             body: {
                 file,
@@ -143,43 +153,59 @@ export async function list(
 
 export async function getURL(
     assetKey: string,
-    optionals: RoutingOptions = {},
+    optionals: {
+        tokenAccessSeconds?: number;
+    } & RoutingOptions = {},
 ): Promise<string> {
+    const { tokenAccessSeconds, ...routingOptions } = optionals;
     return await new Router()
-        .get(`/asset/url/${assetKey}`, optionals)
+        .withSearchParams({ tokenAccessSeconds })
+        .get(`/asset/url/${assetKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function getURLWithScope(
     file: string,
     scope: AssetScope,
-    optionals: RoutingOptions = {},
+    optionals: {
+        tokenAccessSeconds?: number;
+    } & RoutingOptions = {},
 ): Promise<string> {
     const { scopeBoundary, scopeKey, userKey } = scope;
+    const { tokenAccessSeconds, ...routingOptions } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, optionals)
+        .withSearchParams({ tokenAccessSeconds })
+        .get(`/asset/url/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function download(
     assetKey: string,
-    optionals: RoutingOptions = {},
+    optionals: {
+        tokenAccessSeconds?: number;
+    } & RoutingOptions = {},
 ): Promise<void> {
+    const { tokenAccessSeconds, ...routingOptions } = optionals;
     return await new Router()
-        .get(`/asset/download/${assetKey}`, optionals)
+        .withSearchParams({ tokenAccessSeconds })
+        .get(`/asset/download/${assetKey}`, routingOptions)
         .then(({ body }) => body);
 }
 
 export async function downloadWithScope(
     file: string,
     scope: AssetScope,
-    optionals: RoutingOptions = {},
+    optionals: {
+        tokenAccessSeconds?: number;
+    } & RoutingOptions = {},
 ): Promise<void> {
     const { scopeBoundary, scopeKey, userKey } = scope;
+    const { tokenAccessSeconds, ...routingOptions } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return await new Router()
-        .get(`/asset/download/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, optionals)
+        .withSearchParams({ tokenAccessSeconds })
+        .get(`/asset/download/with/${scopeBoundary}/${scopeKey}${uriComponent}/${file}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -193,6 +219,7 @@ export async function store(
         ttlSeconds?: number;
         overwrite?: boolean;
         fileName?: string;
+        tokenAccessSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<void> {
     const { overwrite, fileName, ...remaining } = optionals;
