@@ -753,7 +753,7 @@ export async function getVariables(
         })
         .then(({ body }) => {
             if (hasMultiple) {
-                return Object.keys(body).map(runKey => ({
+                return Object.keys(body).map((runKey) => ({
                     runKey,
                     variables: mappify(body[runKey]),
                 }));
@@ -846,7 +846,7 @@ export async function getMetadata(
             ...routingOptions,
         })
         .then(({ body }) => {
-            const bodyAsArray = Object.keys(body).map(runKey => ({
+            const bodyAsArray = Object.keys(body).map((runKey) => ({
                 runKey,
                 data: body[runKey],
             }));

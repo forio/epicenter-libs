@@ -19,7 +19,7 @@ export enum STREAM_TYPES {
     HLS = 'HLS',
 }
 
-const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 const randRange = (min: number, max: number) => {
     return min + Math.random() * (max - min);
@@ -255,7 +255,7 @@ export async function getVideoByRecordingId(
     const filePaths = filePathInfo.contents;
     if (!filePaths?.length) return null;
     filePaths.sort((a, b) => Number(b.split('.')[0]) - Number(a.split('.')[0]));
-    const filePath = filePaths.find(p => p.includes(recordingId) && p.includes('.mp4'));
+    const filePath = filePaths.find((p) => p.includes(recordingId) && p.includes('.mp4'));
     if (!filePath) return null;
     return await videoAdapter.getURL(filePath, {
         scope,

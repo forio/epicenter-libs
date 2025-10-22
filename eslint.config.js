@@ -135,6 +135,7 @@ export default [
             '@typescript-eslint/no-empty-object-type': ['error', {
                 allowInterfaces: 'with-single-extends',
             }],
+            '@stylistic/arrow-parens': [2, 'always'],
         },
     },
     // Test files configuration

@@ -38,7 +38,7 @@ class ErrorManager {
     }
 
     unregisterHandler(identifier: Identifier) {
-        const index = this.handlers.findIndex(handler => handler.identifier === identifier);
+        const index = this.handlers.findIndex((handler) => handler.identifier === identifier);
         if (index > -1) this.handlers.splice(index, 1);
     }
 
