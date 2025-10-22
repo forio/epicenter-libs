@@ -18,6 +18,7 @@ import {
     groupAdapter,
     authAdapter,
     config,
+    getFunctionKeys,
 } from './common';
 
 const DEPRECATED_METHODS = ['search'];
@@ -90,7 +91,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/quantized/${GROUP_KEY}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('groupAdapter.destroy', () => {
@@ -121,7 +122,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/${GROUP_KEY}`);
         });
 
-        testedMethods.push('destroy');
+        testedMethods.add('destroy');
     });
 
     describe('groupAdapter.gather', () => {
@@ -156,7 +157,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group?includeExpired=true`);
         });
 
-        testedMethods.push('gather');
+        testedMethods.add('gather');
     });
 
     describe('groupAdapter.update', () => {
@@ -212,7 +213,7 @@ describe('Group APIs', () => {
             expect(body).toEqual(UPDATE);
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('groupAdapter.create', () => {
@@ -268,7 +269,7 @@ describe('Group APIs', () => {
             expect(body).toEqual(GROUP);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('groupAdapter.query', () => {
@@ -328,14 +329,14 @@ describe('Group APIs', () => {
             expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
         });
 
-        testedMethods.push('query');
+        testedMethods.add('query');
     });
 
     describe('groupAdapter.search', () => {
         it('Should be deprecated', () => {
             expect(DEPRECATED_METHODS).toContain('search');
         });
-        testedMethods.push('search');
+        testedMethods.add('search');
     });
 
     describe('groupAdapter.withGroupName', () => {
@@ -366,7 +367,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/with/${GROUP_NAME}`);
         });
 
-        testedMethods.push('withGroupName');
+        testedMethods.add('withGroupName');
     });
 
     describe('groupAdapter.forUser', () => {
@@ -421,7 +422,7 @@ describe('Group APIs', () => {
             expect(searchParams.getAll('role')).toEqual([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
 
-        testedMethods.push('forUser');
+        testedMethods.add('forUser');
     });
 
     describe('groupAdapter.getSessionGroups', () => {
@@ -472,7 +473,7 @@ describe('Group APIs', () => {
             expect(searchParams.getAll('role')).toEqual([ROLE.PARTICIPANT, ROLE.FACILITATOR]);
         });
 
-        testedMethods.push('getSessionGroups');
+        testedMethods.add('getSessionGroups');
     });
 
     describe('groupAdapter.whitelistUsers', () => {
@@ -513,7 +514,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
         });
 
-        testedMethods.push('whitelistUsers');
+        testedMethods.add('whitelistUsers');
     });
 
     describe('groupAdapter.getWhitelistedUsers', () => {
@@ -544,7 +545,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/group/self/${GROUP_KEY}`);
         });
 
-        testedMethods.push('getWhitelistedUsers');
+        testedMethods.add('getWhitelistedUsers');
     });
 
     describe('groupAdapter.sendRegistrationEmail', () => {
@@ -570,7 +571,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${GROUP_KEY}`);
         });
 
-        testedMethods.push('sendRegistrationEmail');
+        testedMethods.add('sendRegistrationEmail');
     });
 
     describe('groupAdapter.selfRegister', () => {
@@ -602,7 +603,7 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/self/${REGISTRATION_TOKEN}`);
         });
 
-        testedMethods.push('selfRegister');
+        testedMethods.add('selfRegister');
     });
 
     describe('groupAdapter.addUser', () => {
@@ -645,15 +646,15 @@ describe('Group APIs', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(Array.isArray(body)).toBe(true);
-            expect(body.map(u => u.userKey)).toEqual([USER_KEY]);
+            expect(body.map((u) => u.userKey)).toEqual([USER_KEY]);
         });
 
         it('Should by default set user as an available participant', async () => {
             await groupAdapter.addUser(USER_KEY);
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
-            expect(body.every(u => u.available)).toBe(true);
-            expect(body.every(u => u.role === ROLE.PARTICIPANT)).toBe(true);
+            expect(body.every((u) => u.available)).toBe(true);
+            expect(body.every((u) => u.role === ROLE.PARTICIPANT)).toBe(true);
         });
 
         it('Should support adding multiple users', async () => {
@@ -662,10 +663,10 @@ describe('Group APIs', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(Array.isArray(body)).toBe(true);
-            expect(body.map(u => u.userKey)).toEqual(USER_KEYS);
+            expect(body.map((u) => u.userKey)).toEqual(USER_KEYS);
         });
 
-        testedMethods.push('addUser');
+        testedMethods.add('addUser');
     });
 
     describe('groupAdapter.updateUser', () => {
@@ -707,7 +708,7 @@ describe('Group APIs', () => {
             expect(body).toHaveProperty('available', true);
         });
 
-        testedMethods.push('updateUser');
+        testedMethods.add('updateUser');
     });
 
     describe('groupAdapter.statusUpdate', () => {
@@ -748,7 +749,7 @@ describe('Group APIs', () => {
             expect(body).toHaveProperty('message', 'Group is now active');
         });
 
-        testedMethods.push('statusUpdate');
+        testedMethods.add('statusUpdate');
     });
 
     describe('groupAdapter.removeUser', () => {
@@ -792,12 +793,11 @@ describe('Group APIs', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/group/member/${GROUP_KEY}?userKey=${USER_KEY}&userKey=anotheruserkey`);
         });
 
-        testedMethods.push('removeUser');
+        testedMethods.add('removeUser');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(groupAdapter).filter(key => typeof groupAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(groupAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

@@ -15,6 +15,7 @@ import {
     config,
     authAdapter,
     projectAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('projectAdapter', () => {
@@ -58,7 +59,7 @@ describe('projectAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/project/channel/isEnabled`);
         });
 
-        testedMethods.push('channelsEnabled');
+        testedMethods.add('channelsEnabled');
     });
 
     describe('projectAdapter.get', () => {
@@ -81,7 +82,7 @@ describe('projectAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/project`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('projectAdapter.list', () => {
@@ -106,12 +107,11 @@ describe('projectAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/manager/project/in`);
         });
 
-        testedMethods.push('list');
+        testedMethods.add('list');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(projectAdapter).filter(key => typeof projectAdapter[key] === 'function');
+        const actualMethods = getFunctionKeys(projectAdapter);
         expect(actualMethods).toEqual(testedMethods);
     });
 });

@@ -16,6 +16,7 @@ import {
     config,
     authAdapter,
     assetAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('assetAdapter', () => {
@@ -100,7 +101,7 @@ describe('assetAdapter', () => {
             expect(body.scope.userKey).toBe('USER_KEY');
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('assetAdapter.update', () => {
@@ -151,7 +152,7 @@ describe('assetAdapter', () => {
             expect(body.ttlSeconds).toBe(optionals.ttlSeconds);
         });
 
-        testedMethods.push('update');
+        testedMethods.add('update');
     });
 
     describe('assetAdapter.remove', () => {
@@ -176,7 +177,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/${assetKey}`);
         });
 
-        testedMethods.push('remove');
+        testedMethods.add('remove');
     });
 
     describe('assetAdapter.removeFromScope', () => {
@@ -214,7 +215,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}`);
         });
 
-        testedMethods.push('removeFromScope');
+        testedMethods.add('removeFromScope');
     });
 
     describe('assetAdapter.get', () => {
@@ -239,7 +240,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/${assetKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('assetAdapter.list', () => {
@@ -283,7 +284,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/in/${scope.scopeBoundary}/${scope.scopeKey}/*`);
         });
 
-        testedMethods.push('list');
+        testedMethods.add('list');
     });
 
     describe('assetAdapter.getURL', () => {
@@ -308,7 +309,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/url/${assetKey}`);
         });
 
-        testedMethods.push('getURL');
+        testedMethods.add('getURL');
     });
 
     describe('assetAdapter.getURLWithScope', () => {
@@ -347,7 +348,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/url/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
         });
 
-        testedMethods.push('getURLWithScope');
+        testedMethods.add('getURLWithScope');
     });
 
     describe('assetAdapter.download', () => {
@@ -372,7 +373,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/download/${assetKey}`);
         });
 
-        testedMethods.push('download');
+        testedMethods.add('download');
     });
 
     describe('assetAdapter.downloadWithScope', () => {
@@ -411,7 +412,7 @@ describe('assetAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/asset/download/with/${scope.scopeBoundary}/${scope.scopeKey}/${file}`);
         });
 
-        testedMethods.push('downloadWithScope');
+        testedMethods.add('downloadWithScope');
     });
 
     describe('assetAdapter.store', () => {
@@ -422,12 +423,11 @@ describe('assetAdapter', () => {
             expect(assetAdapter.store).toBeDefined();
         });
 
-        testedMethods.push('store');
+        testedMethods.add('store');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(assetAdapter).filter(key => typeof assetAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(assetAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

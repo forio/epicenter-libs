@@ -17,6 +17,7 @@ import {
     authAdapter,
     episodeAdapter,
     config,
+    getFunctionKeys,
 } from './common';
 
 describe('episodeAdapter', () => {
@@ -93,7 +94,7 @@ describe('episodeAdapter', () => {
             expect(body).toHaveProperty('category', optionals.category);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('episodeAdapter.get', () => {
@@ -124,7 +125,7 @@ describe('episodeAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/episode/${episodeKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('episodeAdapter.query', () => {
@@ -169,7 +170,7 @@ describe('episodeAdapter', () => {
             expect(req.url).toContain('max=10');
         });
 
-        testedMethods.push('query');
+        testedMethods.add('query');
     });
 
     describe('episodeAdapter.forGroup', () => {
@@ -200,7 +201,7 @@ describe('episodeAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/episode/in/${groupKey}`);
         });
 
-        testedMethods.push('forGroup');
+        testedMethods.add('forGroup');
     });
 
     describe('episodeAdapter.withName', () => {
@@ -238,7 +239,7 @@ describe('episodeAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/episode/with/${SESSION.groupName}/${name}`);
         });
 
-        testedMethods.push('withName');
+        testedMethods.add('withName');
     });
 
     describe('episodeAdapter.remove', () => {
@@ -269,12 +270,11 @@ describe('episodeAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/episode/${episodeKey}`);
         });
 
-        testedMethods.push('remove');
+        testedMethods.add('remove');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(episodeAdapter).filter(key => typeof episodeAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(episodeAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

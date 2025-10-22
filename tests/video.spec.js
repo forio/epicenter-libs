@@ -18,6 +18,7 @@ import {
     authAdapter,
     videoAdapter,
     SCOPE_BOUNDARY,
+    getFunctionKeys,
 } from './common';
 
 describe('videoAdapter', () => {
@@ -70,7 +71,7 @@ describe('videoAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/video/${videoKey}`);
         });
 
-        testedMethods.push('remove');
+        testedMethods.add('remove');
     });
 
     describe('videoAdapter.query', () => {
@@ -121,7 +122,7 @@ describe('videoAdapter', () => {
             expect(urlObj.searchParams.get('max')).toBe('20');
         });
 
-        testedMethods.push('query');
+        testedMethods.add('query');
     });
 
     describe('videoAdapter.getURL', () => {
@@ -200,7 +201,7 @@ describe('videoAdapter', () => {
             await expect(videoAdapter.getURL(file, {})).rejects.toThrow('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
         });
 
-        testedMethods.push('getURL');
+        testedMethods.add('getURL');
     });
 
     describe('videoAdapter.getDirectoryURL', () => {
@@ -278,7 +279,7 @@ describe('videoAdapter', () => {
             await expect(videoAdapter.getDirectoryURL({})).rejects.toThrow('Cannot get video URL -- either a video key or scope/affiliate/family specification is required.');
         });
 
-        testedMethods.push('getDirectoryURL');
+        testedMethods.add('getDirectoryURL');
     });
 
     describe('videoAdapter.processVideo', () => {
@@ -358,7 +359,7 @@ describe('videoAdapter', () => {
             expect(body.processors.length).toBe(2);
         });
 
-        testedMethods.push('processVideo');
+        testedMethods.add('processVideo');
     });
 
     describe('videoAdapter.download', () => {
@@ -437,12 +438,11 @@ describe('videoAdapter', () => {
             await expect(videoAdapter.download(file, {})).rejects.toThrow('Cannot download video -- either a video key or scope/affiliate/family specification is required.');
         });
 
-        testedMethods.push('download');
+        testedMethods.add('download');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(videoAdapter).filter(key => typeof videoAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(videoAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

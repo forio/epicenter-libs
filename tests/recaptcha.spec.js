@@ -13,6 +13,7 @@ import {
     config,
     authAdapter,
     recaptchaAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('recaptchaAdapter', () => {
@@ -59,12 +60,11 @@ describe('recaptchaAdapter', () => {
             expect(body.humanKey).toBe(humanKey);
         });
 
-        testedMethods.push('google');
+        testedMethods.add('google');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(recaptchaAdapter).filter(key => typeof recaptchaAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(recaptchaAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

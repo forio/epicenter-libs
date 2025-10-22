@@ -17,6 +17,7 @@ import {
     config,
     authAdapter,
     timeAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('timeAdapter', () => {
@@ -67,12 +68,11 @@ describe('timeAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/time`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(timeAdapter).filter(key => typeof timeAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(timeAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

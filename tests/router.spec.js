@@ -449,7 +449,7 @@ describe('Router Tests', () => {
                 .withSearchParams({ first: 0, max: 3 })
                 .get('/pagination', {
                     paginated: true,
-                    parsePage: strings => strings.map(s => s.length),
+                    parsePage: (strings) => strings.map((s) => s.length),
                 })
                 .then(({ body }) => body);
 

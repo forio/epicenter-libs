@@ -17,6 +17,7 @@ import {
     authAdapter,
     consensusAdapter,
     getAuthHeader,
+    getFunctionKeys,
 } from './common';
 
 describe('consensusAdapter', () => {
@@ -102,7 +103,7 @@ describe('consensusAdapter', () => {
             expect(body.allowChannel).toBe(optionals.allowChannel);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('consensusAdapter.submitActions', () => {
@@ -153,7 +154,7 @@ describe('consensusAdapter', () => {
             expect(body.ritual).toBe(optionals.ritual);
         });
 
-        testedMethods.push('submitActions');
+        testedMethods.add('submitActions');
     });
 
     describe('consensusAdapter.undoSubmitFor', () => {
@@ -187,7 +188,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
         });
 
-        testedMethods.push('undoSubmitFor');
+        testedMethods.add('undoSubmitFor');
     });
 
     describe('consensusAdapter.deleteBarrier', () => {
@@ -220,7 +221,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}/${stage}`);
         });
 
-        testedMethods.push('deleteBarrier');
+        testedMethods.add('deleteBarrier');
     });
 
     describe('consensusAdapter.deleteAll', () => {
@@ -252,7 +253,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}`);
         });
 
-        testedMethods.push('deleteAll');
+        testedMethods.add('deleteAll');
     });
 
     describe('consensusAdapter.forceClose', () => {
@@ -297,7 +298,7 @@ describe('consensusAdapter', () => {
             expect(body.ritual).toBe(optionals.ritual);
         });
 
-        testedMethods.push('forceClose');
+        testedMethods.add('forceClose');
     });
 
     describe('consensusAdapter.list', () => {
@@ -329,7 +330,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}`);
         });
 
-        testedMethods.push('list');
+        testedMethods.add('list');
     });
 
     describe('consensusAdapter.load', () => {
@@ -362,7 +363,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/${worldKey}/${name}/${stage}`);
         });
 
-        testedMethods.push('load');
+        testedMethods.add('load');
     });
 
     describe('consensusAdapter.triggerFor', () => {
@@ -416,7 +417,7 @@ describe('consensusAdapter', () => {
             expect(body.ritual).toBe(optionals.ritual);
         });
 
-        testedMethods.push('triggerFor');
+        testedMethods.add('triggerFor');
     });
 
     describe('consensusAdapter.undoSubmit', () => {
@@ -449,7 +450,7 @@ describe('consensusAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/arrival/${worldKey}/${name}/${stage}`);
         });
 
-        testedMethods.push('undoSubmit');
+        testedMethods.add('undoSubmit');
     });
 
     describe('consensusAdapter.updateDefaults', () => {
@@ -492,12 +493,11 @@ describe('consensusAdapter', () => {
             expect(body.actions).toEqual(actions);
         });
 
-        testedMethods.push('updateDefaults');
+        testedMethods.add('updateDefaults');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(consensusAdapter).filter(key => typeof consensusAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(consensusAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

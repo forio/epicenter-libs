@@ -13,6 +13,7 @@ import {
     GENERIC_OPTIONS,
     createFetchMock,
     testedMethods,
+    getFunctionKeys,
 } from './common';
 
 describe('Authentication', () => {
@@ -79,7 +80,7 @@ describe('Authentication', () => {
             expect(body).toHaveProperty('objectType', 'user');
         });
 
-        testedMethods.push('login');
+        testedMethods.add('login');
     });
 
     describe('authAdapter.logout', () => {
@@ -91,7 +92,7 @@ describe('Authentication', () => {
             expect(req.options.method.toUpperCase()).toBe('DELETE');
         });
 
-        testedMethods.push('logout');
+        testedMethods.add('logout');
     });
 
     describe('authAdapter.getSession', () => {
@@ -114,7 +115,7 @@ describe('Authentication', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/verification`);
         });
 
-        testedMethods.push('getSession');
+        testedMethods.add('getSession');
     });
 
     describe('authAdapter.getLocalSession', () => {
@@ -128,7 +129,7 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
 
-        testedMethods.push('getLocalSession');
+        testedMethods.add('getLocalSession');
     });
 
     describe('authAdapter.setLocalSession', () => {
@@ -138,7 +139,7 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
 
-        testedMethods.push('setLocalSession');
+        testedMethods.add('setLocalSession');
     });
 
     describe('authAdapter.removeLocalSession', () => {
@@ -148,7 +149,7 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toBeUndefined();
         });
 
-        testedMethods.push('removeLocalSession');
+        testedMethods.add('removeLocalSession');
     });
 
     describe('authAdapter.regenerate', () => {
@@ -195,7 +196,7 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
         });
 
-        testedMethods.push('regenerate');
+        testedMethods.add('regenerate');
     });
 
     describe('authAdapter.sso', () => {
@@ -218,7 +219,7 @@ describe('Authentication', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/sso/user`);
         });
 
-        testedMethods.push('sso');
+        testedMethods.add('sso');
     });
 
     describe('authAdapter.getSAMLLink', () => {
@@ -241,7 +242,7 @@ describe('Authentication', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/registration/sso/user/saml`);
         });
 
-        testedMethods.push('getSAMLLink');
+        testedMethods.add('getSAMLLink');
     });
 
     describe('authAdapter.generateSAMLLINK', () => {
@@ -265,7 +266,7 @@ describe('Authentication', () => {
             expect(url).toContain(projectShortName);
         });
 
-        testedMethods.push('generateSAMLLINK');
+        testedMethods.add('generateSAMLLINK');
     });
 
     describe('authAdapter.ssoOutcome', () => {
@@ -304,7 +305,7 @@ describe('Authentication', () => {
             expect(body).toHaveProperty('outcomeServiceUrl', outcomeInfo.outcomeServiceUrl);
         });
 
-        testedMethods.push('ssoOutcome');
+        testedMethods.add('ssoOutcome');
     });
 
     describe('authAdapter.resetPassword', () => {
@@ -341,7 +342,7 @@ describe('Authentication', () => {
             expect(body).toHaveProperty('subject', optionals.subject);
         });
 
-        testedMethods.push('resetPassword');
+        testedMethods.add('resetPassword');
     });
 
     describe('authAdapter.verify', () => {
@@ -373,12 +374,11 @@ describe('Authentication', () => {
             expect(authHeader).toBe(`Bearer ${token}`);
         });
 
-        testedMethods.push('verify');
+        testedMethods.add('verify');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(authAdapter).filter(key => typeof authAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(authAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });
