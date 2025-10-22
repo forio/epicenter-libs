@@ -135,7 +135,7 @@ export async function sendEmailToAdmin(
             data: string;
             name: string;
             contentType: string;
-        };
+        }[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
@@ -192,7 +192,7 @@ export async function sendEmailToSupport(
             data: string;
             name: string;
             contentType: string;
-        };
+        }[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
