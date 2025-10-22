@@ -19,6 +19,7 @@ import {
     vonageAdapter,
     SCOPE_BOUNDARY,
     ROLE,
+    getFunctionKeys,
 } from './common';
 
 describe('vonageAdapter', () => {
@@ -69,7 +70,7 @@ describe('vonageAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/info`);
         });
 
-        testedMethods.push('getProjectID');
+        testedMethods.add('getProjectID');
     });
 
     describe('vonageAdapter.createSession', () => {
@@ -98,7 +99,7 @@ describe('vonageAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/session`);
         });
 
-        testedMethods.push('createSession');
+        testedMethods.add('createSession');
     });
 
     describe('vonageAdapter.generateToken', () => {
@@ -143,7 +144,7 @@ describe('vonageAdapter', () => {
             expect(body.initialLayoutClassList).toEqual(['placeholder']);
         });
 
-        testedMethods.push('generateToken');
+        testedMethods.add('generateToken');
     });
 
     describe('vonageAdapter.startArchive', () => {
@@ -232,7 +233,7 @@ describe('vonageAdapter', () => {
             expect(body.resolution).toBe(resolution);
         });
 
-        testedMethods.push('startArchive');
+        testedMethods.add('startArchive');
     });
 
     describe('vonageAdapter.stopArchive', () => {
@@ -263,12 +264,11 @@ describe('vonageAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/archive/${archiveID}`);
         });
 
-        testedMethods.push('stopArchive');
+        testedMethods.add('stopArchive');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(vonageAdapter).filter(key => typeof vonageAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(vonageAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

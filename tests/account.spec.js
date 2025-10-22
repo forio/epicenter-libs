@@ -15,6 +15,7 @@ import {
     config,
     authAdapter,
     accountAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('accountAdapter', () => {
@@ -53,7 +54,7 @@ describe('accountAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${accountShortName}/${config.projectShortName}/account`);
         });
 
-        testedMethods.push('getAccount');
+        testedMethods.add('getAccount');
     });
 
     describe('accountAdapter.createAccount', () => {
@@ -119,7 +120,7 @@ describe('accountAdapter', () => {
             expect(body.subscriptionPlan).toBe(teamView.subscriptionPlan);
         });
 
-        testedMethods.push('createAccount');
+        testedMethods.add('createAccount');
     });
 
     describe('accountAdapter.updateAccount', () => {
@@ -175,7 +176,7 @@ describe('accountAdapter', () => {
             expect(body.billingInterval).toBe(teamView.billingInterval);
         });
 
-        testedMethods.push('updateAccount');
+        testedMethods.add('updateAccount');
     });
 
     describe('accountAdapter.removeAccount', () => {
@@ -193,7 +194,7 @@ describe('accountAdapter', () => {
             expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${accountShortName}/${config.projectShortName}/account`);
         });
 
-        testedMethods.push('removeAccount');
+        testedMethods.add('removeAccount');
     });
 
     describe('accountAdapter.teamForAdmin', () => {
@@ -236,12 +237,11 @@ describe('accountAdapter', () => {
             expect(searchParams.get('max')).toBe(optionals.max.toString());
         });
 
-        testedMethods.push('teamForAdmin');
+        testedMethods.add('teamForAdmin');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(accountAdapter).filter(key => typeof accountAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(accountAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

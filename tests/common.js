@@ -210,7 +210,7 @@ export const {
     cometdAdapter,
 } = globalThis.epicenter || {};
 
-export const testedMethods = [];
+export const testedMethods = new Set();
 
 // Helper function to get authorization header (case-insensitive)
 export const getAuthHeader = (requestHeaders) => {
@@ -222,4 +222,10 @@ export const getPermitHeader = (requestHeaders) => {
     return requestHeaders['x-forio-confirmation']
         || requestHeaders['X-Forio-Confirmation']
         || requestHeaders['X-FORIO-CONFIRMATION'];
+};
+
+// Helper function to filter out non-function exports (enums, interfaces, etc.)
+export const getFunctionKeys = (adapter) => {
+    const keys = Object.keys(adapter).filter((key) => typeof adapter[key] === 'function');
+    return new Set(keys);
 };

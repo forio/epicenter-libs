@@ -19,6 +19,7 @@ import {
     config,
     authAdapter,
     chatAdapter,
+    getFunctionKeys,
 } from './common';
 
 describe('chatAdapter', () => {
@@ -93,7 +94,7 @@ describe('chatAdapter', () => {
             expect(body.permit.writeLock).toBe(permit.writeLock);
         });
 
-        testedMethods.push('create');
+        testedMethods.add('create');
     });
 
     describe('chatAdapter.get', () => {
@@ -124,7 +125,7 @@ describe('chatAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/${chatKey}`);
         });
 
-        testedMethods.push('get');
+        testedMethods.add('get');
     });
 
     describe('chatAdapter.updatePermit', () => {
@@ -169,7 +170,7 @@ describe('chatAdapter', () => {
             expect(body.permit.writeLock).toBe(permit.writeLock);
         });
 
-        testedMethods.push('updatePermit');
+        testedMethods.add('updatePermit');
     });
 
     describe('chatAdapter.query', () => {
@@ -214,7 +215,7 @@ describe('chatAdapter', () => {
             expect(req.url).toContain('max=10');
         });
 
-        testedMethods.push('query');
+        testedMethods.add('query');
     });
 
     describe('chatAdapter.sendMessage', () => {
@@ -261,7 +262,7 @@ describe('chatAdapter', () => {
             expect(body).toHaveProperty('message', message);
         });
 
-        testedMethods.push('sendMessage');
+        testedMethods.add('sendMessage');
     });
 
     describe('chatAdapter.getMessages', () => {
@@ -303,12 +304,11 @@ describe('chatAdapter', () => {
             expect(req.url).toContain('horizon=50');
         });
 
-        testedMethods.push('getMessages');
+        testedMethods.add('getMessages');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(chatAdapter).filter(key => typeof chatAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(chatAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });

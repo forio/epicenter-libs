@@ -19,6 +19,7 @@ import {
     config,
     SCOPE_BOUNDARY,
     ROLE,
+    getFunctionKeys,
 } from './common';
 
 describe('dailyAdapter', () => {
@@ -69,7 +70,7 @@ describe('dailyAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1`);
         });
 
-        testedMethods.push('getConfig');
+        testedMethods.add('getConfig');
     });
 
     describe('dailyAdapter.createRoom', () => {
@@ -151,7 +152,7 @@ describe('dailyAdapter', () => {
             expect(body.epicenter.scope.userKey).toBe('USER_KEY');
         });
 
-        testedMethods.push('createRoom');
+        testedMethods.add('createRoom');
     });
 
     describe('dailyAdapter.createToken', () => {
@@ -224,7 +225,7 @@ describe('dailyAdapter', () => {
             expect(req.url).toContain('selfSign=false');
         });
 
-        testedMethods.push('createToken');
+        testedMethods.add('createToken');
     });
 
     describe('dailyAdapter.updateRecordingStatus', () => {
@@ -255,7 +256,7 @@ describe('dailyAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/meetingToken/${roomName}`);
         });
 
-        testedMethods.push('updateRecordingStatus');
+        testedMethods.add('updateRecordingStatus');
     });
 
     describe('dailyAdapter.getVideoByRecordingId', () => {
@@ -266,12 +267,11 @@ describe('dailyAdapter', () => {
             expect(dailyAdapter.getVideoByRecordingId).toBeDefined();
         });
 
-        testedMethods.push('getVideoByRecordingId');
+        testedMethods.add('getVideoByRecordingId');
     });
 
     it('Should not have any untested methods', () => {
-        // Filter out non-function exports (enums, interfaces, etc.)
-        const actualMethods = Object.keys(dailyAdapter).filter(key => typeof dailyAdapter[key] === 'function').sort();
-        expect(actualMethods).toEqual(testedMethods.sort());
+        const actualMethods = getFunctionKeys(dailyAdapter);
+        expect(actualMethods).toEqual(testedMethods);
     });
 });
