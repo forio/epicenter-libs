@@ -5,6 +5,7 @@ import { EpicenterError, Fault, identification, isBrowser, errorManager, config 
 import { get as getProject } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
+const MAX_RETRIES = 3;
 
 const IDLE = 'idle';
 const FAILED = 'failed';
@@ -319,7 +320,10 @@ class CometdAdapter {
     async add(
         channel: Channel,
         update: (data: unknown) => unknown,
-        options: { inert?: boolean } = {},
+        options: {
+            inert?: boolean;
+            _retryCount?: number;
+        } = {},
     ): Promise<SubscriptionHandle> {
         await this.init();
 
@@ -408,11 +412,15 @@ class CometdAdapter {
                     },
                 );
             } catch (error: unknown) {
-                if (isIllegalStateError(error)) {
+                const retryCount = options._retryCount ?? 0;
+                if (isIllegalStateError(error) && retryCount < MAX_RETRIES) {
                     this.handshakeState = IDLE;
                     this.handshakePromise = undefined;
                     this.handshake()
-                        .then(() => this.add(channel, update, options))
+                        .then(() => this.add(channel, update, {
+                            ...options,
+                            _retryCount: retryCount + 1,
+                        }))
                         .then(resolve)
                         .catch(reject);
                     return;
@@ -425,7 +433,10 @@ class CometdAdapter {
     async publish(
         channel: Channel,
         content: Record<string, unknown>,
-        options: { inert?: boolean } = {},
+        options: {
+            inert?: boolean;
+            _retryCount?: number;
+        } = {},
     ): Promise<Message> {
         await this.init();
         if (this.cometd.getStatus() !== CONNECTED) {
@@ -483,11 +494,15 @@ class CometdAdapter {
                     },
                 );
             } catch (error: unknown) {
-                if (isIllegalStateError(error)) {
+                const retryCount = options._retryCount ?? 0;
+                if (isIllegalStateError(error) && retryCount < MAX_RETRIES) {
                     this.handshakeState = IDLE;
                     this.handshakePromise = undefined;
                     this.handshake()
-                        .then(() => this.publish(channel, content, options))
+                        .then(() => this.publish(channel, content, {
+                            ...options,
+                            _retryCount: retryCount + 1,
+                        }))
                         .then(resolve)
                         .catch(reject);
                     return;
