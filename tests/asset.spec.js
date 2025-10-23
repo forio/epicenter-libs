@@ -464,11 +464,171 @@ describe('assetAdapter', () => {
     });
 
     describe('assetAdapter.store', () => {
-        // Note: store() is a complex method that calls create/update internally,
-        // handles 409 CONFLICT errors, and makes a direct fetch call to a presigned URL.
-        // Proper testing would require mocking File objects, error scenarios, and the presigned URL flow.
-        it('Should be a placeholder test', () => {
-            expect(assetAdapter.store).toBeDefined();
+        const scope = {
+            scopeBoundary: SCOPE_BOUNDARY.WORLD,
+            scopeKey: 'WORLD_KEY',
+        };
+        const mockFile = new File(['test content'], 'test-file.txt', { type: 'text/plain' });
+
+        it('Should call create when asset does not exist', async () => {
+            const presignedUrl = 'https://presigned.url/upload';
+            mockSetup.restore();
+            mockSetup = createFetchMock({
+                '/asset': {
+                    body: { url: presignedUrl },
+                    status: 201,
+                },
+            });
+            capturedRequests = mockSetup.capturedRequests;
+
+            await assetAdapter.store(mockFile, scope);
+
+            const createRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'POST',
+            );
+            expect(createRequest).toBeDefined();
+            expect(createRequest.options.method).toBe('POST');
+
+            const uploadRequest = capturedRequests.find((req) => req.url === presignedUrl);
+            expect(uploadRequest).toBeDefined();
+            expect(uploadRequest.options.method).toBe('PUT');
+        });
+
+        it('Should call update when asset exists and overwrite is true', async () => {
+            const presignedUrl = 'https://presigned.url/upload';
+            mockSetup.restore();
+            mockSetup = createFetchMock();
+            capturedRequests = mockSetup.capturedRequests;
+
+            mockSetup.fetchStub.mockImplementation((url, options = {}) => {
+                const normalizedOptions = {
+                    method: 'GET',
+                    headers: {},
+                    ...options,
+                };
+                const requestObject = {
+                    url,
+                    options: normalizedOptions,
+                    method: normalizedOptions.method,
+                };
+                capturedRequests.push(requestObject);
+
+                if (url.includes('/asset') && options?.method === 'POST') {
+                    return Promise.resolve(new Response(JSON.stringify({ error: 'CONFLICT' }), {
+                        status: 409,
+                        headers: { 'Content-Type': 'application/json' },
+                    }));
+                }
+                if (url.includes('/asset') && options?.method === 'PATCH') {
+                    return Promise.resolve(new Response(JSON.stringify({ url: presignedUrl }), {
+                        status: 200,
+                        headers: { 'Content-Type': 'application/json' },
+                    }));
+                }
+                return Promise.resolve(new Response(JSON.stringify({}), {
+                    status: 200,
+                    headers: { 'Content-Type': 'application/json' },
+                }));
+            });
+
+            await assetAdapter.store(mockFile, scope, { overwrite: true });
+
+            const createRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'POST',
+            );
+            expect(createRequest).toBeDefined();
+
+            const updateRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'PATCH',
+            );
+            expect(updateRequest).toBeDefined();
+        });
+
+        it('Should throw error when asset exists and overwrite is false', async () => {
+            mockSetup.restore();
+            mockSetup = createFetchMock({
+                '/asset': {
+                    body: { error: 'CONFLICT' },
+                    status: 409,
+                },
+            });
+            capturedRequests = mockSetup.capturedRequests;
+
+            await expect(assetAdapter.store(mockFile, scope, { overwrite: false }))
+                .rejects
+                .toThrow();
+        });
+
+        it('Should pass tokenAccessSeconds to create', async () => {
+            const presignedUrl = 'https://presigned.url/upload';
+            mockSetup.restore();
+            mockSetup = createFetchMock({
+                '/asset': {
+                    body: { url: presignedUrl },
+                    status: 201,
+                },
+            });
+            capturedRequests = mockSetup.capturedRequests;
+
+            await assetAdapter.store(mockFile, scope, { tokenAccessSeconds: 600 });
+
+            const createRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'POST',
+            );
+            expect(createRequest).toBeDefined();
+            const search = createRequest.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('tokenAccessSeconds')).toBe('600');
+        });
+
+        it('Should pass readLock, writeLock, and ttlSeconds to create', async () => {
+            const presignedUrl = 'https://presigned.url/upload';
+            mockSetup.restore();
+            mockSetup = createFetchMock({
+                '/asset': {
+                    body: { url: presignedUrl },
+                    status: 201,
+                },
+            });
+            capturedRequests = mockSetup.capturedRequests;
+
+            const optionals = {
+                readLock: 'FACILITATOR',
+                writeLock: 'FACILITATOR',
+                ttlSeconds: 3600,
+            };
+            await assetAdapter.store(mockFile, scope, optionals);
+
+            const createRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'POST',
+            );
+            expect(createRequest).toBeDefined();
+            const body = JSON.parse(createRequest.options.body);
+            expect(body.permit.readLock).toBe(optionals.readLock);
+            expect(body.permit.writeLock).toBe(optionals.writeLock);
+            expect(body.ttlSeconds).toBe(optionals.ttlSeconds);
+        });
+
+        it('Should use custom fileName if provided', async () => {
+            const presignedUrl = 'https://presigned.url/upload';
+            const customFileName = 'custom-name.txt';
+            mockSetup.restore();
+            mockSetup = createFetchMock({
+                '/asset': {
+                    body: { url: presignedUrl },
+                    status: 201,
+                },
+            });
+            capturedRequests = mockSetup.capturedRequests;
+
+            await assetAdapter.store(mockFile, scope, { fileName: customFileName });
+
+            const createRequest = capturedRequests.find(
+                (req) => req.url.includes('/asset') && req.method === 'POST',
+            );
+            expect(createRequest).toBeDefined();
+            const body = JSON.parse(createRequest.options.body);
+            expect(body.file).toBe(customFileName);
         });
 
         testedMethods.add('store');
