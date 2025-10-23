@@ -52,7 +52,7 @@ export interface Page<Item> {
     all: (first?: number, allValues?: Item[]) => Promise<Item[]>;
 }
 
-const MAX_URL_LENGTH = 2048;
+export const MAX_URL_LENGTH = 2048;
 function paginate(json: Page<unknown>, url: URL, options: RequestOptions) {
     const parsePage = options.parsePage ?? (<T>(i: T) => i);
     const page = { ...json, values: parsePage(json.values) };
