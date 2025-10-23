@@ -5,6 +5,7 @@ import { EpicenterError, Fault, identification, isBrowser, errorManager, config 
 import { get as getProject } from './project';
 
 const AUTH_TOKEN_KEY = 'com.forio.epicenter.token';
+const MAX_RETRIES = 3;
 
 const IDLE = 'idle';
 const FAILED = 'failed';
@@ -21,6 +22,43 @@ const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
 type HandshakeState = 'idle' | 'handshaking' | 'succeeded' | 'failed';
+
+// error messages that indicate session invalidation as
+// described in cometd documentation and oumuamua source code:
+// https://docs.cometd.org/current/reference/#_javascript_disconnect
+// https://github.com/zenbones/SmallMind/blob/main/bayeux/oumuamua/server/spi/src/main/java/org/smallmind/bayeux/oumuamua/server/spi/MetaProcessingException.java
+
+const SESSION_INVALIDATION_ERRORS = [
+    '402',
+    'session_unknown',
+    'invalid client id',
+    'missing client id',
+    'session has been disconnected',
+    'invalid session type',
+    'handshake_denied',
+    'handshake_failed',
+];
+
+function isSessionInvalidationError(errorMessage: string): boolean {
+    const lowerError = errorMessage.toLowerCase();
+    return SESSION_INVALIDATION_ERRORS.some((pattern) => {
+        return lowerError.includes(pattern);
+    });
+}
+
+function isIllegalStateError(error: unknown): boolean {
+    return error instanceof Error && error.message.toLowerCase().includes('illegal state');
+}
+
+function shouldRehandshake(reply: Message): boolean {
+    const advice = reply.advice?.reconnect;
+    if (advice === 'handshake') {
+        return true;
+    }
+
+    const errorMessage = reply.error ?? '';
+    return isSessionInvalidationError(errorMessage);
+}
 
 let cometdInstance: CometD | undefined;
 class CometdAdapter {
@@ -141,8 +179,7 @@ class CometdAdapter {
     }
 
     private handleHandshakeFailure(message: Message) {
-        const errorMessage = message.error ?? '';
-        if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+        if (shouldRehandshake(message)) {
             this.handshakeState = IDLE;
             this.handshakePromise = undefined;
         }
@@ -223,13 +260,13 @@ class CometdAdapter {
                 }
 
                 this.handshakeState = FAILED;
-                const errorMessage = handshakeReply.error ?? '';
 
-                if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
+                if (shouldRehandshake(handshakeReply)) {
                     this.handshakeState = IDLE;
                     this.handshakePromise = undefined;
                 }
 
+                const errorMessage = handshakeReply.error ?? '';
                 const error = new Fault({
                     status: errorMessage.includes('403') ? FORBIDDEN : undefined,
                     message: errorMessage,
@@ -265,18 +302,28 @@ class CometdAdapter {
         if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
         return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: Message) => {
-            if (!disconnectReply.successful) {
-                reject(new EpicenterError('Unable to disconnect from CometD server'));
-            } else {
+            if (disconnectReply.successful) {
                 resolve(undefined);
+                return;
             }
+
+            const errorMessage = disconnectReply.error ?? '';
+            if (isSessionInvalidationError(errorMessage)) {
+                resolve(undefined);
+                return;
+            }
+
+            reject(new EpicenterError('Unable to disconnect from CometD server'));
         }));
     }
 
     async add(
         channel: Channel,
         update: (data: unknown) => unknown,
-        options: { inert?: boolean } = {},
+        options: {
+            inert?: boolean;
+            _retryCount?: number;
+        } = {},
     ): Promise<SubscriptionHandle> {
         await this.init();
 
@@ -317,43 +364,79 @@ class CometdAdapter {
         };
 
         return new Promise((resolve, reject) => {
-            const subscription = this.cometd.subscribe(channel.path, handleCometdUpdate, subscriptionProps, (subscribeReply: Message) => {
-                if (subscribeReply.successful) {
-                    this.subscriptions.set(channel.path, subscription);
-                    resolve(subscription);
-                    return;
-                }
+            let subscription: SubscriptionHandle;
+            try {
+                subscription = this.cometd.subscribe(
+                    channel.path,
+                    handleCometdUpdate,
+                    subscriptionProps,
+                    (subscribeReply: Message) => {
+                        if (subscribeReply.successful) {
+                            this.subscriptions.set(channel.path, subscription);
+                            resolve(subscription);
+                            return;
+                        }
 
-                const errorMessage = subscribeReply.error ?? '';
-                const error = new Fault({
-                    status: errorMessage.includes('403') ? FORBIDDEN : undefined,
-                    message: errorMessage,
-                    information: {
-                        code: 'COMETD_ERROR',
-                        ...subscribeReply,
+                        if (shouldRehandshake(subscribeReply)) {
+                            this.handshakeState = IDLE;
+                            this.handshakePromise = undefined;
+                        }
+
+                        const errorMessage = subscribeReply.error ?? '';
+                        const error = new Fault({
+                            status: errorMessage.includes('403') ? FORBIDDEN : undefined,
+                            message: errorMessage,
+                            information: {
+                                code: 'COMETD_ERROR',
+                                ...subscribeReply,
+                            },
+                        });
+
+                        if (options.inert) {
+                            reject(error);
+                            return;
+                        }
+
+                        const retry = async () => {
+                            if (shouldRehandshake(subscribeReply)) {
+                                await this.handshake({ inert: true });
+                            }
+                            return this.add(channel, update, { inert: true });
+                        };
+                        try {
+                            const result = errorManager.handle<SubscriptionHandle>(error, retry);
+                            resolve(result);
+                        } catch (e) {
+                            reject(e);
+                        }
                     },
-                });
-
-                if (options.inert) {
-                    reject(error);
+                );
+            } catch (error: unknown) {
+                const retryCount = options._retryCount ?? 0;
+                if (isIllegalStateError(error) && retryCount < MAX_RETRIES) {
+                    this.handshakeState = IDLE;
+                    this.handshakePromise = undefined;
+                    this.handshake()
+                        .then(() => this.add(channel, update, {
+                            ...options,
+                            _retryCount: retryCount + 1,
+                        }))
+                        .then(resolve)
+                        .catch(reject);
                     return;
                 }
-
-                const retry = () => this.add(channel, update, { inert: true });
-                try {
-                    const result = errorManager.handle<SubscriptionHandle>(error, retry);
-                    resolve(result);
-                } catch (e) {
-                    reject(e);
-                }
-            });
+                reject(error);
+            }
         });
     }
 
     async publish(
         channel: Channel,
         content: Record<string, unknown>,
-        options: { inert?: boolean } = {},
+        options: {
+            inert?: boolean;
+            _retryCount?: number;
+        } = {},
     ): Promise<Message> {
         await this.init();
         if (this.cometd.getStatus() !== CONNECTED) {
@@ -365,35 +448,67 @@ class CometdAdapter {
         };
 
         return new Promise((resolve, reject) => {
-            this.cometd.publish(channel.path, content, publishProps, (publishReply: Message) => {
-                if (publishReply.successful) {
-                    resolve(publishReply);
-                    return;
-                }
+            try {
+                this.cometd.publish(
+                    channel.path,
+                    content,
+                    publishProps,
+                    (publishReply: Message) => {
+                        if (publishReply.successful) {
+                            resolve(publishReply);
+                            return;
+                        }
 
-                const errorMessage = publishReply.error ?? '';
-                const error = new Fault({
-                    status: errorMessage.includes('403') ? FORBIDDEN : undefined,
-                    message: errorMessage,
-                    information: {
-                        code: 'COMETD_ERROR',
-                        ...publishReply,
+                        if (shouldRehandshake(publishReply)) {
+                            this.handshakeState = IDLE;
+                            this.handshakePromise = undefined;
+                        }
+
+                        const errorMessage = publishReply.error ?? '';
+                        const error = new Fault({
+                            status: errorMessage.includes('403') ? FORBIDDEN : undefined,
+                            message: errorMessage,
+                            information: {
+                                code: 'COMETD_ERROR',
+                                ...publishReply,
+                            },
+                        });
+
+                        if (options.inert) {
+                            reject(error);
+                            return;
+                        }
+
+                        const retry = async () => {
+                            if (shouldRehandshake(publishReply)) {
+                                await this.handshake({ inert: true });
+                            }
+                            return this.publish(channel, content, { inert: true });
+                        };
+                        try {
+                            const result = errorManager.handle<Message>(error, retry);
+                            resolve(result);
+                        } catch (e) {
+                            reject(e);
+                        }
                     },
-                });
-
-                if (options.inert) {
-                    reject(error);
+                );
+            } catch (error: unknown) {
+                const retryCount = options._retryCount ?? 0;
+                if (isIllegalStateError(error) && retryCount < MAX_RETRIES) {
+                    this.handshakeState = IDLE;
+                    this.handshakePromise = undefined;
+                    this.handshake()
+                        .then(() => this.publish(channel, content, {
+                            ...options,
+                            _retryCount: retryCount + 1,
+                        }))
+                        .then(resolve)
+                        .catch(reject);
                     return;
                 }
-
-                const retry = () => this.publish(channel, content, { inert: true });
-                try {
-                    const result = errorManager.handle<Message>(error, retry);
-                    resolve(result);
-                } catch (e) {
-                    reject(e);
-                }
-            });
+                reject(error);
+            }
         });
     }
 
@@ -414,30 +529,39 @@ class CometdAdapter {
             if (this.cometd.getStatus() === DISCONNECTED) return Promise.resolve();
         }
 
-        return new Promise((resolve, reject) => this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
-            if (unsubscribeReply.successful) {
-                resolve(unsubscribeReply);
-                return;
+        return new Promise((resolve, reject) => {
+            try {
+                this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
+                    if (unsubscribeReply.successful) {
+                        resolve(unsubscribeReply);
+                        return;
+                    }
+
+                    const errorMessage = unsubscribeReply.error ?? '';
+
+                    if (isSessionInvalidationError(errorMessage)) {
+                        resolve(unsubscribeReply);
+                        return;
+                    }
+
+                    const error = new Fault({
+                        status: undefined,
+                        message: errorMessage,
+                        information: {
+                            code: 'COMETD_ERROR',
+                            ...unsubscribeReply,
+                        },
+                    });
+                    reject(error);
+                });
+            } catch (error: unknown) {
+                if (isIllegalStateError(error)) {
+                    resolve(undefined);
+                    return;
+                }
+                reject(error);
             }
-
-            const errorMessage = unsubscribeReply.error ?? '';
-
-            // Handle session_unknown errors gracefully - subscription is already invalid
-            if (errorMessage.includes('session_unknown') || errorMessage.includes('402')) {
-                resolve(unsubscribeReply);
-                return;
-            }
-
-            const error = new Fault({
-                status: undefined,
-                message: errorMessage,
-                information: {
-                    code: 'COMETD_ERROR',
-                    ...unsubscribeReply,
-                },
-            });
-            reject(error);
-        }));
+        });
     }
 
     async empty() {
