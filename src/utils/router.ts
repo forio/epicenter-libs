@@ -182,7 +182,7 @@ async function request(
     // lower boundary to prevent truncation that might not be apparent to the user.
     // This can occur in particular with GET requests with large query strings.
     if (url.href.length > MAX_URL_LENGTH) {
-        throw new EpicenterError(`URL length exceeds maximum of ${MAX_URL_LENGTH} characters: ${url.toString().length} characters.`);
+        throw new EpicenterError(`URL length exceeds maximum of ${MAX_URL_LENGTH} characters: ${url.href.length} characters.`);
     }
 
     const {
