@@ -231,6 +231,13 @@ describe('Router Tests', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PUT');
         });
+
+        it('Should throw an error when URL length exceeds maximum', async () => {
+            const MAX_URL_LENGTH = 2048;
+            const longParam = 'x'.repeat(MAX_URL_LENGTH);
+            router.searchParams = { param: longParam };
+            await expect(router.get('/run')).rejects.toThrow(`URL length exceeds maximum of ${MAX_URL_LENGTH} characters`);
+        });
     });
 
     describe('Search Parameters', () => {

@@ -178,7 +178,23 @@ async function request(
     url: URL,
     options: RequestOptions,
 ): Promise<Result> {
-    const { method, headers, body, includeAuthorization, inert, paginated, authorization } = options;
+    // Different browsers have different max URL lengths; we limit to 2048 as a safe
+    // lower boundary to prevent truncation that might not be apparent to the user.
+    // This can occur in particular with GET requests with large query strings.
+    if (url.href.length > MAX_URL_LENGTH) {
+        throw new EpicenterError(`URL length exceeds maximum of ${MAX_URL_LENGTH} characters: ${url.toString().length} characters.`);
+    }
+
+    const {
+        method,
+        headers,
+        body,
+        includeAuthorization,
+        inert,
+        paginated,
+        authorization,
+    } = options;
+
     const message = createMessage(
         headers,
         body,
@@ -463,36 +479,26 @@ export default class Router {
     // Network Requests
     async get(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
-            headers, includeAuthorization, inert, paginated, parsePage,
+            accountShortName,
+            projectShortName,
+            authorization,
+            server,
+            query,
+            useProjectProxy,
+            headers,
+            includeAuthorization,
+            inert,
+            paginated,
+            parsePage,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
-
-        if (url.href.length > MAX_URL_LENGTH) {
-            const searchParams = (this.searchParams ?? new URLSearchParams()) as URLSearchParams;
-            const entries = Array.from(searchParams.entries()) as Array<[string, string]>;
-            const searchObject = entries.reduce((searchObject, [key, value]) => {
-                // Store values that only occur once as the value itself
-                if (!searchObject[key]) {
-                    searchObject[key] = value;
-                    return searchObject;
-                }
-                // Store values that that appear more than once in an array
-                if (!Array.isArray(searchObject[key])) {
-                    // Make existing value an array
-                    searchObject[key] = [searchObject[key] as string];
-                }
-                (searchObject[key] as string[]).push(value);
-
-                return searchObject;
-            }, {} as Record<string, string | string[]>);
-            this.searchParams = '';
-            return this.post(uriComponent, {
-                ...options,
-                body: searchObject,
-            });
-        }
+        const url = this.getURL(uriComponent, {
+            server,
+            query,
+            accountShortName,
+            projectShortName,
+            useProjectProxy,
+        });
 
         return request(url, {
             method: 'GET',
@@ -507,11 +513,25 @@ export default class Router {
 
     async delete(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
-            headers, includeAuthorization, inert,
+            accountShortName,
+            projectShortName,
+            authorization,
+            server,
+            query,
+            useProjectProxy,
+            headers,
+            includeAuthorization,
+            inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
+        const url = this.getURL(uriComponent, {
+            server,
+            query,
+            accountShortName,
+            projectShortName,
+            useProjectProxy,
+        });
+
         return request(url, {
             method: 'DELETE',
             headers,
@@ -523,11 +543,26 @@ export default class Router {
 
     async patch(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
-            headers, body, includeAuthorization, inert,
+            accountShortName,
+            projectShortName,
+            authorization,
+            server,
+            query,
+            useProjectProxy,
+            headers,
+            body,
+            includeAuthorization,
+            inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
+        const url = this.getURL(uriComponent, {
+            server,
+            query,
+            accountShortName,
+            projectShortName,
+            useProjectProxy,
+        });
+
         return request(url, {
             method: 'PATCH',
             headers,
@@ -540,11 +575,26 @@ export default class Router {
 
     async post(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
-            headers, body, includeAuthorization, inert,
+            accountShortName,
+            projectShortName,
+            authorization,
+            server,
+            query,
+            useProjectProxy,
+            headers,
+            body,
+            includeAuthorization,
+            inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
+        const url = this.getURL(uriComponent, {
+            server,
+            query,
+            accountShortName,
+            projectShortName,
+            useProjectProxy,
+        });
+
         return request(url, {
             method: 'POST',
             headers,
@@ -557,11 +607,26 @@ export default class Router {
 
     async put(uriComponent: string, options: RoutingOptions = {}): Promise<Result> {
         const {
-            accountShortName, projectShortName, authorization, server, query, useProjectProxy,
-            headers, body, includeAuthorization, inert,
+            accountShortName,
+            projectShortName,
+            authorization,
+            server,
+            query,
+            useProjectProxy,
+            headers,
+            body,
+            includeAuthorization,
+            inert,
         } = options;
 
-        const url = this.getURL(uriComponent, { server, query, accountShortName, projectShortName, useProjectProxy });
+        const url = this.getURL(uriComponent, {
+            server,
+            query,
+            accountShortName,
+            projectShortName,
+            useProjectProxy,
+        });
+
         return request(url, {
             method: 'PUT',
             headers,
