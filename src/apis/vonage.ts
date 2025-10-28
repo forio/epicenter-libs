@@ -10,11 +10,11 @@ export type APIKey = string;
 export type Token = string;
 export interface VonageSession {
     sessionId: SessionID;
-};
+}
 export interface VonageArchive {
     archiveId: string;
     status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired';
-};
+}
 
 export async function getSession(
     optionals: RoutingOptions = {},
