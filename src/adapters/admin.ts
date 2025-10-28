@@ -1,11 +1,12 @@
 import type { RoutingOptions } from '../utils/router';
+
 import Router from '../utils/router';
 
 export interface Secret {
     password: string;
 }
 
-export interface AdminCreateView {
+export interface AdminCreateInView {
     [key: string]: unknown;
     handle: string;
     email: string;
@@ -29,12 +30,22 @@ export interface Admin {
     objectType: 'external' | 'native';
 }
 
-export interface NativeAdminCreateView extends AdminCreateView {
+export interface NativeAdminCreateInView extends AdminCreateInView {
     objectType: 'native';
     secret: Secret;
 }
 
-export async function createAdmin(view: AdminCreateView): Promise<Admin> {
+export async function createAdmin(
+    view: {
+        handle: string;
+        email: string;
+        givenName?: string;
+        familyName?: string;
+        verified: true;
+        active?: true;
+        [key: string]: unknown;
+    },
+): Promise<Admin> {
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')

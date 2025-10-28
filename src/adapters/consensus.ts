@@ -5,7 +5,26 @@ import {
     RITUAL,
 } from 'utils';
 
-export interface Consensus {
+export interface ProcActionable {
+    objectType: 'execute';
+    name: string;
+    arguments?: unknown[];
+}
+
+export interface GetActionable {
+    objectType: 'get';
+    name: string;
+}
+
+export interface SetActionable {
+    objectType: 'set';
+    name: string;
+    value: unknown;
+}
+
+export type Actionable = ProcActionable | GetActionable | SetActionable;
+
+export interface BarrierReadOutView {
     instantiated: boolean;
     triggered: boolean;
     closed: boolean;
@@ -56,13 +75,13 @@ export async function create(
     name: string,
     stage: string,
     expectedRoles: Record<string, number>,
-    defaultActions: Record<string, Record<string, number>[]>,
+    defaultActions: Record<string, Actionable[]>,
     optionals: {
         ttlSeconds?: number;
         transparent?: boolean;
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     const {
         ttlSeconds,
         transparent = false,
@@ -101,7 +120,7 @@ export async function load(
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}/${stage}`, optionals)
         .then(({ body }) => body);
@@ -116,13 +135,13 @@ export async function load(
  * @param worldKey                      World key for the world you are loading consensus barriers for
  * @param name                          Unique string that specifies which set of consensus barriers to retrieve
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
- * @returns promise that returns a 204 if successful
+ * @returns promise that resolves to a list of consensus barriers
  */
 export async function list(
     worldKey: string,
     name: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView[]> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}`, optionals)
         .then(({ body }) => body);
@@ -184,9 +203,9 @@ export async function updateDefaults(
     worldKey: string,
     name: string,
     stage: string,
-    actions: Record<string, Record<string, number>[]>,
+    actions: Record<string, Actionable[]>,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     const {
         ...routingOptions
     } = optionals;
@@ -227,10 +246,7 @@ export async function submitActions(
     worldKey: string,
     name: string,
     stage: string,
-    actions: {
-        name: string;
-        arguments: string | number | Record<string, unknown>[];
-    }[],
+    actions: Actionable[],
     optionals: {
         message?: string;
         ritual?: keyof typeof RITUAL;
@@ -275,7 +291,7 @@ export async function deleteBarrier(
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     const {
         ...routingOptions
     } = optionals;
@@ -306,7 +322,7 @@ export async function deleteAll(
     worldKey: string,
     name: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     const {
         ...routingOptions
     } = optionals;
@@ -340,7 +356,7 @@ export async function undoSubmit(
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView> {
     const {
         ...routingOptions
     } = optionals;
@@ -379,10 +395,7 @@ export async function triggerFor(
     name: string,
     stage: string,
     userKey: string,
-    actions: {
-        name: string;
-        arguments: string | number | Record<string, unknown>[];
-    }[],
+    actions: Actionable[],
     optionals: {
         message?: string;
         ritual?: keyof typeof RITUAL;

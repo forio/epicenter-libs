@@ -5,7 +5,7 @@ import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
 export interface ChannelScope extends GenericScope {
-    pushCategory: string;
+    pushCategory: keyof typeof PUSH_CATEGORY;
 }
 
 const validateScope = (scope: ChannelScope) => {

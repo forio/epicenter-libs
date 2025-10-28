@@ -4,7 +4,7 @@ import type { RoutingOptions, Page } from '../utils/router';
 import Router from '../utils/router';
 import { parseFilterInput } from '../utils/filter-parser';
 
-export interface ChatMessage {
+export interface ChatMessageReadOutView {
     senderKey: string;
     receiverKey: string;
     created: string;
@@ -12,10 +12,10 @@ export interface ChatMessage {
     message: string;
 }
 
-export interface Chat {
+export interface ChatReadOutView {
     permit: Permit;
     chatKey: string;
-    messages: ChatMessage[];
+    messages: ChatMessageReadOutView[];
     room: string;
     scope: GenericScope;
 }
@@ -31,7 +31,7 @@ export async function updatePermit(
     chatKey: string,
     permit: Permit,
     optionals: RoutingOptions = {},
-): Promise<Chat> {
+): Promise<ChatReadOutView> {
     return new Router()
         .patch(`/chat/${chatKey}`, {
             ...optionals,
@@ -59,7 +59,7 @@ export async function create(
     scope: GenericScope,
     permit: Permit,
     optionals: RoutingOptions = {},
-): Promise<Chat> {
+): Promise<ChatReadOutView> {
     return new Router()
         .post('/chat', {
             body: {
@@ -86,7 +86,7 @@ export async function create(
 export async function get(
     chatKey: string,
     optionals: RoutingOptions = {},
-): Promise<Chat> {
+): Promise<ChatReadOutView> {
     return new Router()
         .get(`/chat/${chatKey}`, optionals)
         .then(({ body }) => body);
@@ -119,7 +119,7 @@ export async function get(
 export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {},
-): Promise<Page<Chat>> {
+): Promise<Page<ChatReadOutView>> {
     const { filter, sort = [], first = 0, max } = searchOptions;
     const searchParams = {
         filter: parseFilterInput(filter),
@@ -150,7 +150,7 @@ export async function sendMessage(
     chatKey: string,
     message: string,
     optionals: { userKey?: string } & RoutingOptions = {},
-): Promise<ChatMessage> {
+): Promise<ChatMessageReadOutView> {
     const { userKey, ...routingOptions } = optionals;
     const uriComponent = userKey ? `/${userKey}` : '';
     return new Router()
@@ -179,7 +179,7 @@ export async function getMessages(
         maxRecords?: number;
         horizon?: number;
     } & RoutingOptions = {},
-): Promise<ChatMessage[]> {
+): Promise<ChatMessageReadOutView[]> {
     const { maxRecords, horizon, ...routingOptions } = optionals;
     return new Router()
         .withSearchParams({ maxRecords, horizon })

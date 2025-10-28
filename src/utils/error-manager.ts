@@ -2,9 +2,9 @@ import type { RetryFunction } from './router';
 import Fault from './fault';
 
 
-type Identifier = (error: Fault) => boolean;
+export type Identifier = (error: Fault) => boolean;
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>;
+export type HandleFunction = <T>(error: Fault, retry: RetryFunction<T>) => Promise<any>;
 /* eslint-enable  @typescript-eslint/no-explicit-any */
 
 export interface Handler {

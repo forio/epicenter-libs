@@ -1,57 +1,83 @@
 import type { UserSession } from '../utils/identification';
 import type { RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
-import type { User } from './user';
+import type { PseudonymReadOutView } from './user';
+import { Router, identification, SCOPE_BOUNDARY } from '../utils';
 
-import {
-    Router, identification,
-    SCOPE_BOUNDARY,
-} from '../utils';
+export const OBJECTIVE = {
+    MINIMUM: 'MINIMUM',
+    MAXIMUM: 'MAXIMUM',
+    MARGINAL: 'MARGINAL',
+    OPTIMAL: 'OPTIMAL',
+} as const;
 
+export type Objective = (typeof OBJECTIVE)[keyof typeof OBJECTIVE];
 
-export enum OBJECTIVE {
-    MINIMUM = 'MINIMUM',
-    MAXIMUM = 'MAXIMUM',
-    MARGINAL = 'MARGINAL',
+export type OrbitType = 'GROUP' | 'EPISODE';
+
+export const WORLD_NAME_GENERATOR_TYPE = {
+    colorAnimal: 'colorAnimal',
+    sequential: 'sequential',
+} as const;
+
+export type WorldNameGeneratorType = (typeof WORLD_NAME_GENERATOR_TYPE)[keyof typeof WORLD_NAME_GENERATOR_TYPE];
+
+export interface ColorAnimalWorldNameGenerator {
+    objectType: 'colorAnimal';
 }
 
-export enum ORBIT_TYPE {
-    GROUP = 'GROUP',
-    EPISODE = 'EPISODE',
+export interface SequentialWorldNameGenerator {
+    objectType: 'sequential';
+    prefix?: string;
 }
 
-export enum WORLD_NAME_GENERATOR {
-    colorAnimal = 'colorAnimal',
-    sequential = 'sequential',
-}
+export type WorldNameGenerator =
+    | ColorAnimalWorldNameGenerator
+    | SequentialWorldNameGenerator;
 
-export interface UserAssignment {
-    userKey: string;
-    role?: string;
-}
-
-export interface Persona {
+export interface AssignmentReadOutView {
     role: string;
-    minimum: number;
+    user: PseudonymReadOutView;
+}
+
+export interface PersonaReadOutView {
+    role: string;
+    minimum?: number;
     maximum?: number;
     marginal?: number;
+    insertionOrder?: number;
 }
 
-export interface Assignment {
-    role: string;
-    user: User;
-}
-
-export interface World {
+export interface WorldReadOutView {
     lastUpdated: string;
-    personae: Persona[];
-    assignments: Assignment[];
+    personae: PersonaReadOutView[];
+    assignments: AssignmentReadOutView[];
     orbitKey: string;
     worldKey: string;
     created: string;
-    orbitType: keyof typeof ORBIT_TYPE;
+    orbitType: OrbitType;
     runKey: string;
+    displayName: string;
+    allowChannel: boolean;
+    name: string;
+    room: string;
 }
+
+export interface AssignmentCreateInView {
+    role?: string;
+    userKey: string;
+}
+
+export interface PersonaCreateInView {
+    role: string;
+    minimum?: number;
+    maximum?: number;
+    marginal?: number;
+    insertionOrder?: number;
+}
+
+type WorldKey = string;
+export type AssignmentMap = Record<WorldKey, AssignmentCreateInView[]>;
 
 /**
  * Updates fields for a particular world.
@@ -73,7 +99,7 @@ export async function update(
         allowChannel?: boolean;
     },
     optionals: RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     const {
         displayName,
         runKey,
@@ -131,10 +157,10 @@ export async function create(
         displayName?: string;
         groupName?: string;
         episodeName?: string;
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
+        worldNameGenerator?: WorldNameGenerator;
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     const {
         name,
         displayName,
@@ -177,7 +203,7 @@ export async function get(
         episodeName?: string;
         mine?: boolean;
     } & RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     const {
         groupName, episodeName, mine,
         ...routingOptions
@@ -208,7 +234,7 @@ export async function getAssignments(
         episodeName?: string;
         mine?: boolean;
     } & RoutingOptions = {},
-): Promise<World[]> {
+): Promise<WorldReadOutView[]> {
     const {
         groupName, episodeName, mine,
         ...routingOptions
@@ -222,7 +248,7 @@ export async function getAssignments(
 
 export async function getSessionWorlds(
     optionals: RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView[]> {
     return await new Router()
         .get('/world/assignment', optionals)
         .then(({ body }) => body);
@@ -258,11 +284,11 @@ export async function selfAssign(
         groupName?: string;
         episodeName?: string;
         objective?: keyof typeof OBJECTIVE;
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
-        populace?: Persona[];
+        worldNameGenerator?: WorldNameGenerator;
+        populace?: PersonaCreateInView[];
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     const {
         role,
         groupName,
@@ -313,18 +339,18 @@ export async function selfAssign(
  * @returns promise that resolves to the list of worlds created by the assignment
  */
 export async function autoAssignUsers(
-    assignments: UserAssignment[],
+    assignments: AssignmentCreateInView[],
     optionals: {
         groupName?: string;
         episodeName?: string;
         objective?: keyof typeof OBJECTIVE;
-        worldNameGenerator?: { objectType: keyof typeof WORLD_NAME_GENERATOR };
+        worldNameGenerator?: WorldNameGenerator;
         requireAllAssignments?: boolean;
         keepEmptyWorlds?: boolean;
-        populace?: Persona[];
+        populace?: PersonaCreateInView[];
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<World[]> {
+): Promise<WorldReadOutView[]> {
     const {
         groupName,
         episodeName,
@@ -353,9 +379,8 @@ export async function autoAssignUsers(
         .then(({ body }) => body);
 }
 
-type WorldKey = string;
 export async function editAssignments(
-    assignments: Record<WorldKey, UserAssignment[]>,
+    assignments: AssignmentMap,
     optionals: {
         groupName?: string;
         episodeName?: string;
@@ -363,7 +388,7 @@ export async function editAssignments(
         keepEmptyWorlds?: boolean;
         requireAllAssignments?: boolean;
     } & RoutingOptions = {},
-): Promise<World[]> {
+): Promise<WorldReadOutView[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
         ...routingOptions
@@ -392,7 +417,7 @@ export async function editAssignments(
 export async function getAssignmentsByKey(
     worldKey: string,
     optionals: RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     return await new Router()
         .get(`/world/assignment/${worldKey}`, optionals)
         .then(({ body }) => body);
@@ -483,7 +508,7 @@ export async function getPersonas(
  * @returns promise that resolves with undefined when successful
  */
 export async function setPersonas(
-    personas: { role: string; minimum?: number; maximum?: number; marginal?: number }[],
+    personas: PersonaCreateInView[],
     scope: GenericScope,
     optionals: RoutingOptions = {},
 ): Promise<void> {
@@ -516,7 +541,7 @@ export async function assignRun(
     worldKey: string,
     runKey: string,
     optionals: RoutingOptions = {},
-): Promise<World> {
+): Promise<WorldReadOutView> {
     return await new Router()
         .patch(`/world/run/${worldKey}`, {
             body: { runKey },

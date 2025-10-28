@@ -1,30 +1,101 @@
 import type { RoutingOptions } from 'utils/router';
+import { GROUP_ROLE } from 'utils/constants';
 import Router from 'utils/router';
 
-export interface Secret {
-    password: string;
+export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
+export type MFAMethodology = 'NONE' | 'NOOP' | 'TOTP';
+
+export interface MFADetailReadOutView {
+    mfaMethodology: MFAMethodology;
 }
 
-export interface UserCreateView {
-    [key: string]: unknown;
-    handle: string;
-    email?: string;
-    givenName?: string;
-    familyName?: string;
-    active?: true;
+export interface GraftReadOutView {
+    reference: string;
+    realm: Record<string, unknown>;
 }
 
-export interface User {
+export interface Countdown {
+    last?: string;
+    count?: number;
+}
+
+export interface GroupRelationshipReadOutView {
+    role: keyof typeof GROUP_ROLE;
+}
+
+export interface UserReadOutView {
+    lastLogin: string;
+    modality: Modality;
     lastUpdated: string;
+    created: string;
     displayName: string;
+    countdown?: Countdown;
     givenName: string;
     familyName: string;
     handle: string;
-    created: string;
-    detail: Record<string, unknown>;
+    loginCount: number;
+    uploadOrder: number;
+    email: string;
+    active: boolean;
     userId: number;
     userKey: string;
     objectType: 'external' | 'native';
+    mfaDetail: MFADetailReadOutView;
+}
+
+export interface ExternalUserReadOutView extends UserReadOutView {
+    graft: GraftReadOutView;
+    objectType: 'external';
+}
+
+export interface NativeUserReadOutView {
+    objectType: 'native';
+}
+
+export interface PseudonymReadOutView {
+    lastUpdated: string;
+    created: string;
+    displayName: string;
+    detail: ExternalUserReadOutView | NativeUserReadOutView;
+    userId: number;
+    userKey: string;
+    relationship: GroupRelationshipReadOutView;
+}
+
+export interface MFADetailCreateInView {
+    mfaMethodology: MFAMethodology;
+    mfaKey?: string;
+}
+
+export interface GraftCreateInView {
+    reference: string;
+    realm: Record<string, unknown>;
+}
+
+export interface SecretCreateInView {
+    password: string;
+}
+
+export interface UserCreateInView {
+    handle: string;
+    modality?: Modality;
+    displayName?: string;
+    familyName?: string;
+    givenName?: string;
+    countdown?: Countdown;
+    active?: true;
+    email?: string;
+    mfaDetail?: MFADetailCreateInView;
+}
+
+export interface NativeUserCreateInView extends UserCreateInView {
+    objectType: 'native';
+    secret?: SecretCreateInView;
+}
+
+export interface ExternalUserCreateInView extends UserCreateInView {
+    objectType: 'external';
+    graft: GraftCreateInView;
 }
 
 export interface UploadOptions extends RoutingOptions {
@@ -32,21 +103,24 @@ export interface UploadOptions extends RoutingOptions {
     overwrite?: boolean;
 }
 
-export interface NativeUserCreateView extends UserCreateView {
-    objectType: 'native';
-    secret: Secret;
+export interface DiscardedUser {
+    user: ExternalUserReadOutView | NativeUserReadOutView;
+    message: string;
+    information: Record<string, unknown>;
+    code: string;
 }
 
-export interface ExternalUserCreateView extends UserCreateView {
-    objectType: 'external';
+export interface UserReport {
+    duplicated?: PseudonymReadOutView[];
+    created?: PseudonymReadOutView[];
+    updated?: PseudonymReadOutView[];
+    discarded?: DiscardedUser[];
 }
-
-export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
 
 export async function uploadCSV(
     file: File,
     optionals: UploadOptions = {},
-): Promise<void> {
+): Promise<UserReport> {
     const {
         overwrite,
         ...routingOptions
@@ -64,10 +138,37 @@ export async function uploadCSV(
         .then(({ body }) => body);
 }
 
+/**
+ * Create a new user (native or external).
+ */
 export async function createUser(
-    view: ExternalUserCreateView | NativeUserCreateView,
+    view: {
+        objectType: 'native';
+        handle: string;
+        modality?: Modality;
+        displayName?: string;
+        familyName?: string;
+        givenName?: string;
+        countdown?: Countdown;
+        active?: true;
+        email?: string;
+        mfaDetail?: MFADetailCreateInView;
+        secret?: SecretCreateInView;
+    } | {
+        objectType: 'external';
+        handle: string;
+        modality?: Modality;
+        displayName?: string;
+        familyName?: string;
+        givenName?: string;
+        countdown?: Countdown;
+        active?: true;
+        email?: string;
+        mfaDetail?: MFADetailCreateInView;
+        graft: GraftCreateInView;
+    },
     optionals: RoutingOptions = {},
-): Promise<User> {
+): Promise<PseudonymReadOutView> {
     return await new Router()
         .post('/user', {
             body: view,
@@ -88,7 +189,7 @@ export async function createUser(
 export async function get(
     userKey: string,
     optionals: RoutingOptions = {},
-): Promise<User> {
+): Promise<PseudonymReadOutView> {
     return await new Router()
         .get(`/user/${userKey}`, optionals)
         .then(({ body }) => body);
@@ -99,7 +200,7 @@ export async function getWithHandle(
     optionals: {
         modality?: Modality;
     } & RoutingOptions = {},
-): Promise<User> {
+): Promise<PseudonymReadOutView> {
     const { modality, ...routingOptions } = optionals;
     const uriComponent = modality ? `/${modality}` : '';
     return await new Router()

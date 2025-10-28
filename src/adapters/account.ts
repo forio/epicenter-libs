@@ -1,13 +1,13 @@
 import type { RoutingOptions } from 'utils/router';
+
 import Router from 'utils/router';
 
-
-export interface AccountReadView {
+export interface AccountReadOutView {
     name: string;
     objectType: string;
 }
 
-export interface AccountCreateView {
+export interface AccountCreateInView {
     adminKey: string;
     name: string;
     shortName: string;
@@ -16,39 +16,59 @@ export interface AccountCreateView {
     active?: boolean;
 }
 
-export interface PersonalAccountCreateView extends AccountCreateView {
+export interface PersonalAccountCreateInView extends AccountCreateInView {
     objectType: 'personal';
 }
 
-export interface TeamAccountCreateView extends AccountCreateView {
+export interface TeamAccountCreateInView extends AccountCreateInView {
     objectType: 'team';
     billingInterval: string;
     subscriptionPlan: string;
 }
 
-export interface AccountUpdateView {
+export interface AccountUpdateInView {
     name?: string;
     workerPartition?: string;
     active?: boolean;
 }
 
-export interface PersonalAccountUpdateView extends AccountUpdateView {
+export interface PersonalAccountUpdateInView extends AccountUpdateInView {
     objectType: 'personal';
 }
 
-export interface TeamAccountUpdateView extends AccountUpdateView {
+export interface TeamAccountUpdateInView extends AccountUpdateInView {
     objectType: 'team';
     billingInterval?: string;
 }
 
-export async function getAccount(accountShortName: string): Promise<AccountReadView> {
+export async function getAccount(accountShortName: string): Promise<AccountReadOutView> {
     return await new Router()
         .withAccountShortName(accountShortName)
         .get('/account')
         .then(({ body }) => body);
 }
 
-export async function createAccount(view: PersonalAccountCreateView | TeamAccountCreateView): Promise<AccountReadView> {
+export async function createAccount(
+    view: {
+        objectType: 'personal';
+        adminKey: string;
+        name: string;
+        shortName: string;
+        sharedSecret?: string;
+        workerPartition?: string;
+        active?: boolean;
+    } | {
+        objectType: 'team';
+        adminKey: string;
+        name: string;
+        shortName: string;
+        billingInterval: string;
+        subscriptionPlan: string;
+        sharedSecret?: string;
+        workerPartition?: string;
+        active?: boolean;
+    },
+): Promise<AccountReadOutView> {
     return await new Router()
         .withAccountShortName('epicenter')
         .withProjectShortName('manager')
@@ -58,9 +78,20 @@ export async function createAccount(view: PersonalAccountCreateView | TeamAccoun
 }
 
 export async function updateAccount(
-    view: PersonalAccountUpdateView | TeamAccountUpdateView,
+    view: {
+        objectType: 'personal';
+        name?: string;
+        workerPartition?: string;
+        active?: boolean;
+    } | {
+        objectType: 'team';
+        name?: string;
+        workerPartition?: string;
+        active?: boolean;
+        billingInterval?: string;
+    },
     optionals: RoutingOptions = {},
-): Promise<AccountReadView> {
+): Promise<AccountReadOutView> {
     return await new Router()
         .patch('/account', {
             body: view,
@@ -85,7 +116,7 @@ export async function teamForAdmin(
         first?: number;
         max?: number;
     } & RoutingOptions = {},
-): Promise<AccountReadView[]> {
+): Promise<AccountReadOutView[]> {
     const {
         includeAllMembers, filter, first, max,
         ...routingOptions

@@ -1,10 +1,12 @@
 import type { UserSession } from '../utils/identification';
 import type { RoutingOptions } from '../utils/router';
-import type { GenericScope, GenericSearchOptions, Permit } from '../utils/constants';
+import type { GenericScope, GenericSearchOptions, Permit, Address } from '../utils/constants';
 
 import {
-    identification, Router,
-    ROLE, SCOPE_BOUNDARY,
+    identification,
+    Router,
+    ROLE,
+    SCOPE_BOUNDARY,
     parseFilterInput,
 } from '../utils';
 
@@ -13,7 +15,7 @@ export interface Vault<Items> {
     created: string;
     lastUpdated: string;
     mutationKey: string;
-    address: unknown;
+    address: Address;
     scope: { userKey?: string } & GenericScope;
     name: string;
     permit: Permit;

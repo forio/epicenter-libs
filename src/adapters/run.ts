@@ -3,13 +3,16 @@ import type { GenericScope, GenericSearchOptions } from '../utils/constants';
 import type { RoutingOptions, Page } from '../utils/router';
 
 import {
-    Router, identification,
-    ROLE, SCOPE_BOUNDARY, RITUAL,
+    Router,
+    identification,
+    ROLE,
+    SCOPE_BOUNDARY,
+    RITUAL,
     EpicenterError,
     parseFilterInput,
 } from 'utils';
 
-interface V2ModelContext {
+export interface V2ModelContext {
     variables?: Record<string, VariableOptions>;
     externalFunctions?: Record<string, WireExternalFunction>;
     modelVersion?: number;
@@ -31,9 +34,9 @@ interface V2ModelContext {
     events?: Record<string, EventOptions>;
 }
 
-interface ModelContext extends V2ModelContext {}
+export interface ModelContext extends V2ModelContext {}
 
-interface VariableOptions {
+export interface VariableOptions {
     resetDecision?: boolean;
     dialect?: string;
     save?: boolean;
@@ -42,57 +45,57 @@ interface VariableOptions {
     reportOffset?: number;
 }
 
-interface WireExternalFunction {
+export interface WireExternalFunction {
     route?: Route;
     arguments?: string;
     objectType: 'wire';
 }
 
-interface Route {
+export interface Route {
     service?: string;
     version?: number;
 }
 
-interface ExcelModelControl {
+export interface ExcelModelControl {
     autoRecalculate?: boolean;
     objectType: 'excel';
 }
 
-interface JavaModelControl {
+export interface JavaModelControl {
     executable?: string;
     objectType: 'java';
 }
 
-interface PowersimModelControl {
+export interface PowersimModelControl {
     minimizeMemoryFootprint?: boolean;
     objectType: 'powersim';
 }
 
-interface VensimModelControl {
+export interface VensimModelControl {
     sensitivityControl?: 'SensitivityControl';
     extensionModule?: string;
     objectType: 'vensim';
 }
 
-interface Protections {
+export interface Protections {
     guards: (InputGuard | OverwriteGuard | PrivilegeGuard | RelativeGuard | RoleGuard)[];
 }
 
-interface InputGuard {
+export interface InputGuard {
     regex: string;
     operand?: string;
     operator?: string;
     objectType: 'input';
 }
 
-interface OverwriteGuard {
+export interface OverwriteGuard {
     regex: string;
     dialect?: string;
     initial: string;
     objectType: 'overwrite';
 }
 
-interface PrivilegeGuard {
+export interface PrivilegeGuard {
     regex: string;
     read: string;
     domain: string;
@@ -102,7 +105,7 @@ interface PrivilegeGuard {
     objectType: 'privilege';
 }
 
-interface RelativeGuard {
+export interface RelativeGuard {
     regex: string;
     dialect?: string;
     value: string;
@@ -111,7 +114,7 @@ interface RelativeGuard {
     objectType: 'relative';
 }
 
-interface RoleGuard {
+export interface RoleGuard {
     regex: string;
     role: string;
     domain: string;
@@ -119,107 +122,107 @@ interface RoleGuard {
     objectType: 'role';
 }
 
-interface Restorations {
+export interface Restorations {
     rewind?: RewindMarker;
     log?: string;
     assembly?: (ReplayRestoration | SnapshotRestoration)[];
 }
 
-interface RewindMarker {
+export interface RewindMarker {
     name?: string;
     destructible?: boolean;
     arguments?: Record<string, unknown>;
 }
 
-interface ReplayRestoration {
+export interface ReplayRestoration {
     replay: {
         operations?: ReplayOperation[];
     };
 }
 
-interface ReplayOperation {
+export interface ReplayOperation {
     targetType: string;
     operationType: string;
     targetKey: string;
 }
 
-interface SnapshotRestoration {
+export interface SnapshotRestoration {
     variables?: string[];
     objectType: 'snapshot';
 }
 
-interface AptExternalDependency {
+export interface AptExternalDependency {
     package?: string;
     repository?: string;
     version?: string;
     objectType: 'apt';
 }
 
-interface CranExternalDependency {
+export interface CranExternalDependency {
     package?: string;
     version?: string;
     objectType: 'cran';
 }
 
-interface GitExternalDependency {
+export interface GitExternalDependency {
     url?: string;
     script?: string;
     objectType: 'git';
 }
 
-interface JuliaExternalDependency {
+export interface JuliaExternalDependency {
     package?: string;
     version?: string;
     objectType: 'julia';
 }
 
-interface NpmExternalDependency {
+export interface NpmExternalDependency {
     package?: string;
     version?: string;
     objectType: 'npm';
 }
 
-interface PypiExternalDependency {
+export interface PypiExternalDependency {
     package?: string;
     version?: string;
     objectType: 'pypi';
 }
 
-interface ShellExternalDependency {
+export interface ShellExternalDependency {
     script?: string;
     objectType: 'shell';
 }
 
-interface OperationOptions {
+export interface OperationOptions {
     timeoutSeconds?: number;
     inert?: boolean;
 }
 
-interface ModelContextDefaults {
+export interface ModelContextDefaults {
     variables?: VariableOptions;
     operations?: OperationOptions;
     events?: EventOptions;
 }
 
-interface EventOptions {
+export interface EventOptions {
     timeoutSeconds?: number;
 }
 
-type V1ExecutionContext = {
+export interface V1ExecutionContext {
     presets?: Record<string, Record<string, unknown>>;
     mappedFiles?: Record<string, string>;
     version: string;
     tool?: StellaModelTool | VensimModelTool;
 };
 
-interface ExecutionContext extends V1ExecutionContext {}
+export interface ExecutionContext extends V1ExecutionContext {}
 
-interface StellaModelTool {
+export interface StellaModelTool {
     objectType: 'stella';
     gameMode?: boolean;
 }
 
-interface VensimModelTool {
+export interface VensimModelTool {
     objectType: 'vensim';
     sensitivityMode?: boolean;
     cinFiles?: string[];
@@ -350,6 +353,7 @@ export async function create(
             headers,
         }).then(({ body }) => body);
 }
+
 /**
  * Creates a project scoped run
  * @example

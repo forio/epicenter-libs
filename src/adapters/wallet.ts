@@ -1,24 +1,24 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
-import type { User } from './user';
-
-import {
-    Router,
-    identification,
-} from '../utils';
+import type { PseudonymReadOutView } from './user';
+import { Router, identification } from '../utils';
 import { UserSession } from 'epicenter';
 
-
-export interface Item {
+export interface WalletItemReadOutView {
     label: string;
     value: string | null;
 }
 
-export interface Wallet {
-    items: Item[];
-    user: User;
+export interface WalletReadOutView {
     walletKey: string;
     scope: { userKey: string } & GenericScope;
+    user: PseudonymReadOutView;
+    items: WalletItemReadOutView[];
+}
+
+export interface WalletItemCreateInView {
+    label: string;
+    value?: string;
 }
 
 /**
@@ -36,9 +36,9 @@ export interface Wallet {
  */
 export async function update(
     scope: { userKey: string | undefined } & GenericScope,
-    items: Item[],
+    items: WalletItemCreateInView[],
     optionals: RoutingOptions = {},
-): Promise<Wallet> {
+): Promise<WalletReadOutView> {
     const session = identification.session as UserSession;
     scope.userKey ??= session?.userKey;
     return await new Router()
@@ -68,7 +68,7 @@ const NOT_FOUND = 404;
 export async function get(
     scope: { userKey: string } & GenericScope,
     optionals: RoutingOptions = {},
-): Promise<Wallet> {
+): Promise<WalletReadOutView | undefined> {
     const { scopeBoundary, scopeKey } = scope;
     let { userKey } = scope;
     const session = identification.session as UserSession;
@@ -99,7 +99,7 @@ export async function withScope(
         first?: number;
         max?: number;
     } & RoutingOptions = {},
-): Promise<Page<Wallet>> {
+): Promise<Page<WalletReadOutView>> {
     const { scopeBoundary, scopeKey } = scope;
     const { first = 0, max, ...routingOptions } = optionals;
 

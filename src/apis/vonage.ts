@@ -8,10 +8,10 @@ export type SessionID = string;
 export type ArchiveID = string;
 export type APIKey = string;
 export type Token = string;
-export type VonageSession = {
+export interface VonageSession {
     sessionId: SessionID;
 };
-export type VonageArchive = {
+export interface VonageArchive {
     archiveId: string;
     status: 'available' | 'deleted' | 'failed' | 'paused' | 'started' | 'stopped' | 'uploaded' | 'expired';
 };
