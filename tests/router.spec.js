@@ -17,6 +17,7 @@ import {
     authAdapter,
     errorManager,
 } from './common';
+import { MAX_URL_LENGTH } from '../src/utils/router';
 
 describe('Router Tests', () => {
     let capturedRequests = [];
@@ -230,6 +231,12 @@ describe('Router Tests', () => {
             await router.put('/run');
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('PUT');
+        });
+
+        it('Should throw an error when URL length exceeds maximum', async () => {
+            const longParam = 'x'.repeat(MAX_URL_LENGTH);
+            router.searchParams = { param: longParam };
+            await expect(router.get('/run')).rejects.toThrow(`URL length exceeds maximum of ${MAX_URL_LENGTH} characters`);
         });
     });
 
