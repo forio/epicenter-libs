@@ -1,5 +1,6 @@
 import type { CometD, Message, SubscriptionHandle } from 'cometd';
 import type Channel from './channel';
+import type { ChannelMessage } from './channel';
 
 import { EpicenterError, Fault, identification, isBrowser, errorManager, config } from '../utils';
 import { get as getProject } from './project';
@@ -317,9 +318,9 @@ class CometdAdapter {
         }));
     }
 
-    async add(
-        channel: Channel,
-        update: (data: unknown) => unknown,
+    async add<D extends Record<string, unknown> = Record<string, unknown>>(
+        channel: Channel<D>,
+        update: (data: ChannelMessage<D>) => unknown,
         options: {
             inert?: boolean;
             _retryCount?: number;
@@ -401,7 +402,7 @@ class CometdAdapter {
                             if (shouldRehandshake(subscribeReply)) {
                                 await this.handshake({ inert: true });
                             }
-                            return this.add(channel, update, { inert: true });
+                            return this.add<D>(channel, update, { inert: true });
                         };
                         try {
                             const result = errorManager.handle<SubscriptionHandle>(error, retry);
@@ -417,7 +418,7 @@ class CometdAdapter {
                     this.handshakeState = IDLE;
                     this.handshakePromise = undefined;
                     this.handshake()
-                        .then(() => this.add(channel, update, {
+                        .then(() => this.add<D>(channel, update, {
                             ...options,
                             _retryCount: retryCount + 1,
                         }))
@@ -430,9 +431,9 @@ class CometdAdapter {
         });
     }
 
-    async publish(
-        channel: Channel,
-        content: Record<string, unknown>,
+    async publish<D extends Record<string, unknown> = Record<string, unknown>>(
+        channel: Channel<D>,
+        content: D,
         options: {
             inert?: boolean;
             _retryCount?: number;
@@ -483,7 +484,7 @@ class CometdAdapter {
                             if (shouldRehandshake(publishReply)) {
                                 await this.handshake({ inert: true });
                             }
-                            return this.publish(channel, content, { inert: true });
+                            return this.publish<D>(channel, content, { inert: true });
                         };
                         try {
                             const result = errorManager.handle<Message>(error, retry);
@@ -499,7 +500,7 @@ class CometdAdapter {
                     this.handshakeState = IDLE;
                     this.handshakePromise = undefined;
                     this.handshake()
-                        .then(() => this.publish(channel, content, {
+                        .then(() => this.publish<D>(channel, content, {
                             ...options,
                             _retryCount: retryCount + 1,
                         }))

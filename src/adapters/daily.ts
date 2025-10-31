@@ -1,22 +1,24 @@
 import type { RoutingOptions } from '../utils/router';
+import type { GenericScope } from '../utils/constants';
+
 import {
     Router,
     ROLE,
     Fault,
 } from 'utils';
-import type { GenericScope } from '../utils/constants';
 import * as videoAdapter from './video';
 
-export enum RECORDING_TYPES {
-    CLOUD = 'CLOUD',
+export type RecordingType = 'CLOUD';
+export type Privacy = 'PRIVATE';
+export type StreamType = 'HLS';
+
+export interface DailyRoomResponseReadOutView {
+    name: string;
+    url: string;
 }
 
-export enum PRIVACY {
-    PRIVATE = 'PRIVATE',
-}
-
-export enum STREAM_TYPES {
-    HLS = 'HLS',
+export interface DailyMeetingTokenResponseReadOutView {
+    token: string;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
@@ -25,11 +27,19 @@ const randRange = (min: number, max: number) => {
     return min + Math.random() * (max - min);
 };
 
-// eslint-disable-next-line no-magic-numbers
-const RETRY_RANGES = [[6_000, 10_000], [11_000, 20_000], [30_000, 45_000]];
+/* eslint-disable no-magic-numbers */
+const RETRY_RANGES = [
+    [6_000, 10_000],
+    [11_000, 20_000],
+    [30_000, 45_000],
+];
+/* eslint-enable no-magic-numbers */
 
 const RATE_LIMIT_REACHED = 429;
-async function handleRateLimit(requestFunction: () => Promise<{ status: number }>, retryNumber = 0): Promise<Record<string, unknown>> {
+async function handleRateLimit<T>(
+    requestFunction: () => Promise<T>,
+    retryNumber = 0,
+): Promise<T> {
     let response;
     try {
         response = await requestFunction();
@@ -57,7 +67,8 @@ async function handleRateLimit(requestFunction: () => Promise<{ status: number }
  */
 export async function getConfig(
     optionals: RoutingOptions = {},
-): Promise<number> {
+    // TODO: investigate actual return type
+): Promise<unknown> {
     return await new Router()
         .get('/daily/v1', optionals)
         .then(({ body }) => body);
@@ -103,14 +114,14 @@ export async function createRoom(
     optionals: {
         readLock?: keyof typeof ROLE;
         writeLock?: keyof typeof ROLE;
-        privacy?: keyof typeof PRIVACY;
+        privacy?: Privacy;
         ttlSeconds?: number;
         exp?: number;
-        enable_recording?: keyof typeof RECORDING_TYPES;
+        enable_recording?: RecordingType;
         disableRateLimitHandling?: boolean;
         streaming_endpoints?: [{
             name: string;
-            type: keyof typeof STREAM_TYPES;
+            type: StreamType;
             hls_config: {
                 storage: {
                     path: string;
@@ -122,7 +133,7 @@ export async function createRoom(
             };
         }];
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<DailyRoomResponseReadOutView> {
     const {
         readLock,
         writeLock,
@@ -135,7 +146,7 @@ export async function createRoom(
         ...routingOptions
     } = optionals;
     const { PARTICIPANT } = ROLE;
-    const callAPI = async () => {
+    const callAPI = async (): Promise<DailyRoomResponseReadOutView> => {
         return await new Router()
             .post(
                 '/daily/v1/room',
@@ -191,11 +202,11 @@ export async function createToken(
         user_name?: string;
         close_tab_on_exit?: boolean;
         exp?: number;
-        enable_recording?: keyof typeof RECORDING_TYPES;
+        enable_recording?: RecordingType;
         disableRateLimitHandling?: boolean;
         selfSign?: boolean;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<DailyMeetingTokenResponseReadOutView> {
     const {
         start_video_off,
         is_owner,
@@ -207,7 +218,7 @@ export async function createToken(
         selfSign = true,
         ...routingOptions
     } = optionals;
-    const callAPI = async () => {
+    const callAPI = async (): Promise<DailyMeetingTokenResponseReadOutView> => {
         return await new Router()
             .withSearchParams({ selfSign })
             .post(
@@ -273,10 +284,11 @@ export async function getVideoByRecordingId(
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
  * dailyAdapter.updateRecordingStatus(room_name);
+ * @returns promise that resolves to true if successful
  */
 export async function updateRecordingStatus(room_name: string,
     optionals: RoutingOptions = {},
-): Promise<number> {
+): Promise<boolean> {
     return await new Router()
         .delete(`/daily/v1/meetingToken/${room_name}`, optionals)
         .then(({ body }) => body);

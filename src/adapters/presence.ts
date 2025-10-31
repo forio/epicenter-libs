@@ -1,5 +1,5 @@
 import type { RoutingOptions } from '../utils/router';
-import type { User } from './user';
+import type { PseudonymReadOutView } from './user';
 
 import { Router, identification, GROUP_ROLE } from '../utils';
 import cometdAdapter from './cometd';
@@ -9,7 +9,7 @@ export interface Presence {
     lastUpdated: number;
     ttlSeconds: number;
     groupRole: keyof typeof GROUP_ROLE;
-    user: User;
+    user: PseudonymReadOutView;
 }
 
 

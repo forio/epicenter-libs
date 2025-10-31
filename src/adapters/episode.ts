@@ -4,10 +4,14 @@ import type { RoutingOptions, Page } from '../utils/router';
 
 import { Router, identification, parseFilterInput } from '../utils';
 
-
-export interface Episode {
+export interface EpisodeReadOutView {
     name: string;
     episodeKey: string;
+    created: string;
+    lastUpdated: string;
+    runLimit: number;
+    draft: boolean;
+    category: string;
 }
 
 /**
@@ -33,7 +37,7 @@ export async function create(
         runLimit?: number;
         category?: string;
     } & RoutingOptions = {},
-): Promise<Episode> {
+): Promise<EpisodeReadOutView> {
     const {
         draft, runLimit, category,
         ...routingOptions
@@ -57,7 +61,7 @@ export async function create(
 export async function get(
     episodeKey: string,
     optionals: RoutingOptions = {},
-): Promise<Episode> {
+): Promise<EpisodeReadOutView> {
     return await new Router()
         .get(`/episode/${episodeKey}`, optionals)
         .then(({ body }) => body);
@@ -92,7 +96,7 @@ export async function get(
 export async function query(
     searchOptions: GenericSearchOptions,
     optionals: RoutingOptions = {},
-): Promise<Page<Episode>> {
+): Promise<Page<EpisodeReadOutView>> {
     const { filter, sort = [], first = 0, max } = searchOptions;
 
     return await new Router()
@@ -111,7 +115,7 @@ export async function query(
 /**
  * Gets episodes based on a group key
  * @example
- * epicenter.episodeAdapter.withGroup('0000017dd3bf540e5ada5b1e058f08f20461');
+ * epicenter.episodeAdapter.forGroup('0000017dd3bf540e5ada5b1e058f08f20461');
  *
  * @param groupKey      The group key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
@@ -120,7 +124,7 @@ export async function query(
 export async function forGroup(
     groupKey: string,
     optionals: RoutingOptions = {},
-): Promise<Episode[]> {
+): Promise<EpisodeReadOutView[]> {
     return await new Router()
         .get(`/episode/in/${groupKey}`, optionals)
         .then(({ body }) => body);
@@ -138,7 +142,7 @@ export async function forGroup(
 export async function withName(
     name: string,
     optionals: { groupName?: string } & RoutingOptions = {},
-): Promise<Episode> {
+): Promise<EpisodeReadOutView> {
     const {
         groupName,
         ...routingOptions

@@ -1,11 +1,104 @@
 import type { RoutingOptions } from 'utils/router';
-import type { GenericScope } from 'utils/constants';
+import type { GenericScope, Address } from 'utils/constants';
 import { Router } from 'utils/index';
 
 export enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', // If the task fails, do nothing (this is the default)
     RESCHEDULE = 'RESCHEDULE', // If the task fails retry at the next scheduled time point
     FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', // Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
+}
+
+// Generic type aliases for task adapter
+export type TaskPayloadBody = Record<string, unknown>;
+export type TaskPayloadHeaders = Record<string, string>;
+
+// Status type for group status tasks
+export interface StatusReadOutView {
+    code?: string;
+    message?: string;
+}
+
+export interface StatusCreateInView {
+    code: string;
+    message: string;
+}
+
+// Trigger type definitions for creating tasks
+export interface CronTaskTriggerCreateInView {
+    objectType: 'cron';
+    value: string;
+}
+
+export interface DateTaskTriggerCreateInView {
+    objectType: 'date';
+    value: string;
+}
+
+export interface OffsetTaskTriggerCreateInView {
+    objectType: 'offset';
+    minutes?: number;
+    hours?: number;
+    days?: number;
+}
+
+export type TaskTriggerCreateInView =
+    | CronTaskTriggerCreateInView
+    | DateTaskTriggerCreateInView
+    | OffsetTaskTriggerCreateInView;
+
+// Payload type definitions for creating tasks
+export interface HttpTaskPayloadCreateInView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+    objectType: 'http';
+    method: string;
+    url: string;
+    body: B;
+    headers?: H;
+}
+
+export interface GroupStatusTaskPayloadCreateInView {
+    objectType: 'groupStatus';
+    groupKey: string;
+    status: StatusCreateInView;
+}
+
+export type TaskPayloadCreateInView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> =
+    | HttpTaskPayloadCreateInView<B, H>
+    | GroupStatusTaskPayloadCreateInView;
+
+// Payload type definitions for reading tasks
+export interface HttpTaskPayloadReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+    objectType: 'http';
+    method?: string;
+    url?: string;
+    body?: B;
+    headers?: H;
+}
+
+export interface GroupStatusTaskPayloadReadOutView {
+    objectType: 'groupStatus';
+    groupKey?: string;
+    status?: StatusReadOutView;
+}
+
+export type TaskPayloadReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> =
+    | HttpTaskPayloadReadOutView<B, H>
+    | GroupStatusTaskPayloadReadOutView;
+
+// Task response structure
+export interface TaskReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+    taskKey?: string;
+    name?: string;
+    status?: string;
+    cron?: string;
+    mutationKey?: string;
+    failures?: number;
+    successes?: number;
+    address?: Address;
+    payload?: TaskPayloadReadOutView<B, H>;
+    scope?: GenericScope;
+    retryPolicy?: string;
+    failSafeTermination?: string;
+    ttlSeconds?: number;
 }
 
 /**
@@ -65,22 +158,25 @@ export enum RETRY_POLICY {
  * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
-export async function create(
+export async function create<
+    B extends TaskPayloadBody = TaskPayloadBody,
+    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+>(
     scope: { userKey?: string } & GenericScope,
     name: string,
     payload: {
         method: string;
         url: string;
-        body?: Record<string, unknown>;
-        headers?: Record<string, unknown>;
+        body?: B;
+        headers?: H;
     },
-    trigger: Record<string, unknown>,
+    trigger: TaskTriggerCreateInView,
     optionals: {
         retryPolicy?: keyof typeof RETRY_POLICY;
         failSafeTermination?: number;
         ttlSeconds?: number;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<TaskReadOutView<B, H>> {
     const {
         retryPolicy,
         failSafeTermination,
@@ -92,7 +188,7 @@ export async function create(
             '/task',
             {
                 body: {
-                    payload: { objectType: 'http', ...payload },
+                    payload: { objectType: 'http' as const, ...payload },
                     trigger,
                     retryPolicy,
                     failSafeTermination,
@@ -143,7 +239,10 @@ export async function destroy(taskKey: string, optionals: RoutingOptions = {}): 
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
-export async function get(taskKey: string, optionals: RoutingOptions = {}): Promise<Record<string, unknown>> {
+export async function get<
+    B extends TaskPayloadBody = TaskPayloadBody,
+    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+>(taskKey: string, optionals: RoutingOptions = {}): Promise<TaskReadOutView<B, H>> {
     return await new Router()
         .get(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);
@@ -164,10 +263,13 @@ export async function get(taskKey: string, optionals: RoutingOptions = {}): Prom
  * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
-export async function getHistory(
+export async function getHistory<
+    B extends TaskPayloadBody = TaskPayloadBody,
+    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+>(
     taskKey: string,
     optionals: RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<TaskReadOutView<B, H>[]> {
     return await new Router()
         .get(`/task/history/${taskKey}`, optionals)
         .then(({ body }) => body);
@@ -198,10 +300,13 @@ export async function getHistory(
  * @param {string}  [optionals.userKey]             Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
-export async function getTaskIn(
+export async function getTaskIn<
+    B extends TaskPayloadBody = TaskPayloadBody,
+    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+>(
     scope: { userKey?: string } & GenericScope,
     optionals: RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<TaskReadOutView<B, H>[]> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     return await new Router()
         .get(

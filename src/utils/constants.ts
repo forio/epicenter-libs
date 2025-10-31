@@ -125,6 +125,12 @@ export enum PUSH_CATEGORY {
      * @type {string} */
     LOBBY = 'LOBBY',
     /**
+     * Used for streaming data; bypasses ack extension
+     * yes pub
+     * @constant
+     * @type {string} */
+    STREAM = 'STREAM',
+    /**
      * Used for the {@link https://github.com/forio Run API}
      * no pub
      * @constant
@@ -151,6 +157,13 @@ export enum PUSH_CATEGORY {
      * @type {string}
      */
     WORLD = 'WORLD',
+    /**
+     * Used for the {@link https://github.com/forio Leaderboard API}
+     * no pub
+     * @constant
+     * @type {string}
+     */
+    LEADERBOARD = 'LEADERBOARD',
     /**
      * For group related things; assignments, unassignments
      * @constant
@@ -347,6 +360,14 @@ export interface Permit {
 export interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY;
     scopeKey: string;
+}
+
+export interface Address {
+    projectShortName: string;
+    accountShortName: string;
+    groupName: string;
+    worldKey: string;
+    episodeName: string;
 }
 
 /**

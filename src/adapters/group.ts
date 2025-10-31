@@ -1,60 +1,98 @@
 import type { UserSession, Session } from '../utils/identification';
 import type { RoutingOptions, Page } from '../utils/router';
 import type { GenericSearchOptions } from '../utils/constants';
-import type { User } from './user';
+import type { PseudonymReadOutView } from './user';
 
 import { Router, EpicenterError, identification, ROLE, parseFilterInput } from '../utils';
 
-enum AUGMENT {
-    MEMBERS = 'MEMBERS',
-    QUANTIZED = 'QUANTIZED',
+export type Augment = 'MEMBERS' | 'QUANTIZED';
+export type SalesChannel = 'TEAM' | 'TEST' | 'FORIO' | 'HBP_HIGHER_ED' | 'HBP_CL';
+
+export interface Status {
+    code?: string;
+    message?: string;
+}
+
+export interface StripePaymentCreateInView {
+    description: string;
+    token: string;
+    objectType: 'stripe';
 }
 
 export interface Pricing {
-    amount: number;
+    amount?: number;
 }
 
-export interface FlightRecorder {
-    start: number;
-    stop: number;
+export interface FlightRecorderReadOutView {
+    enabled?: boolean;
+    start?: number;
+    stop?: number;
+}
+
+export interface FlightRecorderCreateInView {
     enabled: boolean;
+    stop: number;
+    start?: number;
 }
 
-export interface GroupUpdate {
-    runLimit?: number;
-    organization?: string;
-    allowSelfRegistration?: boolean;
-    flightRecorder?: FlightRecorder;
-    event?: string;
-    allowMembershipChanges?: boolean;
-    pricing?: Pricing;
-    startDate?: Date;
-    expirationDate?: Date;
-    capacity?: number;
-    allowChannel?: boolean;
+export interface FlightRecorderUpdateInView {
+    enabled?: boolean;
+    start?: number;
+    stop?: number;
 }
 
-export interface GroupPermission {
-    available: boolean;
-    objectType: 'group';
-    role: keyof typeof ROLE;
-}
-
-export interface Member extends GroupPermission {
-    user: User;
-}
-
-export interface Group extends GroupUpdate {
-    name: string;
+export interface GroupReadOutView {
     groupKey: string;
-    members?: Member[];
+    name: string;
+    members?: GroupPermissionReadOutView[];
+    creator?: string;
+    created?: string;
+    lastUpdated?: string;
+    tombstone?: string;
+    capacity?: number;
+    runLimit?: number;
+    approximateMemberCount?: number;
+    startDate?: string;
+    expirationDate?: string;
+    terminationDate?: string;
+    allowSelfRegistration?: boolean;
+    allowMembershipChanges?: boolean;
+    allowChannel?: boolean;
+    demonstration?: boolean;
+    perpetual?: boolean;
+    reference?: string;
+    organization?: string;
+    event?: string;
+    salesChannel?: SalesChannel;
+    status?: Status;
+    pricing?: Pricing;
+    flightRecorder?: FlightRecorderReadOutView;
 }
+
+export interface GroupPermissionReadOutView {
+    objectType: 'group';
+    role?: string;
+    available?: boolean;
+    user: PseudonymReadOutView;
+}
+
+export interface GroupPermissionCreateInView {
+    userKey: string;
+    role: string;
+    available?: boolean;
+    payment?: StripePaymentCreateInView;
+}
+
+type UserInput = string | GroupPermissionCreateInView;
+
+// Aliases for backward compatibility
+export type Group = GroupReadOutView;
+export type Member = GroupPermissionReadOutView;
 
 export interface SelfRegistrationResult {
     redirectUrl: string;
     whoAmI: Session;
 }
-
 
 /**
  * Provides information on a particular Epicenter group.
@@ -72,18 +110,19 @@ export interface SelfRegistrationResult {
  */
 export async function get(
     optionals: {
-        augment?: keyof typeof AUGMENT;
+        augment?: Augment;
         groupKey?: string;
     } & RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     const {
         groupKey, augment,
         ...routingOptions
     } = optionals;
     let uriComponent = '';
-    if (augment === AUGMENT.MEMBERS) uriComponent = '/member';
-    if (augment === AUGMENT.QUANTIZED) uriComponent = '/quantized';
+    if (augment === 'MEMBERS') uriComponent = '/member';
+    if (augment === 'QUANTIZED') uriComponent = '/quantized';
     const session = identification.session as UserSession;
+
     return await new Router()
         .get(`/group${uriComponent}/${groupKey ?? session?.groupKey}`, routingOptions)
         .then(({ body }) => body);
@@ -118,7 +157,7 @@ export async function destroy(
  */
 export async function gather(
     optionals: { includeExpired?: boolean } & RoutingOptions = {},
-): Promise<Group[]> {
+): Promise<GroupReadOutView[]> {
     const {
         includeExpired,
         ...routingOptions
@@ -157,9 +196,28 @@ export async function gather(
  */
 export async function update(
     groupKey: string,
-    update: GroupUpdate,
+    update: {
+        tombstone?: string;
+        capacity?: number;
+        runLimit?: number;
+        perpetual?: boolean;
+        salesChannel?: SalesChannel;
+        reference?: string;
+        organization?: string;
+        event?: string;
+        allowSelfRegistration?: boolean;
+        allowMembershipChanges?: boolean;
+        allowChannel?: boolean;
+        demonstration?: boolean;
+        startDate?: string;
+        expirationDate?: string;
+        terminationDate?: string;
+        status?: Status;
+        pricing?: Pricing;
+        flightRecorder?: FlightRecorderUpdateInView;
+    },
     optionals: RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     const {
         runLimit,
         organization,
@@ -222,9 +280,28 @@ export async function update(
  * @returns promise that resolves to the newly created group
  */
 export async function create(
-    group: Group,
+    group: {
+        name: string;
+        capacity?: number;
+        runLimit?: number;
+        allowSelfRegistration?: boolean;
+        allowMembershipChanges?: boolean;
+        allowChannel?: boolean;
+        perpetual?: boolean;
+        demonstration?: boolean;
+        startDate?: string;
+        expirationDate?: string;
+        terminationDate?: string;
+        reference?: string;
+        organization?: string;
+        event?: string;
+        salesChannel?: SalesChannel;
+        status?: Status;
+        pricing?: Pricing;
+        flightRecorder?: FlightRecorderCreateInView;
+    },
     optionals: RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     const {
         name,
         runLimit,
@@ -292,7 +369,7 @@ export async function create(
 export async function query(
     searchOptions: { quantized?: boolean } & GenericSearchOptions,
     optionals: RoutingOptions = {},
-): Promise<Page<Group>> {
+): Promise<Page<GroupReadOutView>> {
     const { filter, sort = [], first, max, quantized } = searchOptions;
 
     const searchParams = {
@@ -312,7 +389,7 @@ export async function query(
 /** DEPRECATED -- use groupAdapter.query instead */
 export async function search(
     optionals: { quantized?: boolean } & GenericSearchOptions & RoutingOptions = {},
-): Promise<Page<Group>> {
+): Promise<Page<GroupReadOutView>> {
     console.warn('DEPRECATION WARNING: groupAdapter.search is deprecated and will be removed with the next release. Use groupAdapter.query instead.');
     const { filter = [], sort = [], first, max, quantized, ...routingOptions } = optionals;
     const searchOptions = { filter, sort, first, max, quantized };
@@ -331,7 +408,7 @@ export async function search(
 export async function withGroupName(
     name: string,
     optionals: RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     return await new Router()
         .get(`/group/with/${name}`, optionals)
         .then(({ body }) => body);
@@ -359,7 +436,7 @@ export async function forUser(
         includeExpired?: boolean;
         role?: string | string[];
     } & RoutingOptions = {},
-): Promise<Group[]> {
+): Promise<GroupReadOutView[]> {
     const {
         includeExpired, includeAllMembers, role,
         ...routingOptions
@@ -395,7 +472,7 @@ export async function getSessionGroups(
         includeExpired?: boolean;
         role?: string | string[];
     } & RoutingOptions = {},
-): Promise<Group[]> {
+): Promise<GroupReadOutView[]> {
     const {
         includeExpired, role,
         ...routingOptions
@@ -462,7 +539,7 @@ export async function whitelistUsers(
 export async function getWhitelistedUsers(
     groupKey: string,
     optionals: RoutingOptions = {},
-): Promise<User[]> {
+): Promise<PseudonymReadOutView[]> {
     return await new Router()
         .get(`/group/self/${groupKey}`, optionals)
         .then(({ body }) => body);
@@ -554,8 +631,6 @@ export async function selfRegister(
         .then(({ body }) => body);
 }
 
-
-type UserInput = string | { userKey: string; role?: keyof typeof ROLE; available?: boolean };
 /**
  * Adds user(s) to the group
  * @example
@@ -576,7 +651,7 @@ type UserInput = string | { userKey: string; role?: keyof typeof ROLE; available
 export async function addUser(
     usersInput: UserInput | UserInput[],
     optionals: { groupKey?: string } & RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     const { groupKey, ...routingOptions } = optionals;
 
     const users = Array.isArray(usersInput) ? usersInput : [usersInput];
@@ -614,9 +689,12 @@ export async function addUser(
  */
 export async function updateUser(
     userKey: string,
-    update: { role?: keyof typeof ROLE; available?: boolean },
+    update: {
+        role?: string;
+        available?: boolean;
+    },
     optionals: { groupKey?: string } & RoutingOptions = {},
-): Promise<GroupPermission> {
+): Promise<GroupReadOutView> {
     const { role, available } = update;
     const { groupKey, ...routingOptions } = optionals;
     const session = identification.session as UserSession;
@@ -663,7 +741,7 @@ export async function statusUpdate(
     code: string,
     message: string,
     optionals: { groupKey?: string } & RoutingOptions = {},
-): Promise<Group> {
+): Promise<GroupReadOutView> {
     const { groupKey, ...routingOptions } = optionals;
     const session = identification.session as UserSession;
     return await new Router()

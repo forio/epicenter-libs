@@ -1,58 +1,62 @@
 import type { RoutingOptions } from '../utils/router';
 import { ROLE, Router } from '../utils';
 
-export enum ACCESS_TYPE {
-    PUBLIC = 'PUBLIC',
-    PRIVATE = 'PRIVATE',
-    AUTHENTICATED = 'AUTHENTICATED',
-}
+export const ACCESS_TYPE = {
+    PUBLIC: 'PUBLIC',
+    PRIVATE: 'PRIVATE',
+    AUTHENTICATED: 'AUTHENTICATED',
+} as const;
 
-export enum WORKER_PARTITION {
-    NONE = 'NONE',
-    ALL = 'ALL',
-    FREE = 'FREE',
-    LICENSED = 'LICENSED',
-    ACCOUNT = 'ACCOUNT',
-}
+export type AccessType = (typeof ACCESS_TYPE)[keyof typeof ACCESS_TYPE];
 
-export enum PHYLOGENY {
-    ORIGINAL = 'ORIGINAL',
-    HISTORICAL = 'HISTORICAL',
-    REFERENTIAL = 'REFERENTIAL',
-    ORDERED = 'ORDERED',
-    EVENTUAL = 'EVENTUAL',
+export const WORKER_PARTITION = {
+    NONE: 'NONE',
+    ALL: 'ALL',
+    FREE: 'FREE',
+    LICENSED: 'LICENSED',
+    ACCOUNT: 'ACCOUNT',
+} as const;
+
+export type WorkerPartition = (typeof WORKER_PARTITION)[keyof typeof WORKER_PARTITION];
+
+export const PHYLOGENY = {
+    ORIGINAL: 'ORIGINAL',
+    HISTORICAL: 'HISTORICAL',
+    REFERENTIAL: 'REFERENTIAL',
+    ORDERED: 'ORDERED',
+    EVENTUAL: 'EVENTUAL',
     /**
      * TRANSMOGRIFIED Improves the way Epicenter runs proxies.
-     * @constant
-     * @type {string}
      */
-    TRANSMOGRIFIED = 'TRANSMOGRIFIED',
+    TRANSMOGRIFIED: 'TRANSMOGRIFIED',
     /**
      * REANIMATED Changes the default run start-up ritual.
-     * @constant
-     * @type {string}
      */
-    REANIMATED = 'REANIMATED',
+    REANIMATED: 'REANIMATED',
     /**
      * SILENT Inhibits push channel notifications unless allowChannel is true, which by default is false.
-     * @constant
-     * @type {string}
      */
-    SILENT = 'SILENT',
-}
+    SILENT: 'SILENT',
+} as const;
 
-export enum FILE_TYPE {
-    INSENSITIVE = 'INSENSITIVE',
-    SENSITIVE = 'SENSITIVE',
-}
+export type Phylogeny = (typeof PHYLOGENY)[keyof typeof PHYLOGENY];
 
-interface Member {
+export type FileType = 'INSENSITIVE' | 'SENSITIVE';
+
+export const CHANNEL_PROTOCOL = {
+    OUMUAMUA: 'OUMUAMUA',
+    COMETD: 'COMETD',
+} as const;
+
+export type ChannelProtocol = (typeof CHANNEL_PROTOCOL)[keyof typeof CHANNEL_PROTOCOL];
+
+export interface ProjectMember {
     role: ROLE.AUTHOR;
     adminKey: string;
     objectType: 'project';
 }
 
-interface Deployment {
+export interface Deployment {
     defaultGroupName: string;
     autoCreatePlayer: boolean;
     loginFile: string;
@@ -60,7 +64,7 @@ interface Deployment {
     groupFile: string;
 }
 
-interface TeamProject {
+export interface TeamProject {
     concurrentRunLimit: number;
     modelFile: string;
     available: boolean;
@@ -77,14 +81,14 @@ interface TeamProject {
         dataApiEnforceScope: boolean;
     };
     objectType: 'team';
-    accessType: keyof typeof ACCESS_TYPE;
+    accessType: AccessType;
     sessionTimeoutSeconds: number;
     projectKey: string;
-    members: Member[];
+    members: ProjectMember[];
     channelEnabled: boolean;
-    workerPartition: keyof typeof WORKER_PARTITION;
+    workerPartition: WorkerPartition;
     name: string;
-    phylogeny: keyof typeof PHYLOGENY;
+    phylogeny: Phylogeny;
     multiPlayerEnabled: boolean;
     shortName: string;
     approximateRunCount: number;
@@ -92,31 +96,31 @@ interface TeamProject {
         amount: number;
     };
     dataRetentionDays: number;
-    fileType: keyof typeof FILE_TYPE;
+    fileType: FileType;
     dimensions: 'UNIVERSE' | 'MULTIVERSE';
     deployment: Deployment;
-    channelProtocol: 'OUMUAMUA' | 'COMETD';
+    channelProtocol: ChannelProtocol;
 }
 
-interface PersonalProject {
+export interface PersonalProject {
     concurrentRunLimit: number;
     available: boolean;
     objectType: 'personal';
-    accessType: keyof typeof ACCESS_TYPE;
+    accessType: AccessType;
     sessionTimeoutSeconds: number;
     projectKey: string;
-    workerPartition: keyof typeof WORKER_PARTITION;
+    workerPartition: WorkerPartition;
     name: string;
-    phylogeny: keyof typeof PHYLOGENY;
+    phylogeny: Phylogeny;
     shortName: string;
     approximateRunCount: number;
-    fileType: keyof typeof FILE_TYPE;
+    fileType: FileType;
     deployment: Deployment;
-    channelProtocol: 'OUMUAMUA' | 'COMETD';
+    channelProtocol: ChannelProtocol;
     channelEnabled: boolean;
 }
 
-type Project =
+export type Project =
     | TeamProject
     | PersonalProject;
 

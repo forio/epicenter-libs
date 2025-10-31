@@ -1,11 +1,25 @@
-import type { Callback, SubscriptionHandle, Message } from 'cometd';
+import type { SubscriptionHandle, Message } from 'cometd';
 import type { GenericScope } from '../utils/constants';
 
 import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
+// Generic type for push channel message custom data
+export type ChannelMessageData = Record<string, unknown>;
+
+// Base structure for channel push messages (this is what comes in message.data from cometd)
+export interface ChannelMessage<D extends ChannelMessageData = ChannelMessageData> {
+    date: string;
+    address: {
+        boundary: string;
+        category: string;
+        key: string;
+    };
+    data?: D;
+}
+
 export interface ChannelScope extends GenericScope {
-    pushCategory: string;
+    pushCategory: keyof typeof PUSH_CATEGORY;
 }
 
 const validateScope = (scope: ChannelScope) => {
@@ -21,9 +35,9 @@ const validateScope = (scope: ChannelScope) => {
 /**
  * Used to subscribe to CometD channels. Pass in a channel scope to instantiate, if a subscription to that scope already exists it will use it.
  * */
-export default class Channel {
+export default class Channel<D extends ChannelMessageData = ChannelMessageData> {
     path: string;
-    update: Callback | undefined;
+    update: ((data: ChannelMessage<D>) => unknown) | undefined;
     subscription: SubscriptionHandle | null = null;
 
     /**
@@ -39,7 +53,7 @@ export default class Channel {
         }
     }
 
-    publish(content: Record<string, unknown>): Promise<Message> {
+    publish(content: D): Promise<Message> {
         return cometdAdapter.publish(this, content);
     }
 
@@ -61,8 +75,7 @@ export default class Channel {
      */
     // eslint-disable-next-line complexity
     async subscribe(
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        update: (data: any) => unknown,
+        update: (data: ChannelMessage<D>) => unknown,
         options: { inert?: boolean } = {},
     ): Promise<SubscriptionHandle> {
         if (this.subscription) {

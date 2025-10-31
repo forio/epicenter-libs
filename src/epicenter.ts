@@ -75,10 +75,7 @@ DEFAULT_ERROR_HANDLERS.authInvalidated = errorManager.registerHandler(
 Object.freeze(DEFAULT_ERROR_HANDLERS);
 
 /* Interfaces & Types */
-export type { Session, UserSession, AdminSession } from './utils/identification';
-export type { Group, Member } from './adapters/group';
-export type { Vault } from './adapters/vault';
-export type { GenericScope } from './utils/constants';
+export * from './types';
 
 /* Version */
 export { version };

@@ -33,7 +33,7 @@ export interface RoutingOptions {
     parsePage?: (values: any[]) => any[];
 }
 
-interface RequestOptions extends RoutingOptions {
+export interface RequestOptions extends RoutingOptions {
     method: string;
 }
 
