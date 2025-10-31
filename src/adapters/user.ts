@@ -5,13 +5,16 @@ import Router from 'utils/router';
 export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
 export type MFAMethodology = 'NONE' | 'NOOP' | 'TOTP';
 
+// Generic type alias for SSO realm data
+export type RealmData = Record<string, unknown>;
+
 export interface MFADetailReadOutView {
     mfaMethodology: MFAMethodology;
 }
 
-export interface GraftReadOutView {
+export interface GraftReadOutView<R extends RealmData = RealmData> {
     reference: string;
-    realm: Record<string, unknown>;
+    realm: R;
 }
 
 export interface Countdown {
@@ -48,7 +51,7 @@ export interface ExternalUserReadOutView extends UserReadOutView {
     objectType: 'external';
 }
 
-export interface NativeUserReadOutView {
+export interface NativeUserReadOutView extends UserReadOutView {
     objectType: 'native';
 }
 
@@ -67,9 +70,9 @@ export interface MFADetailCreateInView {
     mfaKey?: string;
 }
 
-export interface GraftCreateInView {
+export interface GraftCreateInView<R extends RealmData = RealmData> {
     reference: string;
-    realm: Record<string, unknown>;
+    realm: R;
 }
 
 export interface SecretCreateInView {
@@ -93,9 +96,9 @@ export interface NativeUserCreateInView extends UserCreateInView {
     secret?: SecretCreateInView;
 }
 
-export interface ExternalUserCreateInView extends UserCreateInView {
+export interface ExternalUserCreateInView<R extends RealmData = RealmData> extends UserCreateInView {
     objectType: 'external';
-    graft: GraftCreateInView;
+    graft: GraftCreateInView<R>;
 }
 
 export interface UploadOptions extends RoutingOptions {
@@ -141,7 +144,7 @@ export async function uploadCSV(
 /**
  * Create a new user (native or external).
  */
-export async function createUser(
+export async function createUser<R extends RealmData = RealmData>(
     view: {
         objectType: 'native';
         handle: string;
@@ -165,7 +168,7 @@ export async function createUser(
         active?: true;
         email?: string;
         mfaDetail?: MFADetailCreateInView;
-        graft: GraftCreateInView;
+        graft: GraftCreateInView<R>;
     },
     optionals: RoutingOptions = {},
 ): Promise<PseudonymReadOutView> {

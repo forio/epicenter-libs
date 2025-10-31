@@ -1,6 +1,7 @@
 import type { UserSession } from '../utils/identification';
-import type { GenericScope, GenericSearchOptions } from '../utils/constants';
+import type { GenericScope, GenericSearchOptions, Permit, Address } from '../utils/constants';
 import type { RoutingOptions, Page } from '../utils/router';
+import type { PseudonymReadOutView } from './user';
 
 import {
     Router,
@@ -11,6 +12,10 @@ import {
     EpicenterError,
     parseFilterInput,
 } from 'utils';
+
+// Generic type parameters for Run variables and metadata
+export type RunVariables = Record<string, unknown>;
+export type RunMetadata = Record<string, unknown>;
 
 export interface V2ModelContext {
     variables?: Record<string, VariableOptions>;
@@ -234,32 +239,60 @@ export enum MORPHOLOGY {
     SINGULAR = 'SINGULAR',
 }
 
-export interface ProcAction {
+export interface ProcActionable {
     name: string;
     arguments?: unknown[];
     objectType: 'execute';
 }
 
-export interface GetAction {
+export interface GetActionable {
     name: string;
     objectType: 'get';
 }
 
-export interface SetAction {
+export interface SetActionable {
     name: string;
     value: unknown;
     objectType: 'set';
 }
 
-export type Action =
-    | ProcAction
-    | GetAction
-    | SetAction;
+export type Actionable =
+    | ProcActionable
+    | GetActionable
+    | SetActionable;
 
-export interface Run {
+
+export type RunReadOutView<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+> = {
+    cluster?: string;
+    hidden?: boolean;
+    modelVersion?: number;
+    lastOperated?: string;
+    modelLanguage?: string;
+    perpetual?: boolean;
+    cloud?: string;
+    metaData?: M;
+    grammar?: string;
+    trackingKey?: string;
+    scope: { userKey?: string } & GenericScope;
+    executionContext?: V1ExecutionContext;
+    allowChannel?: boolean;
+    marked?: boolean;
+    variables?: V;
+    address?: Address;
+    tombstone?: string;
+    morphology?: string;
+    modelFile?: string;
+    created?: string;
     runKey: string;
-    variables?: Record<string, unknown>;
-}
+    permit?: Permit;
+    closed?: boolean;
+    lastModified?: string;
+    runState?: string;
+    user?: PseudonymReadOutView;
+};
 
 export type RunCreateOptions = {
     readLock?: keyof typeof ROLE;
@@ -302,11 +335,14 @@ export type RunStrategy =
  * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created run
  */
-export async function create(
+export async function create<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     model: string,
     scope: { userKey?: string } & GenericScope,
     optionals: RunCreateOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView<V, M>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const {
         readLock,
@@ -370,10 +406,13 @@ export async function create(
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
  * @returns promise that resolves to the newly created run
  */
-export async function createSingular(
+export async function createSingular<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     model: string,
     optionals: RunCreateOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView<V, M>> {
     const {
         readLock, writeLock, ephemeral,
         modelContext, executionContext,
@@ -419,7 +458,7 @@ export async function getSingularRunKey(
 
 /**
  * Clone a run
- * @param runKey                        Run key for the run you want to clone
+ * @param runKey                        RunReadOutView key for the run you want to clone
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
@@ -435,7 +474,7 @@ export async function clone(
         modelContext?: ModelContext;
         executionContext?: ExecutionContext;
     } & RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
         ...routingOptions
@@ -459,7 +498,7 @@ export async function restore(
         modelContext?: ModelContext;
         executionContext?: ExecutionContext;
     } & RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView> {
     const {
         ephemeral, modelContext = {}, executionContext = {},
         ...routingOptions
@@ -482,7 +521,7 @@ export async function rewind(
         ephemeral?: boolean;
         modelContext?: ModelContext;
     } & RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView> {
     const {
         ephemeral, modelContext = {},
         ...routingOptions
@@ -510,7 +549,7 @@ export async function update(
         allowChannel?: boolean; /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
     },
     optionals: RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView> {
     const {
         readLock,
         writeLock,
@@ -557,10 +596,13 @@ export async function remove(
         .then(({ body }) => body);
 }
 
-export async function get(
+export async function get<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     runKey: string,
     optionals: RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView<V, M>> {
     return await new Router()
         .get(`/run/${runKey}`, optionals)
         .then(({ body }) => body);
@@ -600,19 +642,22 @@ export async function get(
  * @param [optionals]                           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a page of runs
  */
-export async function query(
+export async function query<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     model: string,
     searchOptions: {
         timeout?: number;
-        variables?: string[];
-        metadata?: string[];
+        variables?: (keyof V)[];
+        metadata?: (keyof M)[];
         scope?: { userKey?: string } & GenericScope;
         groupName?: string;
         episodeName?: string;
         includeEpisodes?: boolean;
     } & GenericSearchOptions,
     optionals: RoutingOptions = {},
-): Promise<Page<Run>> {
+): Promise<Page<RunReadOutView<V, M>>> {
     const {
         filter, sort = [], first, max, timeout, variables = [], metadata = [],
         scope, groupName, episodeName, includeEpisodes,
@@ -644,8 +689,8 @@ export async function query(
     const searchParams = {
         filter: parseFilterInput(finalFilter),
         sort: sort.join(';') || undefined,
-        var: variables.join(';') || undefined,
-        meta: metadata.join(';') || undefined,
+        var: (variables as string[]).join(';') || undefined,
+        meta: (metadata as string[]).join(';') || undefined,
         first, max, timeout, includeEpisodes,
     };
 
@@ -653,13 +698,13 @@ export async function query(
         .withSearchParams(searchParams)
         .get(`/run/${uriComponent}/${model}`, {
             paginated: true,
-            parsePage: (values: Run[]) => {
+            parsePage: (values: RunReadOutView[]) => {
                 return values.map((run) => {
                     run.variables = variables.reduce((variableMap, key, index) => {
                         // TODO -- add a test case to run.spec that makes sure it does not error if it receives run w/o 'variables'
-                        variableMap[key] = run.variables?.[index];
+                        variableMap[key as keyof V] = run.variables?.[index] as V[keyof V];
                         return variableMap;
-                    }, {} as Record<string, unknown>);
+                    }, {} as Pick<V, keyof V>);
                     return run;
                 });
             },
@@ -719,15 +764,18 @@ export async function operation(
         }).then(({ body }) => body);
 }
 
-export async function getVariables(
+export async function getVariables<V extends RunVariables = RunVariables>(
     runKey: string | string[],
-    variables: string[],
+    variables: (keyof V)[],
     optionals: {
         timeout?: number;
         ritual?: keyof typeof RITUAL;
         ignorable?: boolean;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown> | Record<string, unknown>[]> {
+): Promise<
+    | Pick<V, keyof V>
+    | { runKey: string; variables: Pick<V, keyof V> }[]
+> {
     const {
         timeout, ritual, ignorable,
         ...routingOptions
@@ -738,13 +786,13 @@ export async function getVariables(
         console.warn(`Detected ritual: ${ritual} usage with multiple runKeys; this not allowed. Defaulting to ritual: EXORCISE`);
     }
 
-    const mappify = (values: unknown[]) => variables.reduce((variableMap, key, index) => {
-        variableMap[key] = values[index];
+    const mappify = (values: unknown[]): Pick<V, keyof V> => variables.reduce((variableMap, key, index) => {
+        variableMap[key as keyof V] = values[index] as V[keyof V];
         return variableMap;
-    }, {} as Record<string, unknown>);
+    }, {} as Pick<V, keyof V>);
 
     const uriComponent = hasMultiple ? '' : `/${runKey.length === 1 ? runKey[0] : runKey}`;
-    const include = variables.join(';');
+    const include = (variables as string[]).join(';');
     const body = hasMultiple ? { runKey, include, timeout } : { ritual, include, timeout };
     const additional = ignorable ? { ignorable } : {};
     return await new Router()
@@ -766,18 +814,19 @@ export async function getVariables(
         });
 }
 
-export async function getVariable(
+export async function getVariable<V extends RunVariables = RunVariables>(
     runKey: string | string[],
-    variable: string | string[],
+    variable: keyof V | (keyof V)[],
     optionals: {
         timeout?: number;
         ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
-): Promise<unknown> {
-    const {
-        timeout, ritual,
-        ...routingOptions
-    } = optionals;
+): Promise<
+    | V[keyof V]
+    | Pick<V, keyof V>
+    | { runKey: string; variables: Pick<V, keyof V> }[]
+> {
+    const { timeout, ritual, ...routingOptions } = optionals;
 
     if (Array.isArray(runKey) || Array.isArray(variable)) {
         const variables = Array.isArray(variable) ? variable : [variable];
@@ -786,7 +835,7 @@ export async function getVariable(
 
     return await new Router()
         .withSearchParams({ timeout, ritual })
-        .get(`/run/variable/${runKey}/${variable}`, routingOptions)
+        .get(`/run/variable/${runKey}/${String(variable)}`, routingOptions)
         .then(({ body }) => body);
 }
 /**
@@ -798,14 +847,14 @@ export async function getVariable(
  * @param [optionals.ritual]    TODO -- this does something, it's just that the frontend devs don't know what yet
  * @returns promise that resolve to an object with the variables & new values that were updated
  */
-export async function updateVariables(
+export async function updateVariables<V extends RunVariables = RunVariables>(
     runKey: string | string[],
-    update: Record<string, unknown>,
+    update: Partial<V>,
     optionals: {
         timeout?: number;
         ritual?: keyof typeof RITUAL;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<Partial<V>> {
     const {
         timeout, ritual,
         ...routingOptions
@@ -827,17 +876,20 @@ export async function updateVariables(
         .then(({ body }) => body);
 }
 
-export async function getMetadata(
+export async function getMetadata<M extends RunMetadata = RunMetadata>(
     runKey: string | string[],
-    metadata: string[],
+    metadata: (keyof M)[],
     optionals: {
         timeout?: number;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<
+    | Pick<M, keyof M>
+    | { runKey: string; data: Pick<M, keyof M> }[]
+> {
     const {
         ...routingOptions
     } = optionals;
-    const include = metadata.join(';');
+    const include = (metadata as string[]).join(';');
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
 
     const runKeyArg = Array.isArray(runKey) ? runKey : [runKey];
@@ -860,13 +912,13 @@ export async function getMetadata(
         });
 }
 
-export async function updateMetadata(
+export async function updateMetadata<M extends RunMetadata = RunMetadata>(
     runKey: string | string[],
-    update: Record<string, unknown>,
+    update: Partial<M>,
     optionals: {
         timeout?: number;
     } & RoutingOptions = {},
-): Promise<Record<string, unknown>> {
+): Promise<Partial<M>> {
     const {
         timeout,
         ...routingOptions
@@ -886,7 +938,7 @@ export async function updateMetadata(
 
 export async function action(
     runKey: string | string[],
-    actionList: Action[],
+    actionList: Actionable[],
     optionals: {
         timeout?: number;
         ritual?: keyof typeof RITUAL;
@@ -943,7 +995,7 @@ export async function retrieveFromWorld(
         executionContext?: ExecutionContext;
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView> {
     const {
         readLock,
         writeLock,
@@ -1044,14 +1096,17 @@ export async function removeFromWorld(
  * @returns promise that resolves to a run
  */
 
-export async function getWithStrategy(
+export async function getWithStrategy<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     strategy: RunStrategy,
     model: string,
     scope: GenericScope,
     optionals: {
         // initOperations?: Array<string | { name: string, params?: unknown[]}>,
     } & RunCreateOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView<V, M>> {
     // const { initOperations = [] } = optionals;
     if (strategy === 'reuse-across-sessions') {
         const searchOptions = {
@@ -1059,15 +1114,15 @@ export async function getWithStrategy(
             sort: ['-run.created'],
             max: 1,
         };
-        const { values: [lastRun] } = await query(model, searchOptions);
+        const { values: [lastRun] } = await query<V, M>(model, searchOptions);
         if (!lastRun) {
-            const newRun = await create(model, scope, optionals);
+            const newRun = await create<V, M>(model, scope, optionals);
             // await serial(newRun.runKey, initOperations, optionals = {});
             return newRun;
         }
         return lastRun;
     } else if (strategy === 'reuse-never') {
-        const newRun = await create(model, scope, optionals);
+        const newRun = await create<V, M>(model, scope, optionals);
         // await serial(newRun.runKey, initOperations, optionals = {});
         return newRun;
     } else if (strategy === 'reuse-by-tracking-key') {
@@ -1091,7 +1146,10 @@ export async function getWithStrategy(
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by migrate operations.
  * @returns promise that resolves to the migrated run
  */
-export async function migrate(
+export async function migrate<
+    V extends RunVariables = RunVariables,
+    M extends RunMetadata = RunMetadata,
+>(
     runKey: string,
     episodeKey: string,
     optionals: {
@@ -1100,7 +1158,7 @@ export async function migrate(
         modelContext?: ModelContext;
         executionContext?: ExecutionContext;
     } & RoutingOptions = {},
-): Promise<Run> {
+): Promise<RunReadOutView<V, M>> {
     const {
         ephemeral, trackingKey, modelContext = {}, executionContext = {},
         ...routingOptions

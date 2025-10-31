@@ -69,6 +69,13 @@ export type {
     AppCredentials,
 } from './adapters/authentication';
 
+// Channel Adapter
+export type {
+    ChannelMessage,
+    ChannelMessageData,
+    ChannelScope,
+} from './adapters/channel';
+
 // Chat Adapter
 export type {
     ChatReadOutView,
@@ -78,10 +85,7 @@ export type {
 // Consensus Adapter
 export type {
     BarrierReadOutView,
-    ProcActionable,
-    GetActionable,
-    SetActionable,
-    Actionable,
+    BarrierArrival,
 } from './adapters/consensus';
 
 // Daily Adapter
@@ -144,7 +148,9 @@ export type {
 
 // Run Adapter
 export type {
-    Run,
+    RunReadOutView,
+    RunVariables,
+    RunMetadata,
     RunCreateOptions,
     RunStrategy,
     ExecutionContext,
@@ -171,10 +177,10 @@ export type {
     VensimModelControl,
     VensimModelTool,
     StellaModelTool,
-    ProcAction,
-    GetAction,
-    SetAction,
-    Action,
+    ProcActionable,
+    GetActionable,
+    SetActionable,
+    Actionable,
     WireExternalFunction,
     AptExternalDependency,
     CranExternalDependency,
@@ -211,6 +217,7 @@ export type {
 // Vault Adapter
 export type {
     Vault,
+    VaultItems,
     Items,
 } from './adapters/vault';
 
@@ -224,6 +231,7 @@ export type {
 // World Adapter
 export type {
     WorldReadOutView,
+    WorldRole,
     AssignmentReadOutView,
     AssignmentCreateInView,
     PersonaReadOutView,

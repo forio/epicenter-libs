@@ -4,6 +4,9 @@ import type { GenericScope } from '../utils/constants';
 import type { PseudonymReadOutView } from './user';
 import { Router, identification, SCOPE_BOUNDARY } from '../utils';
 
+// Generic type parameter for world role names
+export type WorldRole = string;
+
 export const OBJECTIVE = {
     MINIMUM: 'MINIMUM',
     MAXIMUM: 'MAXIMUM',
@@ -35,23 +38,23 @@ export type WorldNameGenerator =
     | ColorAnimalWorldNameGenerator
     | SequentialWorldNameGenerator;
 
-export interface AssignmentReadOutView {
-    role: string;
+export interface AssignmentReadOutView<R extends WorldRole = WorldRole> {
+    role: R;
     user: PseudonymReadOutView;
 }
 
-export interface PersonaReadOutView {
-    role: string;
+export interface PersonaReadOutView<R extends WorldRole = WorldRole> {
+    role: R;
     minimum?: number;
     maximum?: number;
     marginal?: number;
     insertionOrder?: number;
 }
 
-export interface WorldReadOutView {
+export interface WorldReadOutView<R extends WorldRole = WorldRole> {
     lastUpdated: string;
-    personae: PersonaReadOutView[];
-    assignments: AssignmentReadOutView[];
+    personae: PersonaReadOutView<R>[];
+    assignments: AssignmentReadOutView<R>[];
     orbitKey: string;
     worldKey: string;
     created: string;
@@ -63,13 +66,13 @@ export interface WorldReadOutView {
     room: string;
 }
 
-export interface AssignmentCreateInView {
-    role?: string;
+export interface AssignmentCreateInView<R extends WorldRole = WorldRole> {
+    role?: R;
     userKey: string;
 }
 
-export interface PersonaCreateInView {
-    role: string;
+export interface PersonaCreateInView<R extends WorldRole = WorldRole> {
+    role: R;
     minimum?: number;
     maximum?: number;
     marginal?: number;
@@ -77,7 +80,7 @@ export interface PersonaCreateInView {
 }
 
 type WorldKey = string;
-export type AssignmentMap = Record<WorldKey, AssignmentCreateInView[]>;
+export type AssignmentMap<R extends WorldRole = WorldRole> = Record<WorldKey, AssignmentCreateInView<R>[]>;
 
 /**
  * Updates fields for a particular world.
@@ -91,7 +94,7 @@ export type AssignmentMap = Record<WorldKey, AssignmentCreateInView[]>;
  * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise wiworld with updated attributes
  */
-export async function update(
+export async function update<R extends WorldRole = WorldRole>(
     worldKey: string,
     update: {
         displayName?: string;
@@ -99,7 +102,7 @@ export async function update(
         allowChannel?: boolean;
     },
     optionals: RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     const {
         displayName,
         runKey,
@@ -151,7 +154,7 @@ export async function destroy(
  * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created world
  */
-export async function create(
+export async function create<R extends WorldRole = WorldRole>(
     optionals: {
         name?: string;
         displayName?: string;
@@ -160,7 +163,7 @@ export async function create(
         worldNameGenerator?: WorldNameGenerator;
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     const {
         name,
         displayName,
@@ -197,13 +200,13 @@ export async function create(
  * @param [optionals.mine]          Flag for indicating to get only the worlds the requesting user is in (based on session token)
  * @returns promise that resolves to a list of worlds
  */
-export async function get(
+export async function get<R extends WorldRole = WorldRole>(
     optionals: {
         groupName?: string;
         episodeName?: string;
         mine?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     const {
         groupName, episodeName, mine,
         ...routingOptions
@@ -228,13 +231,13 @@ export async function get(
  * @returns promise that resolves to a list of worlds the user is assigned to
  *
  */
-export async function getAssignments(
+export async function getAssignments<R extends WorldRole = WorldRole>(
     optionals: {
         groupName?: string;
         episodeName?: string;
         mine?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView[]> {
+): Promise<WorldReadOutView<R>[]> {
     const {
         groupName, episodeName, mine,
         ...routingOptions
@@ -246,9 +249,9 @@ export async function getAssignments(
         .then(({ body }) => body);
 }
 
-export async function getSessionWorlds(
+export async function getSessionWorlds<R extends WorldRole = WorldRole>(
     optionals: RoutingOptions = {},
-): Promise<WorldReadOutView[]> {
+): Promise<WorldReadOutView<R>[]> {
     return await new Router()
         .get('/world/assignment', optionals)
         .then(({ body }) => body);
@@ -278,17 +281,17 @@ export async function getSessionWorlds(
  * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the world the user was assigned to
  */
-export async function selfAssign(
+export async function selfAssign<R extends WorldRole = WorldRole>(
     optionals: {
-        role?: string;
+        role?: R;
         groupName?: string;
         episodeName?: string;
         objective?: keyof typeof OBJECTIVE;
         worldNameGenerator?: WorldNameGenerator;
-        populace?: PersonaCreateInView[];
+        populace?: PersonaCreateInView<R>[];
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     const {
         role,
         groupName,
@@ -338,8 +341,8 @@ export async function selfAssign(
  * @param [optionals.allowChannel]  Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the list of worlds created by the assignment
  */
-export async function autoAssignUsers(
-    assignments: AssignmentCreateInView[],
+export async function autoAssignUsers<R extends WorldRole = WorldRole>(
+    assignments: AssignmentCreateInView<R>[],
     optionals: {
         groupName?: string;
         episodeName?: string;
@@ -347,10 +350,10 @@ export async function autoAssignUsers(
         worldNameGenerator?: WorldNameGenerator;
         requireAllAssignments?: boolean;
         keepEmptyWorlds?: boolean;
-        populace?: PersonaCreateInView[];
+        populace?: PersonaCreateInView<R>[];
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView[]> {
+): Promise<WorldReadOutView<R>[]> {
     const {
         groupName,
         episodeName,
@@ -379,8 +382,8 @@ export async function autoAssignUsers(
         .then(({ body }) => body);
 }
 
-export async function editAssignments(
-    assignments: AssignmentMap,
+export async function editAssignments<R extends WorldRole = WorldRole>(
+    assignments: AssignmentMap<R>,
     optionals: {
         groupName?: string;
         episodeName?: string;
@@ -388,7 +391,7 @@ export async function editAssignments(
         keepEmptyWorlds?: boolean;
         requireAllAssignments?: boolean;
     } & RoutingOptions = {},
-): Promise<WorldReadOutView[]> {
+): Promise<WorldReadOutView<R>[]> {
     const {
         groupName, episodeName, objective = OBJECTIVE.MINIMUM, requireAllAssignments, keepEmptyWorlds,
         ...routingOptions
@@ -414,10 +417,10 @@ export async function editAssignments(
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the world containing the assignment object
  */
-export async function getAssignmentsByKey(
+export async function getAssignmentsByKey<R extends WorldRole = WorldRole>(
     worldKey: string,
     optionals: RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     return await new Router()
         .get(`/world/assignment/${worldKey}`, optionals)
         .then(({ body }) => body);
@@ -469,10 +472,10 @@ export async function removeUsers(
  * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves with undefined when successful
  */
-export async function getPersonas(
+export async function getPersonas<R extends WorldRole = WorldRole>(
     scope: GenericScope,
     optionals: RoutingOptions = {},
-): Promise<void> {
+): Promise<PersonaReadOutView<R>[]> {
     const { scopeBoundary, scopeKey } = scope;
     const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
     /* We will at some point remove the need to explicitly lower case this */
@@ -507,8 +510,8 @@ export async function getPersonas(
  * @param [optionals]           Optional arguments; pass network call options overrides here.
  * @returns promise that resolves with undefined when successful
  */
-export async function setPersonas(
-    personas: PersonaCreateInView[],
+export async function setPersonas<R extends WorldRole = WorldRole>(
+    personas: PersonaCreateInView<R>[],
     scope: GenericScope,
     optionals: RoutingOptions = {},
 ): Promise<void> {
@@ -537,11 +540,11 @@ export async function setPersonas(
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the newly resolved world
  */
-export async function assignRun(
+export async function assignRun<R extends WorldRole = WorldRole>(
     worldKey: string,
     runKey: string,
     optionals: RoutingOptions = {},
-): Promise<WorldReadOutView> {
+): Promise<WorldReadOutView<R>> {
     return await new Router()
         .patch(`/world/run/${worldKey}`, {
             body: { runKey },
