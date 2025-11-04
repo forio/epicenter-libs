@@ -207,7 +207,7 @@ export async function create<R extends WorldRole = WorldRole>(
  * @example
  * // Gets all the worlds in the group attached to the session
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.get();
+ * await worldAdapter.get();
  * // Gets all the worlds in the group attached to the session that the user is assigned to
  * import { worldAdapter } from 'epicenter-libs';
  * await worldAdapter.get({ mine: true });
