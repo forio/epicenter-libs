@@ -155,7 +155,7 @@ export async function destroy(
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.create({ name: 'Whole New World' });
+ * await worldAdapter.create({ name: 'Whole New World' });
  *
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.name]          Name of the new world (if omitted one will be provided by Epicenter). Must be unique within the world's scope.
