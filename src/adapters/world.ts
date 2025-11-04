@@ -89,7 +89,7 @@ export type AssignmentMap<R extends WorldRole = WorldRole> = Record<WorldKey, As
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e', displayName: 'World A1' });
+ * await worldAdapter.update('0000017a445032dc38cb2cecd5fc13708314', { runKey: '0000018d61f1217b22ce0ae605ff00609f5e', displayName: 'World A1' });
  *
  * @param worldKey              Key associated with world
  * @param update                Attributes you wish to update
