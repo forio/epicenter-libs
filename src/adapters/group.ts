@@ -195,16 +195,16 @@ export async function gather(
  * @param update                            Attributes you wish to update
  * @param [update.runLimit]                 Defines the upper limit of runs allowed in the group
  * @param [update.organization]             Name of the organization owning the group
- * @param [update.allowSelfRegistration]    TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.allowSelfRegistration]    Whether users can register to join the group without being invited
  * @param [update.flightRecorder]           Diagnostic tool for logging HTTP requests for the server
  * @param [update.flightRecorder.start]     Start time (epoch time)
  * @param [update.flightRecorder.stop]      End time (epoch time)
  * @param [update.flightRecorder.enabled]   Enabled flag for the flight recorder
  * @param [update.event]                    Name of the event the group is playing for
- * @param [update.allowMembershipChanges]   TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [update.pricing]                  TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [update.pricing.amount]           TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [update.startDate]                TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.allowMembershipChanges]   Locks the group so members cannot be added and member permissions cannot be changed
+ * @param [update.pricing]                  Group pricing information
+ * @param [update.pricing.amount]           Amount (in cents) for user signup
+ * @param [update.startDate]                Start date for group event
  * @param [update.expirationDate]           Date the group expires
  * @param [update.capacity]                 Defines the upper limit on the number of users allowed in the group
  * @param [update.allowChannel]             Opt into push notifications for this resource; applicable to projects with phylogeny >= SILENT
@@ -285,15 +285,16 @@ export async function update(
  * @param group.name                        Group name (required)
  * @param [group.runLimit]                  Defines the upper limit on the number of runs allowed in the group
  * @param [group.organization]              Name of the organization owning the group
- * @param [group.allowSelfRegistration]     TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.allowSelfRegistration]     Whether users can register to join the group without being invited
  * @param [group.flightRecorder]            Diagnostic tool for logging HTTP requests for the server
  * @param [group.flightRecorder.start]      Start time (epoch time)
  * @param [group.flightRecorder.stop]       End time (epoch time)
  * @param [group.flightRecorder.enabled]    Enabled flag for the flight recorder
  * @param [group.event]                     Name of the event the group is playing for
- * @param [group.allowMembershipChanges]    TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [group.pricing]                   TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [group.startDate]                 TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [group.allowMembershipChanges]    Locks the group so members cannot be added and member permissions cannot be changed
+ * @param [group.pricing]                   Group pricing information
+ * @param [group.pricing.amount]            Amount (in cents) for user signup
+ * @param [group.startDate]                 Start date for group event
  * @param [group.expirationDate]            Date the group expires
  * @param [group.capacity]                  Defines the upper limit on the number of users allowed in the group
  * @param [group.allowChannel]              Opt into push notifications for this resource; applicable to projects with phylogeny >= SILENT
