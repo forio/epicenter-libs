@@ -347,7 +347,7 @@ export async function define<I extends VaultItems = VaultItems>(
  *
  * @example
  * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
- * vaultAdapter.create('my-vault-name', {
+ * await vaultAdapter.create('my-vault-name', {
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: 'GROUP_KEY'
  * }, {
