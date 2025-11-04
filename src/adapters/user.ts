@@ -219,7 +219,7 @@ export async function createUser<R extends RealmData = RealmData>(
  *
  * @example
  * import { userAdapter } from 'epicenter-libs';
- * userAdapter.get('00000179b4d3fb0c84f822df8cd2aa53be25');
+ * const user = await userAdapter.get('00000179b4d3fb0c84f822df8cd2aa53be25');
  *
  * @param userKey       The user key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
