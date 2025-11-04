@@ -161,7 +161,7 @@ export async function getVideoURLWith(
  * import { videoAPI } from 'epicenter-libs';
  * const dir = await videoAPI.getVideoDirectoryByKey('video-key-123');
  *
- * @param videoKey      VideoReadOutView key identifier
+ * @param videoKey      Video key identifier
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the video directory information
  */
