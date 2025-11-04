@@ -33,20 +33,28 @@ export interface Items<I extends VaultItems = VaultItems> {
     pop?: Partial<I>;
 }
 
+
 /**
  * Updates a vault's items
+ * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{VAULT_KEY}`
+ *
  * @example
+ * import { vaultAdapter } from 'epicenter-libs';
  * // Change the name of the first student object in the list of students in the vault to "Bob"
- * epicenter.vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', { set: { 'students.0.name': 'Bob' } })
- * @param vaultKey      Vault key
- * @param items         Object with a set/push/pop field to update the vault items with
- * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', { set: { 'students.0.name': 'Bob' } });
+ *
+ * @param vaultKey                  Vault key
+ * @param items                     Object with a set/push/pop field to update the vault items with
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.mutationKey]   Mutation key for optimistic concurrency control
  * @returns promise that resolves to the vault
  */
 export async function update<I extends VaultItems = VaultItems>(
     vaultKey: string,
     items: Items<I>,
-    optionals: { mutationKey?: string } & RoutingOptions = {},
+    optionals: {
+        mutationKey?: string;
+    } & RoutingOptions = {},
 ): Promise<Vault<I>> {
     const {
         mutationKey,
@@ -68,9 +76,11 @@ export async function update<I extends VaultItems = VaultItems>(
 
 /**
  * Updates a vault's properties
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{VAULT_KEY}`
+ *
  * @example
  * import { vaultAdapter, ROLE } from 'epicenter-libs';
- * vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', {
+ * vaultAdapter.updateProperties('00000166d59adcb0f497ddc1aad0270c0a62', {
  *      allowChannel: true,
  *      permit: {
  *          readLock: ROLE.FACILITATOR,
@@ -78,9 +88,14 @@ export async function update<I extends VaultItems = VaultItems>(
  *      },
  *      ttlSeconds: 3600,
  * });
- * @param vaultKey      Vault key
- * @param update        Object with properties to update
- * @param [optionals]   Optional arguments; pass network call options overrides here.
+ *
+ * @param vaultKey                      Vault key
+ * @param update                        Object with properties to update
+ * @param [update.mutationKey]          Mutation key for optimistic concurrency control
+ * @param [update.allowChannel]         Opt into push notifications for this resource
+ * @param [update.permit]               Permission settings for the vault
+ * @param [update.ttlSeconds]           Time to live in seconds
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the vault
  */
 export async function updateProperties<I extends VaultItems = VaultItems>(
@@ -104,6 +119,19 @@ export async function updateProperties<I extends VaultItems = VaultItems>(
 
 
 const NOT_FOUND = 404;
+
+/**
+ * Retrieves a vault by its vault key
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{VAULT_KEY}`
+ *
+ * @example
+ * import { vaultAdapter } from 'epicenter-libs';
+ * const vault = await vaultAdapter.get('00000166d59adcb0f497ddc1aad0270c0a62');
+ *
+ * @param vaultKey      Vault key
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the vault, or undefined if not found
+ */
 export async function get<I extends VaultItems = VaultItems>(
     vaultKey: string,
     optionals: RoutingOptions = {},
@@ -117,6 +145,25 @@ export async function get<I extends VaultItems = VaultItems>(
 }
 
 
+/**
+ * Retrieves a vault by name within a specific scope
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/with/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{VAULT_NAME}`
+ *
+ * @example
+ * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const vault = await vaultAdapter.withScope('my-vault-name', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * });
+ *
+ * @param name                      Name of the vault
+ * @param scope                     Scope associated with the vault
+ * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]           Optional key to scope the vault to a user
+ * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the vault, or undefined if not found
+ */
 export async function withScope<I extends VaultItems = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
@@ -132,6 +179,27 @@ export async function withScope<I extends VaultItems = VaultItems>(
         }).then(({ body }) => body);
 }
 
+
+/**
+ * Retrieves all vaults with a specific name within a group or episode
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/in/{GROUP_NAME}/{VAULT_NAME}`
+ *
+ * @example
+ * import { vaultAdapter } from 'epicenter-libs';
+ * const vaults = await vaultAdapter.byName('my-vault-name', {
+ *      groupName: 'my-group',
+ *      episodeName: 'my-episode',
+ *      includeEpisodes: true,
+ * });
+ *
+ * @param name                          Name of the vault
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupName]         Name of the group to search within. Defaults to the session user's group.
+ * @param [optionals.episodeName]       Name of the episode to search within
+ * @param [optionals.userKey]           Optional user key to filter vaults by user
+ * @param [optionals.includeEpisodes]   Whether to include vaults from episodes within the group
+ * @returns promise that resolves to an array of vaults with the specified name
+ */
 export async function byName<I extends VaultItems = VaultItems>(
     name: string,
     optionals: {
@@ -142,8 +210,10 @@ export async function byName<I extends VaultItems = VaultItems>(
     } & RoutingOptions = {},
 ): Promise<Vault<I>[]> {
     const {
-        groupName, episodeName,
-        userKey, includeEpisodes,
+        groupName,
+        episodeName,
+        userKey,
+        includeEpisodes,
         ...routingOptions
     } = optionals;
     const session = identification.session as UserSession;
@@ -161,6 +231,20 @@ export async function byName<I extends VaultItems = VaultItems>(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Deletes a vault
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{VAULT_KEY}`
+ *
+ * @example
+ * import { vaultAdapter } from 'epicenter-libs';
+ * await vaultAdapter.remove('00000166d59adcb0f497ddc1aad0270c0a62');
+ *
+ * @param vaultKey                  Vault key
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.mutationKey]   Mutation key for optimistic concurrency control
+ * @returns promise that resolves to undefined when successful
+ */
 export async function remove(
     vaultKey: string,
     optionals: { mutationKey?: string } & RoutingOptions = {},
@@ -175,8 +259,9 @@ export async function remove(
         .then(({ body }) => body);
 }
 
+
 /**
- * Defines vault properties, used to create or modify a vault. Vault names are unique to within their scope.
+ * Defines vault properties, used to create or modify a vault. Vault names are unique within their scope.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
  *
  * @example
@@ -187,21 +272,22 @@ export async function remove(
  * });
  *
  * @param name                          Name of the vault
- * @param scope                         Scope associated with your run
+ * @param scope                         Scope associated with your vault
  * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param [scope.userKey]               Optional key to scope the vault to a user
- * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.items]             Optional items parameter for updating vault contents
  * @param [optionals.items.set]         Sets a field in the vault, where `[name]: [value]`, send `[name]: null` to delete
- * @param [optionals.items.push]        Adds an item to a list in the vault, it the list does not exist it will create one
- * @param [optionals.items.pop]         Use to remove items lists in a vault; TODO: how to use is unclear, elucidate
+ * @param [optionals.items.push]        Adds an item to a list in the vault; if the list does not exist it will create one
+ * @param [optionals.items.pop]         Use to remove items from lists in a vault
  * @param [optionals.readLock]          Role allowed to read
  * @param [optionals.writeLock]         Role allowed to write
- * @param [optionals.ttlSeconds]        Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
+ * @param [optionals.ttlSeconds]        Life span of the vault (defaults to null, minimum value of 1800 seconds / 30 minutes)
  * @param [optionals.mutationStrategy]  Setting a mutation strategy allows for the following behaviors: ALLOW - Is an upsert which means if the entry exists it will be updated with the items in the POST. DISALLOW - Is an insert which means that if the entry exists no changes will be made (the 'changed' flag will be false). ERROR - Is an insert and, if the entry exists, a conflict exception will be thrown. If the mutationStrategy is omitted, it will simply search by scope and name; updating if it exists, creating if not.
  * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
- * @returns the vault (created or modified) */
+ * @returns promise that resolves to the vault (created or modified)
+ */
 export async function define<I extends VaultItems = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
@@ -252,6 +338,34 @@ export async function define<I extends VaultItems = VaultItems>(
 }
 
 
+/**
+ * @deprecated Use vaultAdapter.define instead. This method will be removed in the next release.
+ *
+ * Creates a new vault with the specified name, scope, and items
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/{COLLECTION_NAME}`
+ *
+ * @example
+ * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * vaultAdapter.create('my-vault-name', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: 'GROUP_KEY'
+ * }, {
+ *      set: { foo: 'bar' }
+ * });
+ *
+ * @param name                          Name of the vault
+ * @param scope                         Scope associated with your vault
+ * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]               Optional key to scope the vault to a user
+ * @param items                         Items to set, push, or pop in the vault
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]          Role allowed to read
+ * @param [optionals.writeLock]         Role allowed to write
+ * @param [optionals.ttlSeconds]        Life span of the vault -- default to null, minimum value of 1800 (30 minutes)
+ * @param [optionals.mutationStrategy]  Mutation strategy: ALLOW (upsert), DISALLOW (insert without update), ERROR (insert with conflict exception if exists)
+ * @returns promise that resolves to the created vault
+ */
 export async function create<I extends VaultItems = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
@@ -267,8 +381,9 @@ export async function create<I extends VaultItems = VaultItems>(
     return await define<I>(name, scope, { items, ...optionals });
 }
 
+
 /**
- * Searches for vaults that match the search options; not paginable (hence named 'list' and not 'query').
+ * Searches for vaults that match the search options; not paginable (hence named 'list' and not 'query')
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/search`
  *
  * @example
@@ -287,7 +402,7 @@ export async function create<I extends VaultItems = VaultItems>(
  * });
  *
  * @param searchOptions             Search options
- * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupName]     Name of the group
  * @returns promise that resolves to an array of vaults that match the search options
  */
@@ -311,6 +426,7 @@ export async function list<I extends VaultItems = VaultItems>(
         .then(({ body }) => body);
 }
 
+
 /**
  * Counts the number of vaults that match the search options
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vault/count`
@@ -326,15 +442,16 @@ export async function list<I extends VaultItems = VaultItems>(
  * }, {
  *      groupName: 'my-group-name',                             // search within a group
  * });
+ *
  * @param searchOptions             Search options
- * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupName]     Name of the group
  * @returns promise that resolves to the number of vaults that match the search options
  */
-export async function count<I extends VaultItems = VaultItems>(
+export async function count(
     searchOptions: GenericSearchOptions,
     optionals: { groupName?: string } & RoutingOptions = {},
-): Promise<Vault<I>[]> {
+): Promise<number> {
     const { first, filter, max } = searchOptions;
     const searchParams = {
         filter: parseFilterInput(filter),

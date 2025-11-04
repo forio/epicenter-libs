@@ -26,24 +26,28 @@ export interface Leaderboard {
 
 /**
  * Creates a leaderboard entry.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard`
+ *
  * @example
- * import { leaderboardAdapter } from 'epicenter-libs';
+ * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const leaderboard = await leaderboardAdapter.update(
  *      'class-23-leaderboard',
  *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461' },
  *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
  *      { tags: [{ label: 'role', content: 'doctor' }] }
  * );
- * @param collection            Name of the leaderboard
- * @param scope                 Scope attached to the leaderboard entry; allows for scoping
- * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
- * @param scope.scopeKey        Key of the resource defined by the scope boundary
- * @param scope.userKey         User key for the user creating the entry, if omitted will use the one in current session
- * @param scores                List of score objects
- * @param scores[].name         Name of the score
- * @param scores[].quantity     Value of the score
- * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @params [optionals.tags]     Tags for the leaderboard entry, helps to provide another layer of scope if needed
+ *
+ * @param collection                Name of the leaderboard
+ * @param scope                     Scope attached to the leaderboard entry; allows for scoping
+ * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]           User key for the user creating the entry; if omitted will use the one in current session
+ * @param scores                    List of score objects
+ * @param scores[].name             Name of the score
+ * @param scores[].quantity         Value of the score
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.tags]          Tags for the leaderboard entry; helps to provide another layer of scope if needed
+ * @param [optionals.allowChannel]  If true, allows channel notifications for this update
  * @returns promise that resolves to the leaderboard entry created
  */
 export async function update(
@@ -75,30 +79,37 @@ export async function update(
         }).then(({ body }) => body);
 }
 
+
 /**
- * Gathers leaderboard information; not paginable (hence named 'list' and not 'query'). Technically there is no leader
+ * Gathers leaderboard information; not paginable (hence named 'list' and not 'query')
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{COLLECTION}`
+ *
  * @example
- * import { leaderboardAdapter } from 'epicenter-libs';
- * const leaderboard = await leaderboardAdapter.list('myLeaderboard', scope, {
+ * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const leaderboard = await leaderboardAdapter.list('myLeaderboard', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: 'GROUP_KEY',
+ * }, {
  *      filter: [
  *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
  *          'score.total>0'     // where the users scored a total higher than 0
  *      ],
- *      sort: ['+score.total'], // sort results by 'total' in ascending order,
+ *      sort: ['+score.total'], // sort results by 'total' in ascending order
  *      first: 0,
  *      max: 20                 // retrieve only the first 20 entries
  * });
+ *
  * @param collection                Name of the leaderboard
  * @param scope                     Scope attached to the leaderboard entry; allows for scoping
- * @param scope.scopeBoundary       Can be a couple things, commonly group, project, episode, or world
- * @param scope.scopeKey            Key of the resource defined by the scope boundary
+ * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param searchOptions             Search options for the query
  * @param [searchOptions.filter]    Filters for searching
  * @param [searchOptions.sort]      Sorting criteria
  * @param [searchOptions.first]     The starting index of the list returned
  * @param [searchOptions.max]       The maximum number of entries in the list
  * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to to a list of leaderboard entries
+ * @returns promise that resolves to a list of leaderboard entries
  */
 export async function list(
     collection: string,
@@ -133,22 +144,28 @@ export async function get(
 
 /**
  * Returns the total count in the given collection
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/leaderboard/count/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{COLLECTION}`
+ *
  * @example
- * import { leaderboardAdapter } from 'epicenter-libs';
- * const leaderboard = await leaderboardAdapter.getCount('myLeaderboard', scope, {
+ * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const count = await leaderboardAdapter.getCount('myLeaderboard', {
+ *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *      scopeKey: 'GROUP_KEY',
+ * }, {
  *      filter: [
  *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
  *          'score.total>0'     // where the users scored a total higher than 0
  *      ],
  * });
+ *
  * @param collection                Name of the leaderboard
  * @param scope                     Scope attached to the leaderboard entry; allows for scoping
- * @param scope.scopeBoundary       Can be a couple things, commonly group, project, episode, or world
- * @param scope.scopeKey            Key of the resource defined by the scope boundary
+ * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param searchOptions             Search options for the query
  * @param [searchOptions.filter]    Filters for searching
  * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to the number of entries in hte leaderboard
+ * @returns promise that resolves to the number of entries in the leaderboard
  */
 export async function getCount(
     collection: string,

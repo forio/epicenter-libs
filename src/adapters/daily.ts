@@ -5,7 +5,7 @@ import {
     Router,
     ROLE,
     Fault,
-} from 'utils';
+} from '../utils';
 import * as videoAdapter from './video';
 
 export type RecordingType = 'CLOUD';
@@ -55,14 +55,17 @@ async function handleRateLimit<T>(
     return response;
 }
 
+
 /**
  * Gets the daily configuration for the epicenter account. Requires Support auth
  *
- * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
- * dailyAdapter.getConfig();
+ * const config = await dailyAdapter.getConfig();
+ *
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the daily object
  */
 export async function getConfig(
@@ -74,40 +77,41 @@ export async function getConfig(
         .then(({ body }) => body);
 }
 
+
 /**
  * Creates a new daily meeting room
- *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1/room`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/room`
  *
  * @example
  * import { dailyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
- * dailyAdapter.createRoom({
+ * const room = await dailyAdapter.createRoom({
  *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
  *
- * @param scope                         Scope associated with your room
- * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param [scope.userKey]               Optional key to scope the room to a user
- * @param {object}  [optionals={}]                  Optional parameters
- * @param [optionals.readLock]          Role allowed to read
- * @param [optionals.writeLock]         Role allowed to write
- * @param [optionals.ttlSeconds]        Life span of any recording made (how long before it is deleted); defaults to 604,800 (1 week), max of 31,536,000 (1 year)
- * @param [optionals.privacy]           Whether the room is private or not; currently can only be set to PRIVATE
- * @param [optionals.exp]               When the room will be deleted in epoch seconds. Defaults to 24 hours. Max of 24 hours.
- * @param [optionals.enable_recording]                          The type of Daily recording method to use. Only CLOUD is currently permitted.
- * @param [optionals.streaming_endpoints]               Details for daily streaming features.
- * @param [optionals.streaming_endpoints.name]               name of the stream
- * @param [optionals.streaming_endpoints.type]               type of the stream; only HLS is currently permitted
- * @param [optionals.streaming_endpoints.hls_config]               options for hls stream
- * @param [optionals.streaming_endpoints.hls_config.save_hls_recording]               whether or not to record the hls stream
- * @param [optionals.streaming_endpoints.hls_config.storage]               storage details for hls stream
- * @param [optionals.streaming_endpoints.hls_config.path]               s3 storage path
- * @param [optionals.streaming_endpoints.hls_config.bucket_region]               s3 bucket region
- * @param [optionals.streaming_endpoints.hls_config.assume_role_arn]               s3 role ARN for permission to alter S3 resources
- * @param [optionals.streaming_endpoints.hls_config.bucket_name]               s3 bucket name
- * @returns {roomDetailsObject}                        Returns a promise that resolves to the newly created room details
+ * @param scope                                                     Scope associated with your room
+ * @param scope.scopeBoundary                                       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                                            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]                                           Optional key to scope the room to a user
+ * @param [optionals]                                               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.readLock]                                      Role allowed to read
+ * @param [optionals.writeLock]                                     Role allowed to write
+ * @param [optionals.ttlSeconds]                                    Life span of any recording made (how long before it is deleted); defaults to 604,800 (1 week), max of 31,536,000 (1 year)
+ * @param [optionals.privacy]                                       Whether the room is private or not; currently can only be set to PRIVATE
+ * @param [optionals.exp]                                           When the room will be deleted in epoch seconds. Defaults to 24 hours. Max of 24 hours.
+ * @param [optionals.enable_recording]                              The type of Daily recording method to use. Only CLOUD is currently permitted.
+ * @param [optionals.streaming_endpoints]                           Details for daily streaming features.
+ * @param [optionals.streaming_endpoints.name]                      Name of the stream
+ * @param [optionals.streaming_endpoints.type]                      Type of the stream; only HLS is currently permitted
+ * @param [optionals.streaming_endpoints.hls_config]                Options for hls stream
+ * @param [optionals.streaming_endpoints.hls_config.save_hls_recording]  Whether or not to record the hls stream
+ * @param [optionals.streaming_endpoints.hls_config.storage]        Storage details for hls stream
+ * @param [optionals.streaming_endpoints.hls_config.path]           S3 storage path
+ * @param [optionals.streaming_endpoints.hls_config.bucket_region]  S3 bucket region
+ * @param [optionals.streaming_endpoints.hls_config.assume_role_arn]  S3 role ARN for permission to alter S3 resources
+ * @param [optionals.streaming_endpoints.hls_config.bucket_name]    S3 bucket name
+ * @param [optionals.disableRateLimitHandling]                      Disable automatic rate limit retry handling
+ * @returns promise that resolves to the newly created room details
  */
 export async function createRoom(
     scope: { userKey?: string } & GenericScope,
@@ -175,24 +179,26 @@ export async function createRoom(
     return handleRateLimit(callAPI, disableRateLimitHandling ? RETRY_RANGES.length + 1 : 0);
 }
 
+
 /**
  * Creates a token for a daily meeting room
- *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1/meetingToken`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/meetingToken`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
- * dailyAdapter.createToken('my-room-name');
+ * const token = await dailyAdapter.createToken('my-room-name');
  *
- * @param room_name                     Name of the room to create a token for
- * @param {object}  [optionals={}]                  Optional parameters
- * @param [optionals.start_video_off]   Whether the user should have their video off upon joining the meeting; defaults to true.
- * @param [optionals.is_owner]          Whether the user has owner permissions; owner permissions are required to start a stream (not a recording); defaults to false
- * @param [optionals.user_name]         Username to display in daily's system. This is relevant if the daily call is open in a separate window
- * @param [optionals.close_tab_on_exit] Whether to close the tab on the end of the call. This is relevant if the daily call is open in a separate window
- * @param [optionals.exp]               When the token will be deleted in epoch seconds. Defaults to 24 hours. Max of 24 hours.
- * @param [optionals.enable_recording]  The type of Daily recording method to permit. Only CLOUD is currently permitted.
- * @returns {tokenDetailsObject}                        Returns a promise that resolves to the newly created token details
+ * @param room_name                         Name of the room to create a token for
+ * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.start_video_off]       Whether the user should have their video off upon joining the meeting; defaults to true.
+ * @param [optionals.is_owner]              Whether the user has owner permissions; owner permissions are required to start a stream (not a recording); defaults to false
+ * @param [optionals.user_name]             Username to display in daily's system. This is relevant if the daily call is open in a separate window
+ * @param [optionals.close_tab_on_exit]     Whether to close the tab on the end of the call. This is relevant if the daily call is open in a separate window
+ * @param [optionals.exp]                   When the token will be deleted in epoch seconds. Defaults to 24 hours. Max of 24 hours.
+ * @param [optionals.enable_recording]      The type of Daily recording method to permit. Only CLOUD is currently permitted.
+ * @param [optionals.disableRateLimitHandling]  Disable automatic rate limit retry handling
+ * @param [optionals.selfSign]              Whether to self-sign the token; defaults to true
+ * @returns promise that resolves to the newly created token details
  */
 export async function createToken(
     room_name: string,
@@ -243,12 +249,24 @@ export async function createToken(
     return handleRateLimit(callAPI, disableRateLimitHandling ? RETRY_RANGES.length + 1 : 0);
 }
 
+
 /**
  * Convenience function for retrieving the most recent recording for a Daily room
  *
  * @example
- * import { dailyAdapter } from 'epicenter-libs';
- * dailyAdapter.getVideoByRecordingId('recording_instance_id');
+ * import { dailyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const videoUrl = await dailyAdapter.getVideoByRecordingId('my-room', 'recording_instance_id', {
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: 'GROUP_KEY'
+ * });
+ *
+ * @param room_name         Name of the room
+ * @param recordingId       Recording instance ID
+ * @param scope             Scope associated with the room
+ * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey    Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]   Optional key to scope the room to a user
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a url if a video exists or null if it does not
  */
 export async function getVideoByRecordingId(
@@ -276,14 +294,17 @@ export async function getVideoByRecordingId(
     });
 }
 
+
 /**
  * Sets the daily family/room to a recording status of recorded; necessary to prevent videos from deleting automatically within 1 hour
- *
- * Base URL: DELETE `https://forio.com/api/v3/{accountShortName}/{projectShortName}/daily/v1/meetingToken/{room_name}`
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/meetingToken/{ROOM_NAME}`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
- * dailyAdapter.updateRecordingStatus(room_name);
+ * const success = await dailyAdapter.updateRecordingStatus('my-room');
+ *
+ * @param room_name     Name of the room
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to true if successful
  */
 export async function updateRecordingStatus(room_name: string,

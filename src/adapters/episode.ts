@@ -14,13 +14,18 @@ export interface EpisodeReadOutView {
     category: string;
 }
 
+
 /**
  * Create an episode.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/{GROUP_NAME}`
+ *
  * @example
- * epicenter.episodeAdapter.create('myEpisode', 'myGroupName', {
+ * import { episodeAdapter } from 'epicenter-libs';
+ * const episode = await episodeAdapter.create('myEpisode', 'myGroupName', {
  *      runLimit: 20,
  *      draft: true,
  * });
+ *
  * @param name                  Episode name
  * @param groupName             Group to make the episode under
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
@@ -49,10 +54,14 @@ export async function create(
         }).then(({ body }) => body);
 }
 
+
 /**
  * Gets a specific episode.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/{EPISODE_KEY}`
+ *
  * @example
- * epicenter.episodeAdapter.get('000001796733eef0842f4d6d960997018a37');
+ * import { episodeAdapter } from 'epicenter-libs';
+ * const episode = await episodeAdapter.get('000001796733eef0842f4d6d960997018a37');
  *
  * @param episodeKey    The episode key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
@@ -67,9 +76,13 @@ export async function get(
         .then(({ body }) => body);
 }
 
+
 /**
  * Gets episodes.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/search`
+ *
  * @example
+ * import { episodeAdapter } from 'epicenter-libs';
  * const filter = [
  *      'name|=one|two',                                            // searches only for episodes named 'one' or 'two'
  *      'draft=false',                                              // searches only for episodes that aren't drafts
@@ -79,12 +92,13 @@ export async function get(
  *      // 'group.name=my-group-name',                              // specifies a group name, intended for admin use
  *      // 'group.groupKey=0000017dd3bf540e5ada5b1e058f08f20461',   // specifies a group key, intended for admin use
  * ];
- * epicenter.episodeAdapter.query({
+ * const episodes = await episodeAdapter.query({
  *      filter,
  *      sort: ['+episode.created'],     // sort all findings by the 'created' field (ascending)
  *      first: 3,                       // page should start with the 4th item found (will default to 0)
  *      max: 10,                        // page should only include the first 10 items
  * });
+ *
  * @param searchOptions             Search options for the query
  * @param [searchOptions.filter]    Filters for searching
  * @param [searchOptions.sort]      Sorting criteria
@@ -112,10 +126,14 @@ export async function query(
         .then(({ body }) => body);
 }
 
+
 /**
  * Gets episodes based on a group key
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/in/{GROUP_KEY}`
+ *
  * @example
- * epicenter.episodeAdapter.forGroup('0000017dd3bf540e5ada5b1e058f08f20461');
+ * import { episodeAdapter } from 'epicenter-libs';
+ * const episodes = await episodeAdapter.forGroup('0000017dd3bf540e5ada5b1e058f08f20461');
  *
  * @param groupKey      The group key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
@@ -130,10 +148,15 @@ export async function forGroup(
         .then(({ body }) => body);
 }
 
+
 /**
  * Gets episode based on group name and episode name
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/with/{GROUP_NAME}/{EPISODE_NAME}`
+ *
  * @example
- * epicenter.episodeAdapter.withName('myEpisodeName');
+ * import { episodeAdapter } from 'epicenter-libs';
+ * const episode = await episodeAdapter.withName('myEpisodeName');
+ *
  * @param name                  The episode name
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupName] Name of the group, if omitted will use the group name associated with the current session
@@ -154,10 +177,16 @@ export async function withName(
         .then(({ body }) => body);
 }
 
+
 /**
  * Deletes an episode
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/episode/{EPISODE_KEY}`
+ *
  * @example
- * epicenter.episodeAdapter.remove('000001796733eef0842f4d6d960997018a3b');
+ * import { episodeAdapter } from 'epicenter-libs';
+ * await episodeAdapter.remove('000001796733eef0842f4d6d960997018a3b');
+ *
+ * @param episodeKey    The episode key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to undefined if successful
  */

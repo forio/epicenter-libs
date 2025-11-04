@@ -1,6 +1,7 @@
-import type { RoutingOptions } from 'utils/router';
-import { GROUP_ROLE } from 'utils/constants';
-import Router from 'utils/router';
+import type { RoutingOptions } from '../utils/router';
+import { GROUP_ROLE } from '../utils/constants';
+
+import Router from '../utils/router';
 
 export type Modality = 'NONE' | 'HBP' | 'ICC' | 'SSO';
 export type MFAMethodology = 'NONE' | 'NOOP' | 'TOTP';
@@ -120,6 +121,21 @@ export interface UserReport {
     discarded?: DiscardedUser[];
 }
 
+
+/**
+ * Upload a CSV file to create multiple users
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/user/upload`
+ *
+ * @example
+ * import { userAdapter } from 'epicenter-libs';
+ * const file = new File([csvContent], 'users.csv');
+ * const report = await userAdapter.uploadCSV(file, { overwrite: true });
+ *
+ * @param file                      CSV file containing user data
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.overwrite]     If true, overwrites existing users with matching identifiers; defaults to false
+ * @returns promise that resolves to a report containing created, updated, and discarded users
+ */
 export async function uploadCSV(
     file: File,
     optionals: UploadOptions = {},
@@ -141,8 +157,24 @@ export async function uploadCSV(
         .then(({ body }) => body);
 }
 
+
 /**
  * Create a new user (native or external).
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/user`
+ *
+ * @example
+ * import { userAdapter } from 'epicenter-libs';
+ * // Create a native user
+ * const user = await userAdapter.createUser({
+ *     objectType: 'native',
+ *     handle: 'john.doe',
+ *     displayName: 'John Doe',
+ *     email: 'john@example.com',
+ * });
+ *
+ * @param view              User data to create; can be either a native or external user
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the created user
  */
 export async function createUser<R extends RealmData = RealmData>(
     view: {
@@ -180,14 +212,18 @@ export async function createUser<R extends RealmData = RealmData>(
         .then(({ body }) => body);
 }
 
+
 /**
  * Gets a specific user.
- * @example
- * epicenter.userAdapter.get('00000179b4d3fb0c84f822df8cd2aa53be25');
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/user/{USER_KEY}`
  *
- * @param userKey    The user key
+ * @example
+ * import { userAdapter } from 'epicenter-libs';
+ * userAdapter.get('00000179b4d3fb0c84f822df8cd2aa53be25');
+ *
+ * @param userKey       The user key
  * @param [optionals]   Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to an user
+ * @returns promise that resolves to a user
  */
 export async function get(
     userKey: string,
@@ -198,6 +234,20 @@ export async function get(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Gets a specific user by their handle.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/user/with/{HANDLE}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/user/with/{HANDLE}/{MODALITY}`
+ *
+ * @example
+ * import { userAdapter } from 'epicenter-libs';
+ * const user = await userAdapter.getWithHandle('john.doe');
+ *
+ * @param handle                Handle of the user to retrieve
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.modality]  Modality to filter by (e.g., 'email', 'sms')
+ * @returns promise that resolves to a user
+ */
 export async function getWithHandle(
     handle: string,
     optionals: {

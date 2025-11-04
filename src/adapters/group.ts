@@ -94,18 +94,22 @@ export interface SelfRegistrationResult {
     whoAmI: Session;
 }
 
+
 /**
  * Provides information on a particular Epicenter group.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/quantized/{GROUP_KEY}`
+ *
  * @example
  * import { authAdapter, groupAdapter } from 'epicenter-libs';
  * const session = authAdapter.getLocalSession();
  * // include members of the group in the response
- * const group = await groupAdapter.get(session.groupKey, { augment: 'MEMBERS' });
+ * const group = await groupAdapter.get({ groupKey: session.groupKey, augment: 'MEMBERS' });
  * // include metrics relating to the group in the response
- * const group = await groupAdapter.get(session.groupKey, { augment: 'QUANTIZED' });
+ * const group = await groupAdapter.get({ groupKey: session.groupKey, augment: 'QUANTIZED' });
+ *
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.augment]   Specifies which additional information you'd like returned with the group
- * @param [optionals.groupKey]  Group key, if omitted will attempt to use the group associated with the current session
+ * @param [optionals.groupKey]  Group key; if omitted will attempt to use the group associated with the current session
  * @returns promise that resolves to a group
  */
 export async function get(
@@ -115,7 +119,8 @@ export async function get(
     } & RoutingOptions = {},
 ): Promise<GroupReadOutView> {
     const {
-        groupKey, augment,
+        groupKey,
+        augment,
         ...routingOptions
     } = optionals;
     let uriComponent = '';
@@ -131,8 +136,12 @@ export async function get(
 
 /**
  * Deletes the group; available only to Epicenter admins
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.destroy('0000017dd3bf540e5ada5b1e058f08f20461');
+ * import { groupAdapter } from 'epicenter-libs';
+ * await groupAdapter.destroy('0000017dd3bf540e5ada5b1e058f08f20461');
+ *
  * @param groupKey      Key associated with group
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to undefined if successful
@@ -148,10 +157,14 @@ export async function destroy(
 
 
 /**
- * Provides information on for all groups in the project
+ * Provides information for all groups in the project
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group`
+ *
  * @example
- * const groups = await epicenter.groupAdapter.gather();
- * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * import { groupAdapter } from 'epicenter-libs';
+ * const groups = await groupAdapter.gather();
+ *
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
  * @returns promise that resolves to a list of groups
  */
@@ -171,26 +184,30 @@ export async function gather(
 
 
 /**
- * Updates fields for a particular group; available only to Epicenter admins.
+ * Updates fields for a particular group; available only to Epicenter admins
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.update('0000017dd3bf540e5ada5b1e058f08f20461', { event: 'Orientation Day' });
+ * import { groupAdapter } from 'epicenter-libs';
+ * await groupAdapter.update('0000017dd3bf540e5ada5b1e058f08f20461', { event: 'Orientation Day' });
+ *
  * @param groupKey                          Key associated with group
  * @param update                            Attributes you wish to update
  * @param [update.runLimit]                 Defines the upper limit of runs allowed in the group
  * @param [update.organization]             Name of the organization owning the group
  * @param [update.allowSelfRegistration]    TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [update.flightRecorder]           Diagnostic tool for logging http requests for the server
- * @param [update.flightRecorder].start     Start time (epoch time)
- * @param [update.flightRecorder].stop      End time (epoch time)
- * @param [update.flightRecorder].enabled   Enabled flag for the flight recorder
+ * @param [update.flightRecorder]           Diagnostic tool for logging HTTP requests for the server
+ * @param [update.flightRecorder.start]     Start time (epoch time)
+ * @param [update.flightRecorder.stop]      End time (epoch time)
+ * @param [update.flightRecorder.enabled]   Enabled flag for the flight recorder
  * @param [update.event]                    Name of the event the group is playing for
  * @param [update.allowMembershipChanges]   TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [update.pricing]                  TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [update.pricing].number           TODO -- this does something, it's just that the frontend devs don't know what yet
+ * @param [update.pricing.amount]           TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [update.startDate]                TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [update.expirationDate]           Date the group expires
  * @param [update.capacity]                 Defines the upper limit on the number of users allowed in the group
- * @param [update.allowChannel]             Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
+ * @param [update.allowChannel]             Opt into push notifications for this resource; applicable to projects with phylogeny >= SILENT
  * @param [optionals]                       Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the updated group
  */
@@ -255,17 +272,21 @@ export async function update(
 
 /**
  * Creates a new group; available only to Epicenter admins
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group`
+ *
  * @example
- * epicenter.groupAdapter.create({
+ * import { groupAdapter } from 'epicenter-libs';
+ * const group = await groupAdapter.create({
  *      runLimit: 10,
  *      name: 'my-group-name',
  * });
+ *
  * @param group                             Group object
  * @param group.name                        Group name (required)
  * @param [group.runLimit]                  Defines the upper limit on the number of runs allowed in the group
  * @param [group.organization]              Name of the organization owning the group
  * @param [group.allowSelfRegistration]     TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [group.flightRecorder]            Diagnostic tool for loggin http requests for the server
+ * @param [group.flightRecorder]            Diagnostic tool for logging HTTP requests for the server
  * @param [group.flightRecorder.start]      Start time (epoch time)
  * @param [group.flightRecorder.stop]       End time (epoch time)
  * @param [group.flightRecorder.enabled]    Enabled flag for the flight recorder
@@ -275,7 +296,7 @@ export async function update(
  * @param [group.startDate]                 TODO -- this does something, it's just that the frontend devs don't know what yet
  * @param [group.expirationDate]            Date the group expires
  * @param [group.capacity]                  Defines the upper limit on the number of users allowed in the group
- * @param [group.allowChannel]              Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
+ * @param [group.allowChannel]              Opt into push notifications for this resource; applicable to projects with phylogeny >= SILENT
  * @param [optionals]                       Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the newly created group
  */
@@ -341,6 +362,8 @@ export async function create(
 
 /**
  * Queries for groups
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/search` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/quantized/search`
+ *
  * @example
  * import { groupAdapter } from 'epicenter-libs';
  * const filter = [
@@ -352,12 +375,13 @@ export async function create(
  *      // 'account.shortName=acme',                        // specifies account, intended for admin use
  *      // 'project.shortName=simulations',                 // specifies project, intended for admin use
  * ];
- * groupAdapter.query({
+ * const page = await groupAdapter.query({
  *      filter,
- *      sort: ['+group.name']   // sort all findings by group name ascending (lexigraphically)
+ *      sort: ['+group.name'],  // sort all findings by group name ascending (lexicographically)
  *      first: 3,               // page should start with the 4th item found (will default to 0)
  *      max: 10,                // page should only include the first 10 items
  * });
+ *
  * @param searchOptions             Search options for the query
  * @param [searchOptions.filter]    Filters for searching
  * @param [searchOptions.sort]      Sorting criteria
@@ -399,8 +423,12 @@ export async function search(
 
 /**
  * Retrieves a group with given group name
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/with/{NAME}`
+ *
  * @example
- * epicenter.groupAdapter.withGroupName('my-group-name');
+ * import { groupAdapter } from 'epicenter-libs';
+ * const group = await groupAdapter.withGroupName('my-group-name');
+ *
  * @param name          Name associated with the group
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a group
@@ -417,12 +445,16 @@ export async function withGroupName(
 
 /**
  * Retrieves the list of groups a particular user is in; intended for admin use
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/for/{USER_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.forUser(
+ * import { groupAdapter } from 'epicenter-libs';
+ * const groups = await groupAdapter.forUser(
  *      '000001796733eef0842f4d6d960997018a3b', // get groups where this user is a member of
  *      { role: ['FACILITATOR'] }               // where this user is a facilitator in the group
  * );
- * @param userKey                       Name associated with the group
+ *
+ * @param userKey                       User key associated with the user
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
  * @param [optionals.includeAllMembers] Indicates whether to include the other members in the group (by default, only the requested user appears)
@@ -438,7 +470,9 @@ export async function forUser(
     } & RoutingOptions = {},
 ): Promise<GroupReadOutView[]> {
     const {
-        includeExpired, includeAllMembers, role,
+        includeExpired,
+        includeAllMembers,
+        role,
         ...routingOptions
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
@@ -458,9 +492,13 @@ export async function forUser(
 
 /**
  * Retrieves the list of groups particular to the current session
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member`
+ *
  * @example
- * const groups = await epicenter.groupAdapter.getSessionGroups();
- * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * import { groupAdapter } from 'epicenter-libs';
+ * const groups = await groupAdapter.getSessionGroups();
+ *
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.includeExpired]    Indicates whether to include expired groups in the query
  * @param [optionals.includeAllMembers] Indicates whether to include the other members in the group (by default, only the requested user appears)
  * @param [optionals.role]              Role or list of possible roles the user holds in the group
@@ -474,7 +512,8 @@ export async function getSessionGroups(
     } & RoutingOptions = {},
 ): Promise<GroupReadOutView[]> {
     const {
-        includeExpired, role,
+        includeExpired,
+        role,
         ...routingOptions
     } = optionals;
     const isMultiple = Array.isArray(role) && role.length > 0;
@@ -493,13 +532,17 @@ export async function getSessionGroups(
 
 /**
  * Permits a list of users to self-register for membership in a group; will only work if the group has allowSelfRegistration set to true
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/self/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.whitelistUsers('0000017dd3bf540e5ada5b1e058f08f20461', {
+ * import { groupAdapter } from 'epicenter-libs';
+ * await groupAdapter.whitelistUsers('0000017dd3bf540e5ada5b1e058f08f20461', {
  *    allow: true,
  *    emails: ['user1@test.com', 'user2@test.com'],
  * });
+ *
  * @param groupKey                  Key associated with group
- * @param [optionals]               Optional arguments; pass network call options overrides here.
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.allow]         Whether to allow or disallow self-registration for the specified users; defaults to true if unset
  * @param [optionals.emails]        List of emails to allow or disallow; a value of "*" is interpreted as all users; defaults to all users if unset
  * @returns promise that resolves to undefined (indicating success)
@@ -528,10 +571,15 @@ export async function whitelistUsers(
         .then(({ body }) => body);
 }
 
+
 /**
  * Retrieves a list of users allowed to self-register for membership in a group with a given groupKey
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/self/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.getWhitelistedUsers('0000017dd3bf540e5ada5b1e058f08f20461');
+ * import { groupAdapter } from 'epicenter-libs';
+ * const users = await groupAdapter.getWhitelistedUsers('0000017dd3bf540e5ada5b1e058f08f20461');
+ *
  * @param groupKey      Key associated with the group
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a list of users
@@ -548,18 +596,22 @@ export async function getWhitelistedUsers(
 
 /**
  * Sends an email to the specified email address with a link to complete self-registration for a group
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/self/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.sendRegistrationEmail('0000017dd3bf540e5ada5b1e058f08f20461', 'user1@test.com', {
+ * import { groupAdapter } from 'epicenter-libs';
+ * await groupAdapter.sendRegistrationEmail('0000017dd3bf540e5ada5b1e058f08f20461', 'user1@test.com', {
  *     redirectURL: '/login',
  *     linkURL: '/register',
  *     subject: 'Complete your registration!',
  * });
+ *
  * @param groupKey                  Key associated with group
  * @param email                     Email address to send the link to
- * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @param  [optionals.linkURL]      Relative path to link sent in email to complete registration (<forio scheme>://<forio host>/app/<account>/<project><linkURL>)
- * @param  [optionals.redirectURL]  Relative path to redirect to after completing registration (<forio scheme>://<forio host>/app/<account>/<project><redirectURL>)
- * @param  [optionals.subject]      The subject of the email that will be sent
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.linkURL]       Relative path to link sent in email to complete registration (<forio scheme>://<forio host>/app/<account>/<project><linkURL>)
+ * @param [optionals.redirectURL]   Relative path to redirect to after completing registration (<forio scheme>://<forio host>/app/<account>/<project><redirectURL>)
+ * @param [optionals.subject]       The subject of the email that will be sent
  * @returns promise that resolves to undefined (indicating success)
  */
 export async function sendRegistrationEmail(
@@ -571,7 +623,12 @@ export async function sendRegistrationEmail(
         subject?: string;
     } & RoutingOptions = {},
 ): Promise<void> {
-    const { redirectURL, linkURL, subject, ...routingOptions } = optionals;
+    const {
+        redirectURL,
+        linkURL,
+        subject,
+        ...routingOptions
+    } = optionals;
 
     return await new Router()
         .post(`/registration/self/${groupKey}`, {
@@ -588,21 +645,25 @@ export async function sendRegistrationEmail(
 
 
 /**
- * Finalizes a user's self-registration process for a group, requires the project to have deployment.autoCreatePlayer set to true
+ * Finalizes a user's self-registration process for a group; requires the project to have deployment.autoCreatePlayer set to true
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/self/{TOKEN}`
+ *
  * @example
- * epicenter.groupAdapter.selfRegister('myregistrationtoken', 'pass', {
+ * import { groupAdapter } from 'epicenter-libs';
+ * const result = await groupAdapter.selfRegister('myregistrationtoken', 'pass', {
  *    displayName: 'My Display Name',
  *    givenName: 'Leonard',
  *    familyName: 'Nimoy',
  *    handle: 'the_real_spock',
  * });
- * @param groupKey                  Key associated with group
+ *
+ * @param token                     Registration token
  * @param password                  Password the user would use to log in
- * @param [optionals]               Optional arguments; pass network call options overrides here.
- * @param  [optionals.displayName]  Display name chosen by user
- * @param  [optionals.givenName]    User's given name
- * @param  [optionals.familyName]   User's family name
- * @param  [optionals.handle]       Handle the user would use to log in, defaults to email address if not specified
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.displayName]   Display name chosen by user
+ * @param [optionals.givenName]     User's given name
+ * @param [optionals.familyName]    User's family name
+ * @param [optionals.handle]        Handle the user would use to log in; defaults to email address if not specified
  * @returns promise resolving to an object containing the redirect URL and the session
  */
 export async function selfRegister(
@@ -615,7 +676,13 @@ export async function selfRegister(
         handle?: string;
     } & RoutingOptions = {},
 ): Promise<SelfRegistrationResult> {
-    const { displayName, givenName, familyName, handle, ...routingOptions } = optionals;
+    const {
+        displayName,
+        givenName,
+        familyName,
+        handle,
+        ...routingOptions
+    } = optionals;
 
     return await new Router()
         .patch(`/registration/self/${token}`, {
@@ -631,21 +698,26 @@ export async function selfRegister(
         .then(({ body }) => body);
 }
 
+
 /**
  * Adds user(s) to the group
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.addUser('000001796733eef0842f4d6d960997018a3b');
- * epicenter.groupAdapter.addUser([{
+ * import { groupAdapter } from 'epicenter-libs';
+ * await groupAdapter.addUser('000001796733eef0842f4d6d960997018a3b');
+ * await groupAdapter.addUser([{
  *      userKey: '000001796733eef0842f4d6d960997018a3b',
  *      role: 'REVIEWER',
  *      available: false,
  * }]);
+ *
  * @param usersInput                List of user keys or user input objects (properties defined below)
  * @param usersInput[].userKey      User key
- * @param [usersInput[].role]       User's role -- defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
- * @param [usersInput[].available]  Indicates whether or not the user is 'active' (for semantic labeling) -- defaults to true if unset
+ * @param [usersInput[].role]       User's role; defaults to PARTICIPANT if unset; See [ROLE](#ROLE) for all types
+ * @param [usersInput[].available]  Indicates whether or not the user is 'active' (for semantic labeling); defaults to true if unset
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.groupKey]      Group key to do indicate the group; will default to the group key associated with the current session
+ * @param [optionals.groupKey]      Group key to indicate the group; will default to the group key associated with the current session
  * @returns promise that resolves to the group the user was added to
  */
 export async function addUser(
@@ -678,13 +750,18 @@ export async function addUser(
 
 /**
  * Updates a user's group membership information
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}/{USER_KEY}`
+ *
  * @example
- * epicenter.groupAdapter.updateUser('000001796733eef0842f4d6d960997018a3b', { role: 'LEADER' });
+ * import { groupAdapter } from 'epicenter-libs';
+ * const group = await groupAdapter.updateUser('000001796733eef0842f4d6d960997018a3b', { role: 'LEADER' });
+ *
  * @param userKey               User key
  * @param update                Object containing the updates to a user's group membership information
  * @param [update.role]         User's role; See [ROLE](#ROLE) for all types
  * @param [update.available]    Indicates whether or not the user is 'active' (for semantic labeling)
- * @param [optionals]           Optional arguments; pass network call options overrides here.
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupKey]  Group key; defaults to the group key associated with the current session
  * @returns promise that resolves to the membership information that was updated
  */
 export async function updateUser(
@@ -713,9 +790,13 @@ export async function updateUser(
 
 /**
  * Removes user(s) from the group
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}/{USER_KEY}` or DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/member/{GROUP_KEY}` (for multiple users)
+ *
  * @example
+ * import { groupAdapter } from 'epicenter-libs';
  * const userKeys = members.map(({ userKey }) => userKey);
- * epicenter.groupAdapter.removeUsers(userKeys)
+ * await groupAdapter.removeUser(userKeys);
+ *
  * @param userKey               Key associated with the user or an array of user keys to remove from group
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupKey]  Group key for the group you want to remove from; defaults to the group in the current session
@@ -737,6 +818,20 @@ export async function removeUser(
 }
 
 
+/**
+ * Updates the status of a group
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/group/status/{GROUP_KEY}`
+ *
+ * @example
+ * import { groupAdapter } from 'epicenter-libs';
+ * const group = await groupAdapter.statusUpdate('active', 'Group is currently active');
+ *
+ * @param code                      Status code
+ * @param message                   Status message
+ * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.groupKey]      Group key; defaults to the group key associated with the current session
+ * @returns promise that resolves to the updated group
+ */
 export async function statusUpdate(
     code: string,
     message: string,

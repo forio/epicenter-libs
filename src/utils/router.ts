@@ -225,6 +225,7 @@ async function request(
     return errorManager.handle<Result>(fault, retry);
 }
 
+
 /**
  * Used to make the network calls in all API adapters
  */
