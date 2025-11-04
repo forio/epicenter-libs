@@ -41,7 +41,7 @@ export interface Items<I extends VaultItems = VaultItems> {
  * @example
  * import { vaultAdapter } from 'epicenter-libs';
  * // Change the name of the first student object in the list of students in the vault to "Bob"
- * vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', { set: { 'students.0.name': 'Bob' } });
+ * await vaultAdapter.update('00000166d59adcb0f497ddc1aad0270c0a62', { set: { 'students.0.name': 'Bob' } });
  *
  * @param vaultKey                  Vault key
  * @param items                     Object with a set/push/pop field to update the vault items with
