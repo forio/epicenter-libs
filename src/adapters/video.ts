@@ -186,7 +186,7 @@ export async function getDirectoryURL(
  *          jobName: 'test-transcription',
  *      },
  *  ];
- *  videoAdapter.processVideo(videoKey, processors);
+ *  await videoAdapter.processVideo(videoKey, processors);
  *
  * @param videoKey                              Video key
  * @param [processors[]]                        List of processes to complete
