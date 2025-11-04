@@ -80,13 +80,14 @@ export async function update<I extends VaultItems = VaultItems>(
  *
  * @example
  * import { vaultAdapter, ROLE } from 'epicenter-libs';
- * vaultAdapter.updateProperties('00000166d59adcb0f497ddc1aad0270c0a62', {
+ * await vaultAdapter.updateProperties('00000166d59adcb0f497ddc1aad0270c0a62', {
  *      allowChannel: true,
  *      permit: {
  *          readLock: ROLE.FACILITATOR,
  *          writeLock: ROLE.FACILITATOR,
  *      },
  *      ttlSeconds: 3600,
+ * });
  * });
  *
  * @param vaultKey                      Vault key
