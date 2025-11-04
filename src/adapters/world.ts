@@ -300,7 +300,7 @@ export async function getSessionWorlds<R extends WorldRole = WorldRole>(
  * await worldAdapter.selfAssign();
  * // Assigns user to a group-scoped world with role "cartographer"
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.selfAssign({ role: 'cartographer' });
+ * await worldAdapter.selfAssign({ role: 'cartographer' });
  * // Assigns user to an episode-scoped world with role "cartographer"
  * import { worldAdapter } from 'epicenter-libs';
  * worldAdapter.selfAssign({ role: 'cartographer', episodeName: 'my-episode-name' });
