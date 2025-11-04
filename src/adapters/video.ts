@@ -1,6 +1,6 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope, GenericSearchOptions } from '../utils/constants';
-import type { Video, VideoDir, Affiliate, ProcessingType, MediaFormat, LanguageCode } from '../apis/video';
+import type { Video, Affiliate, ProcessingType, MediaFormat, LanguageCode } from '../apis/video';
 
 import EpicenterError from '../utils/error';
 import { parseFilterInput } from '../utils/filter-parser';
@@ -131,7 +131,7 @@ export async function getDirectoryURL(
         family?: string;
         videoKey?: string;
     } & RoutingOptions = {},
-): Promise<VideoDir> {
+): Promise<Video> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {
         return videoAPI.getVideoDirectoryWith(family, affiliate, scope, routingOptions);

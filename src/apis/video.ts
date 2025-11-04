@@ -3,7 +3,20 @@ import type { RoutingOptions, Page } from '../utils/router';
 
 import Router from '../utils/router';
 
-export type Video = FIXME;
+export interface Video {
+    videoKey: string;
+    family: string;
+    affiliate: Affiliate;
+    status: 'INITIALIZED' | 'RECORDED' | 'PROCESSED';
+    scope: GenericScope;
+    permit: Permit;
+    address: Address;
+    contents: string[];
+    reference: string;
+    created: string;
+    lastUpdated: string;
+    expiration: string;
+}
 
 export const AFFILIATE = {
     VONAGE: 'VONAGE',
@@ -71,20 +84,12 @@ export const LANGUAGE_CODE = {
 
 export type LanguageCode = (typeof LANGUAGE_CODE)[keyof typeof LANGUAGE_CODE];
 
-export interface VideoDir {
-    contents: string[];
-    videoKey: string;
-    scope: GenericScope;
-    affiliate: Affiliate;
-    family: string;
-    status: 'INITIALIZED' | 'RECORDED' | 'PROCESSED';
-    address: Address;
-    reference: string;
-    created: string;
-    lastUpdated: string;
-    expiration: string;
-    permit: Permit;
-}
+/**
+ * Represents a video directory.
+ * @deprecated Use Video instead. Video is an alias for backward compatibility.
+ */
+export type VideoDir = Video;
+
 
 export async function getVideoURLByKey(
     file: string,
@@ -113,7 +118,7 @@ export async function getVideoURLWith(
 export async function getVideoDirectoryByKey(
     videoKey: string,
     optionals: RoutingOptions = {},
-): Promise<VideoDir> {
+): Promise<Video> {
     return await new Router()
         .get(`/video/url/${videoKey}`, optionals)
         .then(({ body }) => body);
@@ -124,7 +129,7 @@ export async function getVideoDirectoryWith(
     affiliate: Affiliate,
     scope: { userKey?: string } & GenericScope,
     optionals: RoutingOptions = {},
-): Promise<VideoDir> {
+): Promise<Video> {
     const { scopeBoundary, scopeKey, userKey } = scope;
     const userKeyURIComponent = userKey ? `/${userKey}` : '';
     return await new Router()
