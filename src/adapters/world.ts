@@ -210,7 +210,7 @@ export async function create<R extends WorldRole = WorldRole>(
  * worldAdapter.get();
  * // Gets all the worlds in the group attached to the session that the user is assigned to
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.get({ mine: true });
+ * await worldAdapter.get({ mine: true });
  *
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.groupName]     Name of the group (defaults to name of group associated with session)
