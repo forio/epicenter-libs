@@ -122,7 +122,7 @@ export interface TaskReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H 
  *     value: '0 7 15 * * ?', // triggers on day 15 7am of each month
  *     objectType: 'cron',
  * };
- * taskAdapter.create(scope, name, payload, trigger);
+ * await taskAdapter.create(scope, name, payload, trigger);
  *
  * @param scope                                 Scope associated with the task
  * @param scope.scopeBoundary                   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
