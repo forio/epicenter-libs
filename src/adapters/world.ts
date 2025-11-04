@@ -303,7 +303,7 @@ export async function getSessionWorlds<R extends WorldRole = WorldRole>(
  * await worldAdapter.selfAssign({ role: 'cartographer' });
  * // Assigns user to an episode-scoped world with role "cartographer"
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.selfAssign({ role: 'cartographer', episodeName: 'my-episode-name' });
+ * await worldAdapter.selfAssign({ role: 'cartographer', episodeName: 'my-episode-name' });
  *
  * @param [optionals]               Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.role]          Role constraint -- will put the user in a world with a role
