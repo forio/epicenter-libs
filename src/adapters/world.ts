@@ -133,7 +133,7 @@ export async function update<R extends WorldRole = WorldRole>(
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
- * worldAdapter.destroy('0000017a445032dc38cb2cecd5fc13708314');
+ * await worldAdapter.destroy('0000017a445032dc38cb2cecd5fc13708314');
  *
  * @param worldKey      Key associated with world
  * @param [optionals]   Optional arguments; pass network call options overrides here.
