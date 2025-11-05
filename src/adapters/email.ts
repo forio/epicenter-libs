@@ -1,9 +1,14 @@
 import type { RoutingOptions } from '../utils/router';
+
 import { Router } from 'utils/index';
 
-export enum ENCODING {
-    HEX = 'HEX',
-    BASE_64 = 'BASE_64',
+export type Encoding = 'HEX' | 'BASE_64';
+
+export interface Attachment {
+    encoding: Encoding;
+    data: string;
+    name: string;
+    contentType: string;
 }
 
 /**
@@ -60,12 +65,7 @@ export async function sendEmail(
         from?: string;
         replyTo?: string;
         fromUserKey?: string;
-        attachments?: {
-            encoding: keyof typeof ENCODING;
-            data: string;
-            name: string;
-            contentType: string;
-        }[];
+        attachments?: Attachment[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
@@ -130,12 +130,7 @@ export async function sendEmailToAdmin(
     optionals: {
         familyNameFirst?: string;
         html?: boolean;
-        attachments?: {
-            encoding: keyof typeof ENCODING;
-            data: string;
-            name: string;
-            contentType: string;
-        }[];
+        attachments?: Attachment[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {
@@ -187,12 +182,7 @@ export async function sendEmailToSupport(
         supportType?: string;
         familyNameFirst?: string;
         html?: boolean;
-        attachments?: {
-            encoding: keyof typeof ENCODING;
-            data: string;
-            name: string;
-            contentType: string;
-        }[];
+        attachments?: Attachment[];
     } & RoutingOptions = {},
 ): Promise<void> {
     const {

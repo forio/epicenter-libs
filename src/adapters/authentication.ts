@@ -10,6 +10,7 @@ export interface UserCredentials {
     password: string;
     groupKey?: string;
 }
+
 export interface AppCredentials {
     secretKey: string;
 }

@@ -1,5 +1,5 @@
 import type { RoutingOptions } from '../utils/router';
-import type { GenericScope } from '../utils/constants';
+import type { GenericScope, Address } from '../utils/constants';
 
 import fetch from 'cross-fetch';
 import { Fault, Router, ROLE } from '../utils';
@@ -10,13 +10,7 @@ export interface AssetScope extends GenericScope {
 
 export interface Asset {
     file: string;
-    address: {
-        projectShortName: string;
-        groupName: string;
-        accountShortName: string;
-        worldKey: string;
-        episodeName: string;
-    };
+    address: Address;
     scope: AssetScope;
 }
 

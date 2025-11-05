@@ -1,6 +1,6 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope, GenericSearchOptions } from '../utils/constants';
-import type { Video, AFFILIATE, PROCESSING_TYPE, MEDIA_FORMAT, LANGUAGE_CODE, VIDEO_DIR } from '../apis/video';
+import type { Video, Affiliate, ProcessingType, MediaFormat, LanguageCode } from '../apis/video';
 
 import EpicenterError from '../utils/error';
 import { parseFilterInput } from '../utils/filter-parser';
@@ -80,7 +80,7 @@ export async function getURL(
     file: string,
     optionals: {
         scope?: { userKey?: string } & GenericScope;
-        affiliate?: keyof typeof AFFILIATE;
+        affiliate?: Affiliate;
         family?: string;
         videoKey?: string;
     } & RoutingOptions = {},
@@ -127,11 +127,11 @@ export async function getURL(
 export async function getDirectoryURL(
     optionals: {
         scope?: { userKey?: string } & GenericScope;
-        affiliate?: keyof typeof AFFILIATE;
+        affiliate?: Affiliate;
         family?: string;
         videoKey?: string;
     } & RoutingOptions = {},
-): Promise<VIDEO_DIR> {
+): Promise<Video> {
     const { scope, affiliate, family, videoKey, ...routingOptions } = optionals;
     if (scope && family && affiliate) {
         return videoAPI.getVideoDirectoryWith(family, affiliate, scope, routingOptions);
@@ -174,11 +174,11 @@ export async function processVideo(
     videoKey: string,
     processors: {
         jobName: string;
-        mediaFormat: keyof typeof MEDIA_FORMAT;
-        languageCode: keyof typeof LANGUAGE_CODE;
+        mediaFormat: MediaFormat;
+        languageCode: LanguageCode;
         timeoutMinutes?: number;
         mediaFile: string;
-        objectType: keyof typeof PROCESSING_TYPE;
+        objectType: ProcessingType;
     }[],
     optionals: {
         log?: string;
@@ -208,7 +208,7 @@ export async function download(
     file: string,
     optionals: {
         scope?: { userKey?: string } & GenericScope;
-        affiliate?: keyof typeof AFFILIATE;
+        affiliate?: Affiliate;
         family?: string;
         videoKey?: string;
     } & RoutingOptions = {},

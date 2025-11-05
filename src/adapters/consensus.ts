@@ -1,11 +1,20 @@
 import type { RoutingOptions } from '../utils/router';
+import type { Actionable } from './run';
+import type { WorldRole } from './world';
+import type { PseudonymReadOutView } from './user';
 
 import {
     Router,
     RITUAL,
 } from 'utils';
 
-export interface Consensus {
+export interface BarrierArrival {
+    arrived: string;
+    message?: string;
+    user: PseudonymReadOutView;
+}
+
+export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
     instantiated: boolean;
     triggered: boolean;
     closed: boolean;
@@ -15,9 +24,9 @@ export interface Consensus {
     stage: string;
     ttlSeconds: number;
     secondsLeft: number;
-    expectedRoles: Record<string, unknown>;
-    impendingRoles: Record<string, unknown>;
-    arrivedRoles: Record<string, unknown>;
+    expectedRoles: Record<R, number>;
+    impendingRoles: Record<R, PseudonymReadOutView[]>;
+    arrivedRoles: Record<R, BarrierArrival[]>;
     allowChannel: boolean;
 }
 
@@ -51,18 +60,18 @@ export interface Consensus {
  * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns promise that resolves to the newly created consensus barrier
  */
-export async function create(
+export async function create<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     stage: string,
-    expectedRoles: Record<string, number>,
-    defaultActions: Record<string, Record<string, number>[]>,
+    expectedRoles: Record<R, number>,
+    defaultActions: Record<R, Actionable[]>,
     optionals: {
         ttlSeconds?: number;
         transparent?: boolean;
         allowChannel?: boolean;
     } & RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     const {
         ttlSeconds,
         transparent = false,
@@ -96,12 +105,12 @@ export async function create(
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns promise that returns a 204 if successful
  */
-export async function load(
+export async function load<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}/${stage}`, optionals)
         .then(({ body }) => body);
@@ -116,13 +125,13 @@ export async function load(
  * @param worldKey                      World key for the world you are loading consensus barriers for
  * @param name                          Unique string that specifies which set of consensus barriers to retrieve
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
- * @returns promise that returns a 204 if successful
+ * @returns promise that resolves to a list of consensus barriers
  */
-export async function list(
+export async function list<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>[]> {
     return await new Router()
         .get(`/consensus/${worldKey}/${name}`, optionals)
         .then(({ body }) => body);
@@ -180,13 +189,13 @@ export async function forceClose(
  * @param actions                       List of objects describing the default actions to update for the current user
  * @returns promise that resolves to the newly created consensus barrier
 */
-export async function updateDefaults(
+export async function updateDefaults<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     stage: string,
-    actions: Record<string, Record<string, number>[]>,
+    actions: Record<R, Actionable[]>,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     const {
         ...routingOptions
     } = optionals;
@@ -227,10 +236,7 @@ export async function submitActions(
     worldKey: string,
     name: string,
     stage: string,
-    actions: {
-        name: string;
-        arguments: string | number | Record<string, unknown>[];
-    }[],
+    actions: Actionable[],
     optionals: {
         message?: string;
         ritual?: keyof typeof RITUAL;
@@ -270,12 +276,12 @@ export async function submitActions(
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns {Promise}
  */
-export async function deleteBarrier(
+export async function deleteBarrier<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     const {
         ...routingOptions
     } = optionals;
@@ -302,11 +308,11 @@ export async function deleteBarrier(
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns {Promise}
  */
-export async function deleteAll(
+export async function deleteAll<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     const {
         ...routingOptions
     } = optionals;
@@ -335,12 +341,12 @@ export async function deleteAll(
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns {Promise}
  */
-export async function undoSubmit(
+export async function undoSubmit<R extends WorldRole = WorldRole>(
     worldKey: string,
     name: string,
     stage: string,
     optionals: RoutingOptions = {},
-): Promise<Consensus> {
+): Promise<BarrierReadOutView<R>> {
     const {
         ...routingOptions
     } = optionals;
@@ -379,10 +385,7 @@ export async function triggerFor(
     name: string,
     stage: string,
     userKey: string,
-    actions: {
-        name: string;
-        arguments: string | number | Record<string, unknown>[];
-    }[],
+    actions: Actionable[],
     optionals: {
         message?: string;
         ritual?: keyof typeof RITUAL;
