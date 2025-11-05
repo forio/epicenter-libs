@@ -85,8 +85,8 @@ export async function getConfig(
  * @example
  * import { dailyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const room = await dailyAdapter.createRoom({
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
  *
  * @param scope                                                     Scope associated with your room
@@ -257,7 +257,7 @@ export async function createToken(
  * import { dailyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const videoUrl = await dailyAdapter.getVideoByRecordingId('my-room', 'recording_instance_id', {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: 'GROUP_KEY'
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
  *
  * @param room_name         Name of the room
@@ -307,7 +307,8 @@ export async function getVideoByRecordingId(
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to true if successful
  */
-export async function updateRecordingStatus(room_name: string,
+export async function updateRecordingStatus(
+    room_name: string,
     optionals: RoutingOptions = {},
 ): Promise<boolean> {
     return await new Router()

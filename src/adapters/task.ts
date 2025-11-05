@@ -199,6 +199,7 @@ export async function create<
  *
  * @example
  * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
  * await taskAdapter.destroy(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
@@ -207,7 +208,10 @@ export async function create<
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
  * @returns promise that resolves to undefined when successful
  */
-export async function destroy(taskKey: string, optionals: RoutingOptions = {}): Promise<void> {
+export async function destroy(
+    taskKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
     return await new Router()
         .delete(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);
@@ -220,6 +224,7 @@ export async function destroy(taskKey: string, optionals: RoutingOptions = {}): 
  *
  * @example
  * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
  * const task = await taskAdapter.get(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
@@ -244,6 +249,7 @@ export async function get<
  *
  * @example
  * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
  * const history = await taskAdapter.getHistory(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
@@ -275,7 +281,7 @@ export async function getHistory<
  * import { taskAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const scope = {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: session.groupKey,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * };
  * const tasks = await taskAdapter.getTaskIn(scope);
  *

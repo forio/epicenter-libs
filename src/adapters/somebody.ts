@@ -21,7 +21,7 @@ export interface Somebody {
  * const email = 'test@test.com';
  * const scope = {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: 'GROUP_KEY',
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * };
  * const somebody = await somebodyAdapter.create(email, scope, {
  *     givenName: 'Person',
@@ -74,6 +74,7 @@ export async function create(
  *
  * @example
  * import { somebodyAdapter } from 'epicenter-libs';
+ * const somebodyKey = '0000017dd3bf540e5ada5b1e058f08f20461';
  * const somebody = await somebodyAdapter.get(somebodyKey);
  *
  * @param somebodyKey   Key associated with the somebody
@@ -102,7 +103,7 @@ export async function get(
  * import { somebodyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const scope = {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: 'GROUP_KEY',
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * };
  * const somebodies = await somebodyAdapter.inScope(scope, { first: 0, max: 100 });
  *
@@ -151,7 +152,7 @@ export async function inScope(
  * import { somebodyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const scope = {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: 'GROUP_KEY',
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * };
  * const somebody = await somebodyAdapter.byEmail('test@test.com', scope);
  *

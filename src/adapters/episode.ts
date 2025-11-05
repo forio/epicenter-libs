@@ -22,8 +22,8 @@ export interface EpisodeReadOutView {
  * @example
  * import { episodeAdapter } from 'epicenter-libs';
  * const episode = await episodeAdapter.create('myEpisode', 'myGroupName', {
- *      runLimit: 20,
- *      draft: true,
+ *     runLimit: 20,
+ *     draft: true,
  * });
  *
  * @param name                  Episode name
@@ -84,19 +84,19 @@ export async function get(
  * @example
  * import { episodeAdapter } from 'epicenter-libs';
  * const filter = [
- *      'name|=one|two',                                            // searches only for episodes named 'one' or 'two'
- *      'draft=false',                                              // searches only for episodes that aren't drafts
- *      'created>=2022-01-03T20:30:53.054Z',                        // looks for any episodes created after Jan 3rd 2022
- *      // 'account.shortName=acme'                                 // specifies the account, intended for admin use
- *      // 'project.shortName=simulations'                          // specifies the project, intended for admin use
- *      // 'group.name=my-group-name',                              // specifies a group name, intended for admin use
- *      // 'group.groupKey=0000017dd3bf540e5ada5b1e058f08f20461',   // specifies a group key, intended for admin use
+ *     'name|=one|two',                                            // searches only for episodes named 'one' or 'two'
+ *     'draft=false',                                              // searches only for episodes that aren't drafts
+ *     'created>=2022-01-03T20:30:53.054Z',                        // looks for any episodes created after Jan 3rd 2022
+ *     'account.shortName=acme',                                   // specifies the account, intended for admin use
+ *     'project.shortName=simulations',                            // specifies the project, intended for admin use
+ *     'group.name=my-group-name',                                 // specifies a group name, intended for admin use
+ *     'group.groupKey=0000017dd3bf540e5ada5b1e058f08f20461',      // specifies a group key, intended for admin use
  * ];
  * const episodes = await episodeAdapter.query({
- *      filter,
- *      sort: ['+episode.created'],     // sort all findings by the 'created' field (ascending)
- *      first: 3,                       // page should start with the 4th item found (will default to 0)
- *      max: 10,                        // page should only include the first 10 items
+ *     filter,
+ *     sort: ['+episode.created'],     // sort all findings by the 'created' field (ascending)
+ *     first: 3,                       // page should start with the 4th item found (will default to 0)
+ *     max: 10,                        // page should only include the first 10 items
  * });
  *
  * @param searchOptions             Search options for the query

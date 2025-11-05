@@ -1,43 +1,204 @@
 import type { RoutingOptions } from '../utils/router';
+import type { Admin } from './admin';
+import type { Project } from './project';
 
 import Router from '../utils/router';
 
-export interface AccountReadOutView {
-    name: string;
-    objectType: string;
+type WorkerPartition = 'NONE' | 'ALL' | 'DEVELOPMENT' | 'FREE' | 'LICENSED' | 'ACCOUNT';
+
+export interface SecretStrategyCreateInView {
+    difficulty?: string;
+    encryption?: string;
+    expirationDays?: number;
+    reuseHorizon?: number;
 }
 
-export interface AccountCreateInView {
+export interface DisplayNameStrategyCreateInView {
+    displayNameGenerator: string;
+    clearOnDeletion: boolean;
+}
+
+export interface RetentionPreferenceCreateInView {
+    inactiveUserRetentionDays?: number;
+    dataRetentionDays?: number;
+}
+
+export interface MultiFactorStrategyCreateInView {
+    expirationDays: number;
+    adminMultiFactorRequirement: string;
+    userMultiFactorRequirement: string;
+}
+
+export interface SecretCreateInView {
+    password?: string;
+}
+
+export interface AccountSettingCreateInView {
+    allowProjectScopedModels?: boolean;
+    concurrentRunLimit?: number;
+    authenticatedProjectLimit?: number;
+    maximumUsers?: number;
+    allowMultiPlayer?: boolean;
+}
+
+export interface BillingInformationCreateInView {
+    subscriptionPlan?: string;
+    subscriptionExpiration?: string;
+    billingInterval?: string;
+}
+
+export interface AccountLegacySettingsCreateInView {
+    authorizationMode?: string;
+}
+
+export interface LockoutLimitsCreateInView {
+    blackoutMinutes: number;
+    adminAttempts: number;
+    userAttempts: number;
+}
+
+export interface PersonalAccountCreateInView {
+    objectType: 'personal';
+    shortName: string;
     adminKey: string;
     name: string;
-    shortName: string;
+    workerPartition?: WorkerPartition;
+    active?: boolean;
     sharedSecret?: string;
-    workerPartition?: string;
-    active?: boolean;
 }
 
-export interface PersonalAccountCreateInView extends AccountCreateInView {
-    objectType: 'personal';
-}
-
-export interface TeamAccountCreateInView extends AccountCreateInView {
+export interface TeamAccountCreateInView {
     objectType: 'team';
-    billingInterval: string;
-    subscriptionPlan: string;
+    shortName: string;
+    adminKey: string;
+    name: string;
+    secretStrategy?: SecretStrategyCreateInView;
+    displayNameStrategy?: DisplayNameStrategyCreateInView;
+    allowDeletion?: boolean;
+    retentionPreference?: RetentionPreferenceCreateInView;
+    multiFactorStrategy?: MultiFactorStrategyCreateInView;
+    active?: boolean;
+    apiSecret?: SecretCreateInView;
+    accountSetting?: AccountSettingCreateInView;
+    billingInformation?: BillingInformationCreateInView;
+    legacySettings?: AccountLegacySettingsCreateInView;
+    workerPartition?: WorkerPartition;
+    allowStrongFacilitators?: boolean;
+    sharedSecret?: string;
+    allowAmbiguousHandles?: boolean;
+    lockoutLimits?: LockoutLimitsCreateInView;
 }
 
-export interface AccountUpdateInView {
+export interface SecretStrategyReadOutView {
+    difficulty?: string;
+    encryption?: string;
+    expirationDays?: number;
+    reuseHorizon?: number;
+}
+
+export interface DisplayNameStrategyReadOutView {
+    displayNameGenerator?: string;
+    clearOnDeletion?: boolean;
+}
+
+export interface RetentionPreferenceReadOutView {
+    inactiveUserRetentionDays?: number;
+    dataRetentionDays?: number;
+}
+
+export interface BillingInformationReadOutView {
+    subscriptionPlan?: string;
+    subscriptionExpiration?: string;
+    billingInterval?: string;
+}
+
+export interface MultiFactorStrategyReadOutView {
+    expirationDays?: number;
+    adminMultiFactorRequirement?: string;
+    userMultiFactorRequirement?: string;
+}
+
+export interface AccountLegacySettingsReadOutView {
+    authorizationMode?: string;
+}
+
+export interface AccountSettingReadOutView {
+    allowProjectScopedModels?: boolean;
+    concurrentRunLimit?: number;
+    authenticatedProjectLimit?: number;
+    maximumUsers?: number;
+    allowMultiPlayer?: boolean;
+}
+
+export interface AccountPermissionReadOutView {
+    objectType: 'account';
+    role?: string;
+    handle?: string;
+    adminKey?: string;
+}
+
+export interface LogoReadOutView {
+    imageType?: 'PNG' | 'JPG' | 'SVG';
+}
+
+export interface LockoutLimitsReadOutView {
+    adminAttempts?: number;
+    userAttempts?: number;
+    blackoutMinutes?: number;
+}
+
+export interface PersonalAccountReadOutView {
+    objectType: 'personal';
+    shortName?: string;
     name?: string;
-    workerPartition?: string;
+    workerPartition?: WorkerPartition;
+    active?: boolean;
+    admin?: Admin;
+    projects?: Project[];
+    tombstone?: string;
+    created?: string;
+    lastUpdated?: string;
+}
+
+export interface TeamAccountReadOutView {
+    objectType: 'team';
+    shortName?: string;
+    name?: string;
+    workerPartition?: WorkerPartition;
+    secretStrategy?: SecretStrategyReadOutView;
+    displayNameStrategy?: DisplayNameStrategyReadOutView;
+    allowDeletion?: boolean;
+    retentionPreference?: RetentionPreferenceReadOutView;
+    multiFactorStrategy?: MultiFactorStrategyReadOutView;
+    active?: boolean;
+    accountSetting?: AccountSettingReadOutView;
+    billingInformation?: BillingInformationReadOutView;
+    legacySettings?: AccountLegacySettingsReadOutView;
+    allowStrongFacilitators?: boolean;
+    allowAmbiguousHandles?: boolean;
+    lockoutLimits?: LockoutLimitsReadOutView;
+    members?: AccountPermissionReadOutView[];
+    logo?: LogoReadOutView;
+    projects?: Project[];
+    tombstone?: string;
+    created?: string;
+    lastUpdated?: string;
+}
+
+export type AccountReadOutView = PersonalAccountReadOutView | TeamAccountReadOutView;
+
+export interface PersonalAccountUpdateInView {
+    objectType: 'personal';
+    name?: string;
+    workerPartition?: WorkerPartition;
     active?: boolean;
 }
 
-export interface PersonalAccountUpdateInView extends AccountUpdateInView {
-    objectType: 'personal';
-}
-
-export interface TeamAccountUpdateInView extends AccountUpdateInView {
+export interface TeamAccountUpdateInView {
     objectType: 'team';
+    name?: string;
+    workerPartition?: WorkerPartition;
+    active?: boolean;
     billingInterval?: string;
 }
 
@@ -74,48 +235,42 @@ export async function getAccount(accountShortName: string): Promise<AccountReadO
  *     name: 'John Doe',
  *     shortName: 'johndoe',
  * });
- * // Create a team account
+ * // Create a team account with billing
  * const teamAccount = await accountAdapter.createAccount({
  *     objectType: 'team',
  *     adminKey: 'admin-key',
  *     name: 'Acme Corp',
  *     shortName: 'acme',
- *     billingInterval: 'monthly',
- *     subscriptionPlan: 'standard',
+ *     billingInformation: {
+ *         billingInterval: 'monthly',
+ *         subscriptionPlan: 'standard',
+ *     },
  * });
  *
- * @param view                          Account information
- * @param view.objectType               Account type; either 'personal' or 'team'
- * @param view.adminKey                 Admin key for the account
- * @param view.name                     Display name for the account
- * @param view.shortName                Short name/identifier for the account
- * @param [view.sharedSecret]           Optional shared secret for the account
- * @param [view.workerPartition]        Optional worker partition for the account
- * @param [view.active]                 Optional active status; defaults to true
- * @param view.billingInterval          Billing interval for team accounts (e.g., 'monthly', 'annual')
- * @param view.subscriptionPlan         Subscription plan for team accounts
+ * @param view                                      Account creation information
+ * @param view.objectType                           Account type; either 'personal' or 'team'
+ * @param view.shortName                            Unique short name for account, used as part of URL
+ * @param view.adminKey                             Admin key for the account
+ * @param view.name                                 Descriptive name of account
+ * @param [view.workerPartition]                    Defines location of model execution
+ * @param [view.active]                             Determines if the account can be used
+ * @param [view.sharedSecret]                       Optional shared secret for the account
+ * @param [view.secretStrategy]                     Configuration related to account secrets (team only)
+ * @param [view.displayNameStrategy]                Configuration related to user displayName (team only)
+ * @param [view.allowDeletion]                      Determines if this account can be deleted (team only)
+ * @param [view.retentionPreference]                Configuration related to data, user, group retention preferences (team only)
+ * @param [view.multiFactorStrategy]                Configuration related to multifactor authentication (team only)
+ * @param [view.apiSecret]                          Configuration related to API secret keys (team only)
+ * @param [view.accountSetting]                     Configuration related to account usage limits and capabilities (team only)
+ * @param [view.billingInformation]                 Subscription and billing configuration (team only)
+ * @param [view.legacySettings]                     API settings used for compatibility with legacy accounts (team only)
+ * @param [view.allowStrongFacilitators]            Determines if facilitators can update participants' identifying information (team only)
+ * @param [view.allowAmbiguousHandles]              Determines if a handle can be reused for an admin and a user in this account (team only)
+ * @param [view.lockoutLimits]                      Configuration related to failed login attempt limits (team only)
  * @returns promise that resolves to the newly created account
  */
 export async function createAccount(
-    view: {
-        objectType: 'personal';
-        adminKey: string;
-        name: string;
-        shortName: string;
-        sharedSecret?: string;
-        workerPartition?: string;
-        active?: boolean;
-    } | {
-        objectType: 'team';
-        adminKey: string;
-        name: string;
-        shortName: string;
-        billingInterval: string;
-        subscriptionPlan: string;
-        sharedSecret?: string;
-        workerPartition?: string;
-        active?: boolean;
-    },
+    view: PersonalAccountCreateInView | TeamAccountCreateInView,
 ): Promise<AccountReadOutView> {
     return await new Router()
         .withAccountShortName('epicenter')
@@ -147,26 +302,15 @@ export async function createAccount(
  *
  * @param view                          Account update information
  * @param view.objectType               Account type; either 'personal' or 'team'
- * @param [view.name]                   Updated display name for the account
- * @param [view.workerPartition]        Updated worker partition for the account
- * @param [view.active]                 Updated active status
- * @param [view.billingInterval]        Updated billing interval for team accounts
+ * @param [view.name]                   Updated descriptive name of account
+ * @param [view.workerPartition]        Updated location of model execution
+ * @param [view.active]                 Updated status determining if the account can be used
+ * @param [view.billingInterval]        Updated billing interval (team only)
  * @param [optionals]                   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the updated account information
  */
 export async function updateAccount(
-    view: {
-        objectType: 'personal';
-        name?: string;
-        workerPartition?: string;
-        active?: boolean;
-    } | {
-        objectType: 'team';
-        name?: string;
-        workerPartition?: string;
-        active?: boolean;
-        billingInterval?: string;
-    },
+    view: PersonalAccountUpdateInView | TeamAccountUpdateInView,
     optionals: RoutingOptions = {},
 ): Promise<AccountReadOutView> {
     return await new Router()

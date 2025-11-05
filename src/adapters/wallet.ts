@@ -30,6 +30,11 @@ export interface WalletItemCreateInView {
  * @example
  * // Add a user's phone number to their wallet
  * import { walletAdapter } from 'epicenter-libs';
+ * const scope = {
+ *     userKey: '000001796733eef0842f4d6d960997018a33',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
  * walletAdapter.update(scope, [{ label: 'phone', value: '555-555-5555' }]);
  *
  * @param scope                 Scope attached to the wallet; userKey is required
@@ -65,7 +70,11 @@ const NOT_FOUND = 404;
  * @example
  * // Get a user's wallet
  * import { walletAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
- * const scope = { userKey, scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
+ * const scope = {
+ *     userKey: '000001796733eef0842f4d6d960997018a33',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
  * walletAdapter.get(scope);
  *
  * @param scope                 Scope attached to the wallet; userKey is required
@@ -99,7 +108,10 @@ export async function get(
  * @example
  * // Get all wallets under a group
  * import { walletAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
- * const scope = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
+ * const scope = {
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
  * walletAdapter.withScope(scope);
  *
  * @param scope                 Scope attached to the wallets

@@ -31,10 +31,10 @@ export interface Leaderboard {
  * @example
  * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const leaderboard = await leaderboardAdapter.update(
- *      'class-23-leaderboard',
- *      { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461' },
- *      [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
- *      { tags: [{ label: 'role', content: 'doctor' }] }
+ *     'class-23-leaderboard',
+ *     { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461' },
+ *     [{ name: 'total', quantity: 20 }, { name: 'extraCredit', quantity: 2 }],
+ *     { tags: [{ label: 'role', content: 'doctor' }] }
  * );
  *
  * @param collection                Name of the leaderboard
@@ -87,16 +87,16 @@ export async function update(
  * @example
  * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const leaderboard = await leaderboardAdapter.list('myLeaderboard', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: 'GROUP_KEY',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: 'GROUP_KEY',
  * }, {
- *      filter: [
- *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
- *          'score.total>0'     // where the users scored a total higher than 0
- *      ],
- *      sort: ['+score.total'], // sort results by 'total' in ascending order
- *      first: 0,
- *      max: 20                 // retrieve only the first 20 entries
+ *     filter: [
+ *         'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
+ *         'score.total>0'     // where the users scored a total higher than 0
+ *     ],
+ *     sort: ['+score.total'], // sort results by 'total' in ascending order
+ *     first: 0,
+ *     max: 20                 // retrieve only the first 20 entries
  * });
  *
  * @param collection                Name of the leaderboard
@@ -149,13 +149,13 @@ export async function get(
  * @example
  * import { leaderboardAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const count = await leaderboardAdapter.getCount('myLeaderboard', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: 'GROUP_KEY',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * }, {
- *      filter: [
- *          'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
- *          'score.total>0'     // where the users scored a total higher than 0
- *      ],
+ *     filter: [
+ *         'tag.role=doctor',  // look for leaderboard entries tagged with role=doctor
+ *         'score.total>0'     // where the users scored a total higher than 0
+ *     ],
  * });
  *
  * @param collection                Name of the leaderboard

@@ -81,12 +81,12 @@ export async function update<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter, ROLE } from 'epicenter-libs';
  * await vaultAdapter.updateProperties('00000166d59adcb0f497ddc1aad0270c0a62', {
- *      allowChannel: true,
- *      permit: {
- *          readLock: ROLE.FACILITATOR,
- *          writeLock: ROLE.FACILITATOR,
- *      },
- *      ttlSeconds: 3600,
+ *     allowChannel: true,
+ *     permit: {
+ *         readLock: ROLE.FACILITATOR,
+ *         writeLock: ROLE.FACILITATOR,
+ *     },
+ *     ttlSeconds: 3600,
  * });
  * });
  *
@@ -153,8 +153,8 @@ export async function get<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const vault = await vaultAdapter.withScope('my-vault-name', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
  *
  * @param name                      Name of the vault
@@ -188,9 +188,9 @@ export async function withScope<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter } from 'epicenter-libs';
  * const vaults = await vaultAdapter.byName('my-vault-name', {
- *      groupName: 'my-group',
- *      episodeName: 'my-episode',
- *      includeEpisodes: true,
+ *     groupName: 'my-group',
+ *     episodeName: 'my-episode',
+ *     includeEpisodes: true,
  * });
  *
  * @param name                          Name of the vault
@@ -268,8 +268,8 @@ export async function remove(
  * @example
  * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * vaultAdapter.define('my-vault-name', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: 'GROUP_KEY'
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
  *
  * @param name                          Name of the vault
@@ -348,10 +348,10 @@ export async function define<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * await vaultAdapter.create('my-vault-name', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: 'GROUP_KEY'
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * }, {
- *      set: { foo: 'bar' }
+ *     set: { foo: 'bar' }
  * });
  *
  * @param name                          Name of the vault
@@ -390,16 +390,16 @@ export async function create<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter } from 'epicenter-libs';
  * vaultAdapter.list({
- *      filter: [
- *          'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
- *          'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
- *          'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
- *      ],
- *      sort: ['+vault.created'],                               // sort all findings by the 'created' field (ascending)
- *      first: 3,                                               // page should start with the 4th item found (defaults to 0)
- *      max: 10,                                                // page should only include the first 10 items
+ *     filter: [
+ *         'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
+ *         'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
+ *         'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
+ *     ],
+ *     sort: ['+vault.created'],                               // sort all findings by the 'created' field (ascending)
+ *     first: 3,                                               // page should start with the 4th item found (defaults to 0)
+ *     max: 10,                                                // page should only include the first 10 items
  * }, {
- *      groupName: 'my-group-name',                             // search within a group
+ *     groupName: 'my-group-name',                             // search within a group
  * });
  *
  * @param searchOptions             Search options
@@ -435,13 +435,13 @@ export async function list<I extends VaultItems = VaultItems>(
  * @example
  * import { vaultAdapter } from 'epicenter-libs';
  * vaultAdapter.count({
- *      filter: [
- *          'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
- *          'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
- *          'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
- *      ],
+ *     filter: [
+ *         'name|=vault-one|vault-two',                        // looks for any vaults with the names provided
+ *         'scopeBoundary=WORLD',                              // looks for vaults scoped to a world
+ *         'scopeKey=00000165ad4e6a3cd22b993340b963820239',    // used in conjunction with the scopeBoundary
+ *     ],
  * }, {
- *      groupName: 'my-group-name',                             // search within a group
+ *     groupName: 'my-group-name',                             // search within a group
  * });
  *
  * @param searchOptions             Search options

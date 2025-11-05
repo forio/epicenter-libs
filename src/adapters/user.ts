@@ -241,7 +241,7 @@ export async function get(
  *
  * @example
  * import { userAdapter } from 'epicenter-libs';
- * const user = await userAdapter.getWithHandle('john.doe');
+ * const user = await userAdapter.getWithHandle('john.doe@example.com', { modality: 'email' });
  *
  * @param handle                Handle of the user to retrieve
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.

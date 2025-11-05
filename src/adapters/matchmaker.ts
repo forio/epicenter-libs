@@ -11,7 +11,7 @@ import Router from '../utils/router';
  * import { matchmakerAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const list = await matchmakerAdapter.create('my-matchmaker', 2, {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *     scopeKey: 'GROUP_KEY',
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
  *
  * @param name                  The name for the matchmaker list

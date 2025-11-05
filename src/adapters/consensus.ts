@@ -38,19 +38,19 @@ export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.create(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
- *      {
- *          ROLE1: 1,
- *          ROLE2: 1,
- *          ROLE3: 2,
- *      },
- *      {
- *          ROLE1: [{ name: 'step', arguments: [] }],
- *          ROLE2: [{ name: 'step', arguments: [] }],
- *          ROLE3: [{ name: 'step', arguments: [] }],
- *      }
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     {
+ *         ROLE1: 1,
+ *         ROLE2: 1,
+ *         ROLE3: 2,
+ *     },
+ *     {
+ *         ROLE1: [{ name: 'step', arguments: [] }],
+ *         ROLE2: [{ name: 'step', arguments: [] }],
+ *         ROLE3: [{ name: 'step', arguments: [] }],
+ *     }
  * );
  *
  * @param worldKey                      World key for the world you are making a consensus barrier for
@@ -194,10 +194,10 @@ export async function forceClose(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.updateDefaults(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
- *      [{ name: 'message', value: 'DEFAULT MESSAGE 2', objectType: 'set' }]
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     [{ name: 'var1', value: 100, objectType: 'set' }]
  * );
  *
  * @param worldKey                      World key for the world you are making a consensus barrier for
@@ -230,18 +230,18 @@ export async function updateDefaults<R extends WorldRole = WorldRole>(
 
 
 /**
- * Submits actions for your turn and marks you as having `submitted`. If `executeActionsImmediately` was set to `true` while creating the consensus barrier, the actions will be immediately sent to the model.
+ * Submits actions for your turn and marks you as having `submitted`.
  * Note that you can still call operations from the runAdapter directly, but will bypass the consensus requirements.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/publish/{WORLD_KEY}/{NAME}/{STAGE}`
  *
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.submitActions(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
- *      [{ name: 'step', arguments: [] }],
- *      { message: 'Student side submission!' },
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     [{ name: 'step', arguments: [] }],
+ *     { message: 'Student side submission!' },
  * );
  *
  * @param worldKey                      World key for the world you are making a consensus barrier for
@@ -288,9 +288,9 @@ export async function submitActions(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.deleteBarrier(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
  * );
  *
  * @param worldKey                      World key for the world you are targeting
@@ -324,8 +324,8 @@ export async function deleteBarrier<R extends WorldRole = WorldRole>(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.deleteAll(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
  * );
  *
  * @param worldKey                      World key for the world you are targeting
@@ -357,9 +357,9 @@ export async function deleteAll<R extends WorldRole = WorldRole>(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.undoSubmit(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
  * );
  *
  * @param worldKey                      World key for the world you are targeting
@@ -393,12 +393,12 @@ export async function undoSubmit<R extends WorldRole = WorldRole>(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.triggerFor(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
- *      '0000017cb60ad697e109dcb11cdd4cfcdd1d',
- *      [{ name: 'step', arguments: [] }],
- *      { message: 'Facilitator triggered this submission!' },
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     '0000017cb60ad697e109dcb11cdd4cfcdd1d',
+ *     [{ name: 'step', arguments: [] }],
+ *     { message: 'Facilitator triggered this submission!' },
  * );
  *
  * @param worldKey                      World key for the world you are targeting
@@ -449,10 +449,10 @@ export async function triggerFor(
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
  * await consensusAdapter.undoSubmitFor(
- *      '00000173078afb05b4ae4c726637167a1a9e',
- *      'SUBMISSIONS',
- *      'ROUND1',
- *      '0000017cb60ad697e109dcb11cdd4cfcdd1d',
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     '0000017cb60ad697e109dcb11cdd4cfcdd1d',
  * );
  *
  * @param worldKey                      World key for the world you are targeting

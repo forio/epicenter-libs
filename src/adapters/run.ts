@@ -320,8 +320,8 @@ export type RunStrategy =
  * @example
  * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * await runAdapter.create('model.py', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
  *
  * @param model                         Name of your model file
@@ -711,17 +711,17 @@ export async function get<
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * const page = await runAdapter.query('model.xlsx', {
- *      filter: [
- *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
- *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
- *          'var.certified*=true'           // looks for runs where the variable 'certified' exists,
- *          'run.hidden=false',             // where the run's 'hidden' attribute is false
- *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
- *          'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
- *      ],
- *      sort: ['+run.created']              // sort all findings by the 'created' field (ascending)
- *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
- *      metadata: ['classification']        // include the run metadata for 'classification' in the response
+ *     filter: [
+ *         'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *         'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
+ *         'var.certified*=true'           // looks for runs where the variable 'certified' exists,
+ *         'run.hidden=false',             // where the run's 'hidden' attribute is false
+ *         'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
+ *         'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
+ *     ],
+ *     sort: ['+run.created']              // sort all findings by the 'created' field (ascending)
+ *     variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
+ *     metadata: ['classification']        // include the run metadata for 'classification' in the response
  * });
  *
  * @param model                                 Name of your model file
@@ -1029,8 +1029,8 @@ export async function getVariable<V extends RunVariables = RunVariables>(
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * const updated = await runAdapter.updateVariables('00000173078afb05b4ae4c726637167a1a9e', {
- *      price: 100,
- *      foo: 'bar',
+ *     price: 100,
+ *     foo: 'bar',
  * });
  *
  * @param runKey                Identifier for your run
@@ -1124,26 +1124,65 @@ export async function getMetadata<M extends RunMetadata = RunMetadata>(
 }
 
 
+export interface MetadataFirstPop {
+    objectType: 'first';
+}
+
+export interface MetadataLastPop {
+    objectType: 'last';
+}
+
+export interface MetadataAllPop {
+    objectType: 'all';
+    value?: unknown;
+}
+
+export type MetadataPop = MetadataFirstPop | MetadataLastPop | MetadataAllPop;
+
+export interface MetadataUpdate<M extends RunMetadata = RunMetadata> {
+    pop?: Partial<Record<keyof M, MetadataPop>>;
+    set?: Partial<M>;
+    push?: Partial<M>;
+}
+
 /**
  * Updates run metadata for a run or runs
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/meta/{RUN_KEY}` or PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/meta` (for multiple runs)
  *
  * @example
  * import { runAdapter } from 'epicenter-libs';
+ * // Set metadata values
  * const updated = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
- *      classification: 'new-classification',
- *      categorization: 'new-categorization',
+ *     set: {
+ *         classification: 'new-classification',
+ *         categorization: 'new-categorization',
+ *     },
+ * });
+ * // Push values to array metadata
+ * const pushed = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
+ *     push: {
+ *         history: 'new-entry',
+ *     },
+ * });
+ * // Pop values from array metadata
+ * const popped = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
+ *     pop: {
+ *         history: { objectType: 'last' },
+ *     },
  * });
  *
  * @param runKey                Identifier for your run or runs
- * @param update                Object with the key-value pairs you would like to update in the metadata
+ * @param update                Metadata update operations
+ * @param [update.set]          Key-value pairs to set in the metadata
+ * @param [update.push]         Key-value pairs to push to array metadata
+ * @param [update.pop]          Keys with pop operations (first, last, or all) to remove from array metadata
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
- * @returns promise that resolve to an object with the metadata and new values that were updated
+ * @returns promise that resolves to an object with the updated metadata
  */
 export async function updateMetadata<M extends RunMetadata = RunMetadata>(
     runKey: string | string[],
-    update: Partial<M>,
+    update: MetadataUpdate<M>,
     optionals: {
         timeout?: number;
     } & RoutingOptions = {},
@@ -1173,8 +1212,8 @@ export async function updateMetadata<M extends RunMetadata = RunMetadata>(
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * const actions = [
- *      { name: 'price', value: 100, 'objectType': 'set' },
- *      { name: 'simulate', arguments: [10], 'objectType': 'execute' },
+ *     { name: 'price', value: 100, 'objectType': 'set' },
+ *     { name: 'simulate', arguments: [10], 'objectType': 'execute' },
  * ];
  * // Single runKey
  * const result = await runAdapter.action('00000173078afb05b4ae4c726637167a1a9e', actions);
@@ -1320,13 +1359,13 @@ export async function removeFromWorld(
  * 'reuse-never' -- will create a new run every time
  *
  * @example
- * import { runAdapter } from 'epicenter-libs';
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const run = await runAdapter.getWithStrategy(
  *     'reuse-across-sessions',
  *     'model.py',
  *     {
  *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *         scopeKey: '123456789',
+ *         scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  *     },
  * );
  *

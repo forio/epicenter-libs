@@ -14,8 +14,8 @@ import * as vonageAPI from '../apis/vonage';
  * import OT from '@opentok/client';
  * import { vonageAdapter } from 'epicenter-libs';
  * const [sessionID, projectID] = await Promise.all([
- *      vonageAdapter.createSession(),
- *      vonageAdapter.getProjectID()
+ *     vonageAdapter.createSession(),
+ *     vonageAdapter.getProjectID()
  * ]);
  * const vonageSession = OT.initSession(projectID, sessionID);
  *
@@ -37,8 +37,8 @@ export async function getProjectID(
  * import OT from '@opentok/client';
  * import { vonageAdapter } from 'epicenter-libs';
  * const [sessionID, projectID] = await Promise.all([
- *      vonageAdapter.createSession(),
- *      vonageAdapter.getProjectID()
+ *     vonageAdapter.createSession(),
+ *     vonageAdapter.getProjectID()
  * ]);
  * const vonageSession = OT.initSession(projectID, sessionID);
  *
@@ -78,11 +78,11 @@ export async function generateToken(
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/archive`
  *
  * @example
- * import { vonageAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * import { authAdapter, vonageAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const session = authAdapter.getLocalSession();
  * vonageAdapter.startArchive('my-archive', '2_MX40NzQ...Y1TnZ-fg', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: session.groupKey,
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: session.groupKey,
  * })
  *
  * @param name                      Name of the archive; for your own purposes

@@ -29,7 +29,6 @@ export interface AssetTicket {
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
- * // Use ticket.url to upload the file to S3
  *
  * @param file                              File path/name for the asset
  * @param scope                             Scope associated with the asset
@@ -92,7 +91,6 @@ export async function create(
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
- * // Use ticket.url to upload the updated file to S3
  *
  * @param file                              File path/name for the asset
  * @param scope                             Scope associated with the asset
@@ -304,7 +302,6 @@ export async function getURL(
  *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
  *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * });
- * // Use the url to access the asset
  *
  * @param file                              File path/name for the asset
  * @param scope                             Scope associated with the asset

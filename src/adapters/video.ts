@@ -34,14 +34,14 @@ export async function remove(
  * @example
  * import { videoAdapter } from 'epicenter-libs';
  * const videos = await videoAdapter.query({
- *      filter: [
- *          'affiliate=VONAGE',                     // searches for videos provided by the Vonage affiliate
- *          'episodeName=myEpisode',                // searches for videos tied to the episode with name 'myEpisode'
- *          'created>=2022-01-03T20:30:53.054Z',    // searches for videos created after Jan 3rd 2022
- *      ],
- *      sort: ['+video.created'],                   // sort all findings by the 'created' field (ascending)
- *      first: 0,
- *      max: 25,
+ *     filter: [
+ *         'affiliate=VONAGE',                     // searches for videos provided by the Vonage affiliate
+ *         'episodeName=myEpisode',                // searches for videos tied to the episode with name 'myEpisode'
+ *         'created>=2022-01-03T20:30:53.054Z',    // searches for videos created after Jan 3rd 2022
+ *     ],
+ *     sort: ['+video.created'],                   // sort all findings by the 'created' field (ascending)
+ *     first: 0,
+ *     max: 25,
  * });
  *
  * @param searchOptions Search options
@@ -77,17 +77,17 @@ export async function query(
  *
  * // get using video key
  * videoAdapter.getURL('archive.mp4', {
- *      videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
+ *     videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
  * });
  *
  * // get using scope/affiliate/family
  * videoAdapter.getURL('archive.mp4', {
- *      scope: {
- *          scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *          scopeKey: session.groupKey,
- *      },
- *      affiliate: 'VONAGE',
- *      family: 'archiveName'
+ *     scope: {
+ *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *         scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ *     },
+ *     affiliate: 'VONAGE',
+ *     family: 'archiveName'
  * });
  *
  * @param file                              Name of the file
@@ -130,17 +130,17 @@ export async function getURL(
  *
  * // get using video key
  * videoAdapter.getDirectoryURL({
- *      videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
+ *     videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
  * });
  *
  * // get using scope/affiliate/family
  * videoAdapter.getDirectoryURL({
- *      scope: {
- *          scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *          scopeKey: session.groupKey,
- *      },
- *      affiliate: 'VONAGE',
- *      family: 'archiveName'
+ *     scope: {
+ *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *         scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ *     },
+ *     affiliate: 'VONAGE',
+ *     family: 'archiveName'
  * });
  *
  * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
@@ -178,13 +178,13 @@ export async function getDirectoryURL(
  *
  * @example
  *  const processors = [
- *      {
- *          mediaFormat: 'mp4',
- *          languageCode: 'en-US',
- *          objectType: 'transcription',
- *          mediaFile: 'archive.mp4',
- *          jobName: 'test-transcription',
- *      },
+ *     {
+ *         mediaFormat: 'mp4',
+ *         languageCode: 'en-US',
+ *         objectType: 'transcription',
+ *         mediaFile: 'archive.mp4',
+ *         jobName: 'test-transcription',
+ *     },
  *  ];
  *  await videoAdapter.processVideo(videoKey, processors);
  *
@@ -231,16 +231,16 @@ export async function processVideo(
  * import { videoAdapter } from 'epicenter-libs';
  * // download using video key
  * await videoAdapter.download('archive.mp4', {
- *      videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
+ *     videoKey: '0000017e31bb902cfe17615867d5005c5d5f',
  * });
  * // download using scope/affiliate/family
  * await videoAdapter.download('archive.mp4', {
- *      scope: {
- *          scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *          scopeKey: session.groupKey,
- *      },
- *      affiliate: 'VONAGE',
- *      family: 'archiveName'
+ *     scope: {
+ *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *         scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ *     },
+ *     affiliate: 'VONAGE',
+ *     family: 'archiveName'
  * });
  *
  * @param file                              Name of the file

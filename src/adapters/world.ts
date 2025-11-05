@@ -358,8 +358,8 @@ export async function selfAssign<R extends WorldRole = WorldRole>(
  * @example
  * import { worldAdapter } from 'epicenter-libs';
  * const worlds = await worldAdapter.assignUsers([
- *      { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
- *      { userKey: '000001796733eef0842f4d6d960997018a3b' },
+ *     { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
+ *     { userKey: '000001796733eef0842f4d6d960997018a3b' },
  * ]);
  *
  * @param assignments                       List of users assignment objects
@@ -431,13 +431,13 @@ export async function autoAssignUsers<R extends WorldRole = WorldRole>(
  * @example
  * import { worldAdapter } from 'epicenter-libs';
  * const updatedWorlds = await worldAdapter.editAssignments({
- *      '0000017a445032dc38cb2cecd5fc13708314': [
- *          { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
- *          { userKey: '000001796733eef0842f4d6d960997018a3b' },
- *      ],
- *      '0000017a445032dc38cb2cecd5fc13708315': [
- *          { userKey: '000001796733eef0842f4d6d960997018a4c', role: 'navigator' },
- *      ],
+ *     '0000017a445032dc38cb2cecd5fc13708314': [
+ *         { userKey: '000001796733eef0842f4d6d960997018a43', role: 'locksmith' },
+ *         { userKey: '000001796733eef0842f4d6d960997018a3b' },
+ *     ],
+ *     '0000017a445032dc38cb2cecd5fc13708315': [
+ *         { userKey: '000001796733eef0842f4d6d960997018a4c', role: 'navigator' },
+ *     ],
  * });
  *
  * @param assignments                       Map of world keys to list of user assignment objects
@@ -537,8 +537,11 @@ export async function removeUsers(
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/world/persona/{SCOPE_BOUNDARY}/{SCOPE_KEY}`
  *
  * @example
- * import { worldAdapter } from 'epicenter-libs';
- * await worldAdapter.getPersonas({ scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: GROUP_KEY });
+ * import { worldAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * await worldAdapter.getPersonas({
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * });
  *
  * @param scope                 Scope associated with the persona set (by default the scope used will be the current project). Use this to do any specific overrides.
  * @param scope.scopeBoundary   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
@@ -572,9 +575,14 @@ export async function getPersonas<R extends WorldRole = WorldRole>(
  *
  * @example
  * import { worldAdapter } from 'epicenter-libs';
- * await worldAdapter.setPersonas([
- *      { role: 'leader',  minimum: 1 },
- * ]);
+ * const scope = {
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
+ * const personas = [
+ *     { role: 'leader',  minimum: 1 },
+ * ];
+ * await worldAdapter.setPersonas(personas, scope);
  *
  * @param personas              List of role description objects (personas)
  * @param personas[].role       Name of the role
@@ -589,14 +597,13 @@ export async function getPersonas<R extends WorldRole = WorldRole>(
  */
 export async function setPersonas<R extends WorldRole = WorldRole>(
     personas: PersonaCreateInView<R>[],
-    scope: GenericScope,
+    scope?: GenericScope,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-    const { scopeBoundary, scopeKey } = scope;
-    const boundary = scopeBoundary || SCOPE_BOUNDARY.PROJECT;
+    const boundary = scope?.scopeBoundary || SCOPE_BOUNDARY.PROJECT;
     /* We will at some point remove the need to explicitly lower case this */
     const boundaryComponent = boundary === SCOPE_BOUNDARY.WORLD ? '' : `/${boundary.toLowerCase()}`;
-    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scopeKey}`;
+    const scopeKeyComponent = boundary === SCOPE_BOUNDARY.PROJECT ? '' : `/${scope?.scopeKey}`;
     const uriComponent = `${boundaryComponent}${scopeKeyComponent}`;
 
     return await new Router()
