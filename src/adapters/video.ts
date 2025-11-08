@@ -123,7 +123,7 @@ export async function getURL(
 
 /**
  * Gets a directory URL for a video file
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/url/{VIDEO_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/dir/with/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{AFFILIATE}/{FAMILY}`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/dir/{VIDEO_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/dir/with/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{AFFILIATE}/{FAMILY}`
  *
  * @example
  * import { videoAdapter } from 'epicenter-libs';
