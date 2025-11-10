@@ -496,6 +496,90 @@ describe('consensusAdapter', () => {
         testedMethods.add('updateDefaults');
     });
 
+    describe('consensusAdapter.pause', () => {
+        const worldKey = 'WORLD_KEY';
+        const name = 'CONSENSUS_NAME';
+        const stage = 'CONSENSUS_STAGE';
+
+        it('Should do a PATCH', async () => {
+            await consensusAdapter.pause(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
+        });
+
+        it('Should have authorization', async () => {
+            await consensusAdapter.pause(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the consensus/pause URL', async () => {
+            await consensusAdapter.pause(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/pause/${worldKey}/${name}/${stage}`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await consensusAdapter.pause(worldKey, name, stage, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/pause/${worldKey}/${name}/${stage}`);
+        });
+
+        it('Should pass resume: false to the request body', async () => {
+            await consensusAdapter.pause(worldKey, name, stage);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('resume');
+            expect(body.resume).toBe(false);
+        });
+
+        testedMethods.add('pause');
+    });
+
+    describe('consensusAdapter.resume', () => {
+        const worldKey = 'WORLD_KEY';
+        const name = 'CONSENSUS_NAME';
+        const stage = 'CONSENSUS_STAGE';
+
+        it('Should do a PATCH', async () => {
+            await consensusAdapter.resume(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PATCH');
+        });
+
+        it('Should have authorization', async () => {
+            await consensusAdapter.resume(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the consensus/pause URL', async () => {
+            await consensusAdapter.resume(worldKey, name, stage);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/pause/${worldKey}/${name}/${stage}`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await consensusAdapter.resume(worldKey, name, stage, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/pause/${worldKey}/${name}/${stage}`);
+        });
+
+        it('Should pass resume: true to the request body', async () => {
+            await consensusAdapter.resume(worldKey, name, stage);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('resume');
+            expect(body.resume).toBe(true);
+        });
+
+        testedMethods.add('resume');
+    });
+
     it('Should not have any untested methods', () => {
         const actualMethods = getFunctionKeys(consensusAdapter);
         expect(actualMethods).toEqual(testedMethods);

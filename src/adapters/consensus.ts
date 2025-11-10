@@ -18,6 +18,7 @@ export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
     instantiated: boolean;
     triggered: boolean;
     closed: boolean;
+    paused: boolean;
     transparent: boolean;
     worldKey: string;
     name: string;
@@ -475,6 +476,84 @@ export async function undoSubmitFor(
 
     return await new Router()
         .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Pauses the TTL countdown timer for a timed consensus barrier. When paused, the timer stops counting down and the remaining time is preserved. Only works for barriers that have a ttlSeconds value set.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/pause/{WORLD_KEY}/{NAME}/{STAGE}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.pause(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to pause
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the updated consensus barrier
+ */
+export async function pause<R extends WorldRole = WorldRole>(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {},
+): Promise<BarrierReadOutView<R>> {
+    const {
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
+            body: {
+                resume: false,
+            },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Resumes the TTL countdown timer for a paused consensus barrier. The timer continues from where it was paused. Only works for barriers that were previously paused.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/pause/{WORLD_KEY}/{NAME}/{STAGE}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.resume(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to resume
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the updated consensus barrier
+ */
+export async function resume<R extends WorldRole = WorldRole>(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {},
+): Promise<BarrierReadOutView<R>> {
+    const {
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
+            body: {
+                resume: true,
+            },
             ...routingOptions,
         })
         .then(({ body }) => body);
