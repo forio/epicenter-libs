@@ -31,6 +31,13 @@ export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
     allowChannel: boolean;
 }
 
+export interface BarrierMap {
+    [worldKey: string]: {
+        name: string;
+        stage: string;
+    };
+}
+
 
 /**
  * Creates a new consensus barrier
@@ -593,6 +600,48 @@ export async function resume<R extends WorldRole = WorldRole>(
             body: {
                 resume: true,
             },
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Facilitator only; retrieves multiple consensus barriers across multiple worlds within a group or episode. This allows you to efficiently check the status of barriers across all specified worlds in a single API call.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/in/{GROUP_NAME}` or POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/in/{GROUP_NAME}/{EPISODE_NAME}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * const barriers = await consensusAdapter.collectInGroup(
+ *     {
+ *         '00000173078afb05b4ae4c726637167a1a9e': { name: 'SUBMISSIONS', stage: 'ROUND1' },
+ *         '00000173078afb05b4ae4c726637167a1b2f': { name: 'SUBMISSIONS', stage: 'ROUND1' },
+ *     },
+ *     'my-group-name',
+ *     { episodeName: 'my-episode-name' }
+ * );
+ *
+ * @param barrierMap                    Map of world keys to barrier name/stage pairs
+ * @param groupName                     Name of the group to collect barriers from
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.episodeName]       Name of the episode to collect barriers from (optional)
+ * @returns promise that resolves to an array of consensus barriers
+ */
+export async function collectInGroup<R extends WorldRole = WorldRole>(
+    barrierMap: BarrierMap,
+    groupName: string,
+    optionals: {
+        episodeName?: string;
+    } & RoutingOptions = {},
+): Promise<BarrierReadOutView<R>[]> {
+    const {
+        episodeName,
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .post(`/consensus/in/${groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: barrierMap,
             ...routingOptions,
         })
         .then(({ body }) => body);

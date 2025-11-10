@@ -614,6 +614,56 @@ describe('consensusAdapter', () => {
         testedMethods.add('resume');
     });
 
+    describe('consensusAdapter.collectInGroup', () => {
+        const groupName = 'GROUP_NAME';
+        const barrierMap = {
+            WORLD_KEY_1: { name: 'CONSENSUS_NAME', stage: 'CONSENSUS_STAGE' },
+            WORLD_KEY_2: { name: 'CONSENSUS_NAME', stage: 'CONSENSUS_STAGE' },
+        };
+
+        it('Should do a POST', async () => {
+            await consensusAdapter.collectInGroup(barrierMap, groupName);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('POST');
+        });
+
+        it('Should have authorization', async () => {
+            await consensusAdapter.collectInGroup(barrierMap, groupName);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the consensus/in/{groupName} URL', async () => {
+            await consensusAdapter.collectInGroup(barrierMap, groupName);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/in/${groupName}`);
+        });
+
+        it('Should use the consensus/in/{groupName}/{episodeName} URL when episodeName is provided', async () => {
+            const episodeName = 'EPISODE_NAME';
+            await consensusAdapter.collectInGroup(barrierMap, groupName, { episodeName });
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/in/${groupName}/${episodeName}`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await consensusAdapter.collectInGroup(barrierMap, groupName, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/in/${groupName}`);
+        });
+
+        it('Should pass the barrier map to the request body', async () => {
+            await consensusAdapter.collectInGroup(barrierMap, groupName);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toEqual(barrierMap);
+        });
+
+        testedMethods.add('collectInGroup');
+    });
+
     it('Should not have any untested methods', () => {
         const actualMethods = getFunctionKeys(consensusAdapter);
         expect(actualMethods).toEqual(testedMethods);
