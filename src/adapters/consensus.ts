@@ -483,6 +483,45 @@ export async function undoSubmitFor(
 
 
 /**
+ * Facilitator only; removes the entire role expectation from the consensus barrier based on the specified user's role assignment. This removes the expectation for that role and also removes any arrivals for that user. This is a structural change that affects all users with that role - the barrier will no longer wait for anyone with that role to submit.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/expectation/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.removeRoleExpectationFor(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     '0000017cb60ad697e109dcb11cdd4cfcdd1d',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to remove the role expectation from
+ * @param userKey                       userKey of a user whose role will be completely removed from the barrier expectations
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to undefined if successful
+ */
+export async function removeRoleExpectationFor(
+    worldKey: string,
+    name: string,
+    stage: string,
+    userKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
+    const {
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
  * Pauses the TTL countdown timer for a timed consensus barrier. When paused, the timer stops counting down and the remaining time is preserved. Only works for barriers that have a ttlSeconds value set.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/pause/{WORLD_KEY}/{NAME}/{STAGE}`
  *

@@ -191,6 +191,40 @@ describe('consensusAdapter', () => {
         testedMethods.add('undoSubmitFor');
     });
 
+    describe('consensusAdapter.removeRoleExpectationFor', () => {
+        const worldKey = 'WORLD_KEY';
+        const name = 'CONSENSUS_NAME';
+        const stage = 'CONSENSUS_STAGE';
+        const userKey = 'USER_KEY';
+
+        it('Should do a DELETE', async () => {
+            await consensusAdapter.removeRoleExpectationFor(worldKey, name, stage, userKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('DELETE');
+        });
+
+        it('Should have authorization', async () => {
+            await consensusAdapter.removeRoleExpectationFor(worldKey, name, stage, userKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the consensus/expectation URL', async () => {
+            await consensusAdapter.removeRoleExpectationFor(worldKey, name, stage, userKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await consensusAdapter.removeRoleExpectationFor(worldKey, name, stage, userKey, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`);
+        });
+
+        testedMethods.add('removeRoleExpectationFor');
+    });
+
     describe('consensusAdapter.deleteBarrier', () => {
         const worldKey = 'WORLD_KEY';
         const name = 'CONSENSUS_NAME';
