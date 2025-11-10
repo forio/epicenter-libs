@@ -444,8 +444,8 @@ export async function triggerFor(
 
 
 /**
- * Removes the specified user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission.
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/expectation/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
+ * Facilitator only; removes the specified user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission. This only removes the arrival, not the role expectation.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/untrigger/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
  *
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
@@ -475,7 +475,7 @@ export async function undoSubmitFor(
     } = optionals;
 
     return await new Router()
-        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
+        .delete(`/consensus/untrigger/${worldKey}/${name}/${stage}/${userKey}`, {
             ...routingOptions,
         })
         .then(({ body }) => body);
