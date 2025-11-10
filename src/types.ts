@@ -41,12 +41,30 @@ export type {
 // Account Adapter
 export type {
     AccountReadOutView,
-    AccountCreateInView,
-    AccountUpdateInView,
+    PersonalAccountReadOutView,
+    TeamAccountReadOutView,
     PersonalAccountCreateInView,
     PersonalAccountUpdateInView,
     TeamAccountCreateInView,
     TeamAccountUpdateInView,
+    AccountSettingCreateInView,
+    AccountSettingReadOutView,
+    AccountPermissionReadOutView,
+    AccountLegacySettingsCreateInView,
+    AccountLegacySettingsReadOutView,
+    BillingInformationCreateInView,
+    BillingInformationReadOutView,
+    DisplayNameStrategyCreateInView,
+    DisplayNameStrategyReadOutView,
+    LockoutLimitsCreateInView,
+    LockoutLimitsReadOutView,
+    LogoReadOutView,
+    MultiFactorStrategyCreateInView,
+    MultiFactorStrategyReadOutView,
+    RetentionPreferenceCreateInView,
+    RetentionPreferenceReadOutView,
+    SecretStrategyCreateInView,
+    SecretStrategyReadOutView,
 } from './adapters/account';
 
 // Admin Adapter
@@ -54,6 +72,7 @@ export type {
     Admin,
     AdminCreateInView,
     NativeAdminCreateInView,
+    Secret,
 } from './adapters/admin';
 
 // Asset Adapter
@@ -86,6 +105,7 @@ export type {
 export type {
     BarrierReadOutView,
     BarrierArrival,
+    BarrierMap,
 } from './adapters/consensus';
 
 // Daily Adapter
@@ -96,6 +116,12 @@ export type {
     Privacy,
     StreamType,
 } from './adapters/daily';
+
+// Email Adapter
+export type {
+    Encoding,
+    Attachment,
+} from './adapters/email';
 
 // Episode Adapter
 export type {
@@ -117,12 +143,14 @@ export type {
     Pricing,
     Augment,
     SalesChannel,
+    StripePaymentCreateInView,
 } from './adapters/group';
 
 // Leaderboard Adapter
 export type {
     Leaderboard,
     Score,
+    Tag,
 } from './adapters/leaderboard';
 
 // Presence Adapter
@@ -139,6 +167,8 @@ export type {
     PHYLOGENY,
     Phylogeny,
     FileType,
+    CHANNEL_PROTOCOL,
+    ChannelProtocol,
     ProjectMember,
     Deployment,
     TeamProject,
@@ -158,6 +188,7 @@ export type {
     ModelContextDefaults,
     OperationOptions,
     VariableOptions,
+    EventOptions,
     RewindMarker,
     ReplayOperation,
     ReplayRestoration,
@@ -181,6 +212,7 @@ export type {
     GetActionable,
     SetActionable,
     Actionable,
+    Route,
     WireExternalFunction,
     AptExternalDependency,
     CranExternalDependency,
@@ -189,7 +221,33 @@ export type {
     NpmExternalDependency,
     PypiExternalDependency,
     ShellExternalDependency,
+    MORPHOLOGY,
+    MetadataFirstPop,
+    MetadataLastPop,
+    MetadataAllPop,
+    MetadataPop,
+    MetadataUpdate,
 } from './adapters/run';
+
+// Task Adapter
+export type {
+    RETRY_POLICY,
+    TaskPayloadBody,
+    TaskPayloadHeaders,
+    StatusReadOutView,
+    StatusCreateInView,
+    CronTaskTriggerCreateInView,
+    DateTaskTriggerCreateInView,
+    OffsetTaskTriggerCreateInView,
+    TaskTriggerCreateInView,
+    HttpTaskPayloadCreateInView,
+    GroupStatusTaskPayloadCreateInView,
+    TaskPayloadCreateInView,
+    HttpTaskPayloadReadOutView,
+    GroupStatusTaskPayloadReadOutView,
+    TaskPayloadReadOutView,
+    TaskReadOutView,
+} from './adapters/task';
 
 // User Adapter
 export type {
@@ -212,6 +270,7 @@ export type {
     Modality,
     MFAMethodology,
     Countdown,
+    RealmData,
 } from './adapters/user';
 
 // Vault Adapter
