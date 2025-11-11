@@ -546,16 +546,12 @@ export async function pause<R extends WorldRole = WorldRole>(
     stage: string,
     optionals: RoutingOptions = {},
 ): Promise<BarrierReadOutView<R>> {
-    const {
-        ...routingOptions
-    } = optionals;
-
     return await new Router()
         .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
             body: {
                 resume: false,
             },
-            ...routingOptions,
+            ...optionals,
         })
         .then(({ body }) => body);
 }
@@ -585,16 +581,12 @@ export async function resume<R extends WorldRole = WorldRole>(
     stage: string,
     optionals: RoutingOptions = {},
 ): Promise<BarrierReadOutView<R>> {
-    const {
-        ...routingOptions
-    } = optionals;
-
     return await new Router()
         .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
             body: {
                 resume: true,
             },
-            ...routingOptions,
+            ...optionals,
         })
         .then(({ body }) => body);
 }
