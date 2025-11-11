@@ -516,14 +516,8 @@ export async function removeRoleExpectationFor(
     userKey: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-    const {
-        ...routingOptions
-    } = optionals;
-
     return await new Router()
-        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
-            ...routingOptions,
-        })
+        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, optionals)
         .then(({ body }) => body);
 }
 
