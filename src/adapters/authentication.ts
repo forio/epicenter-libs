@@ -170,14 +170,22 @@ export async function login(
 
     await removeLocalSession();
 
-    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    identification.setSessionWithOptions(session, forcePathInclusion);
     return session;
 }
 
 
 /**
- * Regenerates your epicenter session with the appropriate context. Allows users to update their session to the correct group, and admins to update their session with the correct account name. Will fail if the user/admin does not already belong to the group/account.
+ * Regenerates your Epicenter session with the appropriate context.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/authentication`
+ *
+ * - For users: Updates session to the specified group context
+ * - For admins: Updates session to the specified account/project context (uses platform's focus API)
+ *
+ * This is automatically called when switching between projects/groups if the session cookie
+ * is scoped to a specific project path.
+ *
+ * Will fail if the user/admin does not already belong to the group/account.
  *
  * @example
  * import { authAdapter } from 'epicenter-libs';
@@ -221,7 +229,7 @@ export async function regenerate(
         }).then(({ body }) => body);
 
     await removeLocalSession();
-    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    identification.setSessionWithOptions(session, forcePathInclusion);
     return session;
 }
 
