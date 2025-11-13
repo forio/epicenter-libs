@@ -200,6 +200,12 @@ export enum INTERNAL_ROLE {
 
 export enum ACCOUNT_ROLE {
     /**
+     * Owner -- Full control over account
+     * @constant
+     * @type {string}
+     */
+    OWNER = 'OWNER',
+    /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
@@ -212,6 +218,12 @@ export enum ACCOUNT_ROLE {
      * @type {string}
      */
     SUPPORT = 'SUPPORT',
+    /**
+     * Associate -- Limited access to specific account
+     * @constant
+     * @type {string}
+     */
+    ASSOCIATE = 'ASSOCIATE',
 }
 
 export enum PROJECT_ROLE {
@@ -284,6 +296,12 @@ export enum ROLE {
      */
     MONITOR = 'MONITOR',
     /**
+     * Owner -- Full control over account
+     * @constant
+     * @type {string}
+     */
+    OWNER = 'OWNER',
+    /**
      * Author -- Team Members (and node server API keys)
      * tied to one account (personal + current account)
      * @constant
@@ -296,6 +314,12 @@ export enum ROLE {
      * @type {string}
      */
     SUPPORT = 'SUPPORT',
+    /**
+     * Associate -- Limited access to specific account
+     * @constant
+     * @type {string}
+     */
+    ASSOCIATE = 'ASSOCIATE',
     /**
      * Facilitators
      * @constant
@@ -310,7 +334,7 @@ export enum ROLE {
      */
     REVIEWER = 'REVIEWER',
     /**
-     * Users -- psuedonymKey (userKey) required in scope
+     * Users -- pseudonymKey (userKey) required in scope
      * e.g., an avatar -- GROUP scope, PARTICIPANT read, USER write, userKey pseudonymKey
      * @constant
      * @type {string}

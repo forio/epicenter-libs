@@ -29,8 +29,10 @@ export interface AdminSession {
     expires: boolean;
     multipleAccounts: boolean;
     objectType: 'admin';
-    teamAccountRole: ROLE.AUTHOR | ROLE.SUPPORT;
-    teamAccountShortName: string;
+    globalRole?: ROLE.SYSTEM | ROLE.MONITOR;
+    teamAccountRole?: ROLE.OWNER | ROLE.AUTHOR | ROLE.SUPPORT | ROLE.ASSOCIATE;
+    teamAccountShortName?: string;
+    teamProjectRole?: ROLE.AUTHOR | ROLE.SUPPORT;
     projectShortName?: string;
     projectKey?: string;
     groupKey?: string;
