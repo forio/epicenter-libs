@@ -6,16 +6,53 @@ import { isNode } from './helpers';
 import config from './config';
 const { COOKIE, SESSION } = BROWSER_STORAGE_TYPE;
 
+/**
+ * User session information returned from authentication endpoints.
+ *
+ * @remarks
+ * Field dependencies:
+ * - If `multipleGroups` is true, the user has access to multiple groups and
+ *   `projectShortName`, `projectKey`, `groupKey`, `groupName`, and `groupRole` will be undefined
+ * - If `multipleGroups` is false or undefined, the user is scoped to a single group and
+ *   `projectShortName`, `projectKey`, `groupKey`, `groupName`, and `groupRole` should be present
+ * - `groupKey` and `groupName` are present together (both or neither)
+ * - `projectShortName` and `projectKey` are present together (both or neither)
+ */
 export interface UserSession {
     token: string;
+    /** User identifier (actually the pseudonym key) */
     userKey: string;
+    /**
+     * Group identifier for the user's current group.
+     * Present when user is scoped to a single group (multipleGroups is false/undefined).
+     */
     groupKey?: string;
+    /**
+     * Name of the user's current group.
+     * Present when user is scoped to a single group (multipleGroups is false/undefined).
+     */
     groupName?: string;
+    /**
+     * User's role within their group (FACILITATOR, REVIEWER, LEADER, or PARTICIPANT).
+     * Present when user is scoped to a single group (multipleGroups is false/undefined).
+     */
     groupRole?: keyof typeof GROUP_ROLE;
+    /**
+     * Whether the user has access to multiple groups.
+     * When true, group/project-specific fields will be undefined.
+     */
     multipleGroups?: boolean;
-    accountShortName: string;
-    projectShortName?: string; // undefined when multipleGroups: true
+    /**
+     * Short name of the project.
+     * Present when user is scoped to a single group (multipleGroups is false/undefined).
+     */
+    projectShortName?: string;
+    /**
+     * Unique identifier for the project.
+     * Present when user is scoped to a single group (multipleGroups is false/undefined).
+     */
     projectKey?: string;
+    accountShortName: string;
     displayName: string;
     objectType: 'user';
     loginMethod: {
@@ -23,18 +60,60 @@ export interface UserSession {
     };
 }
 
+/**
+ * Admin session information returned from authentication endpoints.
+ *
+ * Admin sessions can have either:
+ * - A global role (SYSTEM or MONITOR) for system-wide access
+ * - Team-specific roles (teamAccountRole and/or teamProjectRole) for account/project access
+ *
+ * @remarks
+ * Field dependencies:
+ * - If `globalRole` is present, the admin has system-wide access
+ * - If `teamAccountRole` is present, `teamAccountShortName` should also be present
+ * - If `teamProjectRole` is present, `projectShortName` and `projectKey` should also be present
+ * - Personal accounts: admins always have OWNER role for their personal account
+ */
 export interface AdminSession {
     adminHandle: string;
     adminKey: string;
     expires: boolean;
     multipleAccounts: boolean;
     objectType: 'admin';
+    /**
+     * Global system role (SYSTEM or MONITOR).
+     * Present when admin has system-wide access.
+     */
     globalRole?: ROLE.SYSTEM | ROLE.MONITOR;
+    /**
+     * Role within the team account (OWNER, AUTHOR, SUPPORT, or ASSOCIATE).
+     * When present, teamAccountShortName should also be present.
+     */
     teamAccountRole?: ROLE.OWNER | ROLE.AUTHOR | ROLE.SUPPORT | ROLE.ASSOCIATE;
+    /**
+     * Short name of the team account.
+     * Present when teamAccountRole is set.
+     */
     teamAccountShortName?: string;
+    /**
+     * Role within the specific project (AUTHOR or SUPPORT).
+     * When present, projectShortName and projectKey should also be present.
+     */
     teamProjectRole?: ROLE.AUTHOR | ROLE.SUPPORT;
+    /**
+     * Short name of the project.
+     * Present when admin is scoped to a specific project.
+     */
     projectShortName?: string;
+    /**
+     * Unique identifier for the project.
+     * Present when admin is scoped to a specific project.
+     */
     projectKey?: string;
+    /**
+     * Unique identifier for the group.
+     * Present when admin is scoped to a specific group.
+     */
     groupKey?: string;
     timeoutMinutes: number;
     token: string;
