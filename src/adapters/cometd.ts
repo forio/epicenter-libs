@@ -312,7 +312,7 @@ class CometdAdapter {
         }));
     }
 
-    async add<D = Record<string, unknown>>(
+    async add<D = unknown>(
         channel: Channel<D>,
         update: (data: ChannelMessage<D>) => unknown,
         options: {
@@ -425,7 +425,7 @@ class CometdAdapter {
         });
     }
 
-    async publish<D = Record<string, unknown>>(
+    async publish<D = unknown>(
         channel: Channel<D>,
         content: D,
         options: {
