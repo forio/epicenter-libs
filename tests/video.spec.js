@@ -224,17 +224,17 @@ describe('videoAdapter', () => {
                 expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
             });
 
-            it('Should use the video/url URL with videoKey', async () => {
+            it('Should use the video/dir URL with videoKey', async () => {
                 await videoAdapter.getDirectoryURL({ videoKey });
                 const req = capturedRequests[capturedRequests.length - 1];
-                expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/video/url/${videoKey}`);
+                expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/video/dir/${videoKey}`);
             });
 
             it('Should support generic URL options', async () => {
                 await videoAdapter.getDirectoryURL({ videoKey, ...GENERIC_OPTIONS });
                 const req = capturedRequests[capturedRequests.length - 1];
                 const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-                expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/video/url/${videoKey}`);
+                expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/video/dir/${videoKey}`);
             });
         });
 

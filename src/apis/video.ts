@@ -155,7 +155,7 @@ export async function getVideoURLWith(
 
 /**
  * Retrieves a video directory by video key
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/url/{VIDEO_KEY}`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/video/dir/{VIDEO_KEY}`
  *
  * @example
  * import { videoAPI } from 'epicenter-libs';
@@ -170,7 +170,7 @@ export async function getVideoDirectoryByKey(
     optionals: RoutingOptions = {},
 ): Promise<VideoReadOutView> {
     return await new Router()
-        .get(`/video/url/${videoKey}`, optionals)
+        .get(`/video/dir/${videoKey}`, optionals)
         .then(({ body }) => body);
 }
 
