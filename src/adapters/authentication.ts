@@ -140,7 +140,7 @@ export async function removeLocalSession(): Promise<void> {
  * @param credentials.secretKey                 Secret key for app login
  * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.objectType]                Object type for authentication (defaults to 'user' or 'account' based on credentials)
- * @param [optionals.forcePathInclusion]        Force admin login to include the path in the generated cookie; useful when an admin login should be limited in scope to a single project
+ * @param [optionals.forcePathInclusion]        Controls cookie path behavior: `true` forces project-specific path (even on custom domains), `false` forces root path (even for users/admins on Epicenter domain), `undefined` uses defaults (project-specific for users/admins on Epicenter domain, root for custom domains)
  * @returns promise that resolves to the session object
  */
 export async function login(
@@ -170,14 +170,22 @@ export async function login(
 
     await removeLocalSession();
 
-    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    identification.setSessionWithOptions(session, forcePathInclusion);
     return session;
 }
 
 
 /**
- * Regenerates your epicenter session with the appropriate context. Allows users to update their session to the correct group, and admins to update their session with the correct account name. Will fail if the user/admin does not already belong to the group/account.
+ * Regenerates your Epicenter session with the appropriate context.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/authentication`
+ *
+ * - For users: Updates session to the specified group context
+ * - For admins: Updates session to the specified account/project context (uses platform's focus API)
+ *
+ * This is automatically called when switching between projects/groups if the session cookie
+ * is scoped to a specific project path.
+ *
+ * Will fail if the user/admin does not already belong to the group/account.
  *
  * @example
  * import { authAdapter } from 'epicenter-libs';
@@ -189,7 +197,7 @@ export async function login(
  * @param groupOrAccount                    Group key or account name
  * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.objectType]            The object type to regenerate for (defaults to 'user')
- * @param [optionals.forcePathInclusion]    Force the path to be included in the generated cookie
+ * @param [optionals.forcePathInclusion]    Controls cookie path behavior: `true` forces project-specific path (even on custom domains), `false` forces root path (even for users/admins on Epicenter domain), `undefined` uses defaults (project-specific for users/admins on Epicenter domain, root for custom domains)
  * @returns promise that resolves to the new session object
  */
 export async function regenerate(
@@ -221,7 +229,7 @@ export async function regenerate(
         }).then(({ body }) => body);
 
     await removeLocalSession();
-    identification.setSessionWithOptions(session, forcePathInclusion ?? false);
+    identification.setSessionWithOptions(session, forcePathInclusion);
     return session;
 }
 
