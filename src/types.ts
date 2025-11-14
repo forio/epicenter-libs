@@ -252,9 +252,9 @@ export type {
     Somebody,
 } from './adapters/somebody';
 
-// APIs - Video
+// APIs - VideoReadOutView
 export type {
-    Video,
+    VideoReadOutView,
     VideoDir,
     AFFILIATE,
     Affiliate,

@@ -1,6 +1,7 @@
-import type { RoutingOptions } from 'utils/router';
-import type { GenericScope, Address } from 'utils/constants';
-import { Router } from 'utils/index';
+import type { RoutingOptions } from '../utils/router';
+import type { GenericScope, Address } from '../utils/constants';
+
+import Router from '../utils/router';
 
 export enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', // If the task fails, do nothing (this is the default)
@@ -101,62 +102,51 @@ export interface TaskReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H 
     ttlSeconds?: number;
 }
 
+
 /**
  * Creates a task; requires support level authentication
- *
- * Base URL: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task`
- * Base URL with pseudonym: POST `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{scopeBoundary}/{scopeKey}/{userKey}/{name}`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task`
  *
  * @example
+ * import { taskAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const scope = {
- *   scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *   scopeKey: session.groupKey,
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: session.groupKey,
  * };
- * const name = 'task-1-send-emails'
+ * const name = 'task-1-send-emails';
  * const payload = {
- *   method: 'POST',
- *   url: 'https://forio.com/app/forio-dev/test-project/send-out-emails',
- * }
+ *     method: 'POST',
+ *     url: 'https://forio.com/app/forio-dev/test-project/send-out-emails',
+ * };
  * const trigger = {
- *   value: '0 7 15 * * ?', //triggers on day 15 7am of each month
- *   objectType: 'cron',
- * }
+ *     value: '0 7 15 * * ?', // triggers on day 15 7am of each month
+ *     objectType: 'cron',
+ * };
+ * await taskAdapter.create(scope, name, payload, trigger);
  *
- * epicenter.taskAdapter.create(scope, name, payload, trigger);
- *
- * @param {object}  scope                           Scope associated with your run
- * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {string}  scope.userKey                   Key associated with the user. Optional
- * @param {object}  payload                         An HTTP task object that will be executed when the task is triggered
- * @param {string}  [payload.method]                Type of method to use with the HTTP request (i.e. 'GET', 'POST', 'PATCH', etc.)
- * @param {string}  [payload.url]                   The url the HTTP request will be sent to; Will follow format <host>/app/<account>/<project>/url. host, account, and project are automatically entered
- * @param {object}  [payload.body]                  The body of the HTTP request. This is optional
- * @param {object}  [payload.headers]               Headers to send along with the HTTP request. Write as key-value pairs like you would with fetch. This is optional
- *
- * @param {object}  trigger                         One of three types of objects that determine when to run the task
- *
- * trigger option 1, Cron Object:                   Specifies a task that will execute once a set amount of time passes. This is the ONLY trigger that can be repeated
- * @param {string}  [trigger.value]                 Cron order for the task. Should include only time specifications (i.e. '0 7 * * * ?' => trigger at 7am UTC everyday) https://en.wikipedia.org/wiki/Cron
- * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'cron'
- *
- * trigger option 2, Offset Object:                 Specifies a task that will execute ONCE after the specified offset time has passed
- * @param {number}  [trigger.minutes]               Number of minutes until the task triggers
- * @param {number}  [trigger.hours]                 Number of hours until the task triggers
- * @param {number}  [trigger.days]                  Number of days until the task triggers
- * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'offset'
- *
- * trigger option 3, Date Object:                   Specifies a singular date for the task to be carried out; will execute ONCE
- * @param {string}  [trigger.value]                 A string in ISO-8601 date-time format (i.e. 2023-11-05T08:15:30-04:00 => November 5, 2023, 8:15:30 am, US EDT)
- * @param {string}  [trigger.objectType]            Specifies object being used. Should be a constant value of 'date'
- *
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.retryPolicy]         Specifies what to do should the task fail; see RETRY_POLICY
- * @param {string}  [optionals.failSafeTermination] The ISO-8601 date-time when the task will be deleted regardless of any tiggers; defaults to null
- * @param {number}  [optionals.ttlSeconds]          Max life expectancy of the task; used to determine if retrying the task is necessary
- * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
+ * @param scope                                 Scope associated with the task
+ * @param scope.scopeBoundary                   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]                       Key associated with the user
+ * @param name                                  Name of the task
+ * @param payload                               An HTTP task object that will be executed when the task is triggered
+ * @param payload.method                        Type of method to use with the HTTP request (e.g., 'GET', 'POST', 'PATCH')
+ * @param payload.url                           The URL the HTTP request will be sent to
+ * @param [payload.body]                        The body of the HTTP request
+ * @param [payload.headers]                     Headers to send along with the HTTP request
+ * @param trigger                               Object that determines when to run the task (cron, offset, or date)
+ * @param [trigger.value]                       For cron: cron expression (e.g., '0 7 * * * ?'). For date: ISO-8601 date-time string
+ * @param [trigger.objectType]                  Type of trigger: 'cron', 'offset', or 'date'
+ * @param [trigger.minutes]                     For offset triggers: number of minutes until the task triggers
+ * @param [trigger.hours]                       For offset triggers: number of hours until the task triggers
+ * @param [trigger.days]                        For offset triggers: number of days until the task triggers
+ * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
+ * @param [optionals.retryPolicy]               Specifies what to do should the task fail; see RETRY_POLICY
+ * @param [optionals.failSafeTermination]       The ISO-8601 date-time when the task will be deleted regardless of any triggers; defaults to null
+ * @param [optionals.ttlSeconds]                Max life expectancy of the task; used to determine if retrying the task is necessary
+ * @returns promise that resolves to the task object including the taskKey
  */
 export async function create<
     B extends TaskPayloadBody = TaskPayloadBody,
@@ -202,42 +192,46 @@ export async function create<
         .then(({ body }) => body);
 }
 
+
 /**
  * Deletes a task (changes status to cancelled); requires support level authentication
- * Sends a 204 on successful deletion
- * Base URL: DELETE `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{taskKey}`
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/{TASK_KEY}`
  *
- * @memberof taskAdapter
  * @example
+ * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
+ * await taskAdapter.destroy(taskKey);
  *
- * epicenter.taskAdapter.destroy(taskKey);
- *
- * @param {string}  taskKey                         Unique key associated with a task
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {undefined}
+ * @param taskKey                               Unique key associated with a task
+ * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
+ * @returns promise that resolves to undefined when successful
  */
-export async function destroy(taskKey: string, optionals: RoutingOptions = {}): Promise<void> {
+export async function destroy(
+    taskKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
     return await new Router()
         .delete(`/task/${taskKey}`, optionals)
         .then(({ body }) => body);
 }
 
+
 /**
  * Gets a task by taskKey; requires support level authentication
- * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/{taskKey}`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/{TASK_KEY}`
  *
- * @memberof taskAdapter
  * @example
+ * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
+ * const task = await taskAdapter.get(taskKey);
  *
- * epicenter.taskAdapter.get(taskKey);
- *
- * @param {string}  taskKey                         Unique key associated with a task
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
+ * @param taskKey                               Unique key associated with a task
+ * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
+ * @returns promise that resolves to the task object
  */
 export async function get<
     B extends TaskPayloadBody = TaskPayloadBody,
@@ -248,20 +242,21 @@ export async function get<
         .then(({ body }) => body);
 }
 
+
 /**
- * Gets a the history (100 most recent times it has triggered) of a task by taskKey; requires support level authentication
- * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/history/{taskKey}`
+ * Gets the history (100 most recent times it has triggered) of a task by taskKey; requires support level authentication
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/history/{TASK_KEY}`
  *
- * @memberof taskAdapter
  * @example
+ * import { taskAdapter } from 'epicenter-libs';
+ * const taskKey = '0000017dd3bf540e5ada5b1e058f08f20461';
+ * const history = await taskAdapter.getHistory(taskKey);
  *
- * epicenter.taskAdapter.getHistory(taskKey);
- *
- * @param {string}  taskKey                         Unique key associated with a task
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
+ * @param taskKey                               Unique key associated with a task
+ * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
+ * @returns promise that resolves to an array of task history objects
  */
 export async function getHistory<
     B extends TaskPayloadBody = TaskPayloadBody,
@@ -275,30 +270,29 @@ export async function getHistory<
         .then(({ body }) => body);
 }
 
+
 /**
- * TODO: fix this; this call seems to be paginated, but isn't somehow?
- *
  * Gets most recent 100 tasks related to the selected scope; requires support level authentication
- * Base URL: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}`
- * Base URL with userKey: GET `https://forio.com/api/v3/{accountShortName}/{projectShortName}/task/in/{scopeBoundary}/{scopeKey}/{userKey}`
- * Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping
- * @memberof taskAdapter
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/in/{SCOPE_BOUNDARY}/{SCOPE_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/in/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{USER_KEY}`
+ *
+ * Note: Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping.
+ *
  * @example
- *
+ * import { taskAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
  * const scope = {
- *   scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *   scopeKey: session.groupKey,
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  * };
- * epicenter.taskAdapter.getTaskIn(scope);
+ * const tasks = await taskAdapter.getTaskIn(scope);
  *
- * @param {object}  scope                           Scope associated with your run
- * @param {string}  scope.scopeBoundary             Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
- * @param {string}  scope.scopeKey                  Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
- * @param {object}  [optionals={}]                  Optional parameters
- * @param {string}  [optionals.accountShortName]    Name of account (by default will be the account associated with the session)
- * @param {string}  [optionals.projectShortName]    Name of project (by default will be the project associated with the session)
- * @param {string}  [optionals.userKey]             Key associated with the user; Will retrieve tasks in the scope that were made by the specified user
- * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
+ * @param scope                                 Scope associated with the tasks
+ * @param scope.scopeBoundary                   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+ * @param scope.scopeKey                        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+ * @param [scope.userKey]                       Key associated with the user; will retrieve tasks in the scope that were made by the specified user
+ * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
+ * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
+ * @returns promise that resolves to an array of task objects
  */
 export async function getTaskIn<
     B extends TaskPayloadBody = TaskPayloadBody,

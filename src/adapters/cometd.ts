@@ -111,12 +111,6 @@ class CometdAdapter {
             };
         }
 
-        // Current don't want to support CometD on node servers
-        // if (isNode()) {
-        //     const { adapt } = await import('cometd-nodejs-client');
-        //     adapt();
-        // }
-
         this.cometd.configure({
             url: this.url,
             logLevel: options.logLevel,

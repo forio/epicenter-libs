@@ -34,7 +34,19 @@ const validateScope = (scope: ChannelScope) => {
 
 /**
  * Used to subscribe to CometD channels. Pass in a channel scope to instantiate, if a subscription to that scope already exists it will use it.
- * */
+ *
+ * @example
+ * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
+ * const session = authAdapter.getLocalSession();
+ * const channel = new Channel({
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: session.groupKey,
+ *     pushCategory: PUSH_CATEGORY.CHAT,
+ * });
+ * await channel.subscribe((data) => {
+ *     console.log('Received message:', data);
+ * });
+ */
 export default class Channel<D extends ChannelMessageData = ChannelMessageData> {
     path: string;
     update: ((data: ChannelMessage<D>) => unknown) | undefined;
@@ -42,7 +54,11 @@ export default class Channel<D extends ChannelMessageData = ChannelMessageData> 
 
     /**
      * Channel constructor
-     * @param scope object with the scope boundary, scope key, and push category. Defines the namespace for the channel
+     *
+     * @param scope                     Object with the scope boundary, scope key, and push category; defines the namespace for the channel
+     * @param scope.scopeBoundary       Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
+     * @param scope.scopeKey            Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
+     * @param scope.pushCategory        Push category, defines the type of channel; See [push category](#PUSH_CATEGORY) for all types
      */
     constructor(scope: ChannelScope) {
         const { scopeBoundary, scopeKey, pushCategory } = scope;
@@ -53,12 +69,29 @@ export default class Channel<D extends ChannelMessageData = ChannelMessageData> 
         }
     }
 
+    /**
+     * Publishes content to the CometD channel
+     *
+     * @example
+     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
+     * const session = authAdapter.getLocalSession();
+     * const channel = new Channel({
+     *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+     *     scopeKey: session.groupKey,
+     *     pushCategory: PUSH_CATEGORY.CHAT,
+     * });
+     * await channel.publish({ message: 'Hello!' });
+     *
+     * @param content   Content to publish to the channel
+     * @returns promise that resolves to the CometD message response
+     */
     publish(content: D): Promise<Message> {
         return cometdAdapter.publish(this, content);
     }
 
     /**
      * Subscribes to the CometD channel, attaching a handler for any channel updates. If a subscription already exists it will first unsubscribe, ensuring that only one subscription is ever attached to the channel.
+     *
      * @example
      * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
      * const session = authAdapter.getLocalSession();
@@ -70,8 +103,11 @@ export default class Channel<D extends ChannelMessageData = ChannelMessageData> 
      * await channel.subscribe((data) => {
      *      console.log(data.content);
      * });
-     * @param update function that is called whenever a channel update occurs.
-     * @returns the subscription object returned by CometD after a sucessful subscribe.
+     *
+     * @param update                Function that is called whenever a channel update occurs
+     * @param [options]             Optional arguments
+     * @param [options.inert]       If true, creates an inert subscription that doesn't trigger reconnection
+     * @returns promise that resolves to the subscription object returned by CometD after a successful subscribe
      */
     // eslint-disable-next-line complexity
     async subscribe(
@@ -127,6 +163,23 @@ export default class Channel<D extends ChannelMessageData = ChannelMessageData> 
         throw new Error(`Failed to subscribe to ${this.path} after ${maxRetries} attempts`);
     }
 
+    /**
+     * Unsubscribes from the CometD channel
+     *
+     * @example
+     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
+     * const session = authAdapter.getLocalSession();
+     * const channel = new Channel({
+     *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+     *     scopeKey: session.groupKey,
+     *     pushCategory: PUSH_CATEGORY.CHAT,
+     * });
+     * await channel.subscribe((data) => console.log(data));
+     * // Later...
+     * await channel.unsubscribe();
+     *
+     * @returns promise that resolves when unsubscribed
+     */
     async unsubscribe(): Promise<void> {
         if (this.subscription) {
             await cometdAdapter.remove(this.subscription);
@@ -134,6 +187,23 @@ export default class Channel<D extends ChannelMessageData = ChannelMessageData> 
         }
     }
 
+    /**
+     * Unsubscribes from all CometD channels
+     *
+     * @example
+     * import { Channel, authAdapter, SCOPE_BOUNDARY, PUSH_CATEGORY } from 'epicenter-libs';
+     * const session = authAdapter.getLocalSession();
+     * const channel = new Channel({
+     *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+     *     scopeKey: session.groupKey,
+     *     pushCategory: PUSH_CATEGORY.CHAT,
+     * });
+     * await channel.subscribe((data) => console.log(data));
+     * // Later, unsubscribe from all channels...
+     * await channel.unsubscribeAll();
+     *
+     * @returns promise that resolves when all channels are unsubscribed
+     */
     async unsubscribeAll(): Promise<void> {
         await cometdAdapter.empty();
     }

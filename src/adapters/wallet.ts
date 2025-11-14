@@ -1,6 +1,7 @@
 import type { Page, RoutingOptions } from '../utils/router';
 import type { GenericScope } from '../utils/constants';
 import type { PseudonymReadOutView } from './user';
+
 import { Router, identification } from '../utils';
 import { UserSession } from 'epicenter';
 
@@ -21,11 +22,21 @@ export interface WalletItemCreateInView {
     value?: string;
 }
 
+
 /**
  * Updates a wallet
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/wallet`
+ *
  * @example
  * // Add a user's phone number to their wallet
- * epicenter.walletAdapter.update(scope, [{ label: 'phone', value: '555-555-5555' }])
+ * import { walletAdapter } from 'epicenter-libs';
+ * const scope = {
+ *     userKey: '000001796733eef0842f4d6d960997018a33',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
+ * walletAdapter.update(scope, [{ label: 'phone', value: '555-555-5555' }]);
+ *
  * @param scope                 Scope attached to the wallet; userKey is required
  * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
  * @param scope.scopeKey        Key of the resource defined by the scope boundary
@@ -54,10 +65,18 @@ export async function update(
 const NOT_FOUND = 404;
 /**
  * Gets a wallet
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/wallet/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{USER_KEY}`
+ *
  * @example
  * // Get a user's wallet
- * const scope = { userKey, scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
- * epicenter.walletAdapter.get(scope)
+ * import { walletAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const scope = {
+ *     userKey: '000001796733eef0842f4d6d960997018a33',
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
+ * walletAdapter.get(scope);
+ *
  * @param scope                 Scope attached to the wallet; userKey is required
  * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
  * @param scope.scopeKey        Key of the resource defined by the scope boundary
@@ -81,12 +100,20 @@ export async function get(
         }).then(({ body }) => body);
 }
 
+
 /**
  * Get all wallets under a certain scope
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/wallet/with/{SCOPE_BOUNDARY}/{SCOPE_KEY}`
+ *
  * @example
  * // Get all wallets under a group
- * const scope = { scopeBoundary: SCOPE_BOUNDARY.GROUP, scopeKey: groupKey };
- * epicenter.walletAdapter.withScope(scope)
+ * import { walletAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const scope = {
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
+ * };
+ * walletAdapter.withScope(scope);
+ *
  * @param scope                 Scope attached to the wallets
  * @param scope.scopeBoundary   Can be a couple things, commonly group, project, episode, or world
  * @param scope.scopeKey        Key of the resource defined by the scope boundary

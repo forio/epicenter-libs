@@ -26,7 +26,9 @@ class Config {
     }
 
     /**
-     * Protocol used to make network requests (whether `http://` or `https://`). It is typically set on-load based on your browser's URL. For local development, this is defaulted to `https`, and can be overwritten if desired.
+     * Protocol used to make network requests (whether `http://` or `https://`).
+     * It is typically set on-load based on your browser's URL. For local development,
+     * this is defaulted to `https`, and can be overwritten if desired.
      * @memberof config
      * @type {string}
      *  */
@@ -43,7 +45,9 @@ class Config {
     }
 
     /**
-     * Hostname used to make network requests. It is typically set on-load based on your browser's URL. For local development, this is defaulted to `forio.com`, and can be overwritten if desired.
+     * Hostname used to make network requests. It is typically set on-load based on
+     * your browser's URL. For local development, this is defaulted to `forio.com`,
+     * and can be overwritten if desired.
      * @memberof config
      * @type {string}
      *  */
@@ -84,21 +88,25 @@ class Config {
     }
 
     /**
-     * Account name used for making network requests. This is the default value used by Epicenter API adapters when making network requests without explicitly defining an account to use. It is defined on-load based on your browser's URL, and can be overwritten for local development.
+     * Account name used for making network requests.
+     * This is the default value used by Epicenter API adapters when making
+     * network requests without explicitly defining an account to use.
+     * It is defined on-load based on your browser's URL, and can be
+     * overwritten for local development.
      * @example
      * // with browser URL: https://forio.com/app/acme-simulations/foobar-game
      *
-     * console.log(epicenter.config.accountShortName);
+     * console.log(config.accountShortName);
      * // should log 'acme-simulations'
      *
-     * epicenter.runAdapter.get(123);
+     * runAdapter.get(123);
      * // instantiates a GET call with the URL: https://forio.com/api/v3/acme-simulations/foobar-game/run/123
      *
-     * epicenter.config.accountShortName = 'globex-simuations';
-     * epicenter.runAdapter.get(123);
+     * config.accountShortName = 'globex-simuations';
+     * runAdapter.get(123);
      * // now instantiates a GET with the URL: https://forio.com/api/v3/globex-simulations/foobar-game/run/123
      *
-     * epicenter.runAdapter.get(123, { accountShortName: 'initech-simulations' });
+     * runAdapter.get(123, { accountShortName: 'initech-simulations' });
      * // now instantiates a GET with the URL: https://forio.com/api/v3/initech-simulations/foobar-game/run/123
      *
      * @memberof config
@@ -113,21 +121,25 @@ class Config {
     }
 
     /**
-     * Project name used for making network requests. This is the default value used by Epicenter API adapters when making network requests without explicitly defining an account to use. It is defined on-load based on your browser's URL, and can be overwritten for local development.
+     * Project name used for making network requests.
+     * This is the default value used by Epicenter API adapters when making
+     * network requests without explicitly defining an account to use.
+     * It is defined on-load based on your browser's URL, and can be
+     * overwritten for local development.
      * @example
      * // with browser URL: https://forio.com/app/acme-simulations/foobar-game
      *
-     * console.log(epicenter.config.projectShortName);
+     * console.log(config.projectShortName);
      * // should log 'foobar-game'
      *
-     * epicenter.runAdapter.get(123);
+     * runAdapter.get(123);
      * // instantiates a GET call with the URL: https://forio.com/api/v3/acme-simulations/foobar-game/run/123
      *
-     * epicenter.config.projectShortName = 'barfoo-game';
-     * epicenter.runAdapter.get(123);
+     * config.projectShortName = 'barfoo-game';
+     * runAdapter.get(123);
      * // now instantiates a GET with the URL: https://forio.com/api/v3/acme-simulations/barfoo-game/run/123
      *
-     * epicenter.runAdapter.get(123, { projectShortName: 'barbaz-game' });
+     * runAdapter.get(123, { projectShortName: 'barbaz-game' });
      * // now instantiates a GET with the URL: https://forio.com/api/v3/acme-simulations/barbaz-game/run/123
      *
      * @memberof config
