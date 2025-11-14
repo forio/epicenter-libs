@@ -263,8 +263,8 @@ export type Actionable =
 
 
 export type RunReadOutView<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 > = {
     cluster?: string;
     hidden?: boolean;
@@ -339,8 +339,8 @@ export type RunStrategy =
  * @returns promise that resolves to the newly created run
  */
 export async function create<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     scope: { userKey?: string } & GenericScope,
@@ -412,8 +412,8 @@ export async function create<
  * @returns promise that resolves to the newly created run
  */
 export async function createSingular<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     optionals: RunCreateOptions = {},
@@ -692,8 +692,8 @@ export async function remove(
  * @returns promise that resolves to the run
  */
 export async function get<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     runKey: string,
     optionals: RoutingOptions = {},
@@ -741,8 +741,8 @@ export async function get<
  * @returns promise that resolves to a page of runs
  */
 export async function query<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     searchOptions: {
@@ -927,7 +927,7 @@ export async function operation(
  * @param [optionals.ignorable] If true, suppresses errors when variables are not found
  * @returns promise that resolve to an object with the variables and their values
  */
-export async function getVariables<V extends RunVariables = RunVariables>(
+export async function getVariables<V extends object = RunVariables>(
     runKey: string | string[],
     variables: (keyof V)[],
     optionals: {
@@ -996,7 +996,7 @@ export async function getVariables<V extends RunVariables = RunVariables>(
  * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
  * @returns promise that resolve to the variable's value, or an object with the variables and their values
  */
-export async function getVariable<V extends RunVariables = RunVariables>(
+export async function getVariable<V extends object = RunVariables>(
     runKey: string | string[],
     variable: keyof V | (keyof V)[],
     optionals: {
@@ -1040,7 +1040,7 @@ export async function getVariable<V extends RunVariables = RunVariables>(
  * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
  * @returns promise that resolve to an object with the variables and new values that were updated
  */
-export async function updateVariables<V extends RunVariables = RunVariables>(
+export async function updateVariables<V extends object = RunVariables>(
     runKey: string | string[],
     update: Partial<V>,
     optionals: {
@@ -1087,7 +1087,7 @@ export async function updateVariables<V extends RunVariables = RunVariables>(
  * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
  * @returns promise that resolve to an object with the metadata and their values
  */
-export async function getMetadata<M extends RunMetadata = RunMetadata>(
+export async function getMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
     metadata: (keyof M)[],
     optionals: {
@@ -1139,7 +1139,7 @@ export interface MetadataAllPop {
 
 export type MetadataPop = MetadataFirstPop | MetadataLastPop | MetadataAllPop;
 
-export interface MetadataUpdate<M extends RunMetadata = RunMetadata> {
+export interface MetadataUpdate<M extends object = RunMetadata> {
     pop?: Partial<Record<keyof M, MetadataPop>>;
     set?: Partial<M>;
     push?: Partial<M>;
@@ -1180,7 +1180,7 @@ export interface MetadataUpdate<M extends RunMetadata = RunMetadata> {
  * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
  * @returns promise that resolves to an object with the updated metadata
  */
-export async function updateMetadata<M extends RunMetadata = RunMetadata>(
+export async function updateMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
     update: MetadataUpdate<M>,
     optionals: {
@@ -1384,8 +1384,8 @@ export async function removeFromWorld(
  * @returns promise that resolves to a run
  */
 export async function getWithStrategy<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     strategy: RunStrategy,
     model: string,
@@ -1444,8 +1444,8 @@ export async function getWithStrategy<
  * @returns promise that resolves to the migrated run
  */
 export async function migrate<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     runKey: string,
     episodeKey: string,

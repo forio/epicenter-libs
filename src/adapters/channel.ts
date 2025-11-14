@@ -5,10 +5,10 @@ import { EpicenterError, SCOPE_BOUNDARY, PUSH_CATEGORY } from '../utils';
 import cometdAdapter from './cometd';
 
 // Generic type for push channel message custom data
-export type ChannelMessageData = Record<string, unknown>;
+export type ChannelMessageData = unknown;
 
 // Base structure for channel push messages (this is what comes in message.data from cometd)
-export interface ChannelMessage<D extends ChannelMessageData = ChannelMessageData> {
+export interface ChannelMessage<D = ChannelMessageData> {
     date: string;
     address: {
         boundary: string;
@@ -47,7 +47,7 @@ const validateScope = (scope: ChannelScope) => {
  *     console.log('Received message:', data);
  * });
  */
-export default class Channel<D extends ChannelMessageData = ChannelMessageData> {
+export default class Channel<D = ChannelMessageData> {
     path: string;
     update: ((data: ChannelMessage<D>) => unknown) | undefined;
     subscription: SubscriptionHandle | null = null;
