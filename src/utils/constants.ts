@@ -46,6 +46,7 @@ export enum SCOPE_BOUNDARY {
     WORLD = 'WORLD',
 }
 
+
 /**
  * Rituals are used to define the way in which the Epicenter stores a run while running actions like getting variables, saving meta data, and call model operations. Runs can exist in-memory for a certain amount of time before expiring, and requiring their revival again before use.
  * @enum {string}
@@ -88,6 +89,7 @@ export enum RITUAL {
      */
     RESURRECT = 'RESURRECT',
 }
+
 
 /**
  * Push categories are pre-defined channels types in which one might use to receive push channel updates
@@ -370,6 +372,7 @@ export interface Address {
     episodeName: string;
 }
 
+
 /**
  * Generic search options for adapter methods. All adapter methods
  * will take `filter` and `sort` as a list of strings, and join with a ";"
@@ -386,6 +389,7 @@ export interface GenericSearchOptions {
     max?: number;
     count?: boolean;
 }
+
 
 /**
  * The query parameters expected by the Epicenter APIs for

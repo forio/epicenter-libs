@@ -126,8 +126,12 @@ export type Project =
 
 /**
  * Checks to see if the project currently has the push channels enabled
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/project/channel/isEnabled`
+ *
  * @example
- * epicenter.projectAdapter.channelsEnabled();
+ * import { projectAdapter } from 'epicenter-libs';
+ * const enabled = await projectAdapter.channelsEnabled();
+ *
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise resolving true/false whether or not the project supports the use of push channels
  */
@@ -139,6 +143,18 @@ export async function channelsEnabled(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Gets the current project details
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/project`
+ *
+ * @example
+ * import { projectAdapter } from 'epicenter-libs';
+ * const project = await projectAdapter.get();
+ *
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the project object
+ */
 export async function get(
     optionals: RoutingOptions = {},
 ): Promise<Project> {
@@ -147,6 +163,19 @@ export async function get(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Lists all projects in an account
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/manager/project/in`
+ *
+ * @example
+ * import { projectAdapter } from 'epicenter-libs';
+ * const projects = await projectAdapter.list('my-account');
+ *
+ * @param accountShortName  The account short name
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to an array of project objects
+ */
 export async function list(
     accountShortName: string,
     optionals: RoutingOptions = {},

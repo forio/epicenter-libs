@@ -11,7 +11,7 @@ import {
     RITUAL,
     EpicenterError,
     parseFilterInput,
-} from 'utils';
+} from '../utils';
 
 // Generic type parameters for Run variables and metadata
 export type RunVariables = Record<string, unknown>;
@@ -315,19 +315,22 @@ export type RunStrategy =
  * If no permit is specified, platform will assign a default determined by the session user type and the scope boundary.
  * For a participant creating a run, the default readLock/writeLock is `USER/USER`, unless that run is scoped to a world,
  * in which case `PARTICIPANT/FACILITATOR` is the default. Admins and facilitators/reviewers have their own defaults.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run`
+ *
  * @example
  * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
- * runAdapter.create('model.py', {
- *      scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *      scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
+ * await runAdapter.create('model.py', {
+ *     scopeBoundary: SCOPE_BOUNDARY.GROUP,
+ *     scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461'
  * });
+ *
  * @param model                         Name of your model file
  * @param scope                         Scope associated with your run
  * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
- * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in ROLE
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
@@ -390,17 +393,19 @@ export async function create<
         }).then(({ body }) => body);
 }
 
+
 /**
  * Creates a project scoped run
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/singular`
+ *
  * @example
  * import { runAdapter } from 'epicenter-libs';
- * runAdapter.createSingular('model.py');
- * NOTE permit default behavior based on who starts the run:
- * * Admin: read/write Author, User with World: read PARTICPANT, write FACILITATOR, User with Group: read/write USER,
+ * await runAdapter.createSingular('model.py');
+ *
  * @param model                         Name of your model file
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
- * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in ROLE
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
@@ -441,11 +446,16 @@ export async function createSingular<
         }).then(({ body }) => body);
 }
 
+
 /**
  * Gets the singular run's runKey
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/singular/key`
+ *
  * @example
  * import { runAdapter } from 'epicenter-libs';
- * runAdapter.getSingularRunKey();
+ * const runKey = await runAdapter.getSingularRunKey();
+ *
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to a runKey
  */
 export async function getSingularRunKey(
@@ -456,9 +466,16 @@ export async function getSingularRunKey(
         .then(({ body }) => body);
 }
 
+
 /**
  * Clone a run
- * @param runKey                        RunReadOutView key for the run you want to clone
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/clone/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const clonedRun = await runAdapter.clone('00000173078afb05b4ae4c726637167a1a9e');
+ *
+ * @param runKey                        Run key for the run you want to clone
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
@@ -491,6 +508,22 @@ export async function clone(
         }).then(({ body }) => body);
 }
 
+
+/**
+ * Restore a run into memory
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/restore/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const restoredRun = await runAdapter.restore('00000173078afb05b4ae4c726637167a1a9e');
+ *
+ * @param runKey                        Run key for the run you want to restore
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
+ * @returns promise that resolves to the restored run
+ */
 export async function restore(
     runKey: string,
     optionals: {
@@ -500,7 +533,9 @@ export async function restore(
     } & RoutingOptions = {},
 ): Promise<RunReadOutView> {
     const {
-        ephemeral, modelContext = {}, executionContext = {},
+        ephemeral,
+        modelContext = {},
+        executionContext = {},
         ...routingOptions
     } = optionals;
     return await new Router()
@@ -514,6 +549,22 @@ export async function restore(
         }).then(({ body }) => body);
 }
 
+
+/**
+ * Rewind a run by a specified number of steps
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/rewind/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const rewoundRun = await runAdapter.rewind('00000173078afb05b4ae4c726637167a1a9e', 5);
+ *
+ * @param runKey                        Run key for the run you want to rewind
+ * @param steps                         Number of steps to rewind
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
+ * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
+ * @returns promise that resolves to the rewound run
+ */
 export async function rewind(
     runKey: string,
     steps: number,
@@ -523,7 +574,8 @@ export async function rewind(
     } & RoutingOptions = {},
 ): Promise<RunReadOutView> {
     const {
-        ephemeral, modelContext = {},
+        ephemeral,
+        modelContext = {},
         ...routingOptions
     } = optionals;
     return await new Router()
@@ -537,16 +589,42 @@ export async function rewind(
         }).then(({ body }) => body);
 }
 
+
+/**
+ * Updates a run's attributes
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const updatedRun = await runAdapter.update('00000173078afb05b4ae4c726637167a1a9e', {
+ *    readLock: 'FACILITATOR',
+ *    writeLock: 'FACILITATOR',
+ *    marked: true,
+ *    hidden: false,
+ * });
+ *
+ * @param runKey                Key associated with the run
+ * @param update                Object with the key-value pairs you would like to update
+ * @param update.readLock       Read permission role; one of the strings defined in ROLE
+ * @param update.writeLock      Write permission role; one of the strings defined in ROLE
+ * @param update.trackingKey    Tracking key for the run
+ * @param update.marked         Whether the run is marked (analogous to v2's 'saved')
+ * @param update.hidden         Whether the run is hidden (analogous to v2's 'trashed')
+ * @param update.closed         Closed is a flag that means do not restore, the run is done, no more play
+ * @param update.allowChannel   Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
+ * @param [optionals]           Optional arguments; pass network call options overrides here
+ * @returns promise that resolve to the updated run
+ */
 export async function update(
     runKey: string,
     update: {
         readLock?: keyof typeof ROLE;
         writeLock?: keyof typeof ROLE;
         trackingKey?: string;
-        marked?: boolean; /* analogous to v2's 'saved' */
-        hidden?: boolean; /* analogous to v2's 'trashed' */
-        closed?: boolean; /* Closed is a flag that means do not restore, the run is done, no more play */
-        allowChannel?: boolean; /* Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT */
+        marked?: boolean;
+        hidden?: boolean;
+        closed?: boolean;
+        allowChannel?: boolean;
     },
     optionals: RoutingOptions = {},
 ): Promise<RunReadOutView> {
@@ -580,11 +658,15 @@ export async function update(
 
 
 /**
- * *Does not actually delete the run*. The run is instead removed from memory. This can be used as a means of preserving server CPUs, and should be used when you do not expect to perform any addtional actions that would bring the run back into memory. (TODO: see David for details; is it just operations that bring the run into memory? what about clone... etc.)
+ * *Does not actually delete the run*. The run is instead removed from memory. This can be used as a means of preserving server CPUs, and should be used when you do not expect to perform any additional actions that would bring the run back into memory.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
+ *
  * @example
- * epicenter.runAdapter.remove('00000173078afb05b4ae4c726637167a1a9e');
+ * import { runAdapter } from 'epicenter-libs';
+ * await runAdapter.remove('00000173078afb05b4ae4c726637167a1a9e');
+ *
  * @param runKey        Key associated with the run
- * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolve to undefined if successful
  */
 export async function remove(
@@ -596,6 +678,19 @@ export async function remove(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Gets a specific run by its runKey
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const run = await runAdapter.get('00000173078afb05b4ae4c726637167a1a9e');
+ *
+ * @param runKey        Key associated with the run
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the run
+ */
 export async function get<
     V extends object = RunVariables,
     M extends object = RunMetadata,
@@ -611,21 +706,24 @@ export async function get<
 
 /**
  * Queries for runs.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{MODEL}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/in/{GROUP_NAME}/{MODEL}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/in/{GROUP_NAME}/{EPISODE_NAME}/{MODEL}`
+ *
  * @example
  * import { runAdapter } from 'epicenter-libs';
- * runAdapter.query('model.xlsx', {
- *      filter: [
- *          'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
- *          'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
- *          'var.certified*=true'           // looks for runs where the variable 'certified' exists,
- *          'run.hidden=false',             // where the run's 'hidden' attribute is false
- *          'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
- *          'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
- *      ],
- *      sort: ['+run.created']              // sort all findings by the 'created' field (ascending)
- *      variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
- *      metadata: ['classification']        // include the run metadata for 'classification' in the response
+ * const page = await runAdapter.query('model.xlsx', {
+ *     filter: [
+ *         'var.foo|=1|2|3',               // look for runs with a variable 'foo' with the values 1, 2, or 3
+ *         'var.score>=24',                // looks for runs with a variable 'score' higher than or equal to 24
+ *         'var.certified*=true'           // looks for runs where the variable 'certified' exists,
+ *         'run.hidden=false',             // where the run's 'hidden' attribute is false
+ *         'meta.classification~=bar-*'    // where the run metadata contains a 'classification' that begins with 'bar-',
+ *         'meta.categorization~=*-baz'    // where the run metadata contains a 'categorization' that does not end with '-baz',
+ *     ],
+ *     sort: ['+run.created']              // sort all findings by the 'created' field (ascending)
+ *     variables: ['foo', 'baz'],          // include the run variables for 'foo' and 'baz' in the response
+ *     metadata: ['classification']        // include the run metadata for 'classification' in the response
  * });
+ *
  * @param model                                 Name of your model file
  * @param searchOptions                         Search options
  * @param [searchOptions.scope.scopeBoundary]   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
@@ -713,6 +811,20 @@ export async function query<
         .then(({ body }) => body);
 }
 
+
+/**
+ * Retrieves a model's introspection information based on model file.
+ * The exact structure of the information returned varies between model languages, but generally includes information about the model's variables (data type, whether they are user-accessible/writable, etc), named ranges, available model functions. SimLang models also provide "causes" and "effects" for variables, which are ways of describing which variables are affected by changes to other variables.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/introspect/model/{MODEL}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const info = await runAdapter.introspect('model.py');
+ *
+ * @param model         Name of your model file
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to an object containing the model's introspection information
+ */
 export async function introspect(
     model: string,
     optionals: RoutingOptions = {},
@@ -722,6 +834,20 @@ export async function introspect(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Retrieves a model's introspection information based on a run key associated with the model.
+ * The exact structure of the information returned varies between model languages, but generally includes information about the model's variables (data type, whether they are user-accessible/writable, etc), named ranges, available model functions. SimLang models also provide "causes" and "effects" for variables, which are ways of describing which variables are affected by changes to other variables.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/introspect/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const info = await runAdapter.introspectWithRunKey('00000173078afb05b4ae4c726637167a1a9e');
+ *
+ * @param runKey        Identifier for your run
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to an object containing the model's introspection information
+ */
 export async function introspectWithRunKey(
     runKey: string,
     optionals: RoutingOptions = {},
@@ -731,6 +857,23 @@ export async function introspectWithRunKey(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Executes an operation on a run.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/operation/{RUN_KEY}` or POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/operation` (for multiple runs)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const result = await runAdapter.operation('00000173078afb05b4ae4c726637167a1a9e', 'simulate', [10]);
+ *
+ * @param runKey                Identifier for your run
+ * @param name                  Name of the operation to execute
+ * @param [args]                Arguments to pass to the operation
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
+ * @returns promise that resolve to the operation's return value
+ */
 export async function operation(
     runKey: string | string[],
     name: string,
@@ -764,6 +907,26 @@ export async function operation(
         }).then(({ body }) => body);
 }
 
+
+/**
+ * Retrieves model variables for a run or runs
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/variable/{RUN_KEY}` or POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/variable` (for multiple runs)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * // Single runKey
+ * const vars = await runAdapter.getVariables('00000173078afb05b4ae4c726637167a1a9e', ['var1', 'var2']);
+ * // Multiple runKeys
+ * const varsArray = await runAdapter.getVariables(['00000173078afb05b4ae4c726637167a1a9e', '0000017dd3bf540e5ada5b1e058f08f20461'], ['var1', 'var2']);
+ *
+ * @param runKey                Identifier for your run or runs
+ * @param variables             List of variables to retrieve
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
+ * @param [optionals.ignorable] If true, suppresses errors when variables are not found
+ * @returns promise that resolve to an object with the variables and their values
+ */
 export async function getVariables<V extends object = RunVariables>(
     runKey: string | string[],
     variables: (keyof V)[],
@@ -814,6 +977,25 @@ export async function getVariables<V extends object = RunVariables>(
         });
 }
 
+
+/**
+ * Retrieves model variable(s) for a run or runs
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/variable/{RUN_KEY}/{VARIABLE}` or POST (for multiple runs/variables)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * // Single runKey, single variable
+ * const value = await runAdapter.getVariable('00000173078afb05b4ae4c726637167a1a9e', 'var1');
+ * // Multiple runKeys, multiple variables
+ * const varsArray = await runAdapter.getVariable(['00000173078afb05b4ae4c726637167a1a9e', '0000017dd3bf540e5ada5b1e058f08f20461'], ['var1', 'var2']);
+ *
+ * @param runKey                Identifier for your run or runs
+ * @param variable              Variable or list of variables to retrieve
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
+ * @returns promise that resolve to the variable's value, or an object with the variables and their values
+ */
 export async function getVariable<V extends object = RunVariables>(
     runKey: string | string[],
     variable: keyof V | (keyof V)[],
@@ -838,14 +1020,25 @@ export async function getVariable<V extends object = RunVariables>(
         .get(`/run/variable/${runKey}/${String(variable)}`, routingOptions)
         .then(({ body }) => body);
 }
+
+
 /**
  * Updates model variables for the run
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/variable/{RUN_KEY}` or PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/variable` (for multiple runs)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const updated = await runAdapter.updateVariables('00000173078afb05b4ae4c726637167a1a9e', {
+ *     price: 100,
+ *     foo: 'bar',
+ * });
+ *
  * @param runKey                Identifier for your run
  * @param update                Object with the key-value pairs you would like to update in the model
  * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.timeout]   TODO -- this does something, it's just that the frontend devs don't know what yet
- * @param [optionals.ritual]    TODO -- this does something, it's just that the frontend devs don't know what yet
- * @returns promise that resolve to an object with the variables & new values that were updated
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
+ * @returns promise that resolve to an object with the variables and new values that were updated
  */
 export async function updateVariables<V extends object = RunVariables>(
     runKey: string | string[],
@@ -876,6 +1069,24 @@ export async function updateVariables<V extends object = RunVariables>(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Retrieves run metadata for a run or runs
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/meta`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * // Single runKey
+ * const meta = await runAdapter.getMetadata('00000173078afb05b4ae4c726637167a1a9e', ['meta1', 'meta2']);
+ * // Multiple runKeys
+ * const metaArray = await runAdapter.getMetadata(['00000173078afb05b4ae4c726637167a1a9e', '0000017dd3bf540e5ada5b1e058f08f20461'], ['meta1', 'meta2']);
+ *
+ * @param runKey                Identifier for your run or runs
+ * @param metadata              List of metadata keys to retrieve
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @returns promise that resolve to an object with the metadata and their values
+ */
 export async function getMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
     metadata: (keyof M)[],
@@ -912,9 +1123,66 @@ export async function getMetadata<M extends object = RunMetadata>(
         });
 }
 
+
+export interface MetadataFirstPop {
+    objectType: 'first';
+}
+
+export interface MetadataLastPop {
+    objectType: 'last';
+}
+
+export interface MetadataAllPop {
+    objectType: 'all';
+    value?: unknown;
+}
+
+export type MetadataPop = MetadataFirstPop | MetadataLastPop | MetadataAllPop;
+
+export interface MetadataUpdate<M extends object = RunMetadata> {
+    pop?: Partial<Record<keyof M, MetadataPop>>;
+    set?: Partial<M>;
+    push?: Partial<M>;
+}
+
+/**
+ * Updates run metadata for a run or runs
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/meta/{RUN_KEY}` or PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/meta` (for multiple runs)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * // Set metadata values
+ * const updated = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
+ *     set: {
+ *         classification: 'new-classification',
+ *         categorization: 'new-categorization',
+ *     },
+ * });
+ * // Push values to array metadata
+ * const pushed = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
+ *     push: {
+ *         history: 'new-entry',
+ *     },
+ * });
+ * // Pop values from array metadata
+ * const popped = await runAdapter.updateMetadata('00000173078afb05b4ae4c726637167a1a9e', {
+ *     pop: {
+ *         history: { objectType: 'last' },
+ *     },
+ * });
+ *
+ * @param runKey                Identifier for your run or runs
+ * @param update                Metadata update operations
+ * @param [update.set]          Key-value pairs to set in the metadata
+ * @param [update.push]         Key-value pairs to push to array metadata
+ * @param [update.pop]          Keys with pop operations (first, last, or all) to remove from array metadata
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @returns promise that resolves to an object with the updated metadata
+ */
 export async function updateMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
-    update: Partial<M>,
+    update: MetadataUpdate<M>,
     optionals: {
         timeout?: number;
     } & RoutingOptions = {},
@@ -936,6 +1204,29 @@ export async function updateMetadata<M extends object = RunMetadata>(
         .then(({ body }) => body);
 }
 
+
+/**
+ * Executes a list of actions on a run or runs
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/action/{RUN_KEY}` or POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/action` (for multiple runs)
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const actions = [
+ *     { name: 'price', value: 100, 'objectType': 'set' },
+ *     { name: 'simulate', arguments: [10], 'objectType': 'execute' },
+ * ];
+ * // Single runKey
+ * const result = await runAdapter.action('00000173078afb05b4ae4c726637167a1a9e', actions);
+ * // Multiple runKeys
+ * const results = await runAdapter.action(['00000173078afb05b4ae4c726637167a1a9e', '0000017dd3bf540e5ada5b1e058f08f20461'], actions);
+ *
+ * @param runKey                Identifier for your run or runs
+ * @param actionList            List of actions to perform
+ * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.timeout]   Number of seconds we're willing to wait for the response from the server
+ * @param [optionals.ritual]    Ritual describing how to store and remove the run from memory; one of the strings defined in RITUAL
+ * @returns promise that resolve to an object with the action results
+ */
 export async function action(
     runKey: string | string[],
     actionList: Actionable[],
@@ -945,7 +1236,8 @@ export async function action(
     } & RoutingOptions = {},
 ): Promise<Record<string, unknown>> {
     const {
-        timeout, ritual,
+        timeout,
+        ritual,
         ...routingOptions
     } = optionals;
     const hasMultiple = Array.isArray(runKey) && runKey.length > 1;
@@ -965,17 +1257,21 @@ export async function action(
         .then(({ body }) => body);
 }
 
+
 /**
  * Returns the run associated with the given world key; brings the run into memory, if the run does not exist, it will create it.
  * See `runAdapter.create` for more information about platform-determined default permits.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
  * @example
  * import { runAdapter } from 'epicenter-libs';
  * const run = await runAdapter.retrieveFromWorld('0000017a445032dc38cb2cecd5fc13708314', 'model.py');
+ *
  * @param worldKey                      Key associated with the world you'd like a run from
  * @param model                         Name of model file you'd use to create the run if needed
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
- * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in ROLE
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
@@ -1033,10 +1329,15 @@ export async function retrieveFromWorld(
         .then(({ body }) => body);
 }
 
+
 /**
  * Removes the run associated with the given world key
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/world/{WORLD_KEY}`
+ *
  * @example
- * epicenter.runAdapter.removeFromWorld('0000017a445032dc38cb2cecd5fc13708314');
+ * import { runAdapter } from 'epicenter-libs';
+ * await runAdapter.removeFromWorld('0000017a445032dc38cb2cecd5fc13708314');
+ *
  * @param worldKey      Key associated with the world
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to undefined when successful
@@ -1050,18 +1351,6 @@ export async function removeFromWorld(
         .then(({ body }) => body);
 }
 
-// TODO -- revisit the code below when considering reimplmenting v2 run strategies
-// async function serial(runKey: string, operations, optionals = {}) {
-//     const normalizedOps = operations.map((item) => ({
-//         name: typeof item === 'string' ? item : item.name,
-//         params: item.params,
-//     }));
-
-//     //Perform all operations, sequentially
-//     return normalizedOps.reduce((promise, { name, params }) => {
-//         return promise.then(() => operation(runKey, name, params, optionals = {}));
-//     }, Promise.resolve());
-// }
 
 /**
  * Queries for and/or creates a run, depending on the strategy provided.
@@ -1070,14 +1359,13 @@ export async function removeFromWorld(
  * 'reuse-never' -- will create a new run every time
  *
  * @example
- *
- * import { runAdapter } from 'epicenter-libs';
- * runAdapter.getWithStrategy(
+ * import { runAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
+ * const run = await runAdapter.getWithStrategy(
  *     'reuse-across-sessions',
  *     'model.py',
  *     {
  *         scopeBoundary: SCOPE_BOUNDARY.GROUP,
- *         scopeKey: '123456789',
+ *         scopeKey: '0000017dd3bf540e5ada5b1e058f08f20461',
  *     },
  * );
  *
@@ -1087,15 +1375,14 @@ export async function removeFromWorld(
  * @param scope.scopeBoundary           Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey                Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.readLock]          Read permission role; one of the strings defined in epicenter.ROLE
- * @param [optionals.writeLock]         Write permission role; one of the strings defined in epicenter.ROLE
+ * @param [optionals.readLock]          Read permission role; one of the strings defined in ROLE
+ * @param [optionals.writeLock]         Write permission role; one of the strings defined in ROLE
  * @param [optionals.ephemeral]         Used for testing. If true, the run will only exist so long as its in memory; makes it so that nothing is written to the database, history, or variables.
  * @param [optionals.trackingKey]       Tracking key
  * @param [optionals.modelContext]      .ctx2 file overrides, this is not tracked by clone operations
  * @param [optionals.executionContext]  Carries arguments for model file worker on model initialization. This is tracked by clone operations.
  * @returns promise that resolves to a run
  */
-
 export async function getWithStrategy<
     V extends object = RunVariables,
     M extends object = RunMetadata,
@@ -1135,8 +1422,18 @@ export async function getWithStrategy<
     throw new EpicenterError('Invalid run strategy.');
 }
 
+
 /**
  * Clone a run into a novel episode scope
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/run/migrate/to/{EPISODE_KEY}/{RUN_KEY}`
+ *
+ * @example
+ * import { runAdapter } from 'epicenter-libs';
+ * const migratedRun = await runAdapter.migrate(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     '0000017dd3bf540e5ada5b1e058f08f20461',
+ * );
+ *
  * @param runKey                        Source run key for the run you want to copy and migrate
  * @param episodeKey                    Destination episode key for the run's new episode scope
  * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
