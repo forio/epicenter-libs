@@ -140,7 +140,7 @@ export async function removeLocalSession(): Promise<void> {
  * @param credentials.secretKey                 Secret key for app login
  * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.objectType]                Object type for authentication (defaults to 'user' or 'account' based on credentials)
- * @param [optionals.forcePathInclusion]        Force admin login to include the path in the generated cookie; useful when an admin login should be limited in scope to a single project
+ * @param [optionals.forcePathInclusion]        Controls cookie path behavior: `true` forces project-specific path (even on custom domains), `false` forces root path (even for users/admins on Epicenter domain), `undefined` uses defaults (project-specific for users/admins on Epicenter domain, root for custom domains)
  * @returns promise that resolves to the session object
  */
 export async function login(
@@ -197,7 +197,7 @@ export async function login(
  * @param groupOrAccount                    Group key or account name
  * @param [optionals]                       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
  * @param [optionals.objectType]            The object type to regenerate for (defaults to 'user')
- * @param [optionals.forcePathInclusion]    Force the path to be included in the generated cookie
+ * @param [optionals.forcePathInclusion]    Controls cookie path behavior: `true` forces project-specific path (even on custom domains), `false` forces root path (even for users/admins on Epicenter domain), `undefined` uses defaults (project-specific for users/admins on Epicenter domain, root for custom domains)
  * @returns promise that resolves to the new session object
  */
 export async function regenerate(
