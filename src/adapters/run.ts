@@ -263,8 +263,8 @@ export type Actionable =
 
 
 export type RunReadOutView<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 > = {
     cluster?: string;
     hidden?: boolean;
@@ -336,8 +336,8 @@ export type RunStrategy =
  * @returns promise that resolves to the newly created run
  */
 export async function create<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     scope: { userKey?: string } & GenericScope,
@@ -407,8 +407,8 @@ export async function create<
  * @returns promise that resolves to the newly created run
  */
 export async function createSingular<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     optionals: RunCreateOptions = {},
@@ -597,8 +597,8 @@ export async function remove(
 }
 
 export async function get<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     runKey: string,
     optionals: RoutingOptions = {},
@@ -643,8 +643,8 @@ export async function get<
  * @returns promise that resolves to a page of runs
  */
 export async function query<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     model: string,
     searchOptions: {
@@ -764,7 +764,7 @@ export async function operation(
         }).then(({ body }) => body);
 }
 
-export async function getVariables<V extends RunVariables = RunVariables>(
+export async function getVariables<V extends object = RunVariables>(
     runKey: string | string[],
     variables: (keyof V)[],
     optionals: {
@@ -814,7 +814,7 @@ export async function getVariables<V extends RunVariables = RunVariables>(
         });
 }
 
-export async function getVariable<V extends RunVariables = RunVariables>(
+export async function getVariable<V extends object = RunVariables>(
     runKey: string | string[],
     variable: keyof V | (keyof V)[],
     optionals: {
@@ -847,7 +847,7 @@ export async function getVariable<V extends RunVariables = RunVariables>(
  * @param [optionals.ritual]    TODO -- this does something, it's just that the frontend devs don't know what yet
  * @returns promise that resolve to an object with the variables & new values that were updated
  */
-export async function updateVariables<V extends RunVariables = RunVariables>(
+export async function updateVariables<V extends object = RunVariables>(
     runKey: string | string[],
     update: Partial<V>,
     optionals: {
@@ -876,7 +876,7 @@ export async function updateVariables<V extends RunVariables = RunVariables>(
         .then(({ body }) => body);
 }
 
-export async function getMetadata<M extends RunMetadata = RunMetadata>(
+export async function getMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
     metadata: (keyof M)[],
     optionals: {
@@ -912,7 +912,7 @@ export async function getMetadata<M extends RunMetadata = RunMetadata>(
         });
 }
 
-export async function updateMetadata<M extends RunMetadata = RunMetadata>(
+export async function updateMetadata<M extends object = RunMetadata>(
     runKey: string | string[],
     update: Partial<M>,
     optionals: {
@@ -1097,8 +1097,8 @@ export async function removeFromWorld(
  */
 
 export async function getWithStrategy<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     strategy: RunStrategy,
     model: string,
@@ -1147,8 +1147,8 @@ export async function getWithStrategy<
  * @returns promise that resolves to the migrated run
  */
 export async function migrate<
-    V extends RunVariables = RunVariables,
-    M extends RunMetadata = RunMetadata,
+    V extends object = RunVariables,
+    M extends object = RunMetadata,
 >(
     runKey: string,
     episodeKey: string,

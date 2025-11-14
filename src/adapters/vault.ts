@@ -13,7 +13,7 @@ import {
 // Generic type parameter for vault items structure
 export type VaultItems = Record<string, unknown>;
 
-export interface Vault<I extends VaultItems = VaultItems> {
+export interface Vault<I extends object = VaultItems> {
     created: string;
     lastUpdated: string;
     mutationKey: string;
@@ -27,7 +27,7 @@ export interface Vault<I extends VaultItems = VaultItems> {
     changed?: boolean;
 }
 
-export interface Items<I extends VaultItems = VaultItems> {
+export interface Items<I extends object = VaultItems> {
     set?: Partial<I>;
     push?: Partial<I>;
     pop?: Partial<I>;
@@ -43,7 +43,7 @@ export interface Items<I extends VaultItems = VaultItems> {
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the vault
  */
-export async function update<I extends VaultItems = VaultItems>(
+export async function update<I extends object = VaultItems>(
     vaultKey: string,
     items: Items<I>,
     optionals: { mutationKey?: string } & RoutingOptions = {},
@@ -83,7 +83,7 @@ export async function update<I extends VaultItems = VaultItems>(
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the vault
  */
-export async function updateProperties<I extends VaultItems = VaultItems>(
+export async function updateProperties<I extends object = VaultItems>(
     vaultKey: string,
     update: {
         mutationKey?: string;
@@ -104,7 +104,7 @@ export async function updateProperties<I extends VaultItems = VaultItems>(
 
 
 const NOT_FOUND = 404;
-export async function get<I extends VaultItems = VaultItems>(
+export async function get<I extends object = VaultItems>(
     vaultKey: string,
     optionals: RoutingOptions = {},
 ): Promise<Vault<I>> {
@@ -117,7 +117,7 @@ export async function get<I extends VaultItems = VaultItems>(
 }
 
 
-export async function withScope<I extends VaultItems = VaultItems>(
+export async function withScope<I extends object = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
     optionals: RoutingOptions = {},
@@ -132,7 +132,7 @@ export async function withScope<I extends VaultItems = VaultItems>(
         }).then(({ body }) => body);
 }
 
-export async function byName<I extends VaultItems = VaultItems>(
+export async function byName<I extends object = VaultItems>(
     name: string,
     optionals: {
         groupName?: string;
@@ -202,7 +202,7 @@ export async function remove(
  * @param [optionals.mutationStrategy]  Setting a mutation strategy allows for the following behaviors: ALLOW - Is an upsert which means if the entry exists it will be updated with the items in the POST. DISALLOW - Is an insert which means that if the entry exists no changes will be made (the 'changed' flag will be false). ERROR - Is an insert and, if the entry exists, a conflict exception will be thrown. If the mutationStrategy is omitted, it will simply search by scope and name; updating if it exists, creating if not.
  * @param [optionals.allowChannel]      Opt into push notifications for this resource. Applicable to projects with phylogeny >= SILENT
  * @returns the vault (created or modified) */
-export async function define<I extends VaultItems = VaultItems>(
+export async function define<I extends object = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
     optionals: {
@@ -252,7 +252,7 @@ export async function define<I extends VaultItems = VaultItems>(
 }
 
 
-export async function create<I extends VaultItems = VaultItems>(
+export async function create<I extends object = VaultItems>(
     name: string,
     scope: { userKey?: string } & GenericScope,
     items: Items<I>,
@@ -291,7 +291,7 @@ export async function create<I extends VaultItems = VaultItems>(
  * @param [optionals.groupName]     Name of the group
  * @returns promise that resolves to an array of vaults that match the search options
  */
-export async function list<I extends VaultItems = VaultItems>(
+export async function list<I extends object = VaultItems>(
     searchOptions: GenericSearchOptions,
     optionals: { groupName?: string } & RoutingOptions = {},
 ): Promise<Vault<I>[]> {
@@ -331,7 +331,7 @@ export async function list<I extends VaultItems = VaultItems>(
  * @param [optionals.groupName]     Name of the group
  * @returns promise that resolves to the number of vaults that match the search options
  */
-export async function count<I extends VaultItems = VaultItems>(
+export async function count<I extends object = VaultItems>(
     searchOptions: GenericSearchOptions,
     optionals: { groupName?: string } & RoutingOptions = {},
 ): Promise<Vault<I>[]> {

@@ -47,7 +47,10 @@ export type TaskTriggerCreateInView =
     | OffsetTaskTriggerCreateInView;
 
 // Payload type definitions for creating tasks
-export interface HttpTaskPayloadCreateInView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+export interface HttpTaskPayloadCreateInView<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> {
     objectType: 'http';
     method: string;
     url: string;
@@ -61,12 +64,18 @@ export interface GroupStatusTaskPayloadCreateInView {
     status: StatusCreateInView;
 }
 
-export type TaskPayloadCreateInView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> =
+export type TaskPayloadCreateInView<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> =
     | HttpTaskPayloadCreateInView<B, H>
     | GroupStatusTaskPayloadCreateInView;
 
 // Payload type definitions for reading tasks
-export interface HttpTaskPayloadReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+export interface HttpTaskPayloadReadOutView<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> {
     objectType: 'http';
     method?: string;
     url?: string;
@@ -80,12 +89,18 @@ export interface GroupStatusTaskPayloadReadOutView {
     status?: StatusReadOutView;
 }
 
-export type TaskPayloadReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> =
+export type TaskPayloadReadOutView<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> =
     | HttpTaskPayloadReadOutView<B, H>
     | GroupStatusTaskPayloadReadOutView;
 
 // Task response structure
-export interface TaskReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H extends TaskPayloadHeaders = TaskPayloadHeaders> {
+export interface TaskReadOutView<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> {
     taskKey?: string;
     name?: string;
     status?: string;
@@ -159,8 +174,8 @@ export interface TaskReadOutView<B extends TaskPayloadBody = TaskPayloadBody, H 
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function create<
-    B extends TaskPayloadBody = TaskPayloadBody,
-    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
 >(
     scope: { userKey?: string } & GenericScope,
     name: string,
@@ -240,8 +255,8 @@ export async function destroy(taskKey: string, optionals: RoutingOptions = {}): 
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function get<
-    B extends TaskPayloadBody = TaskPayloadBody,
-    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
 >(taskKey: string, optionals: RoutingOptions = {}): Promise<TaskReadOutView<B, H>> {
     return await new Router()
         .get(`/task/${taskKey}`, optionals)
@@ -264,8 +279,8 @@ export async function get<
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function getHistory<
-    B extends TaskPayloadBody = TaskPayloadBody,
-    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
 >(
     taskKey: string,
     optionals: RoutingOptions = {},
@@ -301,8 +316,8 @@ export async function getHistory<
  * @returns {taskObject}                            Returns a promise that resolves to the task object including the taskKey
  */
 export async function getTaskIn<
-    B extends TaskPayloadBody = TaskPayloadBody,
-    H extends TaskPayloadHeaders = TaskPayloadHeaders,
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
 >(
     scope: { userKey?: string } & GenericScope,
     optionals: RoutingOptions = {},

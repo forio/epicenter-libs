@@ -12,7 +12,7 @@ export interface MFADetailReadOutView {
     mfaMethodology: MFAMethodology;
 }
 
-export interface GraftReadOutView<R extends RealmData = RealmData> {
+export interface GraftReadOutView<R extends object = RealmData> {
     reference: string;
     realm: R;
 }
@@ -70,7 +70,7 @@ export interface MFADetailCreateInView {
     mfaKey?: string;
 }
 
-export interface GraftCreateInView<R extends RealmData = RealmData> {
+export interface GraftCreateInView<R extends object = RealmData> {
     reference: string;
     realm: R;
 }
@@ -96,7 +96,7 @@ export interface NativeUserCreateInView extends UserCreateInView {
     secret?: SecretCreateInView;
 }
 
-export interface ExternalUserCreateInView<R extends RealmData = RealmData> extends UserCreateInView {
+export interface ExternalUserCreateInView<R extends object = RealmData> extends UserCreateInView {
     objectType: 'external';
     graft: GraftCreateInView<R>;
 }
@@ -144,7 +144,7 @@ export async function uploadCSV(
 /**
  * Create a new user (native or external).
  */
-export async function createUser<R extends RealmData = RealmData>(
+export async function createUser<R extends object = RealmData>(
     view: {
         objectType: 'native';
         handle: string;
