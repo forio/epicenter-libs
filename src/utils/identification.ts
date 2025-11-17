@@ -151,7 +151,7 @@ class Identification {
         }
     }
 
-    setSessionWithOptions(session: Session | undefined, forcePathInclusion: boolean) {
+    setSessionWithOptions(session: Session | undefined, forcePathInclusion?: boolean) {
         const Store = this.getStore();
         const options = this.getStoreOptions(session, forcePathInclusion);
 
@@ -181,13 +181,26 @@ class Identification {
         const base = { samesite: isLocal ? 'lax' : 'none', secure: !isLocal };
         const isCustomDomain = !isLocal && window.location.pathname.split('/')[1] !== 'app';
         const isEpicenterDomain = !isLocal && !isCustomDomain;
-        if ((objectType === 'user' || forcePathInclusion) && isEpicenterDomain) {
+
+        /* forcePathInclusion can explicitly override behavior:
+         * - true: force scoped path (even on custom domains)
+         * - false: force root path (even for users/admins on Epicenter domain)
+         * - undefined: use defaults (scoped for users and admins on Epicenter domain, root for custom domains) */
+        if (forcePathInclusion === false) {
+            return { ...base, path: '/' };
+        }
+
+        if (
+            forcePathInclusion === true ||
+            (isEpicenterDomain && (objectType === 'user' || objectType === 'admin'))
+        ) {
             const { accountShortName, projectShortName } = config;
             const account = accountShortName ? `/${accountShortName}` : '';
             const project = account && projectShortName ? `/${projectShortName}` : '';
             return { ...base, path: `/app${account}${project}` };
         }
-        /* Admins and any custom domains (ones that don't use 'app/account/project') get the root path */
+
+        /* Custom domains (when forcePathInclusion is not true) get the root path */
         return { ...base, path: '/' };
     }
 
