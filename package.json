@@ -24,8 +24,8 @@
     "build:js": "rollup -c -m",
     "build": "npm run build:clean && npm run build:types && npm run build:js",
     "build:test": "rollup -c rollup.config.test.js",
-    "pretest": "npm run build:test",
-    "pretest:run": "npm run build:test",
+    "pretest": "npm run type-check && npm run build:test",
+    "pretest:run": "npm run type-check && npm run build:test",
     "start": "rollup -c -m inline -w",
     "prepare": "husky"
   },

@@ -18,6 +18,7 @@ export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
     instantiated: boolean;
     triggered: boolean;
     closed: boolean;
+    paused: boolean;
     transparent: boolean;
     worldKey: string;
     name: string;
@@ -28,6 +29,13 @@ export interface BarrierReadOutView<R extends WorldRole = WorldRole> {
     impendingRoles: Record<R, PseudonymReadOutView[]>;
     arrivedRoles: Record<R, BarrierArrival[]>;
     allowChannel: boolean;
+}
+
+export interface BarrierMap {
+    [worldKey: string]: {
+        name: string;
+        stage: string;
+    };
 }
 
 
@@ -443,8 +451,8 @@ export async function triggerFor(
 
 
 /**
- * Removes the specified user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission.
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/expectation/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
+ * Facilitator only; removes the specified user from the list of users that have arrived at this barrier, thus allowing the user to redo their submission. This only removes the arrival, not the role expectation.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/untrigger/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
  *
  * @example
  * import { consensusAdapter } from 'epicenter-libs';
@@ -474,7 +482,152 @@ export async function undoSubmitFor(
     } = optionals;
 
     return await new Router()
-        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, {
+        .delete(`/consensus/untrigger/${worldKey}/${name}/${stage}/${userKey}`, {
+            ...routingOptions,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Facilitator only; removes the entire role expectation from the consensus barrier based on the specified user's role assignment. This removes the expectation for that role and also removes any arrivals for that user. This is a structural change that affects all users with that role - the barrier will no longer wait for anyone with that role to submit.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/expectation/{WORLD_KEY}/{NAME}/{STAGE}/{USER_KEY}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.removeRoleExpectationFor(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ *     '0000017cb60ad697e109dcb11cdd4cfcdd1d',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to remove the role expectation from
+ * @param userKey                       userKey of a user whose role will be completely removed from the barrier expectations
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to undefined if successful
+ */
+export async function removeRoleExpectationFor(
+    worldKey: string,
+    name: string,
+    stage: string,
+    userKey: string,
+    optionals: RoutingOptions = {},
+): Promise<void> {
+    return await new Router()
+        .delete(`/consensus/expectation/${worldKey}/${name}/${stage}/${userKey}`, optionals)
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Pauses the TTL countdown timer for a timed consensus barrier. When paused, the timer stops counting down and the remaining time is preserved. Only works for barriers that have a ttlSeconds value set.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/pause/{WORLD_KEY}/{NAME}/{STAGE}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.pause(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to pause
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the updated consensus barrier
+ */
+export async function pause<R extends WorldRole = WorldRole>(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {},
+): Promise<BarrierReadOutView<R>> {
+    return await new Router()
+        .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
+            body: {
+                resume: false,
+            },
+            ...optionals,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Resumes the TTL countdown timer for a paused consensus barrier. The timer continues from where it was paused. Only works for barriers that were previously paused.
+ * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/pause/{WORLD_KEY}/{NAME}/{STAGE}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * await consensusAdapter.resume(
+ *     '00000173078afb05b4ae4c726637167a1a9e',
+ *     'SUBMISSIONS',
+ *     'ROUND1',
+ * );
+ *
+ * @param worldKey                      World key for the world you are targeting
+ * @param name                          Unique string that names a set of consensus barriers
+ * @param stage                         Unique string to specify which specific barrier to resume
+ * @param [optionals]                   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the updated consensus barrier
+ */
+export async function resume<R extends WorldRole = WorldRole>(
+    worldKey: string,
+    name: string,
+    stage: string,
+    optionals: RoutingOptions = {},
+): Promise<BarrierReadOutView<R>> {
+    return await new Router()
+        .patch(`/consensus/pause/${worldKey}/${name}/${stage}`, {
+            body: {
+                resume: true,
+            },
+            ...optionals,
+        })
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Facilitator only; retrieves multiple consensus barriers across multiple worlds within a group or episode. This allows you to efficiently check the status of barriers across all specified worlds in a single API call.
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/in/{GROUP_NAME}` or POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/consensus/in/{GROUP_NAME}/{EPISODE_NAME}`
+ *
+ * @example
+ * import { consensusAdapter } from 'epicenter-libs';
+ * const barriers = await consensusAdapter.collectInGroup(
+ *     {
+ *         '00000173078afb05b4ae4c726637167a1a9e': { name: 'SUBMISSIONS', stage: 'ROUND1' },
+ *         '00000173078afb05b4ae4c726637167a1b2f': { name: 'SUBMISSIONS', stage: 'ROUND1' },
+ *     },
+ *     'my-group-name',
+ *     { episodeName: 'my-episode-name' }
+ * );
+ *
+ * @param barrierMap                    Map of world keys to barrier name/stage pairs
+ * @param groupName                     Name of the group to collect barriers from
+ * @param [optionals]                   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.episodeName]       Name of the episode to collect barriers from (optional)
+ * @returns promise that resolves to an array of consensus barriers
+ */
+export async function collectInGroup<R extends WorldRole = WorldRole>(
+    barrierMap: BarrierMap,
+    groupName: string,
+    optionals: {
+        episodeName?: string;
+    } & RoutingOptions = {},
+): Promise<BarrierReadOutView<R>[]> {
+    const {
+        episodeName,
+        ...routingOptions
+    } = optionals;
+
+    return await new Router()
+        .post(`/consensus/in/${groupName}${episodeName ? `/${episodeName}` : ''}`, {
+            body: barrierMap,
             ...routingOptions,
         })
         .then(({ body }) => body);
