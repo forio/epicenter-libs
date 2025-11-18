@@ -1,9 +1,4 @@
-
-
-// Escape string for safe use in RegExp
-function escapeRegExp(str: string): string {
-    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
+import { escapeRegExp } from './helpers';
 
 type End = number | string | Date | undefined;
 
