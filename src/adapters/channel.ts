@@ -7,15 +7,30 @@ import cometdAdapter from './cometd';
 // Generic type for push channel message custom data
 export type ChannelMessageData = unknown;
 
-// Base structure for channel push messages (this is what comes in message.data from cometd)
+// Base structure for channel push messages
 export interface ChannelMessage<D = ChannelMessageData> {
-    date: string;
+    /** The destination address for the message. */
     address: {
+        /** The scope boundary of the address (e.g. 'WORLD'). */
         boundary: string;
+        /** The push category of the address (e.g. 'RUN'). */
         category: string;
+        /** The scope key of the address (e.g. your worldKey if boundary is 'WORLD'). */
         key: string;
     };
-    data?: D;
+    /** The sender of the message. */
+    sender: {
+        /** The type of the sender (e.g., 'USER', 'SYSTEM'). */
+        type: string;
+        /** The key of the sender. */
+        key: string;
+    };
+    /** The message content/payload. */
+    content: D;
+    /** The ISO 8601 date string when the message was sent. */
+    date: string;
+    /** The type/category of the message. */
+    type: string;
 }
 
 export interface ChannelScope extends GenericScope {
