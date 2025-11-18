@@ -9,13 +9,18 @@ export type ChannelMessageData = unknown;
 
 // Base structure for channel push messages (this is what comes in message.data from cometd)
 export interface ChannelMessage<D = ChannelMessageData> {
-    date: string;
     address: {
         boundary: string;
         category: string;
         key: string;
     };
-    data?: D;
+    sender: {
+        type: string;
+        key: string;
+    };
+    content: D;
+    date: string;
+    type: string;
 }
 
 export interface ChannelScope extends GenericScope {
