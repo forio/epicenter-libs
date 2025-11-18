@@ -1,5 +1,10 @@
 
 
+// Escape string for safe use in RegExp
+function escapeRegExp(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
 type End = number | string | Date | undefined;
 
 // Modified version of https://github.com/madmurphy/cookies.js
@@ -33,7 +38,7 @@ interface EditCookieOptions {
 export default {
     getItem(key: string): null | string {
         if (!key) return null;
-        return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${encodeURIComponent(key).replace(/[-.+*]/g, '\\$&')}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
+        return decodeURIComponent(document.cookie.replace(new RegExp(`(?:(?:^|.*;)\\s*${escapeRegExp(encodeURIComponent(key))}\\s*\\=\\s*([^;]*).*$)|^.*$`), '$1')) || null;
     },
     setItem(key: string, value: string | number | boolean, options: EditCookieOptions = {}): boolean {
         if (!key || (/^(?:expires|max-age|path|domain|secure)$/i).test(key)) return false;
@@ -58,7 +63,7 @@ export default {
     hasItem(key: string): boolean {
         if (!key || (/^(?:expires|max-age|path|domain|secure)$/i).test(key)) return false;
 
-        return (new RegExp(`(?:^|;\\s*)${encodeURIComponent(key).replace(/[-.+*]/g, '\\$&')}\\s*\\=`)).test(document.cookie);
+        return (new RegExp(`(?:^|;\\s*)${escapeRegExp(encodeURIComponent(key))}\\s*\\=`)).test(document.cookie);
     },
     clear(): string[] {
         // TODO: potentially replace this regex with simpler implementation
