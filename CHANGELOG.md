@@ -1,3 +1,48 @@
+# [3.33.0](https://github.com/forio/epicenter-libs/compare/v3.32.0...v3.33.0) (2025-11-19)
+
+
+### Bug Fixes
+
+* add executioncontext and modelcontext interfaces ([38b81f9](https://github.com/forio/epicenter-libs/commit/38b81f9591052ae7faa7a8a9f79a4e22fb372b8d))
+* add full wraper for leaderboard ([455f5fd](https://github.com/forio/epicenter-libs/commit/455f5fd80d92f89b2a587d86b757b0189dba7e1a))
+* add missing roles to AdminSession ([17ae60d](https://github.com/forio/epicenter-libs/commit/17ae60dda21cc78044a63e55c229024be28615ca))
+* add morphology enum ([f08c305](https://github.com/forio/epicenter-libs/commit/f08c3051227c4a4e9b9d9e8601beece5db117340))
+* add newline to nvmrc ([079949a](https://github.com/forio/epicenter-libs/commit/079949aae72fc74c94d38287ffbf362a2558ea3e))
+* add retry limit to prevent infinite recursion ([bda2289](https://github.com/forio/epicenter-libs/commit/bda228941018500034c330b21868b7162e28e24a))
+* correct attachments type ([d8c6099](https://github.com/forio/epicenter-libs/commit/d8c6099786999f47f1601fe93bf8f995cea87677))
+* correct channel type structure ([276a429](https://github.com/forio/epicenter-libs/commit/276a42926099530e42cb75d042a8089b85009ea4))
+* correct emailAdapter jsdocs and parameters ([07e4aaf](https://github.com/forio/epicenter-libs/commit/07e4aafcb6eb6ca81ab1c57cec05682fb42399ce))
+* correct getVideoDirectoryByKey endpoint ([473e1ef](https://github.com/forio/epicenter-libs/commit/473e1ef84fe74a31984bd51ba068a6b85522ee94))
+* correct phrasing, add missing import ([794377a](https://github.com/forio/epicenter-libs/commit/794377a84d9865a3ccfef4a5d9661293158d9f14))
+* correct spelling of "prerequisite" ([6020927](https://github.com/forio/epicenter-libs/commit/60209275f25b6859a8ce38de452f95098fb89f5e))
+* correct types in video API ([b097c4d](https://github.com/forio/epicenter-libs/commit/b097c4df74f55e89e84facc730060f8d74757754))
+* export missing types from adapters ([74ef30a](https://github.com/forio/epicenter-libs/commit/74ef30ac44675c53c512829b8dd8eef2c6598498))
+* fix filter utilities exports ([3774303](https://github.com/forio/epicenter-libs/commit/37743035958c16272a4431f46245c7fdda022a48))
+* fix remaining eslint errors/warnings, tweak config ([6400f62](https://github.com/forio/epicenter-libs/commit/6400f624e810e713325b0087a8ca5f6c3085d8e9))
+* handle max URL length; do not convert GET to POST ([5f6a66b](https://github.com/forio/epicenter-libs/commit/5f6a66b36a8b57671a1a0e43abf6c29b69d2d391))
+* improve cometd/oumuamua session invalidation/disconnection handling ([be736e3](https://github.com/forio/epicenter-libs/commit/be736e39c1456d083fae853eaf384973a56e99d4))
+* remove domain from cookies to prevent conflicts ([4b50624](https://github.com/forio/epicenter-libs/commit/4b50624d7b903d6ed7213f9d8ddb0951e4fe8f98))
+* remove unnecessary lowercasing ([6e15cea](https://github.com/forio/epicenter-libs/commit/6e15cea3240a0e9cd31570c6f5729413e53adef8))
+* return value from videoAdapter.download; only throw if appropriate ([b6a7bd0](https://github.com/forio/epicenter-libs/commit/b6a7bd0529dee68a29772e94f1e85fc02b06efc2))
+* safely escape regex metacharacters ([fa5fccd](https://github.com/forio/epicenter-libs/commit/fa5fccdff8b85e9b397e635a7538fb6374b02016))
+* scope admin session cookies to account/project path ([1f818ac](https://github.com/forio/epicenter-libs/commit/1f818ac5583c0244cd31674518051a656ecf44bc))
+* update deprecated sso endpoint ([754ac67](https://github.com/forio/epicenter-libs/commit/754ac6772edb2d46e24bd7f5bf59bbb84cffd99e))
+* update inaccurate type defs and JSDocs ([37a93d5](https://github.com/forio/epicenter-libs/commit/37a93d578142c705a33571e04b1fbbd78b09dcc8))
+* use correct endpoint for undoSubmitFor ([ad23612](https://github.com/forio/epicenter-libs/commit/ad2361200ae909a46a72dab3f0deb9a85c99f1aa))
+* use correct type for groupRole ([f3fb82f](https://github.com/forio/epicenter-libs/commit/f3fb82fac3d3ee38ba938d1fbacbf86ab4e936b6))
+
+
+### Features
+
+* add consensus collectInGroup method ([bc06fd7](https://github.com/forio/epicenter-libs/commit/bc06fd7b12d384257b5d268e563ad0bbf766778f))
+* add consensus pause/resume methods ([9769c87](https://github.com/forio/epicenter-libs/commit/9769c8759d3bdc011757308f9248323999e23e2c))
+* add consensus removeRoleExpectationFor method ([4a057f9](https://github.com/forio/epicenter-libs/commit/4a057f9bb8071d04d78849c6ca10919c8f2c5ebb))
+* add support for boolean filter groups in queries ([b89cd16](https://github.com/forio/epicenter-libs/commit/b89cd16ff8c7ad9a59ecebce82c083c273b3bcc2))
+* support tokenAccessSeconds in applicable asset endpoints ([0b1d9c2](https://github.com/forio/epicenter-libs/commit/0b1d9c2b10ad3c2998b211f8df8112dd39d4bd01))
+* wrap /email/to/support endpoint ([83f71d1](https://github.com/forio/epicenter-libs/commit/83f71d1fbced38183161b3e4fbaa4dd709695fc8))
+
+
+
 # [3.32.0](https://github.com/forio/epicenter-libs/compare/v3.31.0...v3.32.0) (2025-10-02)
 
 
