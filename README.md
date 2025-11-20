@@ -113,7 +113,7 @@ Prerequisite Node version: 24
    - Run: `npm run changelog` -- which will append to the CHANGELOG.md file an automated text translation of the commits created between the most recent git tag, and the current HEAD.
    - Commit your updated CHANGELOG.md: `git add CHANGELOG.md && git commit -m "chore: update CHANGELOG"`
 5. Tag `master` with the same version you used in step 3 (prefix with 'v')
-6. Visit Jenkins to deploy to `forio.com/tools/js-libs`: <https://build.forio.com/job/deploy-epicenter-js-v3--epicenter--/>
+6. Visit Jenkins to deploy to `forio.com/tools/js-libs`: <https://sim-build-1.forio.com/view/Other/job/other/job/deploy-epicenter-js-v3/>
 7. Publish the files in `dist/` folder to NPM: `npm publish`
 
 ### Publishing on NPM
