@@ -27,7 +27,7 @@
     "pretest": "npm run type-check && npm run build:test",
     "pretest:run": "npm run type-check && npm run build:test",
     "start": "rollup -c -m inline -w",
-    "prepare": "husky"
+    "prepare": "node -e \"if (!process.env.CI && !process.env.JENKINS_HOME) require('child_process').execSync('husky', {stdio: 'inherit'})\""
   },
   "browserslist": [
     "defaults",
