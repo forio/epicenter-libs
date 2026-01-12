@@ -1,11 +1,4 @@
-import {
-    it,
-    expect,
-    describe,
-    afterAll,
-    beforeAll,
-    beforeEach,
-} from 'vitest';
+import { it, expect, describe, afterAll, beforeAll, beforeEach } from 'vitest';
 import {
     ACCOUNT,
     PROJECT,
@@ -64,20 +57,27 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.create(room, scope, permit);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat URL', async () => {
             await chatAdapter.create(room, scope, permit);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat`);
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.create(room, scope, permit, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toBe(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat`
+            );
         });
 
         it('Should pass the chat details to the request body', async () => {
@@ -109,20 +109,27 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.get(chatKey);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat URL with chatKey', async () => {
             await chatAdapter.get(chatKey);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/${chatKey}`);
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/${chatKey}`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.get(chatKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/${chatKey}`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toBe(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/${chatKey}`
+            );
         });
 
         testedMethods.add('get');
@@ -144,20 +151,27 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.updatePermit(chatKey, permit);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat URL with chatKey', async () => {
             await chatAdapter.updatePermit(chatKey, permit);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/${chatKey}`);
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/${chatKey}`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.updatePermit(chatKey, permit, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/${chatKey}`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toBe(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/${chatKey}`
+            );
         });
 
         it('Should pass the permit to the request body', async () => {
@@ -190,20 +204,27 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.query(searchOptions);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat/search URL', async () => {
             await chatAdapter.query(searchOptions);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/search`);
+            expect(req.url).toContain(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/search`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.query(searchOptions, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/search`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toContain(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/search`
+            );
         });
 
         it('Should pass query parameters', async () => {
@@ -231,27 +252,36 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.sendMessage(chatKey, message);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat/message URL', async () => {
             await chatAdapter.sendMessage(chatKey, message);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}`);
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}`
+            );
         });
 
         it('Should include userKey in URL for private messages', async () => {
             const userKey = 'USER_KEY';
             await chatAdapter.sendMessage(chatKey, message, { userKey });
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}/${userKey}`);
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}/${userKey}`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.sendMessage(chatKey, message, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/${chatKey}`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toBe(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/${chatKey}`
+            );
         });
 
         it('Should pass the message to the request body', async () => {
@@ -277,20 +307,27 @@ describe('chatAdapter', () => {
         it('Should have authorization', async () => {
             await chatAdapter.getMessages(chatKey);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
         });
 
         it('Should use the chat/message URL', async () => {
             await chatAdapter.getMessages(chatKey);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}`);
+            expect(req.url).toContain(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}`
+            );
         });
 
         it('Should support generic URL options', async () => {
             await chatAdapter.getMessages(chatKey, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
-            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/${chatKey}`);
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toContain(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/${chatKey}`
+            );
         });
 
         it('Should pass query parameters for pagination', async () => {
@@ -305,6 +342,161 @@ describe('chatAdapter', () => {
         });
 
         testedMethods.add('getMessages');
+    });
+
+    describe('chatAdapter.getMessagesForUser', () => {
+        const chatKey = 'CHAT_KEY';
+        const pseudonymKey = 'PSEUDONYM_KEY';
+
+        it('Should do a GET', async () => {
+            await chatAdapter.getMessagesForUser(chatKey, pseudonymKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should have authorization', async () => {
+            await chatAdapter.getMessagesForUser(chatKey, pseudonymKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
+        });
+
+        it('Should use the chat/message URL', async () => {
+            await chatAdapter.getMessagesForUser(chatKey, pseudonymKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toContain(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/${chatKey}/${pseudonymKey}`
+            );
+        });
+
+        it('Should support generic URL options', async () => {
+            await chatAdapter.getMessagesForUser(chatKey, pseudonymKey, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toContain(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/${chatKey}/${pseudonymKey}`
+            );
+        });
+
+        it('Should pass query parameters for pagination', async () => {
+            const optionals = {
+                maxRecords: 20,
+                horizon: 50,
+            };
+            await chatAdapter.getMessagesForUser(chatKey, pseudonymKey, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toContain('maxRecords=20');
+            expect(req.url).toContain('horizon=50');
+        });
+
+        testedMethods.add('getMessagesForUser');
+    });
+
+    describe('chatAdapter.getMessagesAdmin', () => {
+        const chatKey = 'CHAT_KEY';
+
+        it('Should do a GET', async () => {
+            await chatAdapter.getMessagesAdmin(chatKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should have authorization', async () => {
+            await chatAdapter.getMessagesAdmin(chatKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
+        });
+
+        it('Should use the chat/message URL', async () => {
+            await chatAdapter.getMessagesAdmin(chatKey);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toContain(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/all/${chatKey}`
+            );
+        });
+
+        it('Should support generic URL options', async () => {
+            await chatAdapter.getMessagesAdmin(chatKey, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toContain(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/all/${chatKey}`
+            );
+        });
+
+        it('Should pass query parameters for pagination', async () => {
+            const optionals = {
+                maxRecords: 20,
+                horizon: 50,
+            };
+            await chatAdapter.getMessagesAdmin(chatKey, optionals);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toContain('maxRecords=20');
+            expect(req.url).toContain('horizon=50');
+        });
+
+        testedMethods.add('getMessagesAdmin');
+    });
+
+    describe('chatAdapter.sendMessageAdmin', () => {
+        const chatKey = 'CHAT_KEY';
+        const message = 'Hello, world!';
+
+        it('Should do a PUT', async () => {
+            await chatAdapter.sendMessageAdmin(chatKey, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('PUT');
+        });
+
+        it('Should have authorization', async () => {
+            await chatAdapter.sendMessageAdmin(chatKey, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(
+                `Bearer ${SESSION.token}`
+            );
+        });
+
+        it('Should use the chat/message URL', async () => {
+            await chatAdapter.sendMessageAdmin(chatKey, message);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/system/${chatKey}`
+            );
+        });
+
+        it('Should include userKey in URL for private messages', async () => {
+            const userKey = 'USER_KEY';
+            await chatAdapter.sendMessageAdmin(chatKey, message, { userKey });
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.url).toBe(
+                `https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/chat/message/system/${chatKey}/${userKey}`
+            );
+        });
+
+        it('Should support generic URL options', async () => {
+            await chatAdapter.sendMessageAdmin(chatKey, message, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const { server, accountShortName, projectShortName } =
+                GENERIC_OPTIONS;
+            expect(req.url).toBe(
+                `${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/chat/message/system/${chatKey}`
+            );
+        });
+
+        it('Should pass the message to the request body', async () => {
+            await chatAdapter.sendMessageAdmin(chatKey, message);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body).toHaveProperty('message', message);
+        });
+
+        testedMethods.add('sendMessageAdmin');
     });
 
     it('Should not have any untested methods', () => {
