@@ -1,3 +1,12 @@
+# [3.34.0](https://github.com/forio/epicenter-libs/compare/v3.33.0...v3.34.0) (2026-02-12)
+
+
+### Features
+
+* added chat endpoints for admin ([bd252cb](https://github.com/forio/epicenter-libs/commit/bd252cb03d5cc841ea43914651d951bba4c1ab65))
+
+
+
 # [3.33.0](https://github.com/forio/epicenter-libs/compare/v3.32.0...v3.33.0) (2025-11-20)
 
 
