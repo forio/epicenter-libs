@@ -1,3 +1,11 @@
+## [3.34.1](https://github.com/forio/epicenter-libs/compare/v3.34.0...v3.34.1) (2026-02-19)
+
+
+### Bug Fixes
+
+* remove both host-only and subdomain v3 SSO cookies ([6d217b2](https://github.com/forio/epicenter-libs/commit/6d217b2253f918197afdc90136fa569d3c734be3))
+
+
 # [3.34.0](https://github.com/forio/epicenter-libs/compare/v3.33.0...v3.34.0) (2026-02-12)
 
 
