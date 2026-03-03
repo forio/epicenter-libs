@@ -194,7 +194,7 @@ class Config {
         accountShortName?: string;
         projectShortName?: string;
     }) {
-        if (context.apiProtocol) this.apiProtocol = context.apiProtocol;
+        if (context.apiProtocol) this.apiProtocol = context.apiProtocol.toLowerCase();
         if (context.apiHost) this.apiHost = context.apiHost;
         if (typeof context.useProjectProxy === 'boolean') this.useProjectProxy = context.useProjectProxy;
         if (context.accountShortName) this.accountShortName = context.accountShortName;
