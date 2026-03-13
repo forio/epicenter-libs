@@ -37,11 +37,12 @@ class Config {
     }
 
     set apiProtocol(apiProtocol) {
-        if (!apiProtocol.startsWith('http')) return;
-        if (apiProtocol.endsWith(':')) {
-            apiProtocol = apiProtocol.slice(0, -1);
+        let proto = apiProtocol.toLowerCase();
+        if (!proto.startsWith('http')) return;
+        if (proto.endsWith(':')) {
+            proto = proto.slice(0, -1);
         }
-        this._apiProtocol = apiProtocol;
+        this._apiProtocol = proto;
     }
 
     /**
