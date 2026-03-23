@@ -125,6 +125,7 @@ export {
     walletAdapter,
     Channel,
     cometdAdapter,
+    powerpointAdapter,
 } from './adapters';
 
 /* APIs */
