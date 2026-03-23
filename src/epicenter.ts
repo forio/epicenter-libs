@@ -125,6 +125,7 @@ export {
     walletAdapter,
     Channel,
     cometdAdapter,
+    gitAdapter,
 } from './adapters';
 
 /* APIs */
