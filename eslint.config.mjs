@@ -5,7 +5,7 @@ import globals from 'globals';
 
 export default [
     {
-        ignores: ['**/dist/**', '**.config.js', '**/examples/**'],
+        ignores: ['**/dist/**', '**.config.{js,mjs}', '**/examples/**'],
     },
     js.configs.recommended,
     ...tseslint.configs.recommended,
@@ -45,11 +45,11 @@ export default [
             // Best Practices
             'accessor-pairs': 2,
             'block-scoped-var': 1,
-            'complexity': [1, 20],
+            complexity: [1, 20],
             'consistent-return': 1,
-            'curly': [2, 'multi-line'],
+            curly: [2, 'multi-line'],
             'default-case': 2,
-            'eqeqeq': 2,
+            eqeqeq: 2,
             'guard-for-in': 2,
             'no-alert': 2,
             'no-caller': 2,
@@ -78,9 +78,9 @@ export default [
             'no-useless-call': 2,
             'no-useless-concat': 2,
             'no-void': 2,
-            'radix': 2,
+            radix: 2,
             'wrap-iife': 2,
-            'yoda': 2,
+            yoda: 2,
 
             // Variables
             'no-label-var': 2,
@@ -140,7 +140,7 @@ export default [
     },
     // Test files configuration
     {
-        files: ['tests/**/*.js', 'tests/**/*.spec.js'],
+        files: ['tests/**/*.{js,mjs}', 'tests/**/*.spec.{js,mjs}'],
         languageOptions: {
             ecmaVersion: 2022,
             sourceType: 'module',
@@ -165,7 +165,7 @@ export default [
         rules: {
             // Test-specific overrides
             'no-magic-numbers': [2, {
-                ignore: [-1, 0, 1, 2, 10, 27, 60, 100, 200, 400, 404, 1000],
+                ignore: [-2, -1, 0, 1, 2, 10, 27, 60, 100, 200, 400, 404, 1000],
             }],
             // Allow unused vars/args/errors prefixed with _
             'no-unused-vars': 0,

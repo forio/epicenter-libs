@@ -574,7 +574,7 @@ describe('runAdapter', () => {
 
                 it('Should do a GET then a POST', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
-                    // eslint-disable-next-line no-magic-numbers
+
                     const [get, post] = capturedRequests.slice(-2);
                     expect(get.options.method.toUpperCase()).toBe('GET');
                     expect(post.options.method.toUpperCase()).toBe('POST');
@@ -582,7 +582,7 @@ describe('runAdapter', () => {
 
                 it('Should GET from run/scopeBoundary/scopeKey/modelFile URL, then POST to /run ', async () => {
                     await runAdapter.getWithStrategy(STRATEGY, ...ARGS);
-                    // eslint-disable-next-line no-magic-numbers
+
                     const [get, post] = capturedRequests.slice(-2);
                     const { scopeBoundary, scopeKey } = SCOPE;
                     const queryURL = get.url.split('?')[0];
