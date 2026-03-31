@@ -168,5 +168,15 @@ export default [{
         // For older versions of node, using cjs
         dir: path.dirname(pkg.main),
         format: 'cjs',
+        plugins: [{
+            name: 'cjs-package-json',
+            generateBundle() {
+                this.emitFile({
+                    type: 'asset',
+                    fileName: 'package.json',
+                    source: JSON.stringify({ type: 'commonjs' }),
+                });
+            },
+        }],
     }],
 }];
