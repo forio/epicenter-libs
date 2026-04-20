@@ -36,6 +36,13 @@ export type {
     Address,
     GenericSearchOptions,
     APISearchOptions,
+    ModelLanguage,
+    Morphology,
+} from './utils/constants';
+
+export {
+    MODEL_LANGUAGE,
+    MORPHOLOGY,
 } from './utils/constants';
 
 // Account Adapter
@@ -75,6 +82,16 @@ export type {
     Secret,
 } from './adapters/admin';
 
+// Automaton Adapter
+export type {
+    Automata,
+    AutomatonStatus,
+    AutomatonParameterType,
+    AutomatonParameter,
+    AutomatonParameters,
+    AutomatedReadOutView,
+} from './adapters/automaton';
+
 // Asset Adapter
 export type {
     Asset,
@@ -88,6 +105,12 @@ export type {
     AppCredentials,
 } from './adapters/authentication';
 
+// Context Adapter
+export type {
+    ModelTool,
+    ModelContext as ContextModelContext,
+} from './adapters/context';
+
 // Channel Adapter
 export type {
     ChannelMessage,
@@ -100,6 +123,15 @@ export type {
     ChatReadOutView,
     ChatMessageReadOutView,
 } from './adapters/chat';
+
+// Dashboard Adapter
+export type {
+    DashboardVersion,
+    PopType,
+    Pop,
+    Items as DashboardItems,
+    DashboardPreferenceReadOutView,
+} from './adapters/dashboard';
 
 // Consensus Adapter
 export type {
@@ -123,10 +155,25 @@ export type {
     Attachment,
 } from './adapters/email';
 
+// Encyclopedia Adapter
+export type {
+    TranslatorFormat,
+    DocumentedParameter,
+    DocumentedEndpoint,
+    DocumentedResource,
+    KnownService,
+} from './adapters/encyclopedia';
+
 // Episode Adapter
 export type {
     EpisodeReadOutView,
 } from './adapters/episode';
+
+// FIDO2 Adapter
+export type {
+    PublicKeyCredentialRequestOptions,
+    PublicKeyCredentialCreationOptions,
+} from './adapters/fido2';
 
 // Group Adapter
 export type {
@@ -146,12 +193,24 @@ export type {
     StripePaymentCreateInView,
 } from './adapters/group';
 
+// Information Adapter
+export type {
+    InformationReadOutView,
+} from './adapters/information';
+
 // Leaderboard Adapter
 export type {
     Leaderboard,
     Score,
     Tag,
 } from './adapters/leaderboard';
+
+// Notification Adapter
+export type {
+    NotificationType,
+    NotificationPreferenceCreateInView,
+    NotificationPreferenceReadOutView,
+} from './adapters/notification';
 
 // Presence Adapter
 export type {
@@ -221,7 +280,6 @@ export type {
     NpmExternalDependency,
     PypiExternalDependency,
     ShellExternalDependency,
-    MORPHOLOGY,
     MetadataFirstPop,
     MetadataLastPop,
     MetadataAllPop,

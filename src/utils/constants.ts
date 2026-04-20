@@ -383,6 +383,43 @@ export interface Permit {
     writeLock: keyof typeof ROLE;
 }
 
+/**
+ * Supported model languages on the Epicenter platform.
+ */
+export const MODEL_LANGUAGE = {
+    EXCEL: 'EXCEL',
+    JAVA: 'JAVA',
+    JAVASCRIPT_20: 'JAVASCRIPT_20',
+    JAVASCRIPT_16: 'JAVASCRIPT_16',
+    JAVASCRIPT: 'JAVASCRIPT',
+    JULIA: 'JULIA',
+    POWERSIM: 'POWERSIM',
+    PYTHON_3: 'PYTHON_3',
+    PYTHON_2: 'PYTHON_2',
+    R: 'R',
+    SIMLANG: 'SIMLANG',
+    STELLA: 'STELLA',
+    TWINE: 'TWINE',
+    VENSIM: 'VENSIM',
+    JVM_VENSIM: 'JVM_VENSIM',
+    WASM: 'WASM',
+} as const;
+
+export type ModelLanguage = (typeof MODEL_LANGUAGE)[keyof typeof MODEL_LANGUAGE];
+
+
+/**
+ * Model morphology defines how model instances are managed.
+ */
+export const MORPHOLOGY = {
+    MANY: 'MANY',
+    PROXY: 'PROXY',
+    SINGULAR: 'SINGULAR',
+} as const;
+
+export type Morphology = (typeof MORPHOLOGY)[keyof typeof MORPHOLOGY];
+
+
 export interface GenericScope {
     scopeBoundary: keyof typeof SCOPE_BOUNDARY;
     scopeKey: string;

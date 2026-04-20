@@ -196,9 +196,15 @@ export const {
     accountAdapter,
     adminAdapter,
     assetAdapter,
+    automatonAdapter,
+    contextAdapter,
+    dashboardAdapter,
     chatAdapter,
     dailyAdapter,
     emailAdapter,
+    fido2Adapter,
+    forgeAdapter,
+    encyclopediaAdapter,
     episodeAdapter,
     matchmakerAdapter,
     presenceAdapter,
@@ -208,6 +214,8 @@ export const {
     videoAdapter,
     vonageAdapter,
     cometdAdapter,
+    notificationAdapter,
+    informationAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();
