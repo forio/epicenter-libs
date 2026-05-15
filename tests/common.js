@@ -210,6 +210,7 @@ export const {
     cometdAdapter,
     pipelineAdapter,
     encyclopediaAdapter,
+    fileAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();

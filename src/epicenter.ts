@@ -125,6 +125,7 @@ export {
     walletAdapter,
     pipelineAdapter,
     encyclopediaAdapter,
+    fileAdapter,
     Channel,
     cometdAdapter,
 } from './adapters';

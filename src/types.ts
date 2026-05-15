@@ -306,6 +306,13 @@ export type {
     OrbitType,
 } from './adapters/world';
 
+// File Adapter
+export type {
+    FileEntry,
+    DirectoryEntry,
+    FileSystemEntry,
+} from './adapters/file';
+
 // Encyclopedia Adapter
 export type {
     EncyclopediaTranslator,

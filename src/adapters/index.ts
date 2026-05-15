@@ -25,6 +25,7 @@ import * as dailyAdapter from './daily';
 import * as walletAdapter from './wallet';
 import * as pipelineAdapter from './pipeline';
 import * as encyclopediaAdapter from './encyclopedia';
+import * as fileAdapter from './file';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 
@@ -57,5 +58,6 @@ export {
     walletAdapter,
     pipelineAdapter,
     encyclopediaAdapter,
+    fileAdapter,
     Channel,
 };
