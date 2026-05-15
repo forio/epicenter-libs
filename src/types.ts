@@ -306,6 +306,16 @@ export type {
     OrbitType,
 } from './adapters/world';
 
+// Pipeline Adapter
+export type {
+    PipelineOperation,
+    CleanOperation,
+    CopyOperation,
+    CopyItem,
+    GitOperation,
+    NPMOperation,
+} from './adapters/pipeline';
+
 // Somebody Adapter
 export type {
     Somebody,

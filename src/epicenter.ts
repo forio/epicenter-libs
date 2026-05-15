@@ -123,6 +123,7 @@ export {
     dailyAdapter,
     matchmakerAdapter,
     walletAdapter,
+    pipelineAdapter,
     Channel,
     cometdAdapter,
 } from './adapters';
