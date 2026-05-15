@@ -124,6 +124,7 @@ export {
     matchmakerAdapter,
     walletAdapter,
     pipelineAdapter,
+    encyclopediaAdapter,
     Channel,
     cometdAdapter,
 } from './adapters';

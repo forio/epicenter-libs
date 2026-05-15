@@ -209,6 +209,7 @@ export const {
     vonageAdapter,
     cometdAdapter,
     pipelineAdapter,
+    encyclopediaAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();

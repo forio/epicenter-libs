@@ -306,6 +306,19 @@ export type {
     OrbitType,
 } from './adapters/world';
 
+// Encyclopedia Adapter
+export type {
+    EncyclopediaTranslator,
+    DocumentedEndpointMethod,
+    DocumentedEndpointAuthorization,
+    DocumentedEndpointNotation,
+    DocumentedParameterSource,
+    DocumentedParameter,
+    DocumentedEndpoint,
+    DocumentedResource,
+    KnownServiceReadOutView,
+} from './adapters/encyclopedia';
+
 // Pipeline Adapter
 export type {
     PipelineOperation,
