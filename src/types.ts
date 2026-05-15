@@ -313,6 +313,15 @@ export type {
     FileSystemEntry,
 } from './adapters/file';
 
+// Registration Adapter
+export type {
+    RegistrationInfo,
+    TeamRegistrationInfo,
+    RegistrationResult,
+    TeamRole,
+    SsoProtocol,
+} from './adapters/registration';
+
 // Encyclopedia Adapter
 export type {
     EncyclopediaTranslator,

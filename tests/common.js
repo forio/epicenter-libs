@@ -211,6 +211,7 @@ export const {
     pipelineAdapter,
     encyclopediaAdapter,
     fileAdapter,
+    registrationAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();
