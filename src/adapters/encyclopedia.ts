@@ -100,22 +100,28 @@ export async function getResource(
  * Supported translators are ASCIIDOC, ASCIIDOC_TO_HTML, and OPENAPI.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/encyclopedia/as/{translator}/v{version}/{api}`
  *
+ * NOTE: The backend returns the translated content with a translator-specific content-type
+ * (e.g. `text/asciidoc`, `text/html`, `application/json`). The shared Router throws when the
+ * response content-type is not `application/json`, so only the OPENAPI translator works here.
+ * For ASCIIDOC and ASCIIDOC_TO_HTML, use the underlying fetch API directly against the
+ * constructed URL.
+ *
  * @example
  * import { encyclopediaAdapter } from 'epicenter-libs';
- * await encyclopediaAdapter.translate('OPENAPI', 1, 'run');
+ * const openApiDoc = await encyclopediaAdapter.translate('OPENAPI', 3, 'run');
  *
  * @param translator    Output format for the documentation; one of 'ASCIIDOC', 'ASCIIDOC_TO_HTML', or 'OPENAPI'
  * @param version       Encyclopedia version number (minimum: 1)
  * @param api           Name of the API service to translate documentation for
  * @param [optionals]   Optional arguments; pass network call options overrides here.
- * @returns promise that resolves when the translation is complete
+ * @returns promise that resolves to the translated documentation (only when translator is 'OPENAPI')
  */
 export async function translate(
     translator: EncyclopediaTranslator,
     version: number,
     api: string,
     optionals: RoutingOptions = {},
-): Promise<void> {
+): Promise<unknown> {
     return await new Router()
         .get(`/encyclopedia/as/${translator}/v${version}/${api}`, optionals)
         .then(({ body }) => body);

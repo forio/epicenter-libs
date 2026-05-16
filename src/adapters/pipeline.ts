@@ -38,6 +38,7 @@ export type PipelineOperation = CleanOperation | CopyOperation | GitOperation | 
 
 /**
  * Returns available NPM node images for use in pipeline NPM operations.
+ * Requires `system` (admin) authorization.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/npm/images`
  *
  * @example

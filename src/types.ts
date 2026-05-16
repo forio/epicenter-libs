@@ -318,6 +318,8 @@ export type {
     RegistrationInfo,
     TeamRegistrationInfo,
     RegistrationResult,
+    WhoAmI,
+    WhoAmIObjectType,
     TeamRole,
     SsoProtocol,
 } from './adapters/registration';

@@ -21,18 +21,38 @@ export interface TeamRegistrationInfo {
     email?: string | null;
 }
 
+export type WhoAmIObjectType = 'system' | 'dashboard' | 'account' | 'admin' | 'user' | 'anonymous';
+
+export interface WhoAmI {
+    objectType: WhoAmIObjectType;
+    sessionKey?: string | null;
+    timeoutMinutes?: number | null;
+    token?: string | null;
+    expires?: boolean | null;
+    [key: string]: unknown;
+}
+
 export interface RegistrationResult {
-    whoAmI: unknown;
+    whoAmI: WhoAmI;
     redirectUrl?: string | null;
 }
 
 export type TeamRole = 'OWNER' | 'AUTHOR' | 'SUPPORT' | 'ASSOCIATE';
+
+/**
+ * Currently the API only supports `SAML`. This type is intentionally narrow so that adding new
+ * protocols on the backend requires an explicit type update here.
+ */
 export type SsoProtocol = 'SAML';
 
 
 /**
  * Gets registration info for a self-registration token.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/self/{token}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getSelfRegistrationInfo('my-token');
  *
  * @param token         Self-registration token
  * @param [optionals]   Optional arguments; pass network call options overrides here.
@@ -51,6 +71,13 @@ export async function getSelfRegistrationInfo(
 /**
  * Completes a self-registration using a token.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/self/{token}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const result = await registrationAdapter.completeSelfRegistration('my-token', 'secret123', {
+ *     displayName: 'John Doe',
+ *     handle: 'johnd',
+ * });
  *
  * @param token                     Self-registration token
  * @param password                  Password for the new account
@@ -82,8 +109,17 @@ export async function completeSelfRegistration(
 
 
 /**
- * Sends a self-registration invite email to a user.
+ * Sends a self-registration invite email to a user. Pass an `Accept-Language` header via
+ * `optionals.headers` to localize the email.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/self/{groupKey}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * await registrationAdapter.sendSelfRegistrationInvite('group-key', 'user@example.com', {
+ *     linkDestination: 'DASHBOARD',
+ *     redirectUrl: 'https://app.example.com',
+ *     headers: { 'Accept-Language': 'fr-FR' },
+ * });
  *
  * @param groupKey                      Group key to register the user into
  * @param email                         Email address of the user to invite
@@ -130,6 +166,10 @@ export async function sendSelfRegistrationInvite(
  * Gets registration info for an invite token.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/invite/{token}`
  *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getInviteRegistrationInfo('invite-token');
+ *
  * @param token         Invite registration token
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to registration info
@@ -147,6 +187,12 @@ export async function getInviteRegistrationInfo(
 /**
  * Completes an invite registration using a token.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/invite/{token}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const result = await registrationAdapter.completeInviteRegistration('invite-token', 'pass456', {
+ *     displayName: 'Jane Doe',
+ * });
  *
  * @param token                     Invite registration token
  * @param password                  Password for the new account
@@ -178,8 +224,17 @@ export async function completeInviteRegistration(
 
 
 /**
- * Sends an invite registration email to a user.
+ * Sends an invite registration email to a user. Pass an `Accept-Language` header via
+ * `optionals.headers` to localize the email.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/invite/{groupKey}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * await registrationAdapter.sendInvite('group-key', 'invited@example.com', {
+ *     givenName: 'New',
+ *     familyName: 'User',
+ *     redirectUrl: 'https://app.example.com',
+ * });
  *
  * @param groupKey                      Group key to invite the user into
  * @param email                         Email address of the user to invite
@@ -226,6 +281,10 @@ export async function sendInvite(
  * Gets registration info for a team invite token.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/team/{token}`
  *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getTeamRegistrationInfo('team-token');
+ *
  * @param token         Team invite token
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to team registration info
@@ -241,8 +300,19 @@ export async function getTeamRegistrationInfo(
 
 
 /**
- * Sends a team invite email.
+ * Sends a team invite email. Pass an `Accept-Language` header via `optionals.headers` to
+ * localize the email.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/team`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * await registrationAdapter.sendTeamInvite(
+ *     'Jane Author',
+ *     'AUTHOR',
+ *     'https://app.example.com',
+ *     'newteammate@example.com',
+ *     { subject: 'Welcome to the team!' },
+ * );
  *
  * @param invitingAuthor            Name or identifier of the person sending the invite
  * @param role                      Role to assign to the invited user
@@ -280,6 +350,10 @@ export async function sendTeamInvite(
  * Gets SSO registration info for a given SSO protocol.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/sso/{ssoProtocol}`
  *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getSsoRegistration('SAML');
+ *
  * @param ssoProtocol   The SSO protocol (e.g. 'SAML')
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to SSO registration data
@@ -288,7 +362,7 @@ export async function getSsoRegistration(
     ssoProtocol: SsoProtocol,
     optionals: RoutingOptions = {},
 ): Promise<unknown> {
-    console.warn('getSsoRegistration is deprecated. Use getSsoAdminRegistration or getSsoUserRegistration instead.');
+    console.warn('DEPRECATION WARNING: registrationAdapter.getSsoRegistration is deprecated and will be removed with the next release. Use registrationAdapter.getSsoAdminRegistration or registrationAdapter.getSsoUserRegistration instead.');
     return await new Router()
         .get(`/registration/sso/${ssoProtocol}`, optionals)
         .then(({ body }) => body);
@@ -298,6 +372,10 @@ export async function getSsoRegistration(
 /**
  * Gets admin SSO registration info for a given SSO protocol.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/sso/admin/{ssoProtocol}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getSsoAdminRegistration('SAML');
  *
  * @param ssoProtocol   The SSO protocol (e.g. 'SAML')
  * @param [optionals]   Optional arguments; pass network call options overrides here.
@@ -316,6 +394,10 @@ export async function getSsoAdminRegistration(
 /**
  * Gets user SSO registration info for a given SSO protocol.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/registration/sso/user/{ssoProtocol}`
+ *
+ * @example
+ * import { registrationAdapter } from 'epicenter-libs';
+ * const info = await registrationAdapter.getSsoUserRegistration('SAML');
  *
  * @param ssoProtocol   The SSO protocol (e.g. 'SAML')
  * @param [optionals]   Optional arguments; pass network call options overrides here.

@@ -142,13 +142,18 @@ export async function remove(
  * Downloads the raw content of a file at the specified path.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file/download/{filePath}`
  *
+ * NOTE: The backend streams the file with its detected content type (e.g. `application/zip`,
+ * `text/plain`, `application/octet-stream`). The shared Router throws when the response
+ * content-type is not `application/json`, so this call only succeeds for JSON files. To download
+ * other file types, use the underlying fetch API directly against the constructed URL.
+ *
  * @example
  * import { fileAdapter } from 'epicenter-libs';
- * const content = await fileAdapter.download('models/model.py');
+ * const content = await fileAdapter.download('config.json');
  *
  * @param filePath          Path to the file to download
  * @param [optionals]       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.depth] Maximum depth of directory traversal
+ * @param [optionals.depth] Currently unused on the backend; reserved for future expansion.
  * @returns promise that resolves to the raw file content
  */
 export async function download(
@@ -199,39 +204,39 @@ export async function listByFilter(
 
 
 /**
- * Compresses files into an archive at the project root or at a specific path.
+ * Compresses files into a ZIP archive at the project root or at a specific path.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file/compress[/{filePath}]`
+ *
+ * NOTE: The backend streams the resulting archive with content-type `application/zip`. The
+ * shared Router throws when the response content-type is not `application/json`, so this call
+ * will not return the archive bytes through the normal flow. To retrieve the archive, use the
+ * underlying fetch API directly against the constructed URL.
  *
  * @example
  * import { fileAdapter } from 'epicenter-libs';
  * // Compress a specific file or directory
- * const result = await fileAdapter.compress('models');
+ * await fileAdapter.compress('models');
  * // Compress at root
- * const result = await fileAdapter.compress();
+ * await fileAdapter.compress();
  *
  * @param [filePath]    Path of the file or directory to compress; omit to compress at the project root
- * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.body]  Optional JSON body for the compress operation
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the compression result
  */
 export async function compress(
     filePath?: string,
-    optionals: {
-        body?: Record<string, unknown>;
-    } & RoutingOptions = {},
+    optionals: RoutingOptions = {},
 ): Promise<unknown> {
-    const { body, ...routingOptions } = optionals;
     const uriComponent = filePath ? `/${filePath}` : '';
     return await new Router()
-        .patch(`/file/compress${uriComponent}`, {
-            body,
-            ...routingOptions,
-        }).then(({ body: responseBody }) => responseBody);
+        .patch(`/file/compress${uriComponent}`, optionals)
+        .then(({ body }) => body);
 }
 
 
 /**
- * Extracts (explodes) an archive at the project root or at a specific path.
+ * Extracts (explodes) a ZIP archive at the project root or at a specific path in place,
+ * deleting the archive after extraction.
  * Base URL: PATCH `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file/explode[/{filePath}]`
  *
  * @example
@@ -242,23 +247,17 @@ export async function compress(
  * await fileAdapter.explode();
  *
  * @param [filePath]    Path of the archive to extract; omit to extract at the project root
- * @param [optionals]   Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.body]  Optional JSON body for the explode operation
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves when the extraction is complete
  */
 export async function explode(
     filePath?: string,
-    optionals: {
-        body?: Record<string, unknown>;
-    } & RoutingOptions = {},
+    optionals: RoutingOptions = {},
 ): Promise<void> {
-    const { body, ...routingOptions } = optionals;
     const uriComponent = filePath ? `/${filePath}` : '';
     return await new Router()
-        .patch(`/file/explode${uriComponent}`, {
-            body,
-            ...routingOptions,
-        }).then(({ body: responseBody }) => responseBody);
+        .patch(`/file/explode${uriComponent}`, optionals)
+        .then(({ body }) => body);
 }
 
 
