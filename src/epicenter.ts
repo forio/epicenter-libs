@@ -127,6 +127,7 @@ export {
     encyclopediaAdapter,
     fileAdapter,
     registrationAdapter,
+    docketAdapter,
     Channel,
     cometdAdapter,
 } from './adapters';

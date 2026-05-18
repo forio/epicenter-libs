@@ -212,6 +212,7 @@ export const {
     encyclopediaAdapter,
     fileAdapter,
     registrationAdapter,
+    docketAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();

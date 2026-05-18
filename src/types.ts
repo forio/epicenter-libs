@@ -324,6 +324,20 @@ export type {
     SsoProtocol,
 } from './adapters/registration';
 
+// Docket Adapter
+export type {
+    OperatingSystem,
+    WorkerShape,
+    ScaleFlavor,
+    ScaleCreateInView,
+    ScaleReadOutView,
+    ScaleDocketPayloadCreateInView,
+    ScaleDocketPayloadReadOutView,
+    DocketPayloadCreateInView,
+    DocketPayloadReadOutView,
+    DocketReadOutView,
+} from './adapters/docket';
+
 // Encyclopedia Adapter
 export type {
     EncyclopediaTranslator,
