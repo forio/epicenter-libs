@@ -126,6 +126,26 @@ describe('docketAdapter', () => {
             expect(result.docketKey).toBe(DOCKET_READ_OUT.docketKey);
             expect(result.complete).toBe(false);
         });
+
+        it('should preserve the full response shape', async () => {
+            const result = await docketAdapter.create(SCALE_PAYLOAD, DATE_TRIGGER, SCHEDULE_DATE, GENERIC_OPTIONS);
+            expect(result).toEqual(DOCKET_READ_OUT);
+        });
+
+        it('should omit ttlMinutes from the body when not provided', async () => {
+            await docketAdapter.create(SCALE_PAYLOAD, DATE_TRIGGER, SCHEDULE_DATE, GENERIC_OPTIONS);
+            const req = fetchMock.capturedRequests[0];
+            const body = JSON.parse(req.requestBody);
+            expect(body.ttlMinutes).toBeUndefined();
+        });
+
+        it('should preserve the test flag on the scale payload', async () => {
+            const testPayload = { ...SCALE_PAYLOAD, test: true };
+            await docketAdapter.create(testPayload, DATE_TRIGGER, SCHEDULE_DATE, GENERIC_OPTIONS);
+            const req = fetchMock.capturedRequests[0];
+            const body = JSON.parse(req.requestBody);
+            expect(body.payload.test).toBe(true);
+        });
     });
 
     it('should have tests for all exported functions', () => {
