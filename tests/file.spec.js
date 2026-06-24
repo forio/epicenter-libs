@@ -76,6 +76,20 @@ describe('fileAdapter', () => {
             expect(searchParams.get('depth')).toBe('3');
         });
 
+        it('Should omit depth when it is not provided', async () => {
+            await fileAdapter.list('models/src');
+            const req = capturedRequests[capturedRequests.length - 1];
+            const searchParams = new URLSearchParams(req.url.split('?')[1]);
+            expect(searchParams.has('depth')).toBe(false);
+        });
+
+        it('Should URL-encode reserved characters per path segment while keeping separators', async () => {
+            await fileAdapter.list('my models/final report (v2).py');
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/file/my%20models/final%20report%20(v2).py`);
+        });
+
         it('Should support generic URL options', async () => {
             await fileAdapter.list(undefined, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];

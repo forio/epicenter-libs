@@ -21,6 +21,13 @@ export interface DirectoryEntry {
 export type FileSystemEntry = FileEntry | DirectoryEntry;
 
 
+/* File paths are free-form, user-authored strings that may contain spaces or URL-reserved
+ * characters. Encode each segment while preserving the '/' separators that the backend's
+ * `{filePath:.*}` routes expect. */
+const encodePath = (filePath: string): string =>
+    filePath.split('/').map(encodeURIComponent).join('/');
+
+
 /**
  * Lists files and directories at the project root or at a specific path.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file[/{filePath}]`
@@ -44,7 +51,7 @@ export async function list(
     } & RoutingOptions = {},
 ): Promise<FileSystemEntry[]> {
     const { depth, ...routingOptions } = optionals;
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .withSearchParams({ depth })
         .get(`/file${uriComponent}`, routingOptions)
@@ -73,7 +80,7 @@ export async function upload(
     filePath?: string,
     optionals: RoutingOptions = {},
 ): Promise<FileEntry[]> {
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .put(`/file${uriComponent}`, {
             body: formData,
@@ -103,7 +110,7 @@ export async function create(
     filePath?: string,
     optionals: RoutingOptions = {},
 ): Promise<FileEntry[]> {
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .post(`/file${uriComponent}`, {
             body: formData,
@@ -131,7 +138,7 @@ export async function remove(
     filePath?: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .delete(`/file${uriComponent}`, optionals)
         .then(({ body }) => body);
@@ -165,7 +172,7 @@ export async function download(
     const { depth, ...routingOptions } = optionals;
     return await new Router()
         .withSearchParams({ depth })
-        .get(`/file/download/${filePath}`, routingOptions)
+        .get(`/file/download/${encodePath(filePath)}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -195,10 +202,10 @@ export async function listByFilter(
     } & RoutingOptions = {},
 ): Promise<FileSystemEntry[]> {
     const { depth, ...routingOptions } = optionals;
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .withSearchParams({ depth })
-        .get(`/file/filter/${filter}${uriComponent}`, routingOptions)
+        .get(`/file/filter/${encodeURIComponent(filter)}${uriComponent}`, routingOptions)
         .then(({ body }) => body);
 }
 
@@ -227,7 +234,7 @@ export async function compress(
     filePath?: string,
     optionals: RoutingOptions = {},
 ): Promise<unknown> {
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .patch(`/file/compress${uriComponent}`, optionals)
         .then(({ body }) => body);
@@ -254,7 +261,7 @@ export async function explode(
     filePath?: string,
     optionals: RoutingOptions = {},
 ): Promise<void> {
-    const uriComponent = filePath ? `/${filePath}` : '';
+    const uriComponent = filePath ? `/${encodePath(filePath)}` : '';
     return await new Router()
         .patch(`/file/explode${uriComponent}`, optionals)
         .then(({ body }) => body);
@@ -314,6 +321,6 @@ export async function createDirectory(
     optionals: RoutingOptions = {},
 ): Promise<DirectoryEntry> {
     return await new Router()
-        .post(`/file/directory/${filePath}`, optionals)
+        .post(`/file/directory/${encodePath(filePath)}`, optionals)
         .then(({ body }) => body);
 }
