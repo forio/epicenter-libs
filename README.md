@@ -126,7 +126,7 @@ For doing a test run before actually publishing
 
 #### npm publish --tag next
 
-For when you want to publish an alpha version of the libs for testing. Normal installations will not pick up versions tagged as "next". This way, you can publish on a change you want to test, and then go to an external project and run `npm install -i epicenter-libs@next` to go and play around with your changes.
+For when you want to publish an alpha version of the libs for testing. Normal installations will not pick up versions tagged as "next". This way, you can publish on a change you want to test, and then go to an external project and run `npm install epicenter-libs@next` to go and play around with your changes.
 
 #### npm unpublish epicenter-libs@{{version}}
 
@@ -145,7 +145,7 @@ The web development team isn't planning on incrementing the number that correlat
 Tests are written to preserve behavior across releases. These are unit tests and are not intended for testing Epicenter features themselves.
 
 ```console
-npm install             # Installs dependencies for libs
+npm ci                  # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
 npm run test:run        # Runs the tests once
 npm run test            # Runs the tests w/ a watch
@@ -162,20 +162,20 @@ Do not use these as a starting point/template for new projects. They are not an 
 ### Vanilla JavaScript
 
 ```console
-npm install             # Installs dependencies for libs
+npm ci                  # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
 cd examples/parcel
-npm install             # Install dependencies for example
+npm ci                  # Install dependencies for example
 npm start               # Serves example locally at localhost:3913
 ```
 
 ### Node Server
 
 ```console
-npm install             # Installs dependencies for libs
+npm ci                  # Installs dependencies for libs
 npm run build           # Builds libs to dist/ folder
 cd examples/node
-npm install             # Install dependencies for example
+npm ci                  # Install dependencies for example
 npm start
 ```
 
