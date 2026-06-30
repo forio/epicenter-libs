@@ -233,11 +233,8 @@ export interface VensimModelTool {
     cinFiles?: string[];
 }
 
-export enum MORPHOLOGY {
-    MANY = 'MANY',
-    PROXY = 'PROXY',
-    SINGULAR = 'SINGULAR',
-}
+export { MORPHOLOGY } from '../utils/constants';
+export type { Morphology } from '../utils/constants';
 
 export interface ProcActionable {
     name: string;

@@ -6,6 +6,11 @@ export default defineConfig({
         globals: true,
         environment: 'jsdom',
         setupFiles: ['./tests/setup.js'],
+        server: {
+            deps: {
+                inline: ['regenerator-runtime', '@babel/runtime'],
+            },
+        },
         include: ['tests/**/*.test.{js,ts}', 'tests/**/*.spec.{js,ts}'],
         coverage: {
             provider: 'v8',
