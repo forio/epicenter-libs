@@ -6,34 +6,37 @@ import { Router } from '../utils';
 // Types
 // ──────────────────────────────────────────────
 
+export type GitAlgorithm = 'rsa' | 'ed25519';
+export type GitKeySpec = 'openssh' | 'pkcs8' | 'x509';
+
 export interface GitStatusReadOutView {
     currentBranch?: string | null;
 }
 
 export interface GitIntegrationReadOutView {
-    privateKeySpec?: string | null;
+    privateKeySpec?: GitKeySpec | null;
     publicKey?: string | null;
     uri?: string | null;
-    publicKeySpec?: string | null;
-    algorithm?: string | null;
+    publicKeySpec?: GitKeySpec | null;
+    algorithm?: GitAlgorithm | null;
 }
 
 export interface GitIntegrationCreateInView {
     privateKey: string;
-    privateKeySpec: unknown;
+    privateKeySpec: GitKeySpec;
     publicKey: string;
     uri: string;
-    publicKeySpec: unknown;
-    algorithm: unknown;
+    publicKeySpec: GitKeySpec;
+    algorithm: GitAlgorithm;
 }
 
 export interface GitIntegrationUpdateInView {
     privateKey?: string | null;
-    privateKeySpec: unknown;
+    privateKeySpec: GitKeySpec;
     publicKey?: string | null;
     uri?: string | null;
-    publicKeySpec: unknown;
-    algorithm: unknown;
+    publicKeySpec: GitKeySpec;
+    algorithm: GitAlgorithm;
 }
 
 
@@ -137,9 +140,9 @@ export async function reset(
  *     uri: 'git@github.com:myorg/myrepo.git',
  *     publicKey: '...',
  *     privateKey: '...',
- *     publicKeySpec: 'ssh-ed25519',
- *     privateKeySpec: 'OPENSSH',
- *     algorithm: 'Ed25519',
+ *     publicKeySpec: 'openssh',
+ *     privateKeySpec: 'openssh',
+ *     algorithm: 'ed25519',
  * });
  *
  * @param integration   Git integration configuration to create
@@ -166,9 +169,9 @@ export async function createIntegration(
  * import { gitAdapter } from 'epicenter-libs';
  * const integration = await gitAdapter.updateIntegration({
  *     uri: 'git@github.com:myorg/newrepo.git',
- *     publicKeySpec: 'ssh-ed25519',
- *     privateKeySpec: 'OPENSSH',
- *     algorithm: 'Ed25519',
+ *     publicKeySpec: 'openssh',
+ *     privateKeySpec: 'openssh',
+ *     algorithm: 'ed25519',
  * });
  *
  * @param integration   Fields to update on the git integration

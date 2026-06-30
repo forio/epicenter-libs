@@ -34,16 +34,16 @@ describe('gitAdapter', () => {
         uri: 'git@github.com:myorg/myrepo.git',
         publicKey: 'ssh-ed25519 AAAA...',
         privateKey: '-----BEGIN OPENSSH PRIVATE KEY-----',
-        publicKeySpec: 'ssh-ed25519',
-        privateKeySpec: 'OPENSSH',
-        algorithm: 'Ed25519',
+        publicKeySpec: 'openssh',
+        privateKeySpec: 'openssh',
+        algorithm: 'ed25519',
     };
 
     const INTEGRATION_UPDATE = {
         uri: 'git@github.com:myorg/myrepo.git',
-        publicKeySpec: 'ssh-ed25519',
-        privateKeySpec: 'OPENSSH',
-        algorithm: 'Ed25519',
+        publicKeySpec: 'openssh',
+        privateKeySpec: 'openssh',
+        algorithm: 'ed25519',
     };
 
     beforeAll(() => {
@@ -288,19 +288,19 @@ describe('gitAdapter', () => {
 
     describe('gitAdapter.push', () => {
         it('Should do a POST', async () => {
-            await gitAdapter.push();
+            await gitAdapter.push({ message: 'my commit' });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.options.method.toUpperCase()).toBe('POST');
         });
 
         it('Should have authorization', async () => {
-            await gitAdapter.push();
+            await gitAdapter.push({ message: 'my commit' });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
         });
 
         it('Should use the git/push URL', async () => {
-            await gitAdapter.push();
+            await gitAdapter.push({ message: 'my commit' });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toBe(`${BASE_URL}/git/push`);
         });
@@ -321,7 +321,7 @@ describe('gitAdapter', () => {
         });
 
         it('Should append force as a query parameter', async () => {
-            await gitAdapter.push({ force: true });
+            await gitAdapter.push({ message: 'my commit', force: true });
             const req = capturedRequests[capturedRequests.length - 1];
             expect(req.url).toContain('force=true');
         });
