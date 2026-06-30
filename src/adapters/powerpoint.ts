@@ -196,7 +196,16 @@ export async function stream(
     document: DocumentShadow,
     optionals: RoutingOptions = {},
 ): Promise<Response> {
-    const { server, accountShortName, projectShortName, useProjectProxy, query, headers: headersOverride, authorization, includeAuthorization } = optionals;
+    const {
+        server,
+        accountShortName,
+        projectShortName,
+        useProjectProxy,
+        query,
+        headers: headersOverride,
+        authorization,
+        includeAuthorization,
+    } = optionals;
     const url = new Router().getURL(`/powerpoint/${templateDirectory}/${templatePath}`, {
         server,
         accountShortName,
