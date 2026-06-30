@@ -215,8 +215,8 @@ export async function removeIntegration(
  * import { gitAdapter } from 'epicenter-libs';
  * await gitAdapter.push({ message: 'Update simulation data' });
  *
- * @param [optionals]           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
- * @param [optionals.message]   Commit message
+ * @param optionals             Arguments object; also accepts network call option overrides.
+ * @param optionals.message     Commit message (required)
  * @param [optionals.password]  Password for authentication
  * @param [optionals.force]     Force-push, bypassing non-fast-forward checks
  * @returns promise that resolves when the push is complete
@@ -226,7 +226,7 @@ export async function push(
         message: string;
         password?: string | null;
         force?: boolean | null;
-    } & RoutingOptions = {},
+    } & RoutingOptions,
 ): Promise<void> {
     const { message, password, force, ...routingOptions } = optionals;
     return new Router()
