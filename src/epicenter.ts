@@ -126,6 +126,7 @@ export {
     Channel,
     cometdAdapter,
     gitAdapter,
+    powerpointAdapter,
 } from './adapters';
 
 /* APIs */

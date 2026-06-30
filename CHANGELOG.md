@@ -1,3 +1,18 @@
+## [3.34.2](https://github.com/forio/epicenter-libs/compare/v3.34.1...v3.34.2) (2026-04-01)
+
+
+### Bug Fixes
+
+* allow cjs importing compatability for proxy ([5c8624d](https://github.com/forio/epicenter-libs/commit/5c8624d1ef904d4ed78f66261eb62debe3970159))
+* lowercase API protocol ([89bc161](https://github.com/forio/epicenter-libs/commit/89bc16124ff34f2986f5a9aeb0a5b46422b8ce87))
+
+
+### Features
+
+* updated apiProtocol setter ([94bbbea](https://github.com/forio/epicenter-libs/commit/94bbbea9c5551b5b5394a955869e9af1d6d91761))
+
+
+
 ## [3.34.1](https://github.com/forio/epicenter-libs/compare/v3.34.0...v3.34.1) (2026-02-19)
 
 

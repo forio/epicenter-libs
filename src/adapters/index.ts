@@ -26,6 +26,7 @@ import * as walletAdapter from './wallet';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
 import * as gitAdapter from './git';
+import * as powerpointAdapter from './powerpoint';
 
 export {
     accountAdapter,
@@ -56,4 +57,5 @@ export {
     walletAdapter,
     Channel,
     gitAdapter,
+    powerpointAdapter,
 };
