@@ -25,6 +25,7 @@ import * as dailyAdapter from './daily';
 import * as walletAdapter from './wallet';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
+import * as powerpointAdapter from './powerpoint';
 
 export {
     accountAdapter,
@@ -54,4 +55,5 @@ export {
     dailyAdapter,
     walletAdapter,
     Channel,
+    powerpointAdapter,
 };
