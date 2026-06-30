@@ -223,7 +223,7 @@ export async function removeIntegration(
  */
 export async function push(
     optionals: {
-        message?: string | null;
+        message: string;
         password?: string | null;
         force?: boolean | null;
     } & RoutingOptions = {},
