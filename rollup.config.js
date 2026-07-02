@@ -26,9 +26,9 @@ export default [{
         replace({
             preventAssignment: true,
             values: {
-                __BUILD__: 'Browsers',
-                __DATE__: () => new Date().toISOString(),
-                __VERSION__: pkg.version,
+                __BUILD__: JSON.stringify('Browsers'),
+                __DATE__: () => JSON.stringify(new Date().toISOString()),
+                __VERSION__: JSON.stringify(pkg.version),
             },
         }),
         alias({
@@ -102,9 +102,9 @@ export default [{
         replace({
             preventAssignment: true,
             values: {
-                __BUILD__: 'Module',
-                __DATE__: () => new Date().toISOString(),
-                __VERSION__: pkg.version,
+                __BUILD__: JSON.stringify('Module'),
+                __DATE__: () => JSON.stringify(new Date().toISOString()),
+                __VERSION__: JSON.stringify(pkg.version),
             },
         }),
         alias({
