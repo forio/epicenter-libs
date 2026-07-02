@@ -15,6 +15,7 @@
     "test": "vitest",
     "test:run": "npm run type-check && vitest run",
     "test:coverage": "npm run type-check && vitest run --coverage",
+    "test:dist": "npm run build && vitest run --config vitest.dist.config.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "changelog:all": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "type-check": "tsc --noEmit",
@@ -23,6 +24,7 @@
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "rollup -c -m",
     "build": "npm run build:clean && npm run build:types && npm run build:js",
+    "prepublishOnly": "npm run test:run && npm run test:dist",
     "start": "rollup -c -m inline -w",
     "prepare": "node -e \"if (!process.env.CI && !process.env.JENKINS_HOME) require('child_process').execSync('husky', {stdio: 'inherit'})\""
   },

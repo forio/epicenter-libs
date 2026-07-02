@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig, configDefaults } from 'vitest/config';
 import path from 'path';
 import pkg from './package.json' with { type: 'json' };
 
@@ -15,6 +15,8 @@ export default defineConfig({
         environment: 'jsdom',
         setupFiles: ['./tests/setup.js'],
         include: ['tests/**/*.test.{js,ts}', 'tests/**/*.spec.{js,ts}'],
+        // Shipped-bundle smoke tests have their own config (vitest.dist.config.js)
+        exclude: [...configDefaults.exclude, 'tests/smoke/**'],
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
