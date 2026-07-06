@@ -1,7 +1,8 @@
-import type { RoutingOptions } from '../utils/router';
-import type { GenericScope, Address } from '../utils/constants';
+import type { RoutingOptions, Page } from '../utils/router';
+import type { GenericScope, GenericSearchOptions, Address } from '../utils/constants';
 
 import Router from '../utils/router';
+import { parseFilterInput } from '../utils/filter-parser';
 
 export enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', // If the task fails, do nothing (this is the default)
@@ -324,5 +325,58 @@ export async function getTaskIn<
             }`,
             optionals,
         )
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Queries for tasks
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/search`
+ *
+ * Requires facilitator (or higher) privileges. Filterable/sortable fields include
+ * `task.taskKey`, `task.name`, `task.status`, `task.scopeBoundary`, `task.scopeKey`,
+ * `task.userKey`, `task.groupName`, `task.episodeName`, `task.nextExecution`,
+ * `task.failSafeExecution`, and `task.created`.
+ *
+ * @example
+ * import { taskAdapter } from 'epicenter-libs';
+ * const page = await taskAdapter.query({
+ *     filter: [
+ *         'task.scopeKey=0000017dd3bf540e5ada5b1e058f08f20461',    // tasks scoped to this group
+ *         'task.status=INITIALIZED',                               // that have not yet fired
+ *     ],
+ *     sort: ['-task.created'],    // newest first
+ *     max: 10,                    // page should only include the first 10 items
+ * });
+ *
+ * @param searchOptions                         Search options for the query
+ * @param [searchOptions.filter]                Filters for searching
+ * @param [searchOptions.sort]                  Sorting criteria
+ * @param [searchOptions.first]                 The starting index of the page returned
+ * @param [searchOptions.max]                   The number of entries per page
+ * @param [optionals]                           Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to a page of tasks
+ */
+export async function query<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+>(
+    searchOptions: GenericSearchOptions,
+    optionals: RoutingOptions = {},
+): Promise<Page<TaskReadOutView<B, H>>> {
+    const { filter, sort = [], first, max } = searchOptions;
+
+    const searchParams = {
+        filter: parseFilterInput(filter),
+        sort: sort.join(';') || undefined,
+        first, max,
+    };
+
+    return await new Router()
+        .withSearchParams(searchParams)
+        .get('/task/search', {
+            paginated: true,
+            ...optionals,
+        })
         .then(({ body }) => body);
 }

@@ -269,6 +269,58 @@ describe('taskAdapter', () => {
         testedMethods.add('getTaskIn');
     });
 
+    describe('taskAdapter.query', () => {
+        const OPTIONS = {
+            filter: [
+                'task.scopeKey=0000017dd3bf540e5ada5b1e058f08f20461',
+                'task.status=INITIALIZED',
+            ],
+            sort: ['-task.created'],
+            first: 0,
+            max: 10,
+        };
+
+        it('Should do a GET', async () => {
+            await taskAdapter.query(OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(req.options.method.toUpperCase()).toBe('GET');
+        });
+
+        it('Should have authorization', async () => {
+            await taskAdapter.query(OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            expect(getAuthHeader(req.requestHeaders)).toBe(`Bearer ${SESSION.token}`);
+        });
+
+        it('Should use the task search URL', async () => {
+            await taskAdapter.query(OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            expect(url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/task/search`);
+        });
+
+        it('Should support generic URL options', async () => {
+            await taskAdapter.query(OPTIONS, GENERIC_OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const url = req.url.split('?')[0];
+            const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
+            expect(url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/search`);
+        });
+
+        it('Should pass in query options as a part of the search parameters (query string)', async () => {
+            await taskAdapter.query(OPTIONS);
+            const req = capturedRequests[capturedRequests.length - 1];
+            const search = req.url.split('?')[1];
+            const searchParams = new URLSearchParams(search);
+            expect(searchParams.get('filter')).toBe(OPTIONS.filter.join(';'));
+            expect(searchParams.get('sort')).toBe(OPTIONS.sort.join(';'));
+            expect(searchParams.get('first')).toBe(OPTIONS.first.toString());
+            expect(searchParams.get('max')).toBe(OPTIONS.max.toString());
+        });
+
+        testedMethods.add('query');
+    });
+
     it('Should not have any untested methods', () => {
         const actualMethods = getFunctionKeys(taskAdapter);
         expect(actualMethods).toEqual(testedMethods);
