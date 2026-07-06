@@ -104,7 +104,7 @@ describe('taskAdapter', () => {
         it('Should pass optional parameters to the request body', async () => {
             const optionals = {
                 retryPolicy: 'RESCHEDULE',
-                failSafeTermination: 1234567890,
+                failSafeTermination: '2026-01-01T00:00:00.000Z',
                 ttlSeconds: 3600,
             };
             await taskAdapter.create(scope, name, payload, trigger, optionals);
@@ -114,6 +114,23 @@ describe('taskAdapter', () => {
             expect(body).toHaveProperty('retryPolicy', optionals.retryPolicy);
             expect(body).toHaveProperty('failSafeTermination', optionals.failSafeTermination);
             expect(body).toHaveProperty('ttlSeconds', optionals.ttlSeconds);
+        });
+
+        it('Should pass the payload target through to the request body', async () => {
+            const proxyPayload = { ...payload, target: 'PROXY' };
+            await taskAdapter.create(scope, name, proxyPayload, trigger);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.payload).toHaveProperty('target', 'PROXY');
+        });
+
+        it('Should omit target from the request body when not provided', async () => {
+            await taskAdapter.create(scope, name, payload, trigger);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.payload).not.toHaveProperty('target');
         });
 
         it('Should include userKey in scope if provided', async () => {
