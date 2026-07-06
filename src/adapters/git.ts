@@ -141,7 +141,7 @@ export async function reset(
  *     publicKey: '...',
  *     privateKey: '...',
  *     publicKeySpec: 'openssh',
- *     privateKeySpec: 'openssh',
+ *     privateKeySpec: 'pkcs8',
  *     algorithm: 'ed25519',
  * });
  *
@@ -170,7 +170,7 @@ export async function createIntegration(
  * const integration = await gitAdapter.updateIntegration({
  *     uri: 'git@github.com:myorg/newrepo.git',
  *     publicKeySpec: 'openssh',
- *     privateKeySpec: 'openssh',
+ *     privateKeySpec: 'pkcs8',
  *     algorithm: 'ed25519',
  * });
  *

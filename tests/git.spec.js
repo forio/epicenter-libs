@@ -35,14 +35,14 @@ describe('gitAdapter', () => {
         publicKey: 'ssh-ed25519 AAAA...',
         privateKey: '-----BEGIN OPENSSH PRIVATE KEY-----',
         publicKeySpec: 'openssh',
-        privateKeySpec: 'openssh',
+        privateKeySpec: 'pkcs8',
         algorithm: 'ed25519',
     };
 
     const INTEGRATION_UPDATE = {
         uri: 'git@github.com:myorg/myrepo.git',
         publicKeySpec: 'openssh',
-        privateKeySpec: 'openssh',
+        privateKeySpec: 'pkcs8',
         algorithm: 'ed25519',
     };
 
