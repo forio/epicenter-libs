@@ -55,9 +55,9 @@ export interface KnownServiceReadOutView {
  *
  * @example
  * import { encyclopediaAdapter } from 'epicenter-libs';
- * const services = await encyclopediaAdapter.listServices(1);
+ * const services = await encyclopediaAdapter.listServices(3);
  *
- * @param version       Encyclopedia version number (minimum: 1)
+ * @param version       Encyclopedia version number
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to an array of known service descriptors
  */
@@ -77,9 +77,9 @@ export async function listServices(
  *
  * @example
  * import { encyclopediaAdapter } from 'epicenter-libs';
- * const resource = await encyclopediaAdapter.getResource(1, 'run');
+ * const resource = await encyclopediaAdapter.getResource(3, 'run');
  *
- * @param version       Encyclopedia version number (minimum: 1)
+ * @param version       Encyclopedia version number
  * @param api           Name of the API service to retrieve documentation for
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the documented resource containing endpoints and definitions
@@ -111,7 +111,7 @@ export async function getResource(
  * const openApiDoc = await encyclopediaAdapter.translate('OPENAPI', 3, 'run');
  *
  * @param translator    Output format for the documentation; one of 'ASCIIDOC', 'ASCIIDOC_TO_HTML', or 'OPENAPI'
- * @param version       Encyclopedia version number (minimum: 1)
+ * @param version       Encyclopedia version number
  * @param api           Name of the API service to translate documentation for
  * @param [optionals]   Optional arguments; pass network call options overrides here.
  * @returns promise that resolves to the translated documentation (only when translator is 'OPENAPI')
