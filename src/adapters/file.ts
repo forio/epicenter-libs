@@ -64,6 +64,9 @@ export async function list(
  * Use this when you want to overwrite existing files. For creating new files, use `create`.
  * Base URL: PUT `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file[/{filePath}]`
  *
+ * NOTE: This is browser-only. The `FormData` body is only serialized as multipart/form-data when
+ * running in a browser environment; in Node it will not be sent correctly.
+ *
  * @example
  * import { fileAdapter } from 'epicenter-libs';
  * const formData = new FormData();
@@ -93,6 +96,9 @@ export async function upload(
  * Creates new files at the project root or at a specific path using multipart/form-data (POST).
  * Use this when creating new files. For overwriting existing files, use `upload`.
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/file[/{filePath}]`
+ *
+ * NOTE: This is browser-only. The `FormData` body is only serialized as multipart/form-data when
+ * running in a browser environment; in Node it will not be sent correctly.
  *
  * @example
  * import { fileAdapter } from 'epicenter-libs';
