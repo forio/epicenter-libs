@@ -208,6 +208,7 @@ export const {
     videoAdapter,
     vonageAdapter,
     cometdAdapter,
+    gitAdapter,
     powerpointAdapter,
 } = globalThis.epicenter || {};
 
