@@ -353,12 +353,8 @@ export type {
 
 // Pipeline Adapter
 export type {
-    PipelineOperation,
-    CleanOperation,
-    CopyOperation,
-    CopyItem,
-    GitOperation,
-    NPMOperation,
+    PipelineExecutionStatus,
+    PipelineAuditReadOutView,
 } from './adapters/pipeline';
 
 // Somebody Adapter

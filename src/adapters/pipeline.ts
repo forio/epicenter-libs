@@ -1,56 +1,38 @@
-import type { RoutingOptions } from '../utils/router';
+import type { Page, RoutingOptions } from '../utils/router';
 
 import { Router } from '../utils';
 
 
-export interface CleanOperation {
-    objectType: 'clean';
-}
+export type PipelineExecutionStatus = 'RUNNING' | 'SUCCEEDED' | 'FAILED';
 
-export interface CopyItem {
-    location: unknown;
-    from?: string;
-    to?: string;
+export interface PipelineAuditReadOutView {
+    status?: PipelineExecutionStatus | null;
+    started?: string | null;
+    finished?: string | null;
+    executionKey?: string | null;
+    accountShortName?: string | null;
+    projectShortName?: string | null;
+    configName?: string | null;
+    /* Virtual field: display name of the admin who triggered the execution. */
+    creator?: string | null;
 }
-
-export interface CopyOperation {
-    objectType: 'copy';
-    items?: CopyItem[];
-}
-
-export interface GitOperation {
-    objectType: 'git';
-    password: string;
-    force?: boolean;
-    confirmed?: boolean;
-}
-
-export interface NPMOperation {
-    objectType: 'npm';
-    nodeVersion?: string;
-    timeoutMinutes?: number;
-    directory?: string;
-    commands?: unknown[];
-}
-
-export type PipelineOperation = CleanOperation | CopyOperation | GitOperation | NPMOperation;
 
 
 /**
- * Returns available NPM node images for use in pipeline NPM operations.
+ * Builds the NPM Docker images used by pipeline NPM operations.
  * Requires `system` (admin) authorization.
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/npm/images`
  *
  * @example
  * import { pipelineAdapter } from 'epicenter-libs';
- * const images = await pipelineAdapter.getImages();
+ * const built = await pipelineAdapter.buildImages();
  *
  * @param [optionals]   Optional arguments; pass network call options overrides here.
- * @returns promise that resolves to the list of available NPM images
+ * @returns promise that resolves to `true` when the images were built successfully
  */
-export async function getImages(
+export async function buildImages(
     optionals: RoutingOptions = {},
-): Promise<unknown> {
+): Promise<boolean> {
     return await new Router()
         .get('/pipeline/npm/images', optionals)
         .then(({ body }) => body);
@@ -58,44 +40,106 @@ export async function getImages(
 
 
 /**
- * Executes a build pipeline for the project. Runs a sequence of operations such as clean, copy, git, and npm steps.
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/execute`
+ * Executes a stored pipeline configuration. The operations to run are read server-side from the
+ * named config file; only step inputs (such as credentials) are supplied here via `attributes`.
+ * The execution runs asynchronously — the returned audit record starts in its `RUNNING` state and
+ * is updated by the worker on completion (poll `getExecution` to observe progress).
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/{configName}`
  *
  * @example
  * import { pipelineAdapter } from 'epicenter-libs';
- * await pipelineAdapter.execute([
- *     { objectType: 'clean' },
- *     { objectType: 'git', password: 'mytoken' },
- *     { objectType: 'npm', nodeVersion: '18', commands: ['install', 'build'] },
- * ]);
+ * // Pass the git credential the config's git step will consume, keyed by operation type
+ * const audit = await pipelineAdapter.execute('deploy', { git: 'my-git-token' });
  *
- * @param operations                        List of pipeline operations to execute in order
- * @param operations[].objectType           Type of operation: 'clean' | 'copy' | 'git' | 'npm'
- * @param [operations[].password]           (git only) Git authentication token or password
- * @param [operations[].force]              (git only) Force the git operation
- * @param [operations[].confirmed]          (git only) Confirmation flag for the git operation
- * @param [operations[].items]              (copy only) List of items to copy
- * @param [operations[].nodeVersion]        (npm only) Node.js version to use
- * @param [operations[].timeoutMinutes]     (npm only) Timeout in minutes for the npm operation
- * @param [operations[].directory]          (npm only) Working directory for the npm operation
- * @param [operations[].commands]           (npm only) NPM commands to run
- * @param [optionals]                       Optional arguments; pass network call options overrides here.
- * @param [optionals.log]                   Log identifier for the pipeline execution
- * @returns promise that resolves to the pipeline execution result
+ * @param configName        Name of the stored pipeline config to execute
+ * @param [attributes]      Step inputs keyed by operation type (e.g. `{ git: '<token>' }`)
+ * @param [optionals]       Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the newly created audit record in its initial RUNNING state
  */
 export async function execute(
-    operations: PipelineOperation[],
-    optionals: {
-        log?: string;
-    } & RoutingOptions = {},
-): Promise<unknown> {
-    const { log, ...routingOptions } = optionals;
+    configName: string,
+    attributes: Record<string, unknown> = {},
+    optionals: RoutingOptions = {},
+): Promise<PipelineAuditReadOutView> {
     return await new Router()
-        .post('/pipeline/execute', {
-            body: {
-                operations,
-                log,
-            },
+        .post(`/pipeline/${encodeURIComponent(configName)}`, {
+            body: { attributes },
+            ...optionals,
+        }).then(({ body }) => body);
+}
+
+
+/**
+ * Retrieves a single pipeline audit record by its execution key.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/{executionKey}`
+ *
+ * @example
+ * import { pipelineAdapter } from 'epicenter-libs';
+ * const audit = await pipelineAdapter.getExecution('<executionKey>');
+ *
+ * @param executionKey  Execution key of the audit record to retrieve
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to the audit record
+ */
+export async function getExecution(
+    executionKey: string,
+    optionals: RoutingOptions = {},
+): Promise<PipelineAuditReadOutView> {
+    return await new Router()
+        .get(`/pipeline/${encodeURIComponent(executionKey)}`, optionals)
+        .then(({ body }) => body);
+}
+
+
+/**
+ * Lists the audit history for a stored pipeline config.
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/with/{configName}`
+ *
+ * @example
+ * import { pipelineAdapter } from 'epicenter-libs';
+ * const page = await pipelineAdapter.listAudits('deploy', { first: 0, max: 20 });
+ *
+ * @param configName        Name of the stored pipeline config
+ * @param [optionals]       Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals.first] Index of the first record to return (for pagination)
+ * @param [optionals.max]   Maximum number of records to return (for pagination)
+ * @returns promise that resolves to a page of audit records
+ */
+export async function listAudits(
+    configName: string,
+    optionals: {
+        first?: number;
+        max?: number;
+    } & RoutingOptions = {},
+): Promise<Page<PipelineAuditReadOutView>> {
+    const { first = 0, max, ...routingOptions } = optionals;
+    return await new Router()
+        .withSearchParams({ first, max })
+        .get(`/pipeline/with/${encodeURIComponent(configName)}`, {
+            paginated: true,
             ...routingOptions,
         }).then(({ body }) => body);
+}
+
+
+/**
+ * Deletes a pipeline audit record by its execution key.
+ * Requires `system` (admin) authorization.
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/pipeline/{executionKey}`
+ *
+ * @example
+ * import { pipelineAdapter } from 'epicenter-libs';
+ * await pipelineAdapter.deleteAudit('<executionKey>');
+ *
+ * @param executionKey  Execution key of the audit record to delete
+ * @param [optionals]   Optional arguments; pass network call options overrides here.
+ * @returns promise that resolves to `true` when the audit record was deleted
+ */
+export async function deleteAudit(
+    executionKey: string,
+    optionals: RoutingOptions = {},
+): Promise<boolean> {
+    return await new Router()
+        .delete(`/pipeline/${encodeURIComponent(executionKey)}`, optionals)
+        .then(({ body }) => body);
 }
