@@ -20,8 +20,9 @@ mockFetch.mockImplementation(() =>
     })),
 );
 
-// Now import epicenter test build that has cross-fetch as external
-const epicenterModule = await import('../dist/test/epicenter.js');
+// Import epicenter straight from source; Vite transforms it on the fly and
+// the vi.mock('cross-fetch') above intercepts the network layer
+const epicenterModule = await import('../src/epicenter.ts');
 
 // Make epicenter globally available for tests
 globalThis.epicenter = epicenterModule;

@@ -10,7 +10,7 @@
   "author": "Forio",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.28.4",
+    "@babel/core": "^7.29.6",
     "@parcel/packager-raw-url": "^2.16.4",
     "@parcel/packager-xml": "^2.16.4",
     "@parcel/source-map": "^2.1.1",

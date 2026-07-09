@@ -1,8 +1,8 @@
 import 'regenerator-runtime/runtime';
 
-/* yes, this string template literal is weird;
- * it's cause rollup does not recogize __VERSION__ as an individual token otherwise */
-const version = `Epicenter (v${'__VERSION__'}) for __BUILD__ | Build Date: __DATE__`;
+/* __VERSION__, __BUILD__ and __DATE__ are injected at build time — by
+ * @rollup/plugin-replace for the shipped bundles and by Vite's `define` for tests */
+const version = `Epicenter (v${__VERSION__}) for ${__BUILD__} | Build Date: ${__DATE__}`;
 
 import type { RetryFunction } from './utils/router';
 import { authAdapter, cometdAdapter } from './adapters';
@@ -130,6 +130,8 @@ export {
     docketAdapter,
     Channel,
     cometdAdapter,
+    gitAdapter,
+    powerpointAdapter,
 } from './adapters';
 
 /* APIs */

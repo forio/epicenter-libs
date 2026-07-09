@@ -213,6 +213,8 @@ export const {
     fileAdapter,
     registrationAdapter,
     docketAdapter,
+    gitAdapter,
+    powerpointAdapter,
 } = globalThis.epicenter || {};
 
 export const testedMethods = new Set();

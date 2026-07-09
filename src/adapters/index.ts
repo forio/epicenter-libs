@@ -30,6 +30,8 @@ import * as registrationAdapter from './registration';
 import * as docketAdapter from './docket';
 import { default as cometdAdapter } from './cometd';
 import { default as Channel } from './channel';
+import * as gitAdapter from './git';
+import * as powerpointAdapter from './powerpoint';
 
 export {
     accountAdapter,
@@ -64,4 +66,6 @@ export {
     registrationAdapter,
     docketAdapter,
     Channel,
+    gitAdapter,
+    powerpointAdapter,
 };

@@ -20,15 +20,18 @@ const extensions = [
     '.js', '.jsx', '.ts', '.tsx',
 ];
 
+// Evaluated once so every bundle in a build shares one build timestamp
+const buildDate = JSON.stringify(new Date().toISOString());
+
 export default [{
     input,
     plugins: [
         replace({
             preventAssignment: true,
             values: {
-                __BUILD__: 'Browsers',
-                __DATE__: () => new Date().toISOString(),
-                __VERSION__: pkg.version,
+                __BUILD__: JSON.stringify('Browsers'),
+                __DATE__: buildDate,
+                __VERSION__: JSON.stringify(pkg.version),
             },
         }),
         alias({
@@ -102,9 +105,9 @@ export default [{
         replace({
             preventAssignment: true,
             values: {
-                __BUILD__: 'Module',
-                __DATE__: () => new Date().toISOString(),
-                __VERSION__: pkg.version,
+                __BUILD__: JSON.stringify('Module'),
+                __DATE__: buildDate,
+                __VERSION__: JSON.stringify(pkg.version),
             },
         }),
         alias({
