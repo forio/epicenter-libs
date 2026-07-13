@@ -2,22 +2,15 @@
 
 The Epicenter JS libs is Forio's JavaScript library for interacting with the Epicenter platform. Similar to its [predecessor](https://github.com/forio/epicenter-js-libs), it is comprised of a set of adapters meant to help streamline your work with the underlying Epicenter APIs.
 
-If you are comfortable with JavaScript, the epicenter.js library is an easy way to connect your project's model, data, and user interface.
+If you are comfortable with JavaScript, epicenter-libs is an easy way to connect your project's model, data, and user interface.
 
 Questions? Contact us at <support@forio.com> or file an issue on github!
 
-JIRA (Forio internal): <https://issues.forio.com/projects/EPILIBS/issues>
+JIRA (Forio internal): <https://forio.atlassian.net/browse/EPILIBS>
 
 ## Table of Contents
 
-- [Transition Guide (v2 &rarr; v3)](#transition-guide-v2--v3)
-  - [New Features In v3](#new-features-in-v3)
-  - [Some Things Were Renamed](#some-things-were-renamed)
-  - [Changes In The Way We Store And Expose User Data](#changes-in-the-way-we-store-and-expose-user-data)
-  - [Session Expiration & Generic Error Handling](#session-expiration--generic-error-handling)
-  - [Built-in SSO Handling](#built-in-sso-handling)
-  - [Pagination](#pagination)
-  - [Presence](#presence)
+- [Documentation](#documentation)
 - [Tenets for Development](#tenets-for-development)
 - [How to Contribute](#how-to-contribute)
 - [How to Prepare a Release](#how-to-prepare-a-release)
@@ -28,59 +21,24 @@ JIRA (Forio internal): <https://issues.forio.com/projects/EPILIBS/issues>
     - [npm dist-tag add | rm | ls](#npm-dist-tag-add--rm--ls)
   - [Versioning](#versioning)
 - [How to Test](#how-to-test)
-- [Documentation](#documentation)
+- [Transition Guide (v2 &rarr; v3)](#transition-guide-v2--v3)
+  - [New Features In v3](#new-features-in-v3)
+  - [Some Things Were Renamed](#some-things-were-renamed)
+  - [Changes In The Way We Store And Expose User Data](#changes-in-the-way-we-store-and-expose-user-data)
+  - [Session Expiration & Generic Error Handling](#session-expiration--generic-error-handling)
+  - [Built-in SSO Handling](#built-in-sso-handling)
+  - [Pagination](#pagination)
+  - [Presence](#presence)
 
-## Transition Guide (v2 &rarr; v3)
+## Documentation
 
-### New Features In v3
+epicenter-libs is documented as part of the broader [Epicenter developer docs](https://docs.forio.com/epicenter), which also cover platform topics beyond the libraries (such as Interface Builder, models, and administration). The sections most relevant to working with the libraries are:
 
-- All resources now have an associated scope to help categorize them -- e.g., project, group, episode, world.
+- [About the Libraries](https://docs.forio.com/epicenter/developer-concepts/about-the-libraries) — a higher-level overview of the libraries and the platform's core entities (worlds, groups, runs, and more).
+- [About the Reference](https://docs.forio.com/epicenter/developer-reference/about-the-reference) — reference pages for each adapter's functions and entities, push channel implementation, and other utilities.
+- [Developer Tutorials](https://docs.forio.com/epicenter/developer-tutorial/about) — ready-made starter-kit templates (single-player, multiplayer, leaderboard, and more) for getting an application up and running quickly.
 
-- All resources now have an associated permit to help define permissions for roles (anonymous, participant, leader, reviewer, facilitator)
-- Users now have a `displayName` for use in sims, detached from any private personal data
-- Two new roles for end users:
-  - reviewer: a role similar to facilitators, but lower on the permissions hierarchy
-  - leader: a role similar to participants, but higher on the permissions hierarchy
-- And more below...
-
-### Some Things Were Renamed
-
-- A bunch of user and run properties, among them --
-  - `userName → handle`
-  - `firstName → givenName`
-  - `lastName → familyName`
-  - `run.saved → run.marked`
-  - `run.trashed → run.hidden`
-
-- Resources ID'd by `[RESOURCE]Id` (e.g., `runId`) now use `key` instead of `id` (so now it's `runKey`)
-- `id` now refers to the long value of the row ID in the database instead
-- All resource `key`s are GUIDs (globally unique IDs)
-
-### Changes In The Way We Store And Expose User Data
-
-User information has been separated into out to better support for GDPR standards. Users now own a "pseudonym" from which to interact with the simulations. This is detached from their personal data which lets the platform to maintain a record while allowing for easy removal of user-sensitive data when requested.
-
-### Session Expiration & Generic Error Handling
-
-- v3 authorization tokens can now expire after a period of inactivity, and become invalid after a world assignment change
-
-- All calls have an error handling fallback to an `errorManager` instance, which will help to run checks on generic network errors like the expiration behavior described in the previous bullet
-
-### Built-in SSO Handling
-
-On load, epi-libs will now make an effort to find any Epicenter SSO tokens and consume them to generate an Epicenter session for you. This means a node server is no longer a hard requirement if you want to do SSO!
-
-### Pagination
-
-When retrieving records, pagination is no longer done via the request `Content-Range` header like in v2. Instead, the platform will now return a page-like object, which will contain properties that reflect the `records {start}-{end}/{total}` syntax:
-
-- `first → page.firstResult`
-- `end → page.firstResult + page.maxResults`
-- `total → page.totalResults`
-
-### Presence
-
-A user's presence is now determined by their connection to the CometD server. Unlike in v2, the platform will automatically create push channel notifications on behalf of the user when they subscribe or do anything channel related (i.e., like a CometD handshake).
+Every exported function is also documented inline with JSDoc — descriptions plus usage examples — alongside complete TypeScript type definitions, so that documentation surfaces directly in your editor through autocomplete and hover.
 
 ## Tenets for Development
 
@@ -148,8 +106,54 @@ npm run test:run        # Runs the tests once
 npm run test            # Runs the tests w/ a watch
 ```
 
-Logs during testing are sent to `browser.log` file
+## Transition Guide (v2 &rarr; v3)
 
-## Documentation
+### New Features In v3
 
-Documentation is currently limited. For the time being, please refer to the comments in code. Hoping to support this in a more official capacity at some point, possibly having them generated automatically with tools like [TypeDoc](https://typedoc.org/).
+- All resources now have an associated scope to help categorize them -- e.g., project, group, episode, world.
+
+- All resources now have an associated permit to help define permissions for roles (anonymous, participant, leader, reviewer, facilitator)
+- Users now have a `displayName` for use in sims, detached from any private personal data
+- Two new roles for end users:
+  - reviewer: a role similar to facilitators, but lower on the permissions hierarchy
+  - leader: a role similar to participants, but higher on the permissions hierarchy
+- And more below...
+
+### Some Things Were Renamed
+
+- A bunch of user and run properties, among them --
+  - `userName → handle`
+  - `firstName → givenName`
+  - `lastName → familyName`
+  - `run.saved → run.marked`
+  - `run.trashed → run.hidden`
+
+- Resources ID'd by `[RESOURCE]Id` (e.g., `runId`) now use `key` instead of `id` (so now it's `runKey`)
+- `id` now refers to the long value of the row ID in the database instead
+- All resource `key`s are GUIDs (globally unique IDs)
+
+### Changes In The Way We Store And Expose User Data
+
+User information has been separated into out to better support for GDPR standards. Users now own a "pseudonym" from which to interact with the simulations. This is detached from their personal data which lets the platform to maintain a record while allowing for easy removal of user-sensitive data when requested.
+
+### Session Expiration & Generic Error Handling
+
+- v3 authorization tokens can now expire after a period of inactivity, and become invalid after a world assignment change
+
+- All calls have an error handling fallback to an `errorManager` instance, which will help to run checks on generic network errors like the expiration behavior described in the previous bullet
+
+### Built-in SSO Handling
+
+On load, epi-libs will now make an effort to find any Epicenter SSO tokens and consume them to generate an Epicenter session for you. This means a node server is no longer a hard requirement if you want to do SSO!
+
+### Pagination
+
+When retrieving records, pagination is no longer done via the request `Content-Range` header like in v2. Instead, the platform will now return a page-like object, which will contain properties that reflect the `records {start}-{end}/{total}` syntax:
+
+- `first → page.firstResult`
+- `end → page.firstResult + page.maxResults`
+- `total → page.totalResults`
+
+### Presence
+
+A user's presence is now determined by their connection to the CometD server. Unlike in v2, the platform will automatically create push channel notifications on behalf of the user when they subscribe or do anything channel related (i.e., like a CometD handshake).
