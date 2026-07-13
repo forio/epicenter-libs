@@ -28,9 +28,6 @@ JIRA (Forio internal): <https://issues.forio.com/projects/EPILIBS/issues>
     - [npm dist-tag add | rm | ls](#npm-dist-tag-add--rm--ls)
   - [Versioning](#versioning)
 - [How to Test](#how-to-test)
-- [How to Use Examples (Local)](#how-to-use-examples-local)
-  - [Vanilla JavaScript](#vanilla-javascript)
-  - [Node Server](#node-server)
 - [Documentation](#documentation)
 
 ## Transition Guide (v2 &rarr; v3)
@@ -152,32 +149,6 @@ npm run test            # Runs the tests w/ a watch
 ```
 
 Logs during testing are sent to `browser.log` file
-
-## How to Use Examples (Local)
-
-The following are examples of the Epicenter JS libs use cases. Their intended purpose is to be a sandbox for end-to-end testing.
-
-Do not use these as a starting point/template for new projects. They are not an indicator of frontend best practices, rather -- the choice to use vanilla JavaScript here was to make it universally understandable.
-
-### Vanilla JavaScript
-
-```console
-npm ci                  # Installs dependencies for libs
-npm run build           # Builds libs to dist/ folder
-cd examples/parcel
-npm ci                  # Install dependencies for example
-npm start               # Serves example locally at localhost:3913
-```
-
-### Node Server
-
-```console
-npm ci                  # Installs dependencies for libs
-npm run build           # Builds libs to dist/ folder
-cd examples/node
-npm ci                  # Install dependencies for example
-npm start
-```
 
 ## Documentation
 

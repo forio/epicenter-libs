@@ -1,9 +1,0 @@
-{
-    "scripts": {
-        "start": "node index.js",
-        "experimental": "node --experimental-modules --es-module-specifier-resolution=node index.js"
-    },
-    "dependencies": {
-        "epicenter": "file:../.."
-    }
-}
