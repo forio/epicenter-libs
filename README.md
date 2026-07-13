@@ -134,7 +134,7 @@ npm run test            # Runs the tests w/ a watch
 
 ### Changes In The Way We Store And Expose User Data
 
-User information has been separated into out to better support for GDPR standards. Users now own a "pseudonym" from which to interact with the simulations. This is detached from their personal data which lets the platform to maintain a record while allowing for easy removal of user-sensitive data when requested.
+User information has been separated out to better support GDPR standards. Users now own a "pseudonym" from which to interact with the simulations. This is detached from their personal data, which lets the platform maintain a record while allowing for easy removal of user-sensitive data when requested.
 
 ### Session Expiration & Generic Error Handling
 
@@ -144,7 +144,7 @@ User information has been separated into out to better support for GDPR standard
 
 ### Built-in SSO Handling
 
-On load, epi-libs will now make an effort to find any Epicenter SSO tokens and consume them to generate an Epicenter session for you. This means a node server is no longer a hard requirement if you want to do SSO!
+On load, epicenter-libs will now make an effort to find any Epicenter SSO tokens and consume them to generate an Epicenter session for you. This means a node server is no longer a hard requirement if you want to do SSO!
 
 ### Pagination
 
