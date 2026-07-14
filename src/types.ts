@@ -306,6 +306,57 @@ export type {
     OrbitType,
 } from './adapters/world';
 
+// File Adapter
+export type {
+    FileEntry,
+    DirectoryEntry,
+    FileSystemEntry,
+} from './adapters/file';
+
+// Registration Adapter
+export type {
+    RegistrationInfo,
+    TeamRegistrationInfo,
+    RegistrationResult,
+    WhoAmI,
+    WhoAmIObjectType,
+    TeamRole,
+    SsoProtocol,
+} from './adapters/registration';
+
+// Docket Adapter
+export type {
+    OperatingSystem,
+    WorkerShape,
+    ScaleFlavor,
+    ScaleCreateInView,
+    ScaleReadOutView,
+    ScaleDocketPayloadCreateInView,
+    ScaleDocketPayloadReadOutView,
+    DocketPayloadCreateInView,
+    DocketPayloadReadOutView,
+    DocketReadOutView,
+} from './adapters/docket';
+
+// Encyclopedia Adapter
+export type {
+    EncyclopediaTranslator,
+    DocumentedEndpointMethod,
+    DocumentedEndpointAuthorization,
+    DocumentedEndpointNotation,
+    DocumentedParameterSource,
+    DocumentedParameter,
+    DocumentedEndpoint,
+    DocumentedResource,
+    KnownServiceReadOutView,
+} from './adapters/encyclopedia';
+
+// Pipeline Adapter
+export type {
+    PipelineExecutionStatus,
+    PipelineAuditReadOutView,
+} from './adapters/pipeline';
+
 // Somebody Adapter
 export type {
     Somebody,
