@@ -333,7 +333,8 @@ export async function getTaskIn<
  * Queries for tasks
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/search`
  *
- * Requires facilitator (or higher) privileges. Filterable/sortable fields include
+ * No authentication is required; results use facilitator-level row visibility.
+ * Filterable/sortable fields include
  * `task.taskKey`, `task.name`, `task.status`, `task.scopeBoundary`, `task.scopeKey`,
  * `task.userKey`, `task.groupName`, `task.episodeName`, `task.nextExecution`,
  * `task.failSafeExecution`, and `task.created`.
