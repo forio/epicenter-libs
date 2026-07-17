@@ -22,6 +22,31 @@ import {
 } from './common';
 
 describe('taskAdapter', () => {
+    const TASK_HISTORY = {
+        result: 'response body',
+        execution: 1752768000000,
+        response: 1752768000100,
+        success: true,
+        taskId: 42,
+    };
+    const TASK = {
+        taskKey: 'TASK_KEY',
+        status: 'initialized',
+        retryPolicy: 'do_nothing',
+        payload: {
+            objectType: 'http',
+            method: 'POST',
+            url: '/send-out-emails',
+            target: 'proxy',
+            body: {},
+            timeoutSeconds: 10,
+        },
+        scope: {
+            scopeBoundary: SCOPE_BOUNDARY.GROUP,
+            scopeKey: 'GROUP_KEY',
+            userKey: 'USER_KEY',
+        },
+    };
     let capturedRequests = [];
     let mockSetup;
 
@@ -29,7 +54,26 @@ describe('taskAdapter', () => {
     config.projectShortName = PROJECT;
 
     beforeAll(() => {
-        mockSetup = createFetchMock();
+        mockSetup = createFetchMock({
+            '/task/history/': {
+                body: {
+                    firstResult: 0,
+                    maxResults: 100,
+                    resultSize: 1,
+                    totalResults: 1,
+                    values: [TASK_HISTORY],
+                },
+            },
+            '/task/in/': {
+                body: {
+                    firstResult: 0,
+                    maxResults: 100,
+                    resultSize: 1,
+                    totalResults: 1,
+                    values: [TASK],
+                },
+            },
+        });
         capturedRequests = mockSetup.capturedRequests;
     });
 
@@ -52,6 +96,7 @@ describe('taskAdapter', () => {
         const payload = {
             method: 'POST',
             url: '/send-out-emails',
+            body: {},
         };
         const trigger = {
             value: '0 7 15 * * ?',
@@ -103,7 +148,7 @@ describe('taskAdapter', () => {
 
         it('Should pass optional parameters to the request body', async () => {
             const optionals = {
-                retryPolicy: 'RESCHEDULE',
+                retryPolicy: 'FIRE_ON_FAIL_SAFE',
                 failSafeTermination: '2026-01-01T00:00:00.000Z',
                 ttlSeconds: 3600,
             };
@@ -123,6 +168,31 @@ describe('taskAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body.payload).toHaveProperty('target', 'PROXY');
+        });
+
+        it('Should pass the payload timeout through to the request body', async () => {
+            const timeoutPayload = { ...payload, timeoutSeconds: 10 };
+            await taskAdapter.create(scope, name, timeoutPayload, trigger);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.payload).toHaveProperty('timeoutSeconds', 10);
+        });
+
+        it('Should preserve a group-status payload discriminator', async () => {
+            const groupStatusPayload = {
+                objectType: 'groupStatus',
+                groupKey: 'GROUP_KEY',
+                status: {
+                    code: 'COMPLETE',
+                    message: 'Complete',
+                },
+            };
+            await taskAdapter.create(scope, name, groupStatusPayload, trigger);
+
+            const req = capturedRequests[capturedRequests.length - 1];
+            const body = JSON.parse(req.options.body);
+            expect(body.payload).toEqual(groupStatusPayload);
         });
 
         it('Should omit target from the request body when not provided', async () => {
@@ -239,6 +309,20 @@ describe('taskAdapter', () => {
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/history/${taskKey}`);
         });
 
+        it('Should send pagination options and return task-history records in a page', async () => {
+            const page = await taskAdapter.getHistory(taskKey, { first: 0, max: 25 });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const searchParams = new URL(req.url).searchParams;
+
+            expect(searchParams.get('first')).toBe('0');
+            expect(searchParams.get('max')).toBe('25');
+            expect(page.resultSize).toBe(1);
+            expect(page.values).toEqual([TASK_HISTORY]);
+            expect(typeof page.prev).toBe('function');
+            expect(typeof page.next).toBe('function');
+            expect(typeof page.all).toBe('function');
+        });
+
         testedMethods.add('getHistory');
     });
 
@@ -281,6 +365,25 @@ describe('taskAdapter', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
             expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/task/in/${scope.scopeBoundary}/${scope.scopeKey}`);
+        });
+
+        it('Should send sorting and pagination options and return tasks in a page', async () => {
+            const page = await taskAdapter.getTaskIn(scope, {
+                sort: ['-task.created', '+task.name'],
+                first: 0,
+                max: 25,
+            });
+            const req = capturedRequests[capturedRequests.length - 1];
+            const searchParams = new URL(req.url).searchParams;
+
+            expect(searchParams.get('sort')).toBe('-task.created;+task.name');
+            expect(searchParams.get('first')).toBe('0');
+            expect(searchParams.get('max')).toBe('25');
+            expect(page.resultSize).toBe(1);
+            expect(page.values).toEqual([TASK]);
+            expect(typeof page.prev).toBe('function');
+            expect(typeof page.next).toBe('function');
+            expect(typeof page.all).toBe('function');
         });
 
         testedMethods.add('getTaskIn');

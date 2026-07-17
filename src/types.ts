@@ -234,6 +234,11 @@ export type {
     RETRY_POLICY,
     TaskPayloadBody,
     TaskPayloadHeaders,
+    TaskHttpMethod,
+    TaskRetryPolicyReadOutView,
+    TaskStatusReadOutView,
+    TaskAddressReadOutView,
+    TaskScopeReadOutView,
     StatusReadOutView,
     StatusCreateInView,
     CronTaskTriggerCreateInView,
@@ -243,10 +248,15 @@ export type {
     HttpTaskPayloadCreateInView,
     GroupStatusTaskPayloadCreateInView,
     TaskPayloadCreateInView,
+    HttpTaskPayloadCreateInput,
+    TaskPayloadCreateInput,
     HttpTaskPayloadReadOutView,
     GroupStatusTaskPayloadReadOutView,
     TaskPayloadReadOutView,
     TaskReadOutView,
+    TaskHistoryReadOutView,
+    TaskPageOptions,
+    TaskScopePageOptions,
 } from './adapters/task';
 
 // User Adapter
