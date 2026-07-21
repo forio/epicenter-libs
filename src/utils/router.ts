@@ -45,6 +45,7 @@ export interface RetryFunction<Output> {
 export interface Page<Item> {
     firstResult: number;
     maxResults: number;
+    resultSize: number;
     totalResults: number;
     values: Item[];
     prev: () => Promise<Item[]>;

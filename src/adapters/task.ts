@@ -1,18 +1,35 @@
-import type { RoutingOptions, Page } from '../utils/router';
-import type { GenericScope, GenericSearchOptions, Address } from '../utils/constants';
+import type { Address, GenericScope, GenericSearchOptions } from '../utils/constants';
+import type { Page, RoutingOptions } from '../utils/router';
 
-import Router from '../utils/router';
 import { parseFilterInput } from '../utils/filter-parser';
+import Router from '../utils/router';
 
 export enum RETRY_POLICY {
     DO_NOTHING = 'DO_NOTHING', // If the task fails, do nothing (this is the default)
-    RESCHEDULE = 'RESCHEDULE', // If the task fails retry at the next scheduled time point
-    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', // Will re-execute the task after it fails; how long until this occurs is equal to ttlSeconds
+    FIRE_ON_FAIL_SAFE = 'FIRE_ON_FAIL_SAFE', // Retry within the task's fail-safe execution window
 }
 
 // Generic type aliases for task adapter
 export type TaskPayloadBody = Record<string, unknown>;
 export type TaskPayloadHeaders = Record<string, string>;
+export type TaskHttpMethod =
+    | 'GET'
+    | 'POST'
+    | 'PUT'
+    | 'DELETE';
+export type TaskRetryPolicyReadOutView = 'do_nothing' | 'fire_on_fail_safe';
+export type TaskStatusReadOutView =
+    | 'initialized'
+    | 'triggered'
+    | 'succeeded'
+    | 'failed'
+    | 'cancelled'
+    | 'terminated';
+export type TaskAddressReadOutView = Partial<Address>;
+
+export interface TaskScopeReadOutView extends GenericScope {
+    userKey?: string;
+}
 
 // Status type for group status tasks
 export interface StatusReadOutView {
@@ -54,11 +71,12 @@ export interface HttpTaskPayloadCreateInView<
     H extends object = TaskPayloadHeaders,
 > {
     objectType: 'http';
-    method: string;
+    method: TaskHttpMethod;
     url: string;
     target?: 'APPLICATION' | 'PROXY';
     body: B;
     headers?: H;
+    timeoutSeconds?: number;
 }
 
 export interface GroupStatusTaskPayloadCreateInView {
@@ -74,17 +92,30 @@ export type TaskPayloadCreateInView<
     | HttpTaskPayloadCreateInView<B, H>
     | GroupStatusTaskPayloadCreateInView;
 
+export type HttpTaskPayloadCreateInput<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> = Omit<HttpTaskPayloadCreateInView<B, H>, 'objectType'> & {
+    objectType?: 'http';
+};
+
+export type TaskPayloadCreateInput<
+    B extends object = TaskPayloadBody,
+    H extends object = TaskPayloadHeaders,
+> = HttpTaskPayloadCreateInput<B, H> | GroupStatusTaskPayloadCreateInView;
+
 // Payload type definitions for reading tasks
 export interface HttpTaskPayloadReadOutView<
     B extends object = TaskPayloadBody,
     H extends object = TaskPayloadHeaders,
 > {
     objectType: 'http';
-    method?: string;
+    method?: TaskHttpMethod;
     url?: string;
     target?: 'application' | 'proxy';
     body?: B;
     headers?: H;
+    timeoutSeconds?: number;
 }
 
 export interface GroupStatusTaskPayloadReadOutView {
@@ -107,19 +138,35 @@ export interface TaskReadOutView<
 > {
     taskKey?: string;
     name?: string;
-    status?: string;
+    status?: TaskStatusReadOutView;
     cron?: string;
     mutationKey?: string;
     failures?: number;
     successes?: number;
-    address?: Address;
+    address?: TaskAddressReadOutView;
     payload?: TaskPayloadReadOutView<B, H>;
-    scope?: GenericScope;
-    retryPolicy?: string;
+    scope?: TaskScopeReadOutView;
+    retryPolicy?: TaskRetryPolicyReadOutView;
     failSafeTermination?: string;
     ttlSeconds?: number;
 }
 
+export interface TaskHistoryReadOutView {
+    result?: string;
+    execution?: number;
+    response?: number;
+    success?: boolean;
+    taskId?: number;
+}
+
+export interface TaskPageOptions {
+    first?: number;
+    max?: number;
+}
+
+export interface TaskScopePageOptions extends TaskPageOptions {
+    sort?: string[];
+}
 
 /**
  * Creates a task; requires facilitator (or higher) privileges
@@ -136,6 +183,7 @@ export interface TaskReadOutView<
  *     method: 'POST',
  *     url: '/send-out-emails',
  *     target: 'PROXY', // fire at the project's proxy server; omit to fire at the app
+ *     body: {},
  * };
  * const trigger = {
  *     value: '0 7 15 * * ?', // triggers on day 15 7am of each month
@@ -148,12 +196,13 @@ export interface TaskReadOutView<
  * @param scope.scopeKey                        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param [scope.userKey]                       Key associated with the user
  * @param name                                  Name of the task
- * @param payload                               An HTTP task object that will be executed when the task is triggered
- * @param payload.method                        Type of method to use with the HTTP request (e.g., 'GET', 'POST', 'PATCH')
+ * @param payload                               An HTTP request or group-status change to execute when the task is triggered
+ * @param payload.method                        Type of method to use with the HTTP request (e.g., 'GET', 'POST')
  * @param payload.url                           Relative URL the HTTP request will be sent to; the task runner builds the full URL as `{host}{targetPath}/{account}/{project}{url}`
  * @param [payload.target]                      Where the task fires: 'APPLICATION' (the project app, `/app`, the default) or 'PROXY' (the project's proxy server, `/proxy`)
- * @param [payload.body]                        The body of the HTTP request
- * @param [payload.headers]                     Headers to send along with the HTTP request
+ * @param payload.body                          The JSON body of the HTTP request
+ * @param [payload.headers]                     Headers to send along with the HTTP request; must be non-empty when provided — omit rather than pass an empty object
+ * @param [payload.timeoutSeconds]               Request timeout in seconds (1–30)
  * @param trigger                               Object that determines when to run the task (cron, offset, or date)
  * @param [trigger.value]                       For cron: cron expression (e.g., '0 7 * * * ?'). For date: ISO-8601 date-time string
  * @param [trigger.objectType]                  Type of trigger: 'cron', 'offset', or 'date'
@@ -164,8 +213,8 @@ export interface TaskReadOutView<
  * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
  * @param [optionals.retryPolicy]               Specifies what to do should the task fail; see RETRY_POLICY
- * @param [optionals.failSafeTermination]       The ISO-8601 date-time when the task will be deleted regardless of any triggers; defaults to null
- * @param [optionals.ttlSeconds]                Max life expectancy of the task; used to determine if retrying the task is necessary
+ * @param [optionals.failSafeTermination]       ISO-8601 deadline after which the task terminates; the server defaults and caps this at one year from creation
+ * @param [optionals.ttlSeconds]                Execution fail-safe window in seconds; the server applies its configured minimum
  * @returns promise that resolves to the task object including the taskKey
  */
 export async function create<
@@ -174,13 +223,7 @@ export async function create<
 >(
     scope: { userKey?: string } & GenericScope,
     name: string,
-    payload: {
-        method: string;
-        url: string;
-        target?: 'APPLICATION' | 'PROXY';
-        body?: B;
-        headers?: H;
-    },
+    payload: TaskPayloadCreateInput<B, H>,
     trigger: TaskTriggerCreateInView,
     optionals: {
         retryPolicy?: keyof typeof RETRY_POLICY;
@@ -194,12 +237,16 @@ export async function create<
         ttlSeconds,
         ...routingOptions
     } = optionals;
+    const normalizedPayload: TaskPayloadCreateInView<B, H> =
+        payload.objectType === 'groupStatus' ?
+            payload :
+            { ...payload, objectType: 'http' };
     return await new Router()
         .post(
             '/task',
             {
                 body: {
-                    payload: { objectType: 'http' as const, ...payload },
+                    payload: normalizedPayload,
                     trigger,
                     retryPolicy,
                     failSafeTermination,
@@ -224,7 +271,7 @@ export async function create<
  * await taskAdapter.destroy(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
- * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]                           Optional arguments; pass network call options overrides here.
  * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
  * @returns promise that resolves to undefined when successful
@@ -249,7 +296,7 @@ export async function destroy(
  * const task = await taskAdapter.get(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
- * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]                           Optional arguments; pass network call options overrides here.
  * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
  * @returns promise that resolves to the task object
@@ -274,20 +321,24 @@ export async function get<
  * const history = await taskAdapter.getHistory(taskKey);
  *
  * @param taskKey                               Unique key associated with a task
- * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]                           Pagination and network options
+ * @param [optionals.first]                     Zero-based index of the first history record; defaults to 0
+ * @param [optionals.max]                       Maximum history records to return; defaults to 100 and cannot exceed 100
  * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
- * @returns promise that resolves to an array of task history objects
+ * @returns promise that resolves to a page of task history objects
  */
-export async function getHistory<
-    B extends object = TaskPayloadBody,
-    H extends object = TaskPayloadHeaders,
->(
+export async function getHistory(
     taskKey: string,
-    optionals: RoutingOptions = {},
-): Promise<TaskReadOutView<B, H>[]> {
+    optionals: TaskPageOptions & RoutingOptions = {},
+): Promise<Page<TaskHistoryReadOutView>> {
+    const { first, max, ...routingOptions } = optionals;
     return await new Router()
-        .get(`/task/history/${taskKey}`, optionals)
+        .withSearchParams({ first, max })
+        .get(`/task/history/${taskKey}`, {
+            paginated: true,
+            ...routingOptions,
+        })
         .then(({ body }) => body);
 }
 
@@ -310,25 +361,37 @@ export async function getHistory<
  * @param scope.scopeBoundary                   Scope boundary, defines the type of scope; See [scope boundary](#SCOPE_BOUNDARY) for all types
  * @param scope.scopeKey                        Scope key, a unique identifier tied to the scope. E.g., if your `scopeBoundary` is `GROUP`, your `scopeKey` will be your `groupKey`; for `EPISODE`, `episodeKey`, etc.
  * @param [scope.userKey]                       Key associated with the user; will retrieve tasks in the scope that were made by the specified user
- * @param [optionals]                           Optional arguments; pass network call options overrides here. Special arguments specific to this method are listed below if they exist.
+ * @param [optionals]                           Pagination, sorting, and network options
+ * @param [optionals.sort]                      Task fields to sort by
+ * @param [optionals.first]                     Zero-based index of the first task; defaults to 0
+ * @param [optionals.max]                       Maximum tasks to return; defaults to 100 and cannot exceed 100
  * @param [optionals.accountShortName]          Name of account (by default will be the account associated with the session)
  * @param [optionals.projectShortName]          Name of project (by default will be the project associated with the session)
- * @returns promise that resolves to an array of task objects
+ * @returns promise that resolves to a page of task objects
  */
 export async function getTaskIn<
     B extends object = TaskPayloadBody,
     H extends object = TaskPayloadHeaders,
 >(
     scope: { userKey?: string } & GenericScope,
-    optionals: RoutingOptions = {},
-): Promise<TaskReadOutView<B, H>[]> {
+    optionals: TaskScopePageOptions & RoutingOptions = {},
+): Promise<Page<TaskReadOutView<B, H>>> {
     const { scopeBoundary, scopeKey, userKey } = scope;
+    const { sort = [], first, max, ...routingOptions } = optionals;
     return await new Router()
+        .withSearchParams({
+            sort: sort.join(';') || undefined,
+            first,
+            max,
+        })
         .get(
             `/task/in/${scopeBoundary}/${scopeKey}${
                 userKey ? `/${userKey}` : ''
             }`,
-            optionals,
+            {
+                paginated: true,
+                ...routingOptions,
+            },
         )
         .then(({ body }) => body);
 }
