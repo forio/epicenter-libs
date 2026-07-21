@@ -1,3 +1,38 @@
+# [3.35.0](https://github.com/forio/epicenter-libs/compare/v3.34.2...v3.35.0) (2026-07-21)
+
+
+### Bug Fixes
+
+* correct privateKeySpec in examples and tests ([802ae14](https://github.com/forio/epicenter-libs/commit/802ae146edbf7c2b0c5ed8bba333546dd23b5244))
+* fix required optionals.message errors ([d7266e6](https://github.com/forio/epicenter-libs/commit/d7266e67a43f5326ed467e9d5bd13d9584a0d242))
+* resolve lockfile conflict ([ca6c8c1](https://github.com/forio/epicenter-libs/commit/ca6c8c18a49449eacf7f5620cc7fe61b1a9bb429))
+* type task payload.target, ISO failSafeTermination, doc privileges ([79f613c](https://github.com/forio/epicenter-libs/commit/79f613cbfac11c0b2ddf02095625e9cbb3836f20))
+* use a single build timestamp across all bundles ([27f8fdb](https://github.com/forio/epicenter-libs/commit/27f8fdb8795769bcdd68b1873be3b98449228872))
+
+
+### Features
+
+* complete task adapter contract ([7a8f40a](https://github.com/forio/epicenter-libs/commit/7a8f40a9c55c2881c58a30646a273b61d840e0b1))
+* add docket adapter ([c59eebf](https://github.com/forio/epicenter-libs/commit/c59eebfb27bad4ec43a17f28823bc1a95afb8182))
+* add encyclopedia adapter ([1fea349](https://github.com/forio/epicenter-libs/commit/1fea349f0b027aba1a38a1648b19a9d738566469))
+* add file adapter ([a719fd5](https://github.com/forio/epicenter-libs/commit/a719fd521efe1427ba815b418813eb6024b11278))
+* add git adapter ([20f3294](https://github.com/forio/epicenter-libs/commit/20f3294241baae88990890d4dcdfd951bf002bd6))
+* add pipeline adapter ([f3271d6](https://github.com/forio/epicenter-libs/commit/f3271d66a676d2d7e8f8a8d6069b08a9445f036a))
+* add powerpoint adapter ([7e825fd](https://github.com/forio/epicenter-libs/commit/7e825fd0d23b57f739bd984e10719d49268a4787))
+* add registration adapter ([a848097](https://github.com/forio/epicenter-libs/commit/a848097525f0cae1b6c6ac9cabe7f097c9d6d04a))
+* add taskAdapter.query wrapping GET /task/search ([d787069](https://github.com/forio/epicenter-libs/commit/d787069d29041dcbbb835595ae8a965b0c0731bb))
+
+
+### BREAKING CHANGES
+
+* `taskAdapter.getHistory()` and `taskAdapter.getTaskIn()` now resolve to a `Page` object instead of an array; read the records from `.values` (or use `.all()`/`.next()`/`.prev()`) rather than iterating the result directly.
+* `taskAdapter.getHistory()` now resolves to `TaskHistoryReadOutView` records and no longer accepts `<Body, Headers>` type parameters (it was previously typed, incorrectly, as task read views).
+* `taskAdapter.create()` `optionals.failSafeTermination` is now an ISO-8601 `string`; callers passing epoch milliseconds (`number`) must convert (e.g. `new Date(ms).toISOString()`).
+* `taskAdapter.create()` payload `body` is now required, and `payload.method` is restricted to `'GET' | 'POST' | 'PUT' | 'DELETE'` (`PATCH` and other arbitrary strings are no longer accepted).
+* `RETRY_POLICY.RESCHEDULE` has been removed (it was never accepted by the server); use `DO_NOTHING` or `FIRE_ON_FAIL_SAFE`.
+
+
+
 ## [3.34.2](https://github.com/forio/epicenter-libs/compare/v3.34.1...v3.34.2) (2026-04-01)
 
 
