@@ -56,6 +56,7 @@ export interface HttpTaskPayloadCreateInView<
     objectType: 'http';
     method: string;
     url: string;
+    target?: 'APPLICATION' | 'PROXY';
     body: B;
     headers?: H;
 }
@@ -81,6 +82,7 @@ export interface HttpTaskPayloadReadOutView<
     objectType: 'http';
     method?: string;
     url?: string;
+    target?: 'application' | 'proxy';
     body?: B;
     headers?: H;
 }
@@ -120,7 +122,7 @@ export interface TaskReadOutView<
 
 
 /**
- * Creates a task; requires support level authentication
+ * Creates a task; requires facilitator (or higher) privileges
  * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task`
  *
  * @example
@@ -132,7 +134,8 @@ export interface TaskReadOutView<
  * const name = 'task-1-send-emails';
  * const payload = {
  *     method: 'POST',
- *     url: 'https://forio.com/app/forio-dev/test-project/send-out-emails',
+ *     url: '/send-out-emails',
+ *     target: 'PROXY', // fire at the project's proxy server; omit to fire at the app
  * };
  * const trigger = {
  *     value: '0 7 15 * * ?', // triggers on day 15 7am of each month
@@ -147,7 +150,8 @@ export interface TaskReadOutView<
  * @param name                                  Name of the task
  * @param payload                               An HTTP task object that will be executed when the task is triggered
  * @param payload.method                        Type of method to use with the HTTP request (e.g., 'GET', 'POST', 'PATCH')
- * @param payload.url                           The URL the HTTP request will be sent to
+ * @param payload.url                           Relative URL the HTTP request will be sent to; the task runner builds the full URL as `{host}{targetPath}/{account}/{project}{url}`
+ * @param [payload.target]                      Where the task fires: 'APPLICATION' (the project app, `/app`, the default) or 'PROXY' (the project's proxy server, `/proxy`)
  * @param [payload.body]                        The body of the HTTP request
  * @param [payload.headers]                     Headers to send along with the HTTP request
  * @param trigger                               Object that determines when to run the task (cron, offset, or date)
@@ -173,13 +177,14 @@ export async function create<
     payload: {
         method: string;
         url: string;
+        target?: 'APPLICATION' | 'PROXY';
         body?: B;
         headers?: H;
     },
     trigger: TaskTriggerCreateInView,
     optionals: {
         retryPolicy?: keyof typeof RETRY_POLICY;
-        failSafeTermination?: number;
+        failSafeTermination?: string;
         ttlSeconds?: number;
     } & RoutingOptions = {},
 ): Promise<TaskReadOutView<B, H>> {
@@ -210,7 +215,7 @@ export async function create<
 
 
 /**
- * Deletes a task (changes status to cancelled); requires support level authentication
+ * Deletes a task (changes status to cancelled); requires facilitator (or higher) privileges
  * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/{TASK_KEY}`
  *
  * @example
@@ -235,7 +240,7 @@ export async function destroy(
 
 
 /**
- * Gets a task by taskKey; requires support level authentication
+ * Gets a task by taskKey; requires facilitator (or higher) privileges
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/{TASK_KEY}`
  *
  * @example
@@ -260,7 +265,7 @@ export async function get<
 
 
 /**
- * Gets the history (100 most recent times it has triggered) of a task by taskKey; requires support level authentication
+ * Gets the history (100 most recent times it has triggered) of a task by taskKey; requires facilitator (or higher) privileges
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/history/{TASK_KEY}`
  *
  * @example
@@ -288,7 +293,7 @@ export async function getHistory<
 
 
 /**
- * Gets most recent 100 tasks related to the selected scope; requires support level authentication
+ * Gets most recent 100 tasks related to the selected scope; requires facilitator (or higher) privileges
  * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/in/{SCOPE_BOUNDARY}/{SCOPE_KEY}` or GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/task/in/{SCOPE_BOUNDARY}/{SCOPE_KEY}/{USER_KEY}`
  *
  * Note: Will retrieve all tasks that were CREATED in the specified scope. If something was created with episode scope, it will not be retrievable through group scoping.
