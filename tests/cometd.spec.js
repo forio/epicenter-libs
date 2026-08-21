@@ -1,5 +1,5 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { cometdAdapter } from './common';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { cometdAdapter, createFetchMock } from './common';
 
 describe('cometdAdapter', () => {
     beforeEach(() => {
@@ -170,6 +170,44 @@ describe('cometdAdapter', () => {
             const testUrl = 'https://test.example.com/push';
             cometdAdapter.url = testUrl;
             expect(cometdAdapter.url).toBe(testUrl);
+        });
+    });
+
+    describe('Startup failure recovery', () => {
+        const CHANNELS_DISABLED = { '/project': { body: { channelEnabled: false } } };
+        let mockSetup;
+
+        beforeEach(() => {
+            cometdAdapter.initialization = undefined;
+            mockSetup = createFetchMock(CHANNELS_DISABLED);
+        });
+
+        afterEach(() => {
+            mockSetup.restore();
+            cometdAdapter.initialization = undefined;
+        });
+
+        it('Should not cache a rejected startup', async () => {
+            await expect(cometdAdapter.init()).rejects.toThrow('Push Channels are not enabled');
+            expect(cometdAdapter.initialization).toBeUndefined();
+        });
+
+        it('Should let a later init() retry after a failed startup', async () => {
+            await expect(cometdAdapter.init()).rejects.toThrow();
+            await expect(cometdAdapter.init()).rejects.toThrow('Push Channels are not enabled');
+            // A genuine retry re-fetches the project; a cached rejection would not
+            const projectFetches = mockSetup.capturedRequests.filter((req) => req.url.includes('/project'));
+            expect(projectFetches.length).toBe(2);
+        });
+
+        it('Should tag the disabled-channel error with a code so callers can distinguish it', async () => {
+            const error = await cometdAdapter.init().catch((caught) => caught);
+            expect(error.code).toBe('CHANNELS_NOT_ENABLED');
+        });
+
+        it('Should let disconnect() resolve instead of re-throwing after a failed startup', async () => {
+            await expect(cometdAdapter.init()).rejects.toThrow();
+            await expect(cometdAdapter.disconnect()).resolves.toBeUndefined();
         });
     });
 });

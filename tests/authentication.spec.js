@@ -1,4 +1,5 @@
 import {
+    vi,
     it,
     expect,
     describe,
@@ -11,6 +12,7 @@ import {
     ACCOUNT,
     PROJECT,
     GENERIC_OPTIONS,
+    cometdAdapter,
     createFetchMock,
     testedMethods,
     getFunctionKeys,
@@ -78,6 +80,16 @@ describe('Authentication', () => {
             const req = capturedRequests[capturedRequests.length - 1];
             const body = JSON.parse(req.options.body);
             expect(body).toHaveProperty('objectType', 'user');
+        });
+
+        it('Should store the session even when tearing down the previous session rejects', async () => {
+            const disconnectSpy = vi.spyOn(cometdAdapter, 'disconnect')
+                .mockRejectedValue(new Error('disconnect failed'));
+            const session = await authAdapter.login(CREDENTIALS);
+            expect(disconnectSpy).toHaveBeenCalled();
+            expect(session).toEqual(SESSION);
+            expect(authAdapter.getLocalSession()).toEqual(SESSION);
+            disconnectSpy.mockRestore();
         });
 
         testedMethods.add('login');
@@ -149,6 +161,16 @@ describe('Authentication', () => {
             expect(authAdapter.getLocalSession()).toBeUndefined();
         });
 
+        it('Should still resolve and clear the session when CometD disconnect rejects', async () => {
+            const disconnectSpy = vi.spyOn(cometdAdapter, 'disconnect')
+                .mockRejectedValue(new Error('disconnect failed'));
+            authAdapter.setLocalSession(SESSION);
+            await expect(authAdapter.removeLocalSession()).resolves.toBeUndefined();
+            expect(disconnectSpy).toHaveBeenCalled();
+            expect(authAdapter.getLocalSession()).toBeUndefined();
+            disconnectSpy.mockRestore();
+        });
+
         testedMethods.add('removeLocalSession');
     });
 
@@ -194,6 +216,15 @@ describe('Authentication', () => {
         it('Should store the new session locally', async () => {
             await authAdapter.regenerate(groupKey);
             expect(authAdapter.getLocalSession()).toEqual(SESSION);
+        });
+
+        it('Should store the new session even when tearing down the previous session rejects', async () => {
+            const disconnectSpy = vi.spyOn(cometdAdapter, 'disconnect')
+                .mockRejectedValue(new Error('disconnect failed'));
+            await authAdapter.regenerate(groupKey);
+            expect(disconnectSpy).toHaveBeenCalled();
+            expect(authAdapter.getLocalSession()).toEqual(SESSION);
+            disconnectSpy.mockRestore();
         });
 
         testedMethods.add('regenerate');

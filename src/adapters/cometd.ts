@@ -20,6 +20,7 @@ const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const HANDSHAKE_META_CHANNEL = '/meta/handshake';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
+const CHANNELS_NOT_ENABLED = 'CHANNELS_NOT_ENABLED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
 type HandshakeState = 'idle' | 'handshaking' | 'succeeded' | 'failed';
@@ -85,7 +86,7 @@ class CometdAdapter {
 
     async startup(options: { logLevel: 'info' | 'debug' | 'warn' } = { logLevel: 'warn' }) {
         const project = await getProject();
-        if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project');
+        if (!project.channelEnabled) throw new EpicenterError('Push Channels are not enabled on this project', CHANNELS_NOT_ENABLED);
         const channelProtocol = project.channelProtocol?.toLowerCase() || DEFAULT_CHANNEL_PROTOCOL;
         const { CometD } = await import('cometd');
         const { AckExtension } = await import('cometd');
@@ -196,7 +197,11 @@ class CometdAdapter {
 
     async init(options?: { logLevel: 'info' | 'debug' | 'warn' }) {
         if (!this.initialization) {
-            this.initialization = this.startup(options);
+            // A rejected startup must not be cached, or every later init() call re-throws it
+            this.initialization = this.startup(options).catch((error) => {
+                this.initialization = undefined;
+                throw error;
+            });
         }
         return this.initialization;
     }
