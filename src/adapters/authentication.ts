@@ -112,7 +112,8 @@ export function setLocalSession(session: Session): Session {
  */
 export async function removeLocalSession(): Promise<void> {
     identification.session = undefined;
-    await cometdAdapter.disconnect();
+    // CometD disconnect is best-effort cleanup; its failure must not fail session removal
+    await cometdAdapter.disconnect().catch(() => undefined);
 }
 
 
