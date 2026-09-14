@@ -59,7 +59,7 @@ async function handleRateLimit<T>(
 /**
  * Gets the daily configuration for the epicenter account. Requires Support auth
  *
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/daily/v1`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
@@ -73,14 +73,14 @@ export async function getConfig(
     // TODO: investigate actual return type
 ): Promise<unknown> {
     return await new Router()
-        .get('/daily/v1', optionals)
+        .get('/studio/daily/v1', optionals)
         .then(({ body }) => body);
 }
 
 
 /**
  * Creates a new daily meeting room
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/room`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/daily/v1/room`
  *
  * @example
  * import { dailyAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
@@ -153,7 +153,7 @@ export async function createRoom(
     const callAPI = async (): Promise<DailyRoomResponseReadOutView> => {
         return await new Router()
             .post(
-                '/daily/v1/room',
+                '/studio/daily/v1/room',
                 {
                     body: {
                         epicenter: {
@@ -182,7 +182,7 @@ export async function createRoom(
 
 /**
  * Creates a token for a daily meeting room
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/meetingToken`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/daily/v1/meetingToken`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
@@ -228,7 +228,7 @@ export async function createToken(
         return await new Router()
             .withSearchParams({ selfSign })
             .post(
-                '/daily/v1/meetingToken',
+                '/studio/daily/v1/meetingToken',
                 {
                     body: {
                         properties: {
@@ -297,7 +297,7 @@ export async function getVideoByRecordingId(
 
 /**
  * Sets the daily family/room to a recording status of recorded; necessary to prevent videos from deleting automatically within 1 hour
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/daily/v1/meetingToken/{ROOM_NAME}`
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/daily/v1/meetingToken/{ROOM_NAME}`
  *
  * @example
  * import { dailyAdapter } from 'epicenter-libs';
@@ -312,6 +312,6 @@ export async function updateRecordingStatus(
     optionals: RoutingOptions = {},
 ): Promise<boolean> {
     return await new Router()
-        .delete(`/daily/v1/meetingToken/${room_name}`, optionals)
+        .delete(`/studio/daily/v1/meetingToken/${room_name}`, optionals)
         .then(({ body }) => body);
 }
