@@ -60,14 +60,14 @@ describe('vonageAdapter', () => {
         it('Should use the vonage/info URL', async () => {
             await vonageAdapter.getProjectID();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vonage/info`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/vonage/info`);
         });
 
         it('Should support generic URL options', async () => {
             await vonageAdapter.getProjectID(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/info`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/vonage/info`);
         });
 
         testedMethods.add('getProjectID');
@@ -89,14 +89,14 @@ describe('vonageAdapter', () => {
         it('Should use the vonage/session URL', async () => {
             await vonageAdapter.createSession();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vonage/session`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/vonage/session`);
         });
 
         it('Should support generic URL options', async () => {
             await vonageAdapter.createSession(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/session`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/vonage/session`);
         });
 
         testedMethods.add('createSession');
@@ -120,14 +120,14 @@ describe('vonageAdapter', () => {
         it('Should use the vonage/token URL', async () => {
             await vonageAdapter.generateToken(sessionID);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vonage/token`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/vonage/token`);
         });
 
         it('Should support generic URL options', async () => {
             await vonageAdapter.generateToken(sessionID, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/token`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/vonage/token`);
         });
 
         it('Should include sessionId in the request body', async () => {
@@ -170,14 +170,14 @@ describe('vonageAdapter', () => {
         it('Should use the vonage/archive URL', async () => {
             await vonageAdapter.startArchive(archiveName, sessionID, scope);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vonage/archive`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/vonage/archive`);
         });
 
         it('Should support generic URL options', async () => {
             await vonageAdapter.startArchive(archiveName, sessionID, scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/archive`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/vonage/archive`);
         });
 
         it('Should include name, sessionId, and scope in the request body', async () => {
@@ -254,14 +254,14 @@ describe('vonageAdapter', () => {
         it('Should use the vonage/archive URL with archiveID', async () => {
             await vonageAdapter.stopArchive(archiveID);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/vonage/archive/${archiveID}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/vonage/archive/${archiveID}`);
         });
 
         it('Should support generic URL options', async () => {
             await vonageAdapter.stopArchive(archiveID, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/vonage/archive/${archiveID}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/vonage/archive/${archiveID}`);
         });
 
         testedMethods.add('stopArchive');

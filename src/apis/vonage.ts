@@ -27,7 +27,7 @@ export interface VonageArchive {
 
 /**
  * Retrieves a Vonage session ID
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/session`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/session`
  *
  * @example
  * import { vonageAPI } from 'epicenter-libs';
@@ -41,14 +41,14 @@ export async function getSession(
     optionals: RoutingOptions = {},
 ): Promise<{ sessionId: SessionID }> {
     return await new Router()
-        .get('/vonage/session', optionals)
+        .get('/studio/vonage/session', optionals)
         .then(({ body }) => body);
 }
 
 
 /**
  * Creates a token for a Vonage session
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/token`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/token`
  *
  * @example
  * import { vonageAPI } from 'epicenter-libs';
@@ -68,14 +68,14 @@ export async function postToken(
         // The initialLayoutClassList is a temporary fix for existing simulations;
         // This should likely be implemented differently if we decide to continue using Vonage;
         // We are currently investigating alternatives due to performance issues, so this solution just prevents API errors;
-        .post('/vonage/token', { body: { ...body, initialLayoutClassList: ['placeholder'] }, ...optionals })
+        .post('/studio/vonage/token', { body: { ...body, initialLayoutClassList: ['placeholder'] }, ...optionals })
         .then(({ body }) => body);
 }
 
 
 /**
  * Creates an archive for a Vonage session
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/archive`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/archive`
  *
  * @example
  * import { vonageAPI } from 'epicenter-libs';
@@ -110,14 +110,14 @@ export async function postArchive(
     optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {
     return await new Router()
-        .post('/vonage/archive', { body, ...optionals })
+        .post('/studio/vonage/archive', { body, ...optionals })
         .then(({ body }) => body);
 }
 
 
 /**
  * Retrieves Vonage API key information
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/info`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/info`
  *
  * @example
  * import { vonageAPI } from 'epicenter-libs';
@@ -131,14 +131,14 @@ export async function getInfo(
     optionals: RoutingOptions = {},
 ): Promise<{ apiKey: APIKey }> {
     return await new Router()
-        .get('/vonage/info', optionals)
+        .get('/studio/vonage/info', optionals)
         .then(({ body }) => body);
 }
 
 
 /**
  * Deletes a Vonage archive by its ID
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/archive/{ARCHIVE_ID}`
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/archive/{ARCHIVE_ID}`
  *
  * @example
  * import { vonageAPI } from 'epicenter-libs';
@@ -153,6 +153,6 @@ export async function deleteArchiveByID(
     optionals: RoutingOptions = {},
 ): Promise<VonageArchive> {
     return await new Router()
-        .delete(`/vonage/archive/${archiveID}`, optionals)
+        .delete(`/studio/vonage/archive/${archiveID}`, optionals)
         .then(({ body }) => body);
 }

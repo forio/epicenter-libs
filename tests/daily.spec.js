@@ -60,14 +60,14 @@ describe('dailyAdapter', () => {
         it('Should use the daily/v1 URL', async () => {
             await dailyAdapter.getConfig();
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/daily/v1`);
         });
 
         it('Should support generic URL options', async () => {
             await dailyAdapter.getConfig(GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/daily/v1`);
         });
 
         testedMethods.add('getConfig');
@@ -94,14 +94,14 @@ describe('dailyAdapter', () => {
         it('Should use the daily/v1/room URL', async () => {
             await dailyAdapter.createRoom(scope);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/room`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/daily/v1/room`);
         });
 
         it('Should support generic URL options', async () => {
             await dailyAdapter.createRoom(scope, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/room`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/daily/v1/room`);
         });
 
         it('Should pass scope and permit to the request body', async () => {
@@ -173,14 +173,14 @@ describe('dailyAdapter', () => {
         it('Should use the daily/v1/meetingToken URL', async () => {
             await dailyAdapter.createToken(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/meetingToken`);
+            expect(req.url).toContain(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/daily/v1/meetingToken`);
         });
 
         it('Should support generic URL options', async () => {
             await dailyAdapter.createToken(roomName, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/meetingToken`);
+            expect(req.url).toContain(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/daily/v1/meetingToken`);
         });
 
         it('Should pass room_name to the request body', async () => {
@@ -246,14 +246,14 @@ describe('dailyAdapter', () => {
         it('Should use the daily/v1/meetingToken URL with room name', async () => {
             await dailyAdapter.updateRecordingStatus(roomName);
             const req = capturedRequests[capturedRequests.length - 1];
-            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/daily/v1/meetingToken/${roomName}`);
+            expect(req.url).toBe(`https://${config.apiHost}/api/v${config.apiVersion}/${config.accountShortName}/${config.projectShortName}/studio/daily/v1/meetingToken/${roomName}`);
         });
 
         it('Should support generic URL options', async () => {
             await dailyAdapter.updateRecordingStatus(roomName, GENERIC_OPTIONS);
             const req = capturedRequests[capturedRequests.length - 1];
             const { server, accountShortName, projectShortName } = GENERIC_OPTIONS;
-            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/daily/v1/meetingToken/${roomName}`);
+            expect(req.url).toBe(`${server}/api/v${config.apiVersion}/${accountShortName}/${projectShortName}/studio/daily/v1/meetingToken/${roomName}`);
         });
 
         testedMethods.add('updateRecordingStatus');
