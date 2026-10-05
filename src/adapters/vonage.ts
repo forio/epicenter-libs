@@ -8,7 +8,7 @@ import * as vonageAPI from '../apis/vonage';
 
 /**
  * Gets the Vonage project ID (not to be confused with the Epicenter project). Used to initialize the session object on the client side
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/info`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/info`
  *
  * @example
  * import OT from '@opentok/client';
@@ -31,7 +31,7 @@ export async function getProjectID(
 
 /**
  * Calls the server SDK call for creating a session. Used to create a session object on the client side.
- * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/session`
+ * Base URL: GET `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/session`
  *
  * @example
  * import OT from '@opentok/client';
@@ -54,7 +54,7 @@ export async function createSession(
 
 /**
  * Creates a Vonage session token, used to connect a session.
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/token`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/token`
  *
  * @example
  * import { vonageAdapter } from 'epicenter-libs';
@@ -75,7 +75,7 @@ export async function generateToken(
 
 /**
  * Starts a Vonage archive -- a user recording of a Vonage session
- * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/archive`
+ * Base URL: POST `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/archive`
  *
  * @example
  * import { authAdapter, vonageAdapter, SCOPE_BOUNDARY } from 'epicenter-libs';
@@ -129,7 +129,7 @@ export async function startArchive(
 
 /**
  * Stops a Vonage archive -- begins the serialization process for a recording
- * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/vonage/archive/{ARCHIVE_ID}`
+ * Base URL: DELETE `https://forio.com/api/v3/{ACCOUNT}/{PROJECT}/studio/vonage/archive/{ARCHIVE_ID}`
  *
  * @example
  * import { vonageAdapter } from 'epicenter-libs';
