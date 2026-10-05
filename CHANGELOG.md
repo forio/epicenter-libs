@@ -1,3 +1,12 @@
+## [3.35.2](https://github.com/forio/epicenter-libs/compare/v3.35.1...v3.35.2) (2026-10-05)
+
+
+### Bug Fixes
+
+* update vonage and daily API endpoints ([a40f3e7](https://github.com/forio/epicenter-libs/commit/a40f3e71a86d92427cf862e2506acb09945de7dc))
+
+
+
 ## [3.35.1](https://github.com/forio/epicenter-libs/compare/v3.34.2...v3.35.1) (2026-09-24)
 
 
