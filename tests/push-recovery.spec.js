@@ -49,6 +49,25 @@ class FakeBayeux {
     wire = [];
     serial = 0;
     heldHandshakes = undefined;
+    heldSubscribes = undefined;
+    unknownShape = 'cometd';
+
+    unknownSession(message) {
+        const reply = { id: message.id, channel: message.channel, successful: false };
+        if (this.unknownShape === 'oumuamua') {
+            return { ...reply, clientId: message.clientId, error: 'Invalid client id', advice: { reconnect: 'handshake', interval: 0 } };
+        }
+        if (message.subscription) reply.subscription = message.subscription;
+        return { ...reply, error: '402::session_unknown', advice: { reconnect: 'handshake', interval: 0 } };
+    }
+
+    answer(socket, reply) {
+        if (reply.channel === '/meta/subscribe' && this.heldSubscribes) {
+            this.heldSubscribes.push({ socket, reply });
+            return;
+        }
+        socket.deliver([reply]);
+    }
 
     receive(socket, messages) {
         for (const message of messages) {
@@ -70,10 +89,7 @@ class FakeBayeux {
             }
             const session = this.sessions.get(message.clientId);
             if (!session) {
-                socket.deliver([{
-                    ...reply, successful: false, error: '402::session_unknown',
-                    advice: { reconnect: 'handshake', interval: 0 },
-                }]);
+                this.answer(socket, this.unknownSession(message));
                 continue;
             }
             session.socket = socket;
@@ -86,7 +102,7 @@ class FakeBayeux {
                 }
             } else if (message.channel === '/meta/subscribe') {
                 session.subscriptions.add(message.subscription);
-                socket.deliver([{ ...reply, successful: true, subscription: message.subscription }]);
+                this.answer(socket, { ...reply, successful: true, subscription: message.subscription });
             } else if (message.channel === '/meta/unsubscribe') {
                 session.subscriptions.delete(message.subscription);
                 socket.deliver([{ ...reply, successful: true, subscription: message.subscription }]);
@@ -109,6 +125,16 @@ class FakeBayeux {
         held.forEach(({ socket, message }) => this.receive(socket, [message]));
     }
 
+    holdSubscribes() {
+        this.heldSubscribes = [];
+    }
+
+    releaseSubscribes() {
+        const held = this.heldSubscribes;
+        this.heldSubscribes = undefined;
+        held.forEach(({ socket, reply }) => socket.deliver([reply]));
+    }
+
     publish(channel, data) {
         let delivered = 0;
         for (const session of this.sessions.values()) {
@@ -120,14 +146,18 @@ class FakeBayeux {
         return delivered;
     }
 
-    expire(clientId) {
+    forget(clientId) {
         const session = this.sessions.get(clientId);
         this.sessions.delete(clientId);
         const held = session.heldConnect;
-        held.socket.deliver([{
+        return () => held.socket.deliver([{
             ...held.reply, successful: false, error: '402::session_unknown',
             advice: { reconnect: 'handshake', interval: 0 },
         }]);
+    }
+
+    expire(clientId) {
+        this.forget(clientId)();
     }
 
     dropSocket(clientId) {
@@ -276,6 +306,74 @@ describe('Push recovery against a Bayeux server', () => {
             expect(server.publish(replacement.path, { sequence: 3 })).toBe(1);
             await until(() => received.length === 2, 'delivery after obsolete unsubscribe');
             expect(received).toEqual([{ sequence: 2 }, { sequence: 3 }]);
+        });
+
+        it('EPILIBS-241: Channel instances subscribing to one path concurrently keep their own handles', async () => {
+            await subscribed(new Channel({ scopeBoundary: 'WORLD', scopeKey: 'warm', pushCategory: 'RUN' }), []);
+            const scope = { scopeBoundary: 'WORLD', scopeKey: 'w1', pushCategory: 'RUN' };
+            const first = new Channel(scope);
+            const second = new Channel(scope);
+            const firstReceived = [];
+            const secondReceived = [];
+
+            server.holdSubscribes();
+            const pending = Promise.all([
+                first.subscribe((data) => firstReceived.push(data)),
+                second.subscribe((data) => secondReceived.push(data)),
+            ]);
+            await until(() => server.heldSubscribes.length === 1, 'subscribe on the wire');
+            await tick();
+            server.releaseSubscribes();
+            await pending;
+
+            expect(first.subscription).not.toBe(second.subscription);
+            expect(cometdAdapter.subscriptions.get(first.path)).toBe(second.subscription);
+
+            await first.unsubscribe();
+
+            expect(server.subscriptionsOf(clientId())).toContain(first.path);
+            expect(server.publish(first.path, { sequence: 1 })).toBe(1);
+            await until(() => secondReceived.length === 1, 'delivery to the surviving instance');
+            await new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
+            expect(firstReceived).toEqual([]);
+            expect(secondReceived).toEqual([{ sequence: 1 }]);
+        });
+
+        it.each([
+            { shape: 'cometd', label: 'names its channel' },
+            { shape: 'oumuamua', label: 'names no channel' },
+        ])('EPILIBS-241: A subscribe the forgotten session answers after restoration delivers once and unsubscribes when the reply $label', async ({ shape }) => {
+            server.unknownShape = shape;
+            const channel = new Channel({ scopeBoundary: 'WORLD', scopeKey: 'w1', pushCategory: 'RUN' });
+            await subscribed(channel, []);
+            const prior = clientId();
+            const failConnect = server.forget(prior);
+            server.holdSubscribes();
+            const late = new Channel({ scopeBoundary: 'WORLD', scopeKey: 'w2', pushCategory: 'RUN' });
+            const lateReceived = [];
+            const pending = late.subscribe((data) => lateReceived.push(data));
+            await until(() => server.heldSubscribes.length === 1, 'late subscribe answered by the forgotten session');
+
+            failConnect();
+            await until(connectedAs(prior), 'new session');
+            await until(() => server.heldSubscribes.length === cometdAdapter.subscriptions.size + 1, 'restoration subscribes');
+            const stale = server.heldSubscribes.shift();
+            server.releaseSubscribes();
+            await tick();
+            stale.socket.deliver([stale.reply]);
+            await pending;
+            await until(() => server.sessions.get(clientId())?.heldConnect, 'steady state');
+
+            expect(late.subscription).toBe(cometdAdapter.subscriptions.get(late.path));
+            expect(server.publish(late.path, { sequence: 1 })).toBe(1);
+            await until(() => lateReceived.length === 1, 'late delivery');
+
+            await late.unsubscribe();
+
+            expect(server.subscriptionsOf(clientId())).toEqual([channel.path]);
+            server.publish(late.path, { sequence: 2 });
+            await tick();
+            expect(lateReceived).toEqual([{ sequence: 1 }]);
         });
 
         it('EPILIBS-241: An application that resubscribes on a new clientId itself still receives each message exactly once', async () => {

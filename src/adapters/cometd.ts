@@ -410,12 +410,19 @@ class CometdAdapter {
                     handleCometdUpdate,
                     subscriptionProps,
                     (subscribeReply: Message) => {
-                        const current = this.subscriptions.get(channel.path) ?? subscription;
+                        const entry = this.subscriptions.get(channel.path) as Subscription | undefined;
+                        const restored = entry?.callback === handleCometdUpdate;
+                        const current = restored ? entry as SubscriptionHandle : subscription;
                         if (subscribeReply.successful) {
                             resolve(current);
                             return;
                         }
 
+                        const erased = String(subscribeReply.subscription) === channel.path;
+                        if (current !== subscription && !erased && shouldRehandshake(subscribeReply)) {
+                            resolve(current);
+                            return;
+                        }
                         if (current === subscription) this.subscriptions.delete(channel.path);
                         if (shouldRehandshake(subscribeReply)) {
                             this.handshakeState = IDLE;
