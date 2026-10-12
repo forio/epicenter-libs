@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { cometdAdapter, errorManager } from './common';
+import { cometdAdapter, authAdapter, errorManager, SESSION, UNAUTHORIZED_CODE } from './common';
 
 const { Channel } = globalThis.epicenter;
 const OPEN = 1;
@@ -8,6 +8,8 @@ const ABNORMAL_CLOSURE = 1006;
 const WAIT_MS = 2000;
 const POLL_MS = 5;
 const SETTLE_MS = 20;
+const SERVER_ERROR = 500;
+const TOKEN_KEY = 'com.forio.epicenter.token';
 
 const tick = () => new Promise((resolve) => setTimeout(resolve, 0));
 const until = async (predicate, label, ms = WAIT_MS) => {
@@ -175,6 +177,10 @@ class FakeBayeux {
 
     subscribesFor(path) {
         return this.wire.filter((m) => m.channel === '/meta/subscribe' && m.subscription === path).length;
+    }
+
+    handshakeTokens() {
+        return this.wire.filter((m) => m.channel === '/meta/handshake').map((m) => m.ext?.[TOKEN_KEY]);
     }
 }
 
@@ -526,6 +532,121 @@ describe('Push recovery against a Bayeux server', () => {
             await until(() => received.length >= 2, 'delivery');
             await new Promise((resolve) => setTimeout(resolve, SETTLE_MS));
             expect(received).toEqual([{ sequence: 1 }, { sequence: 2 }]);
+        });
+    });
+
+    describe('EPILIBS-252', () => {
+        it('EPILIBS-252: Disconnect does not wait for a pending project request or create a connection', async () => {
+            let releaseProject;
+            let settled = false;
+            globalThis.mockFetch.mockImplementation(() => new Promise((resolve) => {
+                releaseProject = resolve;
+            }));
+            const startup = cometdAdapter.init().then(() => {
+                settled = true;
+            });
+            await until(() => releaseProject, 'project request');
+
+            try {
+                await Promise.race([cometdAdapter.disconnect(), until(() => false, 'disconnect', 1000)]);
+                expect(settled).toBe(false);
+                expect(server.wire).toEqual([]);
+            } finally {
+                releaseProject(projectResponse());
+                await startup;
+            }
+            expect(server.wire).toEqual([]);
+        });
+
+        it('EPILIBS-252: Disconnect clears established subscriptions and closes the server session', async () => {
+            const channel = new Channel(scope);
+            const received = [];
+            await subscribed(channel, received);
+            const prior = clientId();
+
+            await cometdAdapter.disconnect();
+
+            expect(server.sessions.has(prior)).toBe(false);
+            expect(cometdAdapter.subscriptions.size).toBe(0);
+            expect(cometdAdapter.cometd.getStatus()).toBe('disconnected');
+            cometdAdapter.cometd.receive({ channel: channel.path, data: { sequence: 2 } });
+            await tick();
+            expect(received).toEqual([{ sequence: 1 }]);
+        });
+
+        it('EPILIBS-252: Ordinary same-page regeneration installs the new token before an explicit handshake', async () => {
+            authAdapter.setLocalSession({ ...SESSION, token: 'token-one' });
+            await subscribed(new Channel(scope), []);
+            globalThis.mockFetch.mockImplementation((url, options = {}) => {
+                if (String(url).endsWith('/authentication') && options.method === 'PATCH') {
+                    return Promise.resolve(new Response(JSON.stringify({ ...SESSION, token: 'token-two' }), {
+                        status: 200, headers: { 'Content-Type': 'application/json' },
+                    }));
+                }
+                return Promise.resolve(projectResponse());
+            });
+            await authAdapter.regenerate(SESSION.groupKey, { inert: true });
+            await cometdAdapter.handshake({ inert: true });
+
+            expect(server.handshakeTokens()).toEqual(['token-one', 'token-two']);
+        });
+
+        it('EPILIBS-252: Startup survives session renewal triggered by its own project request', async () => {
+            authAdapter.setLocalSession({ ...SESSION, token: 'token-one' });
+            globalThis.mockFetch.mockImplementation((url, options = {}) => {
+                const authorization = options.headers?.authorization ?? options.headers?.Authorization;
+                if (String(url).endsWith('/authentication') && options.method === 'PATCH') {
+                    return Promise.resolve(new Response(JSON.stringify({ ...SESSION, token: 'token-two' }), {
+                        status: 200, headers: { 'Content-Type': 'application/json' },
+                    }));
+                }
+                if (String(url).endsWith('/project') && authorization === 'Bearer token-one') {
+                    return Promise.resolve(new Response(JSON.stringify({
+                        status: 401, message: 'Session invalidated', information: { code: 'AUTHENTICATION_INVALIDATED' },
+                    }), { status: 401, headers: { 'Content-Type': 'application/json' } }));
+                }
+                return Promise.resolve(projectResponse());
+            });
+
+            let outcome = 'pending';
+            cometdAdapter.init().then(
+                () => {
+                    outcome = 'resolved';
+                },
+                (error) => {
+                    outcome = `rejected: ${error}`;
+                },
+            );
+            await until(() => outcome !== 'pending', 'startup to settle', 1000).catch(() => undefined);
+
+            expect(outcome).toBe('resolved');
+            expect(authAdapter.getLocalSession()?.token).toBe('token-two');
+            const received = [];
+            await subscribed(new Channel(scope), received);
+            expect(server.handshakeTokens()).toEqual(['token-two']);
+            expect(received).toEqual([{ sequence: 1 }]);
+        });
+
+        it('EPILIBS-252: Startup rejects a failed authentication renewal and permits a later retry', async () => {
+            authAdapter.setLocalSession({ ...SESSION, token: 'token-one' });
+            globalThis.mockFetch.mockImplementation((url) => {
+                const status = String(url).endsWith('/authentication') ? SERVER_ERROR : UNAUTHORIZED_CODE;
+                return Promise.resolve(new Response(JSON.stringify({
+                    status,
+                    message: 'Rejected',
+                    information: { code: 'AUTHENTICATION_INVALIDATED' },
+                }), { status, headers: { 'Content-Type': 'application/json' } }));
+            });
+            await expect(Promise.race([
+                cometdAdapter.init(), until(() => false, 'startup rejection', 1000),
+            ])).rejects.toMatchObject({ status: 401, code: 'AUTHENTICATION_INVALIDATED' });
+            expect(cometdAdapter.initialization).toBeUndefined();
+            expect(authAdapter.getLocalSession()).toBeFalsy();
+
+            globalThis.mockFetch.mockImplementation(() => Promise.resolve(projectResponse()));
+            authAdapter.setLocalSession({ ...SESSION, token: 'token-two' });
+            await subscribed(new Channel(scope), []);
+            expect(server.handshakeTokens()).toEqual(['token-two']);
         });
     });
 });
