@@ -1,4 +1,5 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
+import { CometD } from 'cometd';
 import { cometdAdapter, authAdapter, errorManager, SESSION, UNAUTHORIZED_CODE } from './common';
 
 const { Channel } = globalThis.epicenter;
@@ -647,6 +648,73 @@ describe('Push recovery against a Bayeux server', () => {
             authAdapter.setLocalSession({ ...SESSION, token: 'token-two' });
             await subscribed(new Channel(scope), []);
             expect(server.handshakeTokens()).toEqual(['token-two']);
+        });
+    });
+
+    describe('EPILIBS-254', () => {
+        it('EPILIBS-254: Reports each reconnection exactly once, however many sessions have been replaced', async () => {
+            const reconnects = [];
+            on('COMETD_RECONNECTED', () => reconnects.push(clientId()));
+            const channel = new Channel(scope);
+            const received = [];
+            await subscribed(channel, received);
+            const replacements = 3;
+
+            for (let i = 0; i < replacements; i++) {
+                await replaced();
+            }
+            await tick();
+
+            expect(reconnects).toHaveLength(1 + replacements);
+            expect(new Set(reconnects).size).toBe(1 + replacements);
+            server.publish(channel.path, { sequence: 2 });
+            await until(() => received.length === 2, 'delivery after repeated replacement');
+            await tick();
+            expect(received).toEqual([{ sequence: 1 }, { sequence: 2 }]);
+        });
+
+        it('EPILIBS-254: Meta listener counts and per-message invocations remain constant across session replacements', async () => {
+            const metaChannels = ['/meta/handshake', '/meta/connect', '/meta/disconnect'];
+            const invocations = new Map();
+            const registrations = new Map(metaChannels.map((channel) => [channel, 0]));
+
+            let registeringAdapter = false;
+            const originalListen = cometdAdapter.listenToMetaChannels;
+            const listen = vi.spyOn(cometdAdapter, 'listenToMetaChannels').mockImplementation(function (...args) {
+                registeringAdapter = true;
+                try {
+                    return originalListen.apply(this, args);
+                } finally {
+                    registeringAdapter = false;
+                }
+            });
+            const original = CometD.prototype.addListener;
+            const register = vi.spyOn(CometD.prototype, 'addListener').mockImplementation(function (...args) {
+                const [channel, callback] = args;
+                if (registeringAdapter && metaChannels.includes(channel)) {
+                    registrations.set(channel, registrations.get(channel) + 1);
+                    args[1] = (message) => {
+                        invocations.set(message, (invocations.get(message) ?? 0) + 1);
+                        return callback(message);
+                    };
+                }
+                return original.apply(this, args);
+            });
+            const counts = () => metaChannels.map((channel) => registrations.get(channel));
+            try {
+                await subscribed(new Channel(scope), []);
+                expect(counts()).toEqual([1, 1, 1]);
+                const replacements = 3;
+                for (let i = 0; i < replacements; i++) {
+                    await replaced();
+                    expect(counts()).toEqual([1, 1, 1]);
+                }
+                await cometdAdapter.disconnect();
+                expect([...invocations.values()].every((count) => count === 1)).toBe(true);
+            } finally {
+                register.mockRestore();
+                listen.mockRestore();
+            }
         });
     });
 });
