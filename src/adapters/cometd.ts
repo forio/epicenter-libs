@@ -20,10 +20,13 @@ const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const HANDSHAKE_META_CHANNEL = '/meta/handshake';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
+const COMETD_RESUBSCRIBED = 'COMETD_RESUBSCRIBED';
 const CHANNELS_NOT_ENABLED = 'CHANNELS_NOT_ENABLED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
 type HandshakeState = 'idle' | 'handshaking' | 'succeeded' | 'failed';
+
+type Subscription = SubscriptionHandle & { channel: string; callback: (message: Message) => unknown };
 
 // error messages that indicate session invalidation as
 // described in cometd documentation and oumuamua source code:
@@ -100,6 +103,7 @@ class CometdAdapter {
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/${channelProtocol}`;
 
         this.cometd.registerExtension('ack', new AckExtension());
+
         if (isBrowser()) {
             this.cometd.registerExtension('reload', new ReloadExtension());
 
@@ -172,6 +176,40 @@ class CometdAdapter {
         });
 
         return Promise.all([connectListener, disconnectListener]);
+    }
+
+    private restoreSubscriptions(clientId?: string) {
+        if (this.subscriptions.size === 0) return;
+
+        const { session } = identification;
+        const subscriptionProps = !session ?
+            {} :
+            { ext: { [AUTH_TOKEN_KEY]: session.token } };
+
+        const replies = [...this.subscriptions].map(([path, handle]) => {
+            const { callback } = handle as Subscription;
+
+            this.cometd.removeListener(handle);
+            return new Promise<[string, boolean]>((resolve) => {
+                this.subscriptions.set(path, this.cometd.subscribe(path, callback, subscriptionProps, (reply: Message) => {
+                    resolve([path, reply.successful || false]);
+                }));
+            });
+        });
+
+        Promise.all(replies).then((results) => {
+            const error = new Fault({
+                status: undefined,
+                message: 'Resubscribed to CometD channels on a new session',
+                information: {
+                    code: COMETD_RESUBSCRIBED,
+                    clientId,
+                    channels: results.filter(([, successful]) => successful).map(([path]) => path),
+                    failed: results.filter(([, successful]) => !successful).map(([path]) => path),
+                },
+            });
+            return errorManager.handle(error, () => Promise.resolve());
+        }).catch(() => undefined);
     }
 
     private handleHandshakeFailure(message: Message) {
@@ -254,6 +292,7 @@ class CometdAdapter {
             this.cometd.handshake(handshakeProps, (handshakeReply) => {
                 if (handshakeReply.successful) {
                     this.handshakeState = SUCCEEDED;
+                    this.restoreSubscriptions(handshakeReply.clientId);
                     this.listenToMetaChannels();
                     resolve(undefined);
                     return;
@@ -371,12 +410,13 @@ class CometdAdapter {
                     handleCometdUpdate,
                     subscriptionProps,
                     (subscribeReply: Message) => {
+                        const current = this.subscriptions.get(channel.path) ?? subscription;
                         if (subscribeReply.successful) {
-                            this.subscriptions.set(channel.path, subscription);
-                            resolve(subscription);
+                            resolve(current);
                             return;
                         }
 
+                        if (current === subscription) this.subscriptions.delete(channel.path);
                         if (shouldRehandshake(subscribeReply)) {
                             this.handshakeState = IDLE;
                             this.handshakePromise = undefined;
@@ -411,6 +451,8 @@ class CometdAdapter {
                         }
                     },
                 );
+
+                this.subscriptions.set(channel.path, subscription);
             } catch (error: unknown) {
                 const retryCount = options._retryCount ?? 0;
                 if (isIllegalStateError(error) && retryCount < MAX_RETRIES) {
@@ -524,6 +566,10 @@ class CometdAdapter {
             }
         }
 
+        const { channel, callback } = subscription as Subscription;
+        if (!channelPath && (this.subscriptions.get(channel) as Subscription | undefined)?.callback === callback) channelPath = channel;
+        const current = channelPath ? this.subscriptions.get(channelPath) as SubscriptionHandle : subscription;
+
         if (channelPath) {
             this.subscriptions.delete(channelPath);
             if (this.cometd.getStatus() === DISCONNECTED) return Promise.resolve();
@@ -531,7 +577,7 @@ class CometdAdapter {
 
         return new Promise((resolve, reject) => {
             try {
-                this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
+                this.cometd.unsubscribe(current, (unsubscribeReply: Message) => {
                     if (unsubscribeReply.successful) {
                         resolve(unsubscribeReply);
                         return;
