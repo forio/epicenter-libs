@@ -22,6 +22,15 @@ DEFAULT_ERROR_HANDLERS.cometdReconnected = errorManager.registerHandler(
     },
 );
 
+DEFAULT_ERROR_HANDLERS.cometdResubscribed = errorManager.registerHandler(
+    (error) => error.code === 'COMETD_RESUBSCRIBED',
+    async (error: Fault) => {
+        if (isBrowser()) {
+            console.warn('Cometd session was replaced; error.information lists the channels whose subscriptions were restored and those that failed. Messages published in between were not delivered; to refetch state, register an error handler with identifier: error.code === "COMETD_RESUBSCRIBED".', error);
+        }
+    },
+);
+
 DEFAULT_ERROR_HANDLERS.cometdError = errorManager.registerHandler(
     (error) => error.status === FORBIDDEN && error.code === 'COMETD_ERROR',
     async<T>(error: Fault, retry: RetryFunction<T>) => {
