@@ -20,10 +20,13 @@ const CONNECT_META_CHANNEL = '/meta/connect';
 const DISCONNECT_META_CHANNEL = '/meta/disconnect';
 const HANDSHAKE_META_CHANNEL = '/meta/handshake';
 const COMETD_RECONNECTED = 'COMETD_RECONNECTED';
+const COMETD_RESUBSCRIBED = 'COMETD_RESUBSCRIBED';
 const CHANNELS_NOT_ENABLED = 'CHANNELS_NOT_ENABLED';
 const DEFAULT_CHANNEL_PROTOCOL = 'cometd';
 
 type HandshakeState = 'idle' | 'handshaking' | 'succeeded' | 'failed';
+
+type Subscription = SubscriptionHandle & { channel: string; callback: (message: Message) => unknown };
 
 // error messages that indicate session invalidation as
 // described in cometd documentation and oumuamua source code:
@@ -68,6 +71,8 @@ class CometdAdapter {
     initialization: Promise<boolean> | undefined = undefined;
     handshakePromise: Promise<void> | undefined = undefined;
     subscriptions = new Map<string, SubscriptionHandle>();
+    lost = new Map<string, (reply: Message) => void>();
+    generation = 0;
     isConnected = false;
     handshakeState: HandshakeState = IDLE;
     pendingOperations: Array<() => Promise<unknown>> = [];
@@ -137,6 +142,7 @@ class CometdAdapter {
                 }
                 const wasConnected = this.isConnected;
                 this.isConnected = message.successful || false;
+                if (this.isConnected) this.reissueLost();
 
                 if (!wasConnected && this.isConnected) {
                     const error = new Fault({
@@ -172,6 +178,74 @@ class CometdAdapter {
         });
 
         return Promise.all([connectListener, disconnectListener]);
+    }
+
+    private restore(path: string, callback: Subscription['callback'], acknowledge: (reply: Message) => void) {
+        const { session } = identification;
+        const subscriptionProps = !session ?
+            {} :
+            { ext: { [AUTH_TOKEN_KEY]: session.token } };
+
+        const restored = this.cometd.subscribe(path, callback, subscriptionProps, (reply: Message) => {
+            const current = this.subscriptions.get(path);
+            if ('failure' in reply && current === restored) {
+                this.lost.set(path, acknowledge);
+                return;
+            }
+            if (!reply.successful && current && current !== restored && String(reply.subscription) === path && !this.lost.has(path)) {
+                this.lost.set(path, () => undefined);
+            }
+            acknowledge(reply);
+        });
+        this.subscriptions.set(path, restored);
+    }
+
+    private reissueLost() {
+        const lost = [...this.lost];
+        this.lost.clear();
+        lost.forEach(([path, acknowledge]) => {
+            const current = this.subscriptions.get(path) as Subscription | undefined;
+            if (!current) return;
+            this.cometd.removeListener(current);
+            this.restore(path, current.callback, acknowledge);
+        });
+    }
+
+    private clear() {
+        this.cometd.clearSubscriptions();
+        this.subscriptions.clear();
+        this.lost.clear();
+        this.generation++;
+    }
+
+    private restoreSubscriptions(clientId?: string) {
+        const generation = ++this.generation;
+        this.lost.clear();
+        if (this.subscriptions.size === 0) return;
+
+        const replies = [...this.subscriptions].map(([path, handle]) => {
+            const { callback } = handle as Subscription;
+
+            this.cometd.removeListener(handle);
+            return new Promise<[string, boolean]>((resolve) => {
+                this.restore(path, callback, (reply) => resolve([path, reply.successful || false]));
+            });
+        });
+
+        Promise.all(replies).then((results) => {
+            if (generation !== this.generation || clientId !== this.cometd.getClientId() || this.cometd.getStatus() === HANDSHAKING) return undefined;
+            const error = new Fault({
+                status: undefined,
+                message: 'Resubscribed to CometD channels on a new session',
+                information: {
+                    code: COMETD_RESUBSCRIBED,
+                    clientId,
+                    channels: results.filter(([, successful]) => successful).map(([path]) => path),
+                    failed: results.filter(([, successful]) => !successful).map(([path]) => path),
+                },
+            });
+            return errorManager.handle(error, () => Promise.resolve());
+        }).catch(() => undefined);
     }
 
     private handleHandshakeFailure(message: Message) {
@@ -254,6 +328,7 @@ class CometdAdapter {
             this.cometd.handshake(handshakeProps, (handshakeReply) => {
                 if (handshakeReply.successful) {
                     this.handshakeState = SUCCEEDED;
+                    this.restoreSubscriptions(handshakeReply.clientId);
                     this.listenToMetaChannels();
                     resolve(undefined);
                     return;
@@ -295,13 +370,13 @@ class CometdAdapter {
     }
 
     async disconnect() {
-        if (!this.initialization) return Promise.resolve();
+        const cometd = cometdInstance;
+        if (!cometd) return Promise.resolve();
 
-        await this.init();
-        await this.empty();
-        if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
+        this.clear();
+        if (cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
-        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: Message) => {
+        return new Promise((resolve, reject) => cometd.disconnect((disconnectReply: Message) => {
             if (disconnectReply.successful) {
                 resolve(undefined);
                 return;
@@ -524,14 +599,19 @@ class CometdAdapter {
             }
         }
 
+        const { channel, callback } = subscription as Subscription;
+        if (!channelPath && (this.subscriptions.get(channel) as Subscription | undefined)?.callback === callback) channelPath = channel;
+        const current = channelPath ? this.subscriptions.get(channelPath) as SubscriptionHandle : subscription;
+
         if (channelPath) {
             this.subscriptions.delete(channelPath);
+            this.lost.delete(channelPath);
             if (this.cometd.getStatus() === DISCONNECTED) return Promise.resolve();
         }
 
         return new Promise((resolve, reject) => {
             try {
-                this.cometd.unsubscribe(subscription, (unsubscribeReply: Message) => {
+                this.cometd.unsubscribe(current, (unsubscribeReply: Message) => {
                     if (unsubscribeReply.successful) {
                         resolve(unsubscribeReply);
                         return;
@@ -566,8 +646,7 @@ class CometdAdapter {
 
     async empty() {
         await this.init();
-        this.cometd.clearSubscriptions();
-        this.subscriptions.clear();
+        this.clear();
     }
 }
 
