@@ -370,13 +370,13 @@ class CometdAdapter {
     }
 
     async disconnect() {
-        if (!this.initialization) return Promise.resolve();
+        const cometd = cometdInstance;
+        if (!cometd) return Promise.resolve();
 
-        await this.init();
-        await this.empty();
-        if (this.cometd.getStatus() !== CONNECTED) return Promise.resolve();
+        this.clear();
+        if (cometd.getStatus() !== CONNECTED) return Promise.resolve();
 
-        return new Promise((resolve, reject) => this.cometd.disconnect((disconnectReply: Message) => {
+        return new Promise((resolve, reject) => cometd.disconnect((disconnectReply: Message) => {
             if (disconnectReply.successful) {
                 resolve(undefined);
                 return;
