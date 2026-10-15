@@ -1,3 +1,14 @@
+## [3.35.3](https://github.com/forio/epicenter-libs/compare/v3.35.2...v3.35.3) (2026-10-15)
+
+
+### Bug Fixes
+
+* avoid waiting for push startup during teardown (EPILIBS-252) ([d5f5385](https://github.com/forio/epicenter-libs/commit/d5f53858d8f1d7af461a087c2a966c4fc276228a))
+* register CometD meta listeners once (EPILIBS-254) ([8fafb3e](https://github.com/forio/epicenter-libs/commit/8fafb3e52fbf8415084301138413ba7587e9ec96))
+* restore push subscriptions after re-handshake (EPILIBS-241) ([cf1b664](https://github.com/forio/epicenter-libs/commit/cf1b664dfb56d1504f2ee86428b8045c59bedc96))
+
+
+
 ## [3.35.2](https://github.com/forio/epicenter-libs/compare/v3.35.1...v3.35.2) (2026-10-05)
 
 
