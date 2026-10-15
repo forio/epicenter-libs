@@ -105,6 +105,7 @@ class CometdAdapter {
         this.url = `${apiProtocol}://${apiHost}/push/v${apiVersion}${accountProject}/${channelProtocol}`;
 
         this.cometd.registerExtension('ack', new AckExtension());
+        this.listenToMetaChannels();
         if (isBrowser()) {
             this.cometd.registerExtension('reload', new ReloadExtension());
 
@@ -329,7 +330,6 @@ class CometdAdapter {
                 if (handshakeReply.successful) {
                     this.handshakeState = SUCCEEDED;
                     this.restoreSubscriptions(handshakeReply.clientId);
-                    this.listenToMetaChannels();
                     resolve(undefined);
                     return;
                 }
